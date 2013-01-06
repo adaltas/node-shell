@@ -7,7 +7,7 @@ describe 'decode', ->
   describe 'help', ->
 
     it 'handle an empty action as help', ->
-      params = parameters help: {}
+      params = parameters actions: help: {}
       expect = action: 'help'
       # as a string
       expect.should.eql params.decode 'node myscript'
@@ -15,7 +15,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript']
 
     it 'handle help command', ->
-      params = parameters help: {}
+      params = parameters actions: help: {}
       expect = action: 'help'
       # as a string
       expect.should.eql params.decode 'node myscript help'
@@ -23,7 +23,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'help']
 
     it 'handle help command with an action', ->
-      params = parameters help: {}
+      params = parameters actions: help: {}
       expect = 
         action: 'help'
         command: 'start'
@@ -35,12 +35,12 @@ describe 'decode', ->
   describe 'with action', ->
 
     it 'accept no main and no option', ->
-      params = parameters start: {}
+      params = parameters actions: start: {}
       expect = action: 'start'
       expect.should.eql params.decode ['node', 'myscript', 'start']
 
     it 'accept no main and a string option', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'myparam'
         ]
@@ -50,7 +50,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start', '--myparam', 'my value']
 
     it 'accept an optional main and no option', ->
-      params = parameters start: 
+      params = parameters actions: start: 
         main:
           name: 'command'
       expect = 
@@ -63,7 +63,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start']
   
     it 'throw error if action is undefined', ->
-      params = parameters()
+      params = parameters actions: {}
       (->
         params.decode ['node', 'myscript', 'hum', '-s', 'my', '--command']
       ).should.throw "Invalid action 'hum'"
@@ -71,7 +71,7 @@ describe 'decode', ->
   describe 'option', ->
 
     it 'handle string option', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'watch'
           shortcut: 'w'
@@ -85,7 +85,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start', '--watch', __dirname]
 
     it 'handle boolean option', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'strict'
           shortcut: 's'
@@ -100,7 +100,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start', '-s']
 
     it 'handle multiple options', ->
-      params = parameters start:
+      params = parameters actions: start:
         main: 
           name: 'command'
           required: true
@@ -123,7 +123,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start', '--watch', __dirname, '-s', 'my', '--command']
 
     it 'throw error if decoding undefined option', ->
-      params = parameters myaction: {}
+      params = parameters actions: myaction: {}
       (->
         params.decode ['node', 'myscript', 'myaction', '--myoption', 'my', '--command']
       ).should.throw "Invalid option 'myoption'"
@@ -131,7 +131,7 @@ describe 'decode', ->
   describe 'main', ->
 
     it 'may follow action without any option', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'command'
           required: true
@@ -141,7 +141,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'myaction', 'mycommand']
 
     it 'may be optional', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'command'
       expect = 
@@ -150,7 +150,7 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'myaction']
 
     it 'may be required', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'command'
           required: true

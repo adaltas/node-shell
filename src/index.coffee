@@ -6,22 +6,89 @@ Parameters = (@config = {}) ->
   @bynames = {}
   # An object where key are action and values are object map between shortcuts and names
   @shortcuts = {}
-  # An object where key are action and values are list of options
-  @requireds = {}
-  for action, command of @config
+  for action, command of @config.actions
     main = command.main
     @bynames[action] = {}
     @shortcuts[action] = {}
-    # For each action, store the required fields as an array
-    @requireds[action] = []
     @bynames[action][main.name] = main if main
-    @requireds[action].push main.name if main?.required
     if command.options then for option in command.options
       option.type ?= 'string'
       @bynames[action][option.name] = option
       @shortcuts[action][option.shortcut] = option.name
-      @requireds[action].push option.name if option.required
+  @config.actions.help ?= {}
+  @config.actions.help.description ?= "Display help information about #{@config.name}"
+  @config.actions.help.main ?= 
+    name: 'command'
+    description: 'Help about a specific action'
   @
+
+###
+
+`help([action])`
+----------------
+
+Return a string describing the usage of the overall command or one of its action.
+
+###
+Parameters.prototype.help = (action) ->
+    command = @config.actions[action]
+    describeOption = (option) ->
+      content = pad "      -#{option.shortcut} --#{option.name}", 26
+      content += option.description
+      content += '\n'
+    describeCommand = (command) ->
+      content = pad "    #{action}", 24
+      content += command.description
+      content += '\n'
+      if command.options then for option in command.options
+        content += describeOption option
+      content += pad "      #{command.main.name}", 26
+      content += command.main.description
+      content += '\n'
+    if action and action isnt 'help'
+      command = @config.actions[action]
+      synopsis = @config.name + ' ' + action + ' '
+      synopsis += '[options...]'
+      synopsis += " [#{command.main.name}]" if command.main
+      content = """
+      NAME
+          #{@config.name} #{action} - #{command.description}
+      SYNOPSIS
+          #{synopsis}
+      DESCRIPTION
+
+      """
+      content += describeCommand command
+    else
+      # Introduce the starstop command
+      content = """
+      NAME
+          #{@config.name} - #{@config.description}
+      SYNOPSIS
+          #{@config.name} action [options...]
+          where action is one of
+
+      """
+      for action, command of @config.actions
+        content += pad "      #{action}", 24
+        content += command.description
+        content += '\n'
+      content += """
+      DESCRIPTION
+
+      """
+      # Describe each action
+      for action, command of @config.actions
+        content += describeCommand command
+      # Add examples
+      content += """
+      EXAMPLES
+          #{@config.name} help          Show this message
+      """
+      # for action of @config.actions
+      #   content += "    #{@config.name} help #{action}    Describe the #{action} action"
+      content += '\n'
+      content
 
 ###
 
@@ -48,7 +115,7 @@ Parameters.prototype.decode = (argv = process.argv) ->
   data = {}
   data.action = argv.shift()
   data.action ?= 'help'
-  command = @config[data.action]
+  command = @config.actions[data.action]
   throw new Error "Invalid action '#{data.action}'" unless command
   while true
     break if not argv.length or argv[0].substr(0, 1) isnt '-'
@@ -71,8 +138,6 @@ Parameters.prototype.decode = (argv = process.argv) ->
     if options.required
       throw new Error "Required main argument \"#{name}\"" unless data[name]?
     data[name] ?= null
-  # for name in @requireds[data.action]
-  #   throw new Error "Main argument \"#{name}\" is required" unless data[name]?
   data
 
 ###
@@ -87,7 +152,7 @@ Parameters.prototype.encode = (script, data) ->
   if arguments.length is 1
     data = script
     script = null
-  command = @config[data.action]
+  command = @config.actions[data.action]
   throw new Error "Invalid action '#{data.action}'" unless command
   argv = if script then [process.execPath, script] else []
   argv.push data.action

@@ -7,7 +7,7 @@ describe 'encode', ->
   describe 'api', ->
 
     it 'should prefix with node path and executed script', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'myparam'
         ]
@@ -18,12 +18,12 @@ describe 'encode', ->
   describe 'with action', ->
 
     it 'accept no main and no option', ->
-      params = parameters start: {}
+      params = parameters actions: start: {}
       ['start'].should.eql params.encode
         action: 'start'
 
     it 'accept no main and a string option', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'myparam'
         ]
@@ -32,7 +32,7 @@ describe 'encode', ->
         myparam: 'my value'
 
     it 'accept an optional main and no option', ->
-      params = parameters start: 
+      params = parameters actions: start: 
         main:
           name: 'command'
       ['start', 'my --command'].should.eql params.encode
@@ -42,7 +42,7 @@ describe 'encode', ->
         action: 'start'
 
     it 'throw error if action is undefined', ->
-      params = parameters()
+      params = parameters actions: {}
       (->
         params.encode 
           action: 'hum'
@@ -52,7 +52,7 @@ describe 'encode', ->
   describe 'option', ->
 
     it 'handle string option', ->
-      params = parameters start:
+      params = parameters  actions: start:
         options: [
           name: 'watch'
           shortcut: 'w'
@@ -62,7 +62,7 @@ describe 'encode', ->
         watch: __dirname
 
     it 'handle boolean option', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'strict'
           shortcut: 's'
@@ -73,7 +73,7 @@ describe 'encode', ->
         strict: true
 
     it 'handle multiple options', ->
-      params = parameters start:
+      params = parameters actions: start:
         main: 
           name: 'command'
           required: true
@@ -92,7 +92,7 @@ describe 'encode', ->
         command: 'my --command'
 
     it 'throw error if option is undefined', ->
-      params = parameters myaction: {}
+      params = parameters actions: myaction: {}
       (->
         params.encode 
           action: 'myaction'
@@ -100,7 +100,7 @@ describe 'encode', ->
       ).should.throw "Invalid option 'myoption'"
 
     it 'should bypass a boolean option set to null', ->
-      params = parameters start:
+      params = parameters actions: start:
         options: [
           name: 'detached'
           shortcut: 'd'
@@ -113,7 +113,7 @@ describe 'encode', ->
   describe 'main', ->
 
     it 'may follow action without any option', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'command'
           required: true
@@ -122,14 +122,14 @@ describe 'encode', ->
         command: 'mycommand'
 
     it 'may be optional', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'mycommand'
       ['myaction'].should.eql params.encode 
         action: 'myaction'
 
     it 'may be required', ->
-      params = parameters myaction: 
+      params = parameters actions: myaction: 
         main: 
           name: 'mycommand'
           required: true
