@@ -3,7 +3,6 @@ path = require 'path'
 pad = require 'pad' 
 
 Parameters = (@config = {}) ->
-  @bynames = {}
   # An object where key are action and values are object map between shortcuts and names
   @shortcuts = {}
   for action in config.actions
@@ -11,15 +10,12 @@ Parameters = (@config = {}) ->
     do (action) =>
       config.actions.__defineGetter__ action.name, -> action
     main = action.main
-    @bynames[action.name] = {}
     @shortcuts[action.name] = {}
-    @bynames[action.name][main.name] = main if main
     if action.options then for option in action.options
       # Access option by key
       do (option) ->
         action.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
-      @bynames[action.name][option.name] = option
       @shortcuts[action.name][option.shortcut] = option.name
   unless config.actions.help
     config.actions.push 
@@ -140,7 +136,7 @@ Parameters.prototype.decode = (argv = process.argv) ->
     shortcut = key.substr(1, 1) isnt '-'
     key = key.substring (if shortcut then 1 else 2), key.length
     key = @shortcuts[data.action][key] if shortcut
-    option = @bynames[data.action][key]
+    option = @config.actions[data.action].options?[key]
     throw new Error "Invalid option '#{key}'" unless option
     switch option.type
       when 'boolean'
@@ -150,11 +146,19 @@ Parameters.prototype.decode = (argv = process.argv) ->
     data[key] = value
   # Store the full command in the return object
   data.command = argv.join(' ') if argv.length
-  # Time to check against required arguments
-  for name, options of @bynames[data.action]
-    if options.required
-      throw new Error "Required main argument \"#{name}\"" unless data[name]?
-    data[name] ?= null
+  # Check against required options
+  options = @config.actions[data.action].options
+  if options then for option in options
+    # console.log option.name
+    if option.required
+      throw new Error "Required argument \"#{option.name}\"" unless data[option.name]?
+    data[option.name] ?= null
+  # Check against required main
+  main = @config.actions[data.action].main
+  if main
+    if main.required
+      throw new Error "Required main argument \"#{main.name}\"" unless data[main.name]?
+    data[main.name] ?= null
   data
 
 ###
@@ -175,7 +179,7 @@ Parameters.prototype.encode = (script, data) ->
   argv.push data.action
   for key, value of data
     continue if key is 'action' or key is command.main?.name
-    option = @bynames[data.action][key]
+    option = @config.actions[data.action].options?[key]
     throw new Error "Invalid option '#{key}'" unless option
     switch option.type
       when 'boolean'
