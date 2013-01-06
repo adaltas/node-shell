@@ -10,41 +10,43 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions:
-          start:
-            description: 'Description for the start action'
-            main: 
-              name: 'command'
-              description: 'Command in start' 
-            options: [
-              name: 'string'
-              shortcut: 's'
-              description: 'String option in start'
-            ,
-              name: 'boolean'
-              shortcut: 'b'
-              type: 'boolean'
-              description: 'Boolean option in start'
-            ,
-              name: 'integer'
-              shortcut: 'i'
-              type: 'integer'
-              description: 'Integer option in start'
-            ]
-          stop:
-            description: 'Description for the stop action'
-            main:
-              name: 'command'
-              description: 'Command in stop'
-            options: [
-              name: 'string'
-              shortcut: 's'
-              description: 'String option in stop'
-            ,
-              name: 'boolean'
-              shortcut: 'b'
-              description: 'Boolean option in stop'
-            ]
+        actions: [
+          name: 'start'
+          description: 'Description for the start action'
+          main: 
+            name: 'command'
+            description: 'Command in start' 
+          options: [
+            name: 'string'
+            shortcut: 's'
+            description: 'String option in start'
+          ,
+            name: 'boolean'
+            shortcut: 'b'
+            type: 'boolean'
+            description: 'Boolean option in start'
+          ,
+            name: 'integer'
+            shortcut: 'i'
+            type: 'integer'
+            description: 'Integer option in start'
+          ]
+        ,
+          name: 'stop'
+          description: 'Description for the stop action'
+          main:
+            name: 'command'
+            description: 'Command in stop'
+          options: [
+            name: 'string'
+            shortcut: 's'
+            description: 'String option in stop'
+          ,
+            name: 'boolean'
+            shortcut: 'b'
+            description: 'Boolean option in stop'
+          ]
+        ]
       params.help().should.eql """
       NAME
           myscript - Some description for myscript
@@ -78,17 +80,18 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions:
-          start:
-            description: 'Description for the start action'
-            main: 
-              name: 'command'
-              description: 'Command in start' 
-            options: [
-              name: 'string'
-              shortcut: 's'
-              description: 'String option in start'
-            ]
+        actions:[
+          name: 'start'
+          description: 'Description for the start action'
+          main: 
+            name: 'command'
+            description: 'Command in start' 
+          options: [
+            name: 'string'
+            shortcut: 's'
+            description: 'String option in start'
+          ]
+        ]
       params.help('start').should.eql """
       NAME
           myscript start - Description for the start action
@@ -105,13 +108,14 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions:
-          start:
-            description: 'Description for the start action'
-            main: 
-              name: 'command'
-              description: 'Command in start'
-              required: true
+        actions: [
+          name: 'start'
+          description: 'Description for the start action'
+          main: 
+            name: 'command'
+            description: 'Command in start'
+            required: true
+        ]
       params.help('start').should.eql """
       NAME
           myscript start - Description for the start action
@@ -127,19 +131,20 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions:
-          start:
-            description: 'Description for the start action'
-            options: [
-              name: 'optional'
-              shortcut: 'o'
-              description: 'Optional option'
-            ,
-              name: 'required'
-              shortcut: 'r'
-              description: 'Required option'
-              required: true
-            ]
+        actions: [
+          name: 'start'
+          description: 'Description for the start action'
+          options: [
+            name: 'optional'
+            shortcut: 'o'
+            description: 'Optional option'
+          ,
+            name: 'required'
+            shortcut: 'r'
+            description: 'Required option'
+            required: true
+          ]
+        ]
       params.help('start').should.eql """
       NAME
           myscript start - Description for the start action

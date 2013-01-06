@@ -6,20 +6,28 @@ Parameters = (@config = {}) ->
   @bynames = {}
   # An object where key are action and values are object map between shortcuts and names
   @shortcuts = {}
-  for action, command of @config.actions
-    main = command.main
-    @bynames[action] = {}
-    @shortcuts[action] = {}
-    @bynames[action][main.name] = main if main
-    if command.options then for option in command.options
+  for action in config.actions
+    # Access action by key
+    do (action) =>
+      config.actions.__defineGetter__ action.name, -> action
+    main = action.main
+    @bynames[action.name] = {}
+    @shortcuts[action.name] = {}
+    @bynames[action.name][main.name] = main if main
+    if action.options then for option in action.options
+      # Access option by key
+      do (option) ->
+        action.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
-      @bynames[action][option.name] = option
-      @shortcuts[action][option.shortcut] = option.name
-  @config.actions.help ?= {}
-  @config.actions.help.description ?= "Display help information about #{@config.name}"
-  @config.actions.help.main ?= 
-    name: 'command'
-    description: 'Help about a specific action'
+      @bynames[action.name][option.name] = option
+      @shortcuts[action.name][option.shortcut] = option.name
+  unless config.actions.help
+    config.actions.push 
+      name: 'help'
+      description: "Display help information about #{config.name}"
+      main:
+        name: 'command'
+        description: 'Help about a specific action'
   @
 
 ###
@@ -37,7 +45,7 @@ Parameters.prototype.help = (action) ->
       content += option.description
       content += '\n'
     describeCommand = (command) ->
-      content = pad "    #{action}", 24
+      content = pad "    #{command.name}", 24
       content += command.description
       content += '\n'
       if command.options then for option in command.options
@@ -78,17 +86,17 @@ Parameters.prototype.help = (action) ->
           where action is one of
 
       """
-      for action, command of @config.actions
-        content += pad "      #{action}", 24
-        content += command.description
+      for action in @config.actions
+        content += pad "      #{action.name}", 24
+        content += action.description
         content += '\n'
       content += """
       DESCRIPTION
 
       """
       # Describe each action
-      for action, command of @config.actions
-        content += describeCommand command
+      for action in @config.actions
+        content += describeCommand action
       # Add examples
       content += """
       EXAMPLES
