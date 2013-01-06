@@ -5,13 +5,17 @@ pad = require 'pad'
 Parameters = (@config = {}) ->
   # An object where key are action and values are object map between shortcuts and names
   @shortcuts = {}
+  config.actions ?= []
+  config.actions = [config.actions] unless Array.isArray config.actions
   for action in config.actions
     # Access action by key
     do (action) =>
       config.actions.__defineGetter__ action.name, -> action
     main = action.main
     @shortcuts[action.name] = {}
-    if action.options then for option in action.options
+    action.options ?= []
+    action.options = [action.options] unless Array.isArray action.options
+    for option in action.options
       # Access option by key
       do (option) ->
         action.options.__defineGetter__ option.name, -> option
@@ -55,7 +59,7 @@ Parameters.prototype.help = (action) ->
       command = @config.actions[action]
       synopsis = @config.name + ' ' + action #+ ' '
       # synopsis += '[options...]'
-      if command.options
+      if command.options.length
         options = 'options...'
         options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
         synopsis += " #{options}"

@@ -4,19 +4,6 @@ parameters = require '..'
 
 describe 'encode', ->
 
-  describe 'api', ->
-
-    it 'should prefix with node path and executed script', ->
-      params = parameters actions: [
-        name: 'start'
-        options: [
-          name: 'myparam'
-        ]
-      ]
-      [process.execPath, './bin/myscript', 'start', '--myparam', 'my value'].should.eql params.encode './bin/myscript',
-        action: 'start'
-        myparam: 'my value'
-
   describe 'with action', ->
 
     it 'accept no main and no option', ->
