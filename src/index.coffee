@@ -42,14 +42,23 @@ Parameters.prototype.help = (action) ->
       content += '\n'
       if command.options then for option in command.options
         content += describeOption option
-      content += pad "      #{command.main.name}", 26
-      content += command.main.description
-      content += '\n'
+      if command.main
+        content += pad "      #{command.main.name}", 26
+        content += command.main.description
+        content += '\n'
+      content
     if action and action isnt 'help'
       command = @config.actions[action]
-      synopsis = @config.name + ' ' + action + ' '
-      synopsis += '[options...]'
-      synopsis += " [#{command.main.name}]" if command.main
+      synopsis = @config.name + ' ' + action #+ ' '
+      # synopsis += '[options...]'
+      if command.options
+        options = 'options...'
+        options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
+        synopsis += " #{options}"
+      if command.main
+        main = "#{command.main.name}"
+        main = "[#{main}]" unless command.main.required
+        synopsis += " #{main}"
       content = """
       NAME
           #{@config.name} #{action} - #{command.description}
