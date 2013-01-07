@@ -117,8 +117,8 @@ to `process.argv`.
 
 Example
 
-  options = argv.decode ['node', 'startstop', 'start', '--watch', __dirname, '-s', 'my', '--command']
-  options.should.eql
+  params = argv.decode ['node', 'startstop', 'start', '--watch', __dirname, '-s', 'my', '--command']
+  params.should.eql
     action: 'start'
     watch: __dirname
     strict: true
@@ -127,62 +127,63 @@ Example
 ###
 Parameters.prototype.decode = (argv = process.argv) ->
   argv = argv.split ' ' if typeof argv is 'string'
+  # Remove node and script argv elements
   argv.shift() and argv.shift()
-  data = {}
-  data.action = argv.shift()
-  data.action ?= 'help'
-  command = @config.actions[data.action]
-  throw new Error "Invalid action '#{data.action}'" unless command
+  # Extracted parameters
+  params = {}
+  params.action = argv.shift()
+  params.action ?= 'help'
+  command = @config.actions[params.action]
+  throw new Error "Invalid action '#{params.action}'" unless command
   while true
     break if not argv.length or argv[0].substr(0, 1) isnt '-'
     key = argv.shift()
     shortcut = key.substr(1, 1) isnt '-'
     key = key.substring (if shortcut then 1 else 2), key.length
-    key = @shortcuts[data.action][key] if shortcut
-    option = @config.actions[data.action].options?[key]
+    key = @shortcuts[params.action][key] if shortcut
+    option = @config.actions[params.action].options?[key]
     throw new Error "Invalid option '#{key}'" unless option
     switch option.type
       when 'boolean'
         value = true
       when 'string'
         value = argv.shift()
-    data[key] = value
+    params[key] = value
   # Store the full command in the return object
-  data.command = argv.join(' ') if argv.length
+  params.command = argv.join(' ') if argv.length
   # Check against required options
-  options = @config.actions[data.action].options
+  options = @config.actions[params.action].options
   if options then for option in options
-    # console.log option.name
     if option.required
-      throw new Error "Required argument \"#{option.name}\"" unless data[option.name]?
-    data[option.name] ?= null
+      throw new Error "Required argument \"#{option.name}\"" unless params[option.name]?
+    params[option.name] ?= null
   # Check against required main
-  main = @config.actions[data.action].main
+  main = @config.actions[params.action].main
   if main
     if main.required
-      throw new Error "Required main argument \"#{main.name}\"" unless data[main.name]?
-    data[main.name] ?= null
-  data
+      throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
+    params[main.name] ?= null
+  params
 
 ###
 
-`encode([script], data)`
+`encode([script], params)`
 ------------------------
 
 Convert an object into process arguments.
 
 ###
-Parameters.prototype.encode = (script, data) ->
+Parameters.prototype.encode = (script, params) ->
   if arguments.length is 1
-    data = script
+    params = script
     script = null
-  command = @config.actions[data.action]
-  throw new Error "Invalid action '#{data.action}'" unless command
+  command = @config.actions[params.action]
+  throw new Error "Invalid action '#{params.action}'" unless command
   argv = if script then [process.execPath, script] else []
-  argv.push data.action
-  for key, value of data
+  argv.push params.action
+  for key, value of params
     continue if key is 'action' or key is command.main?.name
-    option = @config.actions[data.action].options?[key]
+    option = @config.actions[params.action].options?[key]
     throw new Error "Invalid option '#{key}'" unless option
     switch option.type
       when 'boolean'
@@ -191,7 +192,7 @@ Parameters.prototype.encode = (script, data) ->
         argv.push "--#{key}"
         argv.push value
   if command.main
-    value = data[command.main.name]
+    value = params[command.main.name]
     throw new Error "Required main argument \"#{command.main.name}\"" if command.main.required and not value?
     argv.push value if value?
   argv
