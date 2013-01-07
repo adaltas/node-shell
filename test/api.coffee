@@ -17,7 +17,7 @@ describe 'api', ->
         name: 'myparam'
     asObjects.should.eql asArrays
 
-  describe 'encode'
+  describe 'encode', ->
 
     it 'should prefix with node path and executed script', ->
       params = parameters actions: [

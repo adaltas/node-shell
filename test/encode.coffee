@@ -4,7 +4,7 @@ parameters = require '..'
 
 describe 'encode', ->
 
-  describe 'with action', ->
+  describe 'with actions', ->
 
     it 'accept no main and no option', ->
       params = parameters actions: [ name: 'start' ]

@@ -57,8 +57,7 @@ Parameters.prototype.help = (action) ->
       content
     if action and action isnt 'help'
       command = @config.actions[action]
-      synopsis = @config.name + ' ' + action #+ ' '
-      # synopsis += '[options...]'
+      synopsis = @config.name + ' ' + action
       if command.options.length
         options = 'options...'
         options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
