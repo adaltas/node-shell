@@ -1,6 +1,6 @@
 
 should = require 'should'
-parameters = require '..'
+parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
 
 describe 'with actions', ->
 
