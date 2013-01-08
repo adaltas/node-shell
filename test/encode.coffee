@@ -42,6 +42,26 @@ describe 'encode', ->
           myparam: true
       ).should.throw "Invalid action 'hum'"
 
+  describe 'without actions', ->
+
+    it 'accept no main and a string option', ->
+      params = parameters 
+        options: [
+          name: 'myparam'
+          shortcut: 'm'
+        ]
+        myparam: 'my value'
+      ['--myparam', 'my value'].should.eql params.encode 
+        myparam: 'my value'
+
+    it 'accept an optional main and no option', ->
+      params = parameters
+        main:
+          name: 'command'
+      ['my --command'].should.eql params.encode 
+        command: 'my --command'
+      [].should.eql params.encode {}
+
   describe 'option', ->
 
     it 'handle string option', ->

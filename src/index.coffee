@@ -195,25 +195,30 @@ Parameters.prototype.encode = (script, params) ->
   if arguments.length is 1
     params = script
     script = null
-  command = @config.actions[params.action]
-  throw new Error "Invalid action '#{params.action}'" unless command
+  encode = (action, params) ->
+    for key, value of params
+      continue if key is 'action' or key is action.main?.name
+      option = action.options?[key]
+      throw new Error "Invalid option '#{key}'" unless option
+      switch option.type
+        when 'boolean'
+          argv.push "--#{key}" if value
+        when 'string'
+          argv.push "--#{key}"
+          argv.push value
+    if action.main
+      value = params[action.main.name]
+      throw new Error "Required main argument \"#{action.main.name}\"" if action.main.required and not value?
+      argv.push value if value?
+    argv
   argv = if script then [process.execPath, script] else []
-  argv.push params.action
-  for key, value of params
-    continue if key is 'action' or key is command.main?.name
-    option = @config.actions[params.action].options?[key]
-    throw new Error "Invalid option '#{key}'" unless option
-    switch option.type
-      when 'boolean'
-        argv.push "--#{key}" if value
-      when 'string'
-        argv.push "--#{key}"
-        argv.push value
-  if command.main
-    value = params[command.main.name]
-    throw new Error "Required main argument \"#{command.main.name}\"" if command.main.required and not value?
-    argv.push value if value?
-  argv
+  if params.action
+    action = @config.actions[params.action]
+    throw new Error "Invalid action '#{params.action}'" unless action
+    argv.push params.action
+  else 
+    action = @config
+  encode action, params
 
 module.exports = (config) ->
   new Parameters config

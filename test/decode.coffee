@@ -93,7 +93,6 @@ describe 'decode', ->
         command: 'my --command'
       expect.should.eql params.decode ['node', 'myscript', 'my --command']
       expect = {}
-        # command: null
       expect.should.eql params.decode ['node', 'myscript']
     
   describe 'option', ->
