@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/wdavidw/node-parameters.png)](http://travis-ci.org/wdavidw/node-parameters)
 
 <pre>
                  _                                               _                
