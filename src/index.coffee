@@ -3,8 +3,18 @@ path = require 'path'
 pad = require 'pad' 
 
 Parameters = (@config = {}) ->
+  # Sanitize options
+  options = (action) ->
+    for option in action.options
+      # Access option by key
+      do (option) ->
+        action.options.__defineGetter__ option.name, -> option
+      option.type ?= 'string'
+      action.shortcuts[option.shortcut] = option.name
   # An object where key are action and values are object map between shortcuts and names
-  @shortcuts = {}
+  config.shortcuts = {}
+  config.options ?= []
+  options config
   config.actions ?= []
   config.actions = [config.actions] unless Array.isArray config.actions
   for action in config.actions
@@ -12,22 +22,23 @@ Parameters = (@config = {}) ->
     do (action) =>
       config.actions.__defineGetter__ action.name, -> action
     main = action.main
-    @shortcuts[action.name] = {}
+    action.shortcuts = {}
     action.options ?= []
     action.options = [action.options] unless Array.isArray action.options
-    for option in action.options
-      # Access option by key
-      do (option) ->
-        action.options.__defineGetter__ option.name, -> option
-      option.type ?= 'string'
-      @shortcuts[action.name][option.shortcut] = option.name
+    options action
   unless config.actions.help
-    config.actions.push 
-      name: 'help'
-      description: "Display help information about #{config.name}"
-      main:
-        name: 'command'
-        description: 'Help about a specific action'
+    if config.actions.length
+      config.actions.push 
+        name: 'help'
+        description: "Display help information about #{config.name}"
+        main:
+          name: 'command'
+          description: 'Help about a specific action'
+    else 
+      config.options.push 
+        name: 'help'
+        shortcut: 'h'
+        description: "Display help information"
   @
 
 ###
@@ -131,39 +142,46 @@ Parameters.prototype.decode = (argv = process.argv) ->
   argv.shift() and argv.shift()
   # Extracted parameters
   params = {}
-  params.action = argv.shift()
-  params.action ?= 'help'
-  command = @config.actions[params.action]
-  throw new Error "Invalid action '#{params.action}'" unless command
-  while true
-    break if not argv.length or argv[0].substr(0, 1) isnt '-'
-    key = argv.shift()
-    shortcut = key.substr(1, 1) isnt '-'
-    key = key.substring (if shortcut then 1 else 2), key.length
-    key = @shortcuts[params.action][key] if shortcut
-    option = @config.actions[params.action].options?[key]
-    throw new Error "Invalid option '#{key}'" unless option
-    switch option.type
-      when 'boolean'
-        value = true
-      when 'string'
-        value = argv.shift()
-    params[key] = value
-  # Store the full command in the return object
-  params.command = argv.join(' ') if argv.length
-  # Check against required options
-  options = @config.actions[params.action].options
-  if options then for option in options
-    if option.required
-      throw new Error "Required argument \"#{option.name}\"" unless params[option.name]?
-    params[option.name] ?= null
-  # Check against required main
-  main = @config.actions[params.action].main
-  if main
-    if main.required
-      throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
-    params[main.name] ?= null
-  params
+  decode = (action, argv) ->
+    while true
+      break if not argv.length or argv[0].substr(0, 1) isnt '-'
+      key = argv.shift()
+      shortcut = key.substr(1, 1) isnt '-'
+      key = key.substring (if shortcut then 1 else 2), key.length
+      key = action.shortcuts[key] if shortcut
+      option = action.options?[key]
+      throw new Error "Invalid option '#{key}'" unless option
+      switch option.type
+        when 'boolean'
+          value = true
+        when 'string'
+          value = argv.shift()
+      params[key] = value
+    # Store the full command in the return object
+    params.command = argv.join(' ') if argv.length
+    # Check against required options
+    options = action.options
+    if options then for option in options
+      if option.required
+        throw new Error "Required argument \"#{option.name}\"" unless params[option.name]?
+      # params[option.name] ?= null
+    # Check against required main
+    main = action.main
+    if main
+      if main.required
+        throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
+      # params[main.name] ?= null
+    params
+  # If they are action (other than help) and first arg is an action 
+  if @config.actions.length and argv[0].substr(0,1) isnt '-'
+    action = @config.actions[argv[0]]
+    throw new Error "Invalid action '#{argv[0]}'" unless action
+    params.action = argv.shift()
+  else
+    action = @config
+  # params.action = argv.shift()
+  # params.action ?= 'help'
+  decode action, argv
 
 ###
 

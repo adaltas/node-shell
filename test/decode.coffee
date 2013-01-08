@@ -4,35 +4,35 @@ parameters = require '..'
 
 describe 'decode', ->
 
-  describe 'help', ->
+  # describe 'help', ->
 
-    it 'handle an empty action as help', ->
-      params = parameters actions: [name: 'help']
-      expect = action: 'help'
-      # as a string
-      expect.should.eql params.decode 'node myscript'
-      # as an array
-      expect.should.eql params.decode ['node', 'myscript']
+  #   it 'handle an empty action as help', ->
+  #     params = parameters actions: [name: 'help']
+  #     expect = action: 'help'
+  #     # as a string
+  #     expect.should.eql params.decode 'node myscript'
+  #     # as an array
+  #     expect.should.eql params.decode ['node', 'myscript']
 
-    it 'handle help command', ->
-      params = parameters actions: [name: 'help']
-      expect = action: 'help'
-      # as a string
-      expect.should.eql params.decode 'node myscript help'
-      # as an array
-      expect.should.eql params.decode ['node', 'myscript', 'help']
+  #   it 'handle help command', ->
+  #     params = parameters actions: [name: 'help']
+  #     expect = action: 'help'
+  #     # as a string
+  #     expect.should.eql params.decode 'node myscript help'
+  #     # as an array
+  #     expect.should.eql params.decode ['node', 'myscript', 'help']
 
-    it 'handle help command with an action', ->
-      params = parameters actions: [name: 'help']
-      expect = 
-        action: 'help'
-        command: 'start'
-      # as a string
-      expect.should.eql params.decode 'node myscript help start'
-      # as an array
-      expect.should.eql params.decode ['node', 'myscript', 'help', 'start']
+  #   it 'handle help command with an action', ->
+  #     params = parameters actions: [name: 'help']
+  #     expect = 
+  #       action: 'help'
+  #       command: 'start'
+  #     # as a string
+  #     expect.should.eql params.decode 'node myscript help start'
+  #     # as an array
+  #     expect.should.eql params.decode ['node', 'myscript', 'help', 'start']
 
-  describe 'with action', ->
+  describe 'with actions', ->
 
     it 'accept no main and no option', ->
       params = parameters actions: [name: 'start']
@@ -63,14 +63,38 @@ describe 'decode', ->
       expect.should.eql params.decode ['node', 'myscript', 'start', 'my --command']
       expect = 
         action: 'start'
-        command: null
+        # command: null
       expect.should.eql params.decode ['node', 'myscript', 'start']
   
     it 'throw error if action is undefined', ->
-      params = parameters actions: []
+      params = parameters actions: [name: 'myaction']
       (->
         params.decode ['node', 'myscript', 'hum', '-s', 'my', '--command']
       ).should.throw "Invalid action 'hum'"
+
+  describe 'without actions', ->
+
+    it 'accept no main and a string option', ->
+      params = parameters 
+        options: [
+          name: 'myparam'
+          shortcut: 'm'
+        ]
+      expect = 
+        myparam: 'my value'
+      expect.should.eql params.decode ['node', 'myscript', '--myparam', 'my value']
+      expect.should.eql params.decode ['node', 'myscript', '-m', 'my value']
+
+    it 'accept an optional main and no option', ->
+      params = parameters
+        main:
+          name: 'command'
+      expect = 
+        command: 'my --command'
+      expect.should.eql params.decode ['node', 'myscript', 'my --command']
+      expect = {}
+        # command: null
+      expect.should.eql params.decode ['node', 'myscript']
     
   describe 'option', ->
 
@@ -160,7 +184,7 @@ describe 'decode', ->
       ]
       expect = 
         action: 'myaction'
-        command: null
+        # command: null
       expect.should.eql params.decode ['node', 'myscript', 'myaction']
 
     it 'may be required', ->
