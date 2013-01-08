@@ -94,9 +94,9 @@ Parameters.prototype.help = (action) ->
       content = """
       NAME
           #{@config.name} - #{@config.description}
-      SYNOPSIS
 
       """
+      content += 'SYNOPSIS\n'
       content += "    #{@config.name}"
       content += ' action' if @config.actions.length
       content += ' [options...]'
@@ -109,10 +109,7 @@ Parameters.prototype.help = (action) ->
         content += pad "      #{action.name}", 24
         content += action.description
         content += '\n'
-      content += """
-      DESCRIPTION
-
-      """
+      content += 'DESCRIPTION\n'
       # Describe each option
       # content += describeCommand action
       for option in @config.options
@@ -127,8 +124,7 @@ Parameters.prototype.help = (action) ->
       for action in @config.actions
         content += describeCommand action
       # Add examples
-      content += 'EXAMPLES'
-      content += '\n'
+      content += 'EXAMPLES\n'
       if @config.actions.length
         content += "    #{@config.name} help       Show this message"
       else
