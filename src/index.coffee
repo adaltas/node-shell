@@ -173,14 +173,14 @@ Parameters.prototype.decode = (argv = process.argv) ->
       # params[main.name] ?= null
     params
   # If they are action (other than help) and first arg is an action 
+  if @config.actions.length and argv.length is 0
+    argv.push 'help'
   if @config.actions.length and argv[0].substr(0,1) isnt '-'
     action = @config.actions[argv[0]]
     throw new Error "Invalid action '#{argv[0]}'" unless action
     params.action = argv.shift()
   else
     action = @config
-  # params.action = argv.shift()
-  # params.action ?= 'help'
   decode action, argv
 
 ###
