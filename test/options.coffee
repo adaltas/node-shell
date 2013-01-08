@@ -37,6 +37,23 @@ describe 'options', ->
       strict: true
     .should.eql ['start', '--strict']
 
+  it 'handle integer option', ->
+    params = parameters actions: [
+      name: 'start'
+      options: [
+        name: 'integer'
+        shortcut: 'i'
+        type: 'integer'
+      ]
+    ]
+    params.decode(['node', 'myscript', 'start', '-i', '5']).should.eql
+      action: 'start'
+      integer: 5
+    params.encode 
+      action: 'start'
+      integer: 5
+    .should.eql ['start', '--integer', '5']
+
   it 'handle multiple options', ->
     params = parameters actions: [
       name: 'start'

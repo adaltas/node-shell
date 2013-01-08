@@ -2,6 +2,8 @@
 path = require 'path'
 pad = require 'pad' 
 
+types = ['string', 'boolean', 'integer']
+
 Parameters = (@config = {}) ->
   # Sanitize options
   options = (action) ->
@@ -10,6 +12,7 @@ Parameters = (@config = {}) ->
       do (option) ->
         action.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
+      throw new Error "Invalid type \"#{option.type}\"" if types.indexOf(option.type) is -1
       action.shortcuts[option.shortcut] = option.name
   # An object where key are action and values are object map between shortcuts and names
   config.shortcuts = {}
@@ -92,10 +95,16 @@ Parameters.prototype.help = (action) ->
       NAME
           #{@config.name} - #{@config.description}
       SYNOPSIS
-          #{@config.name} action [options...]
-          where action is one of
 
       """
+      content += "    #{@config.name}"
+      content += ' action' if @config.actions.length
+      content += ' [options...]'
+      # content += ' command' if @config.main or @config.actions.filter((el) -> el.main).length
+      content += '\n'
+      if @config.actions.length
+        content += '    where action is one of'
+        content += '\n'
       for action in @config.actions
         content += pad "      #{action.name}", 24
         content += action.description
@@ -104,17 +113,30 @@ Parameters.prototype.help = (action) ->
       DESCRIPTION
 
       """
+      # Describe each option
+      # content += describeCommand action
+      for option in @config.options
+        content += pad "    -#{option.shortcut} --#{option.name}", 24
+        content += option.description
+        content += '\n'
+      if @config.main
+        content += pad "    #{@config.main.name}", 24
+        content += @config.main.description
+        content += '\n'
       # Describe each action
       for action in @config.actions
         content += describeCommand action
       # Add examples
-      content += """
-      EXAMPLES
-          #{@config.name} help          Show this message
-      """
+      content += 'EXAMPLES'
+      content += '\n'
+      if @config.actions.length
+        content += "    #{@config.name} help       Show this message"
+      else
+        content += "    #{@config.name} --help     Show this message"
+      content += '\n'
       # for action of @config.actions
       #   content += "    #{@config.name} help #{action}    Describe the #{action} action"
-      content += '\n'
+      # content += '\n'
       content
 
 ###
@@ -156,6 +178,8 @@ Parameters.prototype.decode = (argv = process.argv) ->
           value = true
         when 'string'
           value = argv.shift()
+        when 'integer'
+          value = parseInt argv.shift(), 10
       params[key] = value
     # Store the full command in the return object
     params.command = argv.join(' ') if argv.length
@@ -203,9 +227,9 @@ Parameters.prototype.encode = (script, params) ->
       switch option.type
         when 'boolean'
           argv.push "--#{key}" if value
-        when 'string'
+        when 'string', 'integer'
           argv.push "--#{key}"
-          argv.push value
+          argv.push "#{value}"
     if action.main
       value = params[action.main.name]
       throw new Error "Required main argument \"#{action.main.name}\"" if action.main.required and not value?

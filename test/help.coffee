@@ -26,6 +26,44 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
+        main: 
+          name: 'command'
+          description: 'Command in start' 
+        options: [
+          name: 'string'
+          shortcut: 's'
+          description: 'String option in start'
+        ,
+          name: 'boolean'
+          shortcut: 'b'
+          type: 'boolean'
+          description: 'Boolean option in start'
+        ,
+          name: 'integer'
+          shortcut: 'i'
+          type: 'integer'
+          description: 'Integer option in start'
+        ]
+      params.help().should.eql """
+      NAME
+          myscript - Some description for myscript
+      SYNOPSIS
+          myscript [options...]
+      DESCRIPTION
+          -s --string         String option in start
+          -b --boolean        Boolean option in start
+          -i --integer        Integer option in start
+          -h --help           Display help information
+          command             Command in start
+      EXAMPLES
+          myscript --help     Show this message
+
+      """
+
+    it 'should print multiple actions with multiple options', ->
+      params = parameters
+        name: 'myscript'
+        description: 'Some description for myscript'
         actions: [
           name: 'start'
           description: 'Description for the start action'
@@ -85,7 +123,7 @@ describe 'help', ->
           help                Display help information about myscript
             command             Help about a specific action
       EXAMPLES
-          myscript help          Show this message
+          myscript help       Show this message
 
       """
       params.help().should.eql params.help 'help'
