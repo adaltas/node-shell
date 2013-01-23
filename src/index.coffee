@@ -162,12 +162,14 @@ Parameters.prototype.help = (action) ->
 ----------------
 
 Convert process arguments into a usable object. Argument may
-be in the form of a string or an array. If not provided, it default
-to `process.argv`.
+be in the form of a string or an array. If not provided, it 
+parse the arguments present in  `process.argv`.
+
+You should only pass the parameters and the not the script name.
 
 Example
 
-  params = argv.parse ['node', 'startstop', 'start', '--watch', __dirname, '-s', 'my', '--command']
+  params = argv.parse ['start', '--watch', __dirname, '-s', 'my', '--command']
   params.should.eql
     action: 'start'
     watch: __dirname
@@ -175,17 +177,18 @@ Example
     command: 'my --command'
 
 ###
-Parameters.prototype.parse = (argv = process.argv) ->
+Parameters.prototype.parse = (argv = process) ->
   argv = argv.split ' ' if typeof argv is 'string'
+  index = 0
   # Remove node and script argv elements
-  index = 2
-  # argv.shift() and argv.shift()
+  if argv is process
+    index = 2
+    argv = argv.argv
   # Extracted parameters
   params = {}
   parse = (action, argv) ->
     while true
       break if argv.length is index or argv[index].substr(0, 1) isnt '-'
-      # key = argv.shift()
       key = argv[index++]
       shortcut = key.substr(1, 1) isnt '-'
       key = key.substring (if shortcut then 1 else 2), key.length
@@ -196,10 +199,8 @@ Parameters.prototype.parse = (argv = process.argv) ->
         when 'boolean'
           value = true
         when 'string'
-          # value = argv.shift()
           value = argv[index++]
         when 'integer'
-          # value = parseInt argv.shift(), 10
           value = parseInt argv[index++], 10
       params[key] = value
     # Store the full command in the return object
@@ -223,7 +224,6 @@ Parameters.prototype.parse = (argv = process.argv) ->
   if @config.actions.length and argv[index].substr(0,1) isnt '-'
     action = @config.actions[argv[index]]
     throw new Error "Invalid action '#{argv[index]}'" unless action
-    # params.action = argv.shift()
     params.action = argv[index++]
   else
     action = @config

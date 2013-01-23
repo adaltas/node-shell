@@ -7,7 +7,7 @@ describe 'with actions', ->
   it 'accept no main and no option', ->
     params = parameters
       actions: [name: 'start']
-    params.parse(['node', 'myscript', 'start']).should.eql
+    params.parse(['start']).should.eql
       action: 'start'
     params.stringify
       action: 'start'
@@ -20,7 +20,7 @@ describe 'with actions', ->
         name: 'myparam'
       ]
     ]
-    params.parse(['node', 'myscript', 'start', '--myparam', 'my value']).should.eql
+    params.parse(['start', '--myparam', 'my value']).should.eql
       action: 'start'
       myparam: 'my value'
     params.stringify
@@ -34,10 +34,10 @@ describe 'with actions', ->
       main:
         name: 'command'
     ]
-    params.parse(['node', 'myscript', 'start', 'my --command']).should.eql
+    params.parse(['start', 'my --command']).should.eql
       action: 'start'
       command: 'my --command'
-    params.parse(['node', 'myscript', 'start']).should.eql
+    params.parse(['start']).should.eql
       action: 'start'
     params.stringify
       action: 'start'
@@ -50,7 +50,7 @@ describe 'with actions', ->
   it 'throw error if action is undefined', ->
     params = parameters actions: [name: 'myaction']
     (->
-      params.parse ['node', 'myscript', 'hum', '-s', 'my', '--command']
+      params.parse ['hum', '-s', 'my', '--command']
     ).should.throw "Invalid action 'hum'"
     (->
       params.stringify 

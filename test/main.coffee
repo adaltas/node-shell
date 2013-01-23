@@ -11,7 +11,7 @@ describe 'main', ->
         name: 'command'
         required: true
     ]
-    params.parse(['node', 'myscript', 'myaction', 'mycommand']).should.eql
+    params.parse(['myaction', 'mycommand']).should.eql
       action: 'myaction'
       command: 'mycommand'
     params.stringify 
@@ -25,7 +25,7 @@ describe 'main', ->
       main: 
         name: 'command'
     ]
-    params.parse(['node', 'myscript', 'myaction']).should.eql
+    params.parse(['myaction']).should.eql
       action: 'myaction'
     params.stringify 
       action: 'myaction'
@@ -38,11 +38,11 @@ describe 'main', ->
         name: 'command'
         required: true
     ]
-    params.parse(['node', 'myscript', 'myaction', 'my --command']).should.eql
+    params.parse(['myaction', 'my --command']).should.eql
       action: 'myaction'
       command: 'my --command'
     (->
-      params.parse ['node', 'myscript', 'myaction']
+      params.parse ['myaction']
     ).should.throw 'Required main argument "command"'
     params.stringify
       action: 'myaction'
@@ -57,9 +57,9 @@ describe 'main', ->
     params = parameters
       main:
         name: 'command'
-    params.parse(['node', 'myscript', 'my --command']).should.eql
+    params.parse(['my --command']).should.eql
       command: 'my --command'
-    params.parse(['node', 'myscript']).should.eql {}
+    params.parse([]).should.eql {}
     params.stringify 
       command: 'my --command'
     .should.eql ['my --command']

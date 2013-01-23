@@ -29,9 +29,9 @@ describe 'api', ->
           shortcut: 'w'
         ]
       ]
-      argv = ['node', 'myscript', 'start', '--watch', __dirname]
+      argv = ['start', '--watch', __dirname]
       params.parse(argv)
-      argv.should.eql ['node', 'myscript', 'start', '--watch', __dirname]
+      argv.should.eql ['start', '--watch', __dirname]
 
   describe 'stringify', ->
 
