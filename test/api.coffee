@@ -4,18 +4,34 @@ parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'sr
 
 describe 'api', ->
 
-  it 'define action and options as an object or an array', ->
-    asArrays = parameters actions: [
-      name: 'start'
-      options: [
-        name: 'myparam'
+  describe 'constructor', ->
+    
+    it 'define action and options as an object or an array', ->
+      asArrays = parameters actions: [
+        name: 'start'
+        options: [
+          name: 'myparam'
+        ]
       ]
-    ]
-    asObjects = parameters actions:
-      name: 'start'
-      options:
-        name: 'myparam'
-    asObjects.should.eql asArrays
+      asObjects = parameters actions:
+        name: 'start'
+        options:
+          name: 'myparam'
+      asObjects.should.eql asArrays
+
+  describe 'parse', ->
+    
+    it 'should not alter params', ->
+      params = parameters actions: [
+        name: 'start'
+        options: [
+          name: 'watch'
+          shortcut: 'w'
+        ]
+      ]
+      argv = ['node', 'myscript', 'start', '--watch', __dirname]
+      params.parse(argv)
+      argv.should.eql ['node', 'myscript', 'start', '--watch', __dirname]
 
   describe 'stringify', ->
 

@@ -4,6 +4,27 @@ pad = require 'pad'
 
 types = ['string', 'boolean', 'integer']
 
+###
+parameters(config)
+==================
+
+About options
+-------------
+Options are defined at the "config" level or for each action.
+
+About main
+----------
+Main is what's left after the options. Like options, "main" is 
+defined at the "config" level or for each action.
+
+Parameters are defined with the following properties
+*   name:     name of the two dash parameter in the command (eg "--my_name") and in the returned parse object unless label is defined.
+*   label:    not yet implemented, see name
+*   shortcut: name of the one dash parameter in the command (eg "-n"), must be one charactere
+*   required: boolean, throw an exception when true and the parameter is not defined
+*   type:     one of 'string', 'boolean' or 'integer'
+
+###
 Parameters = (@config = {}) ->
   # Sanitize options
   options = (action) ->
@@ -157,13 +178,15 @@ Example
 Parameters.prototype.parse = (argv = process.argv) ->
   argv = argv.split ' ' if typeof argv is 'string'
   # Remove node and script argv elements
-  argv.shift() and argv.shift()
+  index = 2
+  # argv.shift() and argv.shift()
   # Extracted parameters
   params = {}
   parse = (action, argv) ->
     while true
-      break if not argv.length or argv[0].substr(0, 1) isnt '-'
-      key = argv.shift()
+      break if argv.length is index or argv[index].substr(0, 1) isnt '-'
+      # key = argv.shift()
+      key = argv[index++]
       shortcut = key.substr(1, 1) isnt '-'
       key = key.substring (if shortcut then 1 else 2), key.length
       key = action.shortcuts[key] if shortcut
@@ -173,12 +196,14 @@ Parameters.prototype.parse = (argv = process.argv) ->
         when 'boolean'
           value = true
         when 'string'
-          value = argv.shift()
+          # value = argv.shift()
+          value = argv[index++]
         when 'integer'
-          value = parseInt argv.shift(), 10
+          # value = parseInt argv.shift(), 10
+          value = parseInt argv[index++], 10
       params[key] = value
     # Store the full command in the return object
-    params.command = argv.join(' ') if argv.length
+    params.command = argv.slice(index).join(' ') if argv.length isnt index
     # Check against required options
     options = action.options
     if options then for option in options
@@ -193,12 +218,13 @@ Parameters.prototype.parse = (argv = process.argv) ->
       # params[main.name] ?= null
     params
   # If they are action (other than help) and first arg is an action 
-  if @config.actions.length and argv.length is 0
+  if @config.actions.length and argv.length is index
     argv.push 'help'
-  if @config.actions.length and argv[0].substr(0,1) isnt '-'
-    action = @config.actions[argv[0]]
-    throw new Error "Invalid action '#{argv[0]}'" unless action
-    params.action = argv.shift()
+  if @config.actions.length and argv[index].substr(0,1) isnt '-'
+    action = @config.actions[argv[index]]
+    throw new Error "Invalid action '#{argv[index]}'" unless action
+    # params.action = argv.shift()
+    params.action = argv[index++]
   else
     action = @config
   parse action, argv
