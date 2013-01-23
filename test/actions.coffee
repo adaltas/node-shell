@@ -7,9 +7,9 @@ describe 'with actions', ->
   it 'accept no main and no option', ->
     params = parameters
       actions: [name: 'start']
-    params.decode(['node', 'myscript', 'start']).should.eql
+    params.parse(['node', 'myscript', 'start']).should.eql
       action: 'start'
-    params.encode
+    params.stringify
       action: 'start'
     .should.eql ['start']
 
@@ -20,10 +20,10 @@ describe 'with actions', ->
         name: 'myparam'
       ]
     ]
-    params.decode(['node', 'myscript', 'start', '--myparam', 'my value']).should.eql
+    params.parse(['node', 'myscript', 'start', '--myparam', 'my value']).should.eql
       action: 'start'
       myparam: 'my value'
-    params.encode
+    params.stringify
       action: 'start'
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
@@ -34,26 +34,26 @@ describe 'with actions', ->
       main:
         name: 'command'
     ]
-    params.decode(['node', 'myscript', 'start', 'my --command']).should.eql
+    params.parse(['node', 'myscript', 'start', 'my --command']).should.eql
       action: 'start'
       command: 'my --command'
-    params.decode(['node', 'myscript', 'start']).should.eql
+    params.parse(['node', 'myscript', 'start']).should.eql
       action: 'start'
-    params.encode
+    params.stringify
       action: 'start'
       command: 'my --command'
     .should.eql ['start', 'my --command']
-    params.encode
+    params.stringify
       action: 'start'
     .should.eql ['start']
 
   it 'throw error if action is undefined', ->
     params = parameters actions: [name: 'myaction']
     (->
-      params.decode ['node', 'myscript', 'hum', '-s', 'my', '--command']
+      params.parse ['node', 'myscript', 'hum', '-s', 'my', '--command']
     ).should.throw "Invalid action 'hum'"
     (->
-      params.encode 
+      params.stringify 
         action: 'hum'
         myparam: true
     ).should.throw "Invalid action 'hum'"

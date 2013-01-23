@@ -27,14 +27,14 @@ command = parameters({
 // Print help
 console.log( command.help() );
 // Extract command arguments
-command.decode(
+command.parse(
   ['node', 'server.js', '--host', '127.0.0.1', '-p', '80']
 ).should.eql({
   host: '127.0.0.1',
   port: 80
 });
 // Create a command
-command.encode({
+command.stringify({
   host: '127.0.0.1',
   port: 80
 }).should.eql(

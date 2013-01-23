@@ -12,10 +12,10 @@ describe 'options', ->
         shortcut: 'w'
       ]
     ]
-    params.decode(['node', 'myscript', 'start', '--watch', __dirname]).should.eql
+    params.parse(['node', 'myscript', 'start', '--watch', __dirname]).should.eql
       action: 'start'
       watch: __dirname
-    params.encode 
+    params.stringify 
       action: 'start'
       watch: __dirname
     .should.eql ['start', '--watch', __dirname]
@@ -29,10 +29,10 @@ describe 'options', ->
         type: 'boolean'
       ]
     ]
-    params.decode(['node', 'myscript', 'start', '-s']).should.eql
+    params.parse(['node', 'myscript', 'start', '-s']).should.eql
       action: 'start'
       strict: true
-    params.encode 
+    params.stringify 
       action: 'start'
       strict: true
     .should.eql ['start', '--strict']
@@ -46,10 +46,10 @@ describe 'options', ->
         type: 'integer'
       ]
     ]
-    params.decode(['node', 'myscript', 'start', '-i', '5']).should.eql
+    params.parse(['node', 'myscript', 'start', '-i', '5']).should.eql
       action: 'start'
       integer: 5
-    params.encode 
+    params.stringify 
       action: 'start'
       integer: 5
     .should.eql ['start', '--integer', '5']
@@ -69,12 +69,12 @@ describe 'options', ->
         type: 'boolean'
       ]
     ]
-    params.decode(['node', 'myscript', 'start', '--watch', __dirname, '-s', 'my', '--command']).should.eql
+    params.parse(['node', 'myscript', 'start', '--watch', __dirname, '-s', 'my', '--command']).should.eql
       action: 'start'
       watch: __dirname
       strict: true
       command: 'my --command'
-    params.encode 
+    params.stringify 
       action: 'start'
       watch: __dirname
       strict: true
@@ -87,20 +87,20 @@ describe 'options', ->
         name: 'myparam'
         shortcut: 'm'
       ]
-    params.decode(['node', 'myscript', '--myparam', 'my value']).should.eql
+    params.parse(['node', 'myscript', '--myparam', 'my value']).should.eql
       myparam: 'my value'
-    params.decode(['node', 'myscript', '-m', 'my value']).should.eql
+    params.parse(['node', 'myscript', '-m', 'my value']).should.eql
       myparam: 'my value'
-    ['--myparam', 'my value'].should.eql params.encode 
+    ['--myparam', 'my value'].should.eql params.stringify 
       myparam: 'my value'
 
   it 'throw error if undefined', ->
     params = parameters actions: [name: 'myaction']
     (->
-      params.decode ['node', 'myscript', 'myaction', '--myoption', 'my', '--command']
+      params.parse ['node', 'myscript', 'myaction', '--myoption', 'my', '--command']
     ).should.throw "Invalid option 'myoption'"
     (->
-      params.encode 
+      params.stringify 
         action: 'myaction'
         myoption: true
     ).should.throw "Invalid option 'myoption'"
@@ -112,5 +112,5 @@ describe 'options', ->
         shortcut: 'd'
         type: 'boolean'
       ]
-    [].should.eql params.encode 
+    [].should.eql params.stringify 
       detached: null

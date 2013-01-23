@@ -17,7 +17,7 @@ describe 'api', ->
         name: 'myparam'
     asObjects.should.eql asArrays
 
-  describe 'encode', ->
+  describe 'stringify', ->
 
     it 'should prefix with node path and executed script', ->
       params = parameters actions: [
@@ -26,6 +26,6 @@ describe 'api', ->
           name: 'myparam'
         ]
       ]
-      [process.execPath, './bin/myscript', 'start', '--myparam', 'my value'].should.eql params.encode './bin/myscript',
+      [process.execPath, './bin/myscript', 'start', '--myparam', 'my value'].should.eql params.stringify './bin/myscript',
         action: 'start'
         myparam: 'my value'

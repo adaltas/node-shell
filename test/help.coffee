@@ -6,17 +6,17 @@ describe 'help', ->
 
   it 'handle an empty action as help', ->
     params = parameters actions: [name: 'help']
-    params.decode(['node', 'myscript']).should.eql
+    params.parse(['node', 'myscript']).should.eql
       action: 'help'
 
   it 'handle help command', ->
     params = parameters actions: [name: 'help']
-    params.decode(['node', 'myscript', 'help']).should.eql
+    params.parse(['node', 'myscript', 'help']).should.eql
       action: 'help'
 
   it 'handle help command with an action', ->
     params = parameters actions: [name: 'help']
-    params.decode(['node', 'myscript', 'help', 'start']).should.eql
+    params.parse(['node', 'myscript', 'help', 'start']).should.eql
       action: 'help'
       command: 'start'
 

@@ -11,10 +11,10 @@ describe 'main', ->
         name: 'command'
         required: true
     ]
-    params.decode(['node', 'myscript', 'myaction', 'mycommand']).should.eql
+    params.parse(['node', 'myscript', 'myaction', 'mycommand']).should.eql
       action: 'myaction'
       command: 'mycommand'
-    params.encode 
+    params.stringify 
       action: 'myaction'
       command: 'mycommand'
     .should.eql ['myaction', 'mycommand']
@@ -25,9 +25,9 @@ describe 'main', ->
       main: 
         name: 'command'
     ]
-    params.decode(['node', 'myscript', 'myaction']).should.eql
+    params.parse(['node', 'myscript', 'myaction']).should.eql
       action: 'myaction'
-    params.encode 
+    params.stringify 
       action: 'myaction'
     .should.eql ['myaction']
 
@@ -38,18 +38,18 @@ describe 'main', ->
         name: 'command'
         required: true
     ]
-    params.decode(['node', 'myscript', 'myaction', 'my --command']).should.eql
+    params.parse(['node', 'myscript', 'myaction', 'my --command']).should.eql
       action: 'myaction'
       command: 'my --command'
     (->
-      params.decode ['node', 'myscript', 'myaction']
+      params.parse ['node', 'myscript', 'myaction']
     ).should.throw 'Required main argument "command"'
-    params.encode
+    params.stringify
       action: 'myaction'
       command: 'my --command'
     .should.eql ['myaction', 'my --command']
     (->
-      params.encode
+      params.stringify
         action: 'myaction'
     ).should.throw 'Required main argument "command"'
 
@@ -57,10 +57,10 @@ describe 'main', ->
     params = parameters
       main:
         name: 'command'
-    params.decode(['node', 'myscript', 'my --command']).should.eql
+    params.parse(['node', 'myscript', 'my --command']).should.eql
       command: 'my --command'
-    params.decode(['node', 'myscript']).should.eql {}
-    params.encode 
+    params.parse(['node', 'myscript']).should.eql {}
+    params.stringify 
       command: 'my --command'
     .should.eql ['my --command']
-    params.encode({}).should.eql []
+    params.stringify({}).should.eql []

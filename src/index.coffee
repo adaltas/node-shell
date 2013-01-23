@@ -137,7 +137,7 @@ Parameters.prototype.help = (action) ->
 
 ###
 
-`decode([argv])`
+`parse([argv])`
 ----------------
 
 Convert process arguments into a usable object. Argument may
@@ -146,7 +146,7 @@ to `process.argv`.
 
 Example
 
-  params = argv.decode ['node', 'startstop', 'start', '--watch', __dirname, '-s', 'my', '--command']
+  params = argv.parse ['node', 'startstop', 'start', '--watch', __dirname, '-s', 'my', '--command']
   params.should.eql
     action: 'start'
     watch: __dirname
@@ -154,13 +154,13 @@ Example
     command: 'my --command'
 
 ###
-Parameters.prototype.decode = (argv = process.argv) ->
+Parameters.prototype.parse = (argv = process.argv) ->
   argv = argv.split ' ' if typeof argv is 'string'
   # Remove node and script argv elements
   argv.shift() and argv.shift()
   # Extracted parameters
   params = {}
-  decode = (action, argv) ->
+  parse = (action, argv) ->
     while true
       break if not argv.length or argv[0].substr(0, 1) isnt '-'
       key = argv.shift()
@@ -201,21 +201,21 @@ Parameters.prototype.decode = (argv = process.argv) ->
     params.action = argv.shift()
   else
     action = @config
-  decode action, argv
+  parse action, argv
 
 ###
 
-`encode([script], params)`
+`stringify([script], params)`
 ------------------------
 
 Convert an object into process arguments.
 
 ###
-Parameters.prototype.encode = (script, params) ->
+Parameters.prototype.stringify = (script, params) ->
   if arguments.length is 1
     params = script
     script = null
-  encode = (action, params) ->
+  stringify = (action, params) ->
     for key, value of params
       continue if key is 'action' or key is action.main?.name
       option = action.options?[key]
@@ -238,7 +238,7 @@ Parameters.prototype.encode = (script, params) ->
     argv.push params.action
   else 
     action = @config
-  encode action, params
+  stringify action, params
 
 module.exports = (config) ->
   new Parameters config
