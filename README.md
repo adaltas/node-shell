@@ -15,7 +15,7 @@
 Node parameters is sugar for parsing typical unix command line options. 
 
 *   Standard and actions-based command lines (think `git pull ...`)
-*   Parse and stringify options
+*   Asymetric: parse and stringify
 *   Complete tests and samples
 
 Standard command line example
