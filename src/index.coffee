@@ -39,6 +39,7 @@ Parameters = (@config = {}) ->
   config.shortcuts = {}
   config.options ?= []
   options config
+  config.action ?= 'action'
   config.actions ?= []
   config.actions = [config.actions] unless Array.isArray config.actions
   makeAction = (action) ->
@@ -232,7 +233,7 @@ Parameters.prototype.parse = (argv = process) ->
   if @config.actions.length and argv[index].substr(0,1) isnt '-'
     action = @config.actions[argv[index]]
     throw new Error "Invalid action '#{argv[index]}'" unless action
-    params.action = argv[index++]
+    params[@config.action] = argv[index++]
   else
     action = @config
   parse action, argv
@@ -249,30 +250,28 @@ Parameters.prototype.stringify = (script, params) ->
   if arguments.length is 1
     params = script
     script = null
-  stringify = (action, params) ->
-    for key, value of params
-      continue if key is 'action' or key is action.main?.name
-      option = action.options?[key]
-      throw new Error "Invalid option '#{key}'" unless option
-      switch option.type
-        when 'boolean'
-          argv.push "--#{key}" if value
-        when 'string', 'integer'
-          argv.push "--#{key}"
-          argv.push "#{value}"
-    if action.main
-      value = params[action.main.name]
-      throw new Error "Required main argument \"#{action.main.name}\"" if action.main.required and not value?
-      argv.push value if value?
-    argv
   argv = if script then [process.execPath, script] else []
-  if params.action
-    action = @config.actions[params.action]
-    throw new Error "Invalid action '#{params.action}'" unless action
-    argv.push params.action
+  if params[@config.action]
+    action = @config.actions[params[@config.action]]
+    throw new Error "Invalid action '#{params[@config.action]}'" unless action
+    argv.push params[@config.action]
   else 
     action = @config
-  stringify action, params
+  for key, value of params
+    continue if key is @config.action or key is action.main?.name
+    option = action.options?[key]
+    throw new Error "Invalid option '#{key}'" unless option
+    switch option.type
+      when 'boolean'
+        argv.push "--#{key}" if value
+      when 'string', 'integer'
+        argv.push "--#{key}"
+        argv.push "#{value}"
+  if action.main
+    value = params[action.main.name]
+    throw new Error "Required main argument \"#{action.main.name}\"" if action.main.required and not value?
+    argv.push value if value?
+  argv
 
 module.exports = (config) ->
   new Parameters config

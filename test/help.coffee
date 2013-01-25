@@ -22,7 +22,7 @@ describe 'help', ->
       action: 'help'
     .should.eql ['help']
 
-  it.only 'handle help command with an action', ->
+  it 'handle help command with an action', ->
     params = parameters actions: [name: 'toto']
     params.parse(['help', 'start']).should.eql
       action: 'help'

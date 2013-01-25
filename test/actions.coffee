@@ -70,3 +70,13 @@ describe 'actions', ->
       params.parse ['myaction', '--arg', 'myarg', 'mymain']
     ).should.throw "Fail to parse end of command \"mymain\""
 
+  it 'customize action name', ->
+    params = parameters
+      action: 'myaction'
+      actions: [name: 'start']
+    params.parse(['start']).should.eql
+      myaction: 'start'
+    params.stringify
+      myaction: 'start'
+    .should.eql ['start']
+
