@@ -9,20 +9,32 @@ describe 'help', ->
     params.parse([]).should.eql
       action: 'help'
 
+  it 'handle an empty action as even if help is not defined', ->
+    params = parameters actions: [name: 'fake']
+    params.parse([]).should.eql
+      action: 'help'
+
   it 'handle help command', ->
     params = parameters actions: [name: 'help']
     params.parse(['help']).should.eql
       action: 'help'
+    params.stringify
+      action: 'help'
+    .should.eql ['help']
 
-  it 'handle help command with an action', ->
-    params = parameters actions: [name: 'help']
+  it.only 'handle help command with an action', ->
+    params = parameters actions: [name: 'toto']
     params.parse(['help', 'start']).should.eql
       action: 'help'
       command: 'start'
+    params.stringify
+      action: 'help'
+      command: 'start'
+    .should.eql ['help', 'start']
 
   describe 'without action', ->
 
-    it 'should print multiple actions with multiple options', ->
+    it 'should print multiple options', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
@@ -59,6 +71,8 @@ describe 'help', ->
           myscript --help     Show this message
 
       """
+
+  describe 'with action', ->
 
     it 'should print multiple actions with multiple options', ->
       params = parameters
@@ -127,8 +141,6 @@ describe 'help', ->
 
       """
       params.help().should.eql params.help 'help'
-
-  describe 'with action', ->
 
     it 'describe an action', ->
       params = parameters

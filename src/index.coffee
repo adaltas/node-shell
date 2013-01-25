@@ -41,28 +41,31 @@ Parameters = (@config = {}) ->
   options config
   config.actions ?= []
   config.actions = [config.actions] unless Array.isArray config.actions
-  for action in config.actions
-    # Access action by key
-    do (action) =>
-      config.actions.__defineGetter__ action.name, -> action
+  makeAction = (action) ->
+    config.actions.__defineGetter__ action.name, -> action
     main = action.main
     action.shortcuts = {}
     action.options ?= []
     action.options = [action.options] unless Array.isArray action.options
     options action
+  for action in config.actions
+    makeAction action
   unless config.actions.help
     if config.actions.length
-      config.actions.push 
+      actions = 
         name: 'help'
         description: "Display help information about #{config.name}"
         main:
           name: 'command'
           description: 'Help about a specific action'
+      config.actions.push actions
+      makeAction actions
     else 
       config.options.push 
         name: 'help'
         shortcut: 'h'
         description: "Display help information"
+  # console.log config.actions
   @
 
 ###
@@ -204,7 +207,12 @@ Parameters.prototype.parse = (argv = process) ->
           value = parseInt argv[index++], 10
       params[key] = value
     # Store the full command in the return object
-    params.command = argv.slice(index).join(' ') if argv.length isnt index
+    if argv.length isnt index
+      main = argv.slice(index).join(' ')
+      if action.main
+        params[action.main.name] = main
+      else
+        throw new Error "Fail to parse end of command \"#{main}\""
     # Check against required options
     options = action.options
     if options then for option in options
@@ -218,7 +226,7 @@ Parameters.prototype.parse = (argv = process) ->
         throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
       # params[main.name] ?= null
     params
-  # If they are action (other than help) and first arg is an action 
+  # If they are actions (other than help) and first arg is an action 
   if @config.actions.length and argv.length is index
     argv.push 'help'
   if @config.actions.length and argv[index].substr(0,1) isnt '-'

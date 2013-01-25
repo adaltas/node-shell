@@ -2,7 +2,7 @@
 should = require 'should'
 parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
 
-describe 'with actions', ->
+describe 'actions', ->
 
   it 'accept no main and no option', ->
     params = parameters
@@ -32,16 +32,16 @@ describe 'with actions', ->
     params = parameters actions: [
       name: 'start'
       main:
-        name: 'command'
+        name: 'commanda'
     ]
     params.parse(['start', 'my --command']).should.eql
       action: 'start'
-      command: 'my --command'
+      commanda: 'my --command'
     params.parse(['start']).should.eql
       action: 'start'
     params.stringify
       action: 'start'
-      command: 'my --command'
+      commanda: 'my --command'
     .should.eql ['start', 'my --command']
     params.stringify
       action: 'start'
@@ -57,3 +57,16 @@ describe 'with actions', ->
         action: 'hum'
         myparam: true
     ).should.throw "Invalid action 'hum'"
+
+  it 'throw error if no main and command provide extra arguments', ->
+    # Action with no option
+    params = parameters actions: [name: 'myaction']
+    (->
+      params.parse ['myaction', 'mymain']
+    ).should.throw "Fail to parse end of command \"mymain\""
+    # Action with one option
+    params = parameters actions: [name: 'myaction', options: [name:'arg']]
+    (->
+      params.parse ['myaction', '--arg', 'myarg', 'mymain']
+    ).should.throw "Fail to parse end of command \"mymain\""
+
