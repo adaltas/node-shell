@@ -90,6 +90,20 @@ command.stringify({
 );
 ```
 
+Help usage
+----------
+
+Here's an example on how to integrate the help functionnality.
+
+```javascript
+params = parameters(my_config).parse())
+if( params.action === 'help' ){
+  return console.log(parameters.help(params.command));
+}
+```
+
+This will satisfy a help command with or without an extra action such as `myscript help` and `myscript help myaction`.
+
 Development
 -----------
 
