@@ -80,3 +80,29 @@ describe 'actions', ->
       myaction: 'start'
     .should.eql ['start']
 
+  it 'mix with general options', ->
+    params = parameters
+      options: [
+        name: 'gopt'
+      ]
+      actions: [
+        name: 'start'
+        options: [
+          name: 'aopt'
+        ]
+      ]
+    params.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
+      gopt: 'toto'
+      action: 'start'
+      aopt: 'lulu'
+    console.log params.stringify
+      gopt: 'toto'
+      action: 'start'
+      aopt: 'lulu'
+    console.log ''
+    params.stringify
+      gopt: 'toto'
+      action: 'start'
+      aopt: 'lulu'
+    .should.eql ['--gopt', 'toto', 'start', '--aopt', 'lulu']
+
