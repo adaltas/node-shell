@@ -95,11 +95,6 @@ describe 'actions', ->
       gopt: 'toto'
       action: 'start'
       aopt: 'lulu'
-    console.log params.stringify
-      gopt: 'toto'
-      action: 'start'
-      aopt: 'lulu'
-    console.log ''
     params.stringify
       gopt: 'toto'
       action: 'start'

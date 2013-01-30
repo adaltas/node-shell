@@ -66,7 +66,6 @@ Parameters = (@config = {}) ->
         name: 'help'
         shortcut: 'h'
         description: "Display help information"
-  # console.log config.actions
   @
 
 ###
@@ -258,39 +257,36 @@ Parameters.prototype.stringify = (script, params) ->
     params = script
     script = null
   argv = if script then [process.execPath, script] else []
-  actions = []
-  index = 0
+  keys = {}
   stringify = (config) =>
-    for key, value of params
-      continue if key is @config.action or key is config.main?.name
-      option = config.options?[key]
-      if option
-        switch option.type
-          when 'boolean'
-            argv.push "--#{key}" if value
-          when 'string', 'integer'
-            argv.push "--#{key}"
-            argv.push "#{value}"
-      else
-        option = @config.options?[key]
-        throw new Error "Invalid option '#{key}'" unless option
-        switch option.type
-          when 'boolean'
-            argv.unshift "--#{key}" if value
-          when 'string', 'integer'
-            argv.unshift "#{value}"
-            argv.unshift "--#{key}"
+    for option in config.options
+      key = option.name
+      keys[key] = true
+      value = params[key]
+      unless value?
+        continue unless option.required
+        throw new Error "Required option \"#{key}\"" 
+      switch option.type
+        when 'boolean'
+          argv.push "--#{key}" if value
+        when 'string', 'integer'
+          argv.push "--#{key}"
+          argv.push "#{value}"
     if config.main
       value = params[config.main.name]
       throw new Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
+      keys[config.main.name] = value
       argv.push value if value?
+  stringify @config
   if params[@config.action]
     config = @config.actions[params[@config.action]]
     throw new Error "Invalid action '#{params[@config.action]}'" unless config
     argv.push params[@config.action]
-  else 
-    config = @config
-  stringify config
+    keys[@config.action] = params[@config.action]
+    stringify config
+  # Check keys
+  for key of params
+    throw new Error "Invalid option '#{key}'" unless keys[key]
   argv
 
 module.exports = (config) ->
