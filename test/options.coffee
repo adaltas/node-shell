@@ -31,7 +31,7 @@ describe 'options', ->
       command: 'my --command'
     .should.eql ['start', '--watch', __dirname, '--strict', 'my --command']
 
-  it 'work with no main', ->
+  it 'run without main', ->
     params = parameters 
       options: [
         name: 'myparam'
@@ -44,23 +44,14 @@ describe 'options', ->
     ['--myparam', 'my value'].should.eql params.stringify 
       myparam: 'my value'
 
-  it 'throw error if undefined', ->
-    params = parameters actions: [name: 'myaction']
-    (->
-      params.parse ['myaction', '--myoption', 'my', '--command']
-    ).should.throw "Invalid option 'myoption'"
-    (->
-      params.stringify 
-        action: 'myaction'
-        myoption: true
-    ).should.throw "Invalid option 'myoption'"
 
-  it 'should bypass a boolean option set to null', ->
-    params = parameters
-      options: [
-        name: 'detached'
-        shortcut: 'd'
-        type: 'boolean'
-      ]
-    [].should.eql params.stringify 
-      detached: null
+
+
+
+
+
+
+
+
+
+

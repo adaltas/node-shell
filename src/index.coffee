@@ -25,7 +25,8 @@ Parameters are defined with the following properties
 *   type:     one of 'string', 'boolean' or 'integer'
 
 ###
-Parameters = (@config = {}) ->
+Parameters = (config = {}) ->
+  @config = config
   # Sanitize options
   options = (action) ->
     for option in action.options
@@ -44,7 +45,8 @@ Parameters = (@config = {}) ->
   config.actions = [config.actions] unless Array.isArray config.actions
   makeAction = (action) ->
     config.actions.__defineGetter__ action.name, -> action
-    main = action.main
+    # main = action.main
+    action.strict ?= config.strict
     action.shortcuts = {}
     action.options ?= []
     action.options = [action.options] unless Array.isArray action.options
@@ -106,7 +108,10 @@ Parameters.prototype.parse = (argv = process) ->
       key = key.substring (if shortcut then 1 else 2), key.length
       key = config.shortcuts[key] if shortcut
       option = config.options?[key]
-      throw new Error "Invalid option '#{key}'" unless option
+      throw new Error "Invalid option '#{key}'" if config.strict and not option
+      unless option
+        type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'
+        option = name: key, type: type
       switch option.type
         when 'boolean'
           value = true
@@ -172,6 +177,7 @@ Parameters.prototype.stringify = (script, params) ->
       key = option.name
       keys[key] = true
       value = params[key]
+      # delete params[key]
       unless value?
         continue unless option.required
         throw new Error "Required option \"#{key}\"" 
@@ -183,6 +189,7 @@ Parameters.prototype.stringify = (script, params) ->
           argv.push "#{value}"
     if config.main
       value = params[config.main.name]
+      # delete params[config.main.name]
       throw new Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
       keys[config.main.name] = value
       argv.push value if value?
@@ -194,8 +201,17 @@ Parameters.prototype.stringify = (script, params) ->
     keys[@config.action] = params[@config.action]
     stringify config
   # Check keys
-  for key of params
-    throw new Error "Invalid option '#{key}'" unless keys[key]
+  for key, value of params
+    # throw new Error "Invalid option '#{key}'" unless keys[key]
+    continue if keys[key]
+    throw new Error "Invalid option '#{key}'" if @config.strict
+    if typeof value is 'boolean'
+      argv.push "--#{key}" if value
+    else if typeof value is 'undefined' or value is null
+      # nothing
+    else
+      argv.push "--#{key}"
+      argv.push "#{value}"
   argv
 
 ###
