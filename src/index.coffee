@@ -70,97 +70,6 @@ Parameters = (@config = {}) ->
 
 ###
 
-`help([action])`
-----------------
-
-Return a string describing the usage of the overall command or one of its action.
-
-###
-Parameters.prototype.help = (action) ->
-    command = @config.actions[action]
-    describeOption = (option) ->
-      content = pad "      -#{option.shortcut} --#{option.name}", 26
-      content += option.description
-      content += '\n'
-    describeCommand = (command) ->
-      content = pad "    #{command.name}", 24
-      content += command.description
-      content += '\n'
-      if command.options then for option in command.options
-        content += describeOption option
-      if command.main
-        content += pad "      #{command.main.name}", 26
-        content += command.main.description
-        content += '\n'
-      content
-    if action and action isnt 'help'
-      command = @config.actions[action]
-      synopsis = @config.name + ' ' + action
-      if command.options.length
-        options = 'options...'
-        options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
-        synopsis += " #{options}"
-      if command.main
-        main = "#{command.main.name}"
-        main = "[#{main}]" unless command.main.required
-        synopsis += " #{main}"
-      content = """
-      NAME
-          #{@config.name} #{action} - #{command.description}
-      SYNOPSIS
-          #{synopsis}
-      DESCRIPTION
-
-      """
-      content += describeCommand command
-    else
-      # Introduce the starstop command
-      content = """
-      NAME
-          #{@config.name} - #{@config.description}
-
-      """
-      content += 'SYNOPSIS\n'
-      content += "    #{@config.name}"
-      content += ' action' if @config.actions.length
-      content += ' [options...]'
-      # content += ' command' if @config.main or @config.actions.filter((el) -> el.main).length
-      content += '\n'
-      if @config.actions.length
-        content += '    where action is one of'
-        content += '\n'
-      for action in @config.actions
-        content += pad "      #{action.name}", 24
-        content += action.description
-        content += '\n'
-      content += 'DESCRIPTION\n'
-      # Describe each option
-      # content += describeCommand action
-      for option in @config.options
-        content += pad "    -#{option.shortcut} --#{option.name}", 24
-        content += option.description
-        content += '\n'
-      if @config.main
-        content += pad "    #{@config.main.name}", 24
-        content += @config.main.description
-        content += '\n'
-      # Describe each action
-      for action in @config.actions
-        content += describeCommand action
-      # Add examples
-      content += 'EXAMPLES\n'
-      if @config.actions.length
-        content += "    #{@config.name} help       Show this message"
-      else
-        content += "    #{@config.name} --help     Show this message"
-      content += '\n'
-      # for action of @config.actions
-      #   content += "    #{@config.name} help #{action}    Describe the #{action} action"
-      # content += '\n'
-      content
-
-###
-
 `parse([argv])`
 ----------------
 
@@ -288,6 +197,97 @@ Parameters.prototype.stringify = (script, params) ->
   for key of params
     throw new Error "Invalid option '#{key}'" unless keys[key]
   argv
+
+###
+
+`help([action])`
+----------------
+
+Return a string describing the usage of the overall command or one of its action.
+
+###
+Parameters.prototype.help = (action) ->
+    command = @config.actions[action]
+    describeOption = (option) ->
+      content = pad "      -#{option.shortcut} --#{option.name}", 26
+      content += option.description
+      content += '\n'
+    describeCommand = (command) ->
+      content = pad "    #{command.name}", 24
+      content += command.description
+      content += '\n'
+      if command.options then for option in command.options
+        content += describeOption option
+      if command.main
+        content += pad "      #{command.main.name}", 26
+        content += command.main.description
+        content += '\n'
+      content
+    if action and action isnt 'help'
+      command = @config.actions[action]
+      synopsis = @config.name + ' ' + action
+      if command.options.length
+        options = 'options...'
+        options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
+        synopsis += " #{options}"
+      if command.main
+        main = "#{command.main.name}"
+        main = "[#{main}]" unless command.main.required
+        synopsis += " #{main}"
+      content = """
+      NAME
+          #{@config.name} #{action} - #{command.description}
+      SYNOPSIS
+          #{synopsis}
+      DESCRIPTION
+
+      """
+      content += describeCommand command
+    else
+      # Introduce the starstop command
+      content = """
+      NAME
+          #{@config.name} - #{@config.description}
+
+      """
+      content += 'SYNOPSIS\n'
+      content += "    #{@config.name}"
+      content += ' action' if @config.actions.length
+      content += ' [options...]'
+      # content += ' command' if @config.main or @config.actions.filter((el) -> el.main).length
+      content += '\n'
+      if @config.actions.length
+        content += '    where action is one of'
+        content += '\n'
+      for action in @config.actions
+        content += pad "      #{action.name}", 24
+        content += action.description
+        content += '\n'
+      content += 'DESCRIPTION\n'
+      # Describe each option
+      # content += describeCommand action
+      for option in @config.options
+        content += pad "    -#{option.shortcut} --#{option.name}", 24
+        content += option.description
+        content += '\n'
+      if @config.main
+        content += pad "    #{@config.main.name}", 24
+        content += @config.main.description
+        content += '\n'
+      # Describe each action
+      for action in @config.actions
+        content += describeCommand action
+      # Add examples
+      content += 'EXAMPLES\n'
+      if @config.actions.length
+        content += "    #{@config.name} help       Show this message"
+      else
+        content += "    #{@config.name} --help     Show this message"
+      content += '\n'
+      # for action of @config.actions
+      #   content += "    #{@config.name} help #{action}    Describe the #{action} action"
+      # content += '\n'
+      content
 
 module.exports = (config) ->
   new Parameters config
