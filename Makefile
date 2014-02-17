@@ -7,7 +7,7 @@ doc: build
 	@cp -rp doc/* $(PARAMETERS_DOC)
 
 test: build
-	@NODE_ENV=test ./node_modules/.bin/mocha --compilers coffee:coffee-script \
+	@NODE_ENV=test ./node_modules/.bin/mocha --compilers coffee:coffee-script/register \
 		--reporter $(REPORTER)
 
 coverage: build
