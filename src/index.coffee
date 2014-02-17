@@ -2,7 +2,7 @@
 path = require 'path'
 pad = require 'pad' 
 
-types = ['string', 'boolean', 'integer']
+types = ['string', 'boolean', 'integer', 'array']
 
 ###
 parameters(config)
@@ -120,6 +120,8 @@ Parameters.prototype.parse = (argv = process) ->
           value = argv[index++]
         when 'integer'
           value = parseInt argv[index++], 10
+        when 'array'
+          value = argv[index++].split ','
       params[key] = value
     # Check against required options
     options = config.options
@@ -188,6 +190,9 @@ Parameters.prototype.stringify = (script, params) ->
         when 'string', 'integer'
           argv.push "--#{key}"
           argv.push "#{value}"
+        when 'array'
+          argv.push "--#{key}"
+          argv.push "#{value.join ','}"
     if config.main
       value = params[config.main.name]
       # delete params[config.main.name]

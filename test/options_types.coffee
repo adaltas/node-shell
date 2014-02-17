@@ -53,7 +53,7 @@ describe 'options type', ->
 
   describe 'integer', ->
 
-    it 'handle integer option', ->
+    it 'handle shortcut', ->
       params = parameters actions: [
         name: 'start'
         options: [
@@ -69,5 +69,24 @@ describe 'options type', ->
         action: 'start'
         integer: 5
       .should.eql ['start', '--integer', '5']
+
+  describe 'array', ->
+
+    it 'handle shortcut', ->
+      params = parameters actions: [
+        name: 'start'
+        options: [
+          name: 'array'
+          shortcut: 'a'
+          type: 'array'
+        ]
+      ]
+      params.parse(['start', '-a', '3,2,1']).should.eql
+        action: 'start'
+        array: ['3','2','1']
+      params.stringify 
+        action: 'start'
+        array: ['3','2','1']
+      .should.eql ['start', '--array', '3,2,1']
 
 
