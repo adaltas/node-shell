@@ -22,7 +22,7 @@ Parameters are defined with the following properties
 *   label:    not yet implemented, see name
 *   shortcut: name of the one dash parameter in the command (eg "-n"), must be one charactere
 *   required: boolean, throw an exception when true and the parameter is not defined
-*   type:     one of 'string', 'boolean' or 'integer'
+*   type:     one of 'string', 'boolean', 'integer' or 'array'
 
 ###
 Parameters = (config = {}) ->
