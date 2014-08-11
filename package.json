@@ -2,7 +2,7 @@
   "name": "parameters",
   "version": "0.0.6",
   "description": "Command line arguments parser and stringifier",
-  "keywords": ["argument", "arg", "parameter", "param", "option", "command", "cli"],
+  "keywords": ["argument", "arg", "parameter", "param", "option", "command", "cli", "getopt", "parser"],
   "homepage": "http://www.adaltas.com/projects/node-parameters/",
   "author": "David Worms <david@adaltas.com>",
   "contributors": [],

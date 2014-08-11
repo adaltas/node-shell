@@ -230,6 +230,7 @@ Return a string describing the usage of the overall command or one of its action
 ###
 Parameters.prototype.help = (action) ->
     command = @config.actions[action]
+    throw Error "Invalid command \"undefined\"" if action? and not command
     describeOption = (option) ->
       content = pad "      -#{option.shortcut} --#{option.name}", 26
       content += option.description

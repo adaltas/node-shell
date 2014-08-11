@@ -170,6 +170,14 @@ describe 'help', ->
 
       """
 
+    it 'error if action isnt defined', ->
+      params = parameters
+        name: 'myscript'
+        actions:[]
+      try
+        params.help('undefined')
+      catch e then e.message.should.eql 'Invalid command "undefined"'
+
     it 'display main without braket if required', ->
       params = parameters
         name: 'myscript'
