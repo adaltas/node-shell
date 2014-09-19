@@ -1,25 +1,26 @@
 [![Build Status](https://secure.travis-ci.org/wdavidw/node-parameters.png)](http://travis-ci.org/wdavidw/node-parameters)
 
+# `npm install parameters`
+
 <pre>
-                 _                                               _                
-                | |                                             | |               
- _ __   ___   __| | ___     _ __   __ _ _ __ __ _ _ __ ___   ___| |_ ___ _ __ ___ 
-| '_ \ / _ \ / _` |/ _ \   | '_ \ / _` | '__/ _` | '_ ` _ \ / _ \ __/ _ \ '__/ __|
-| | | | (_) | (_| |  __/   | |_) | (_| | | | (_| | | | | | |  __/ ||  __/ |  \__ \
-|_| |_|\___/ \__,_|\___|   | .__/ \__,_|_|  \__,_|_| |_| |_|\___|\__\___|_|  |___/
-                           | |                                                    
-                           |_| 
+                 _                                             _                
+                | |                                           | |               
+ _ __   ___   __| | ___   _ __   __ _ _ __ __ _ _ __ ___   ___| |_ ___ _ __ ___ 
+| '_ \ / _ \ / _` |/ _ \_| '_ \ / _` | '__/ _` | '_ ` _ \ / _ \ __/ _ \ '__/ __|
+| | | | (_) | (_| |  __/_| |_) | (_| | | | (_| | | | | | |  __/ ||  __/ |  \__ \
+|_| |_|\___/ \__,_|\___| | .__/ \__,_|_|  \__,_|_| |_| |_|\___|\__\___|_|  |___/
+                         | |                                                    
+                         |_| 
 
 </pre>
 
 Node parameters is sugar for parsing typical unix command line options. 
 
-*   Standard and actions-based command lines (think `git pull ...`)
+*   Standard and commands-based command lines (think `git pull ...`)
 *   Asymetric: parse and stringify
 *   Complete tests and samples
 
-Standard command line example
------------------------------
+## Standard command line example
 
 ```javascript
 command = parameters({
@@ -51,14 +52,13 @@ command.stringify({
 );
 ```
 
-Action-based command line example
----------------------------------
+## Command-based command line example
 
 ```javascript
 command = parameters({
   name: 'server',
   description: 'Manage a web server',
-  actions: [{
+  commands: [{
     name: 'start',
     description: 'Start a web server',
     options: [{
@@ -76,13 +76,13 @@ console.log( command.help() );
 command.parse(
   ['node', 'server.js', 'start', '--host', '127.0.0.1', '-p', '80']
 ).should.eql({
-  action: 'start',
+  command: 'start',
   host: '127.0.0.1',
   port: 80
 });
 // Create a command
 command.stringify({
-  action: 'start',
+  command: 'start',
   host: '127.0.0.1',
   port: 80
 }).should.eql(
@@ -97,18 +97,19 @@ Here's an example on how to integrate the help functionnality.
 
 ```javascript
 params = parameters(my_config).parse())
-if( params.action === 'help' ){
+if( params.command === 'help' ){
   return console.log(parameters.help(params.command));
 }
 ```
 
-This will satisfy a help command with or without an extra action such as `myscript help` and `myscript help myaction`.
+This will satisfy a help command with or without an extra command such as
+`myscript help` and `myscript help mycommand`.
 
 Development
 -----------
 
-Tests are executed with mocha. To install it, simple run `npm install`, it will install
-mocha and its dependencies in your project "node_modules" directory.
+Tests are executed with mocha. To install it, simple run `npm install`, it will
+install mocha and its dependencies in your project "node_modules" directory.
 
 To run the tests:
 ```bash

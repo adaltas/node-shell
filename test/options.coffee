@@ -5,10 +5,10 @@ parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'sr
 describe 'options', ->
 
   it 'handle multiple options', ->
-    params = parameters actions: [
+    params = parameters commands: [
       name: 'start'
       main: 
-        name: 'command'
+        name: 'my_argument'
         required: true
       options: [
         name: 'watch'
@@ -19,17 +19,17 @@ describe 'options', ->
         type: 'boolean'
       ]
     ]
-    params.parse(['start', '--watch', __dirname, '-s', 'my', '--command']).should.eql
-      action: 'start'
+    params.parse(['start', '--watch', __dirname, '-s', 'my', '--value']).should.eql
+      command: 'start'
       watch: __dirname
       strict: true
-      command: 'my --command'
+      my_argument: 'my --value'
     params.stringify 
-      action: 'start'
+      command: 'start'
       watch: __dirname
       strict: true
-      command: 'my --command'
-    .should.eql ['start', '--watch', __dirname, '--strict', 'my --command']
+      my_argument: 'my --value'
+    .should.eql ['start', '--watch', __dirname, '--strict', 'my --value']
 
   it 'run without main', ->
     params = parameters 

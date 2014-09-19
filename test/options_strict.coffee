@@ -21,22 +21,22 @@ describe 'options strict', ->
       params.parse ['-c']
     ).should.throw "Invalid option 'c'"
 
-  it 'throw error for an undefined argument inside an action', ->
-    params = parameters strict: true, actions: [name: 'myaction']
+  it 'throw error for an undefined argument inside an command', ->
+    params = parameters strict: true, commands: [name: 'mycommand']
     (->
-      params.parse ['myaction', '--myoption', 'my', '--command']
+      params.parse ['mycommand', '--myoption', 'my', '--command']
     ).should.throw "Invalid option 'myoption'"
     (->
       params.stringify
-        action: 'myaction'
+        command: 'mycommand'
         myoption: true
     ).should.throw "Invalid option 'myoption'"
 
-  it 'throw error for an undefined shortcut inside an action', ->
+  it 'throw error for an undefined shortcut inside an command', ->
     # Test a boolean (no value) argument
-    params = parameters strict: true, actions: [name: 'myaction']
+    params = parameters strict: true, commands: [name: 'mycommand']
     (->
-      params.parse ['myaction', '-c']
+      params.parse ['mycommand', '-c']
     ).should.throw "Invalid option 'c'"
 
 

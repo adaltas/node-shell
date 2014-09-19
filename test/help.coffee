@@ -4,35 +4,35 @@ parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'sr
 
 describe 'help', ->
 
-  it 'handle an empty action as help', ->
-    params = parameters actions: [name: 'help']
+  it 'handle an empty command as help', ->
+    params = parameters commands: [name: 'help']
     params.parse([]).should.eql
-      action: 'help'
+      command: 'help'
 
-  it 'handle an empty action as even if help is not defined', ->
-    params = parameters actions: [name: 'fake']
+  it 'handle an empty command as even if help is not defined', ->
+    params = parameters commands: [name: 'fake']
     params.parse([]).should.eql
-      action: 'help'
+      command: 'help'
 
   it 'handle help command', ->
-    params = parameters actions: [name: 'help']
+    params = parameters commands: [name: 'help']
     params.parse(['help']).should.eql
-      action: 'help'
+      command: 'help'
     params.stringify
-      action: 'help'
+      command: 'help'
     .should.eql ['help']
 
-  it 'handle help command with an action', ->
-    params = parameters actions: [name: 'toto']
+  it 'handle help command with a command', ->
+    params = parameters commands: [name: 'toto']
     params.parse(['help', 'start']).should.eql
-      action: 'help'
-      command: 'start'
+      command: 'help'
+      name: 'start'
     params.stringify
-      action: 'help'
-      command: 'start'
+      command: 'help'
+      name: 'start'
     .should.eql ['help', 'start']
 
-  describe 'without action', ->
+  describe 'without command', ->
 
     it 'should print multiple options', ->
       params = parameters
@@ -72,15 +72,15 @@ describe 'help', ->
 
       """
 
-  describe 'with action', ->
+  describe 'with command', ->
 
-    it 'should print multiple actions with multiple options', ->
+    it 'should print multiple commands with multiple options', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions: [
+        commands: [
           name: 'start'
-          description: 'Description for the start action'
+          description: 'Description for the start command'
           main: 
             name: 'command'
             description: 'Command in start' 
@@ -101,7 +101,7 @@ describe 'help', ->
           ]
         ,
           name: 'stop'
-          description: 'Description for the stop action'
+          description: 'Description for the stop command'
           main:
             name: 'command'
             description: 'Command in stop'
@@ -119,36 +119,36 @@ describe 'help', ->
       NAME
           myscript - Some description for myscript
       SYNOPSIS
-          myscript action [options...]
-          where action is one of
-            start             Description for the start action
-            stop              Description for the stop action
+          myscript command [options...]
+          where command is one of
+            start             Description for the start command
+            stop              Description for the stop command
             help              Display help information about myscript
       DESCRIPTION
-          start               Description for the start action
+          start               Description for the start command
             -s --string         String option in start
             -b --boolean        Boolean option in start
             -i --integer        Integer option in start
             command             Command in start
-          stop                Description for the stop action
+          stop                Description for the stop command
             -s --string         String option in stop
             -b --boolean        Boolean option in stop
             command             Command in stop
           help                Display help information about myscript
-            command             Help about a specific action
+            name                Help about a specific command
       EXAMPLES
           myscript help       Show this message
 
       """
       params.help().should.eql params.help 'help'
 
-    it 'describe an action', ->
+    it 'describe an command', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions:[
+        commands:[
           name: 'start'
-          description: 'Description for the start action'
+          description: 'Description for the start command'
           main: 
             name: 'command'
             description: 'Command in start' 
@@ -160,20 +160,20 @@ describe 'help', ->
         ]
       params.help('start').should.eql """
       NAME
-          myscript start - Description for the start action
+          myscript start - Description for the start command
       SYNOPSIS
           myscript start [options...] [command]
       DESCRIPTION
-          start               Description for the start action
+          start               Description for the start command
             -s --string         String option in start
             command             Command in start
 
       """
 
-    it 'error if action isnt defined', ->
+    it 'error if command isnt defined', ->
       params = parameters
         name: 'myscript'
-        actions:[]
+        commands:[]
       try
         params.help('undefined')
       catch e then e.message.should.eql 'Invalid command "undefined"'
@@ -182,9 +182,9 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions: [
+        commands: [
           name: 'start'
-          description: 'Description for the start action'
+          description: 'Description for the start command'
           main: 
             name: 'command'
             description: 'Command in start'
@@ -192,11 +192,11 @@ describe 'help', ->
         ]
       params.help('start').should.eql """
       NAME
-          myscript start - Description for the start action
+          myscript start - Description for the start command
       SYNOPSIS
           myscript start command
       DESCRIPTION
-          start               Description for the start action
+          start               Description for the start command
             command             Command in start
 
       """
@@ -205,9 +205,9 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        actions: [
+        commands: [
           name: 'start'
-          description: 'Description for the start action'
+          description: 'Description for the start command'
           options: [
             name: 'optional'
             shortcut: 'o'
@@ -221,11 +221,11 @@ describe 'help', ->
         ]
       params.help('start').should.eql """
       NAME
-          myscript start - Description for the start action
+          myscript start - Description for the start command
       SYNOPSIS
           myscript start options...
       DESCRIPTION
-          start               Description for the start action
+          start               Description for the start command
             -o --optional       Optional option
             -r --required       Required option
 

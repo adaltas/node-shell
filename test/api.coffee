@@ -6,14 +6,14 @@ describe 'api', ->
 
   describe 'constructor', ->
     
-    it 'define action and options as an object or an array', ->
-      asArrays = parameters actions: [
+    it 'define command and options as an object or an array', ->
+      asArrays = parameters commands: [
         name: 'start'
         options: [
           name: 'myparam'
         ]
       ]
-      asObjects = parameters actions:
+      asObjects = parameters commands:
         name: 'start'
         options:
           name: 'myparam'
@@ -22,7 +22,7 @@ describe 'api', ->
   describe 'parse', ->
     
     it 'should not alter params', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'watch'
@@ -36,12 +36,12 @@ describe 'api', ->
   describe 'stringify', ->
 
     it 'should prefix with node path and executed script', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'myparam'
         ]
       ]
       [process.execPath, './bin/myscript', 'start', '--myparam', 'my value'].should.eql params.stringify './bin/myscript',
-        action: 'start'
+        command: 'start'
         myparam: 'my value'

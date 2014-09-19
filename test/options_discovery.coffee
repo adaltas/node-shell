@@ -11,13 +11,13 @@ describe 'options discovery', ->
     ['--myoption', 'my value'].should.eql params.stringify 
       myoption: 'my value'
 
-  it 'discover unregistered options in action', ->
-    params = parameters actions: [name: 'myaction']
-    params.parse(['myaction', '--myoption', 'my value']).should.eql
-      action: 'myaction'
+  it 'discover unregistered options in command', ->
+    params = parameters commands: [name: 'mycommand']
+    params.parse(['mycommand', '--myoption', 'my value']).should.eql
+      command: 'mycommand'
       myoption: 'my value'
-    ['myaction', '--myoption', 'my value'].should.eql params.stringify
-      action: 'myaction'
+    ['mycommand', '--myoption', 'my value'].should.eql params.stringify
+      command: 'mycommand'
       myoption: 'my value'
 
   it 'deal with boolean', ->

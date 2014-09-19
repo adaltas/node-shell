@@ -2,82 +2,82 @@
 should = require 'should'
 parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
 
-describe 'actions', ->
+describe 'commands', ->
 
   it 'accept no main and no option', ->
     params = parameters
-      actions: [name: 'start']
+      commands: [name: 'start']
     params.parse(['start']).should.eql
-      action: 'start'
+      command: 'start'
     params.stringify
-      action: 'start'
+      command: 'start'
     .should.eql ['start']
 
   it 'accept no main and a string option', ->
-    params = parameters actions: [
+    params = parameters commands: [
       name: 'start'
       options: [
         name: 'myparam'
       ]
     ]
     params.parse(['start', '--myparam', 'my value']).should.eql
-      action: 'start'
+      command: 'start'
       myparam: 'my value'
     params.stringify
-      action: 'start'
+      command: 'start'
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
   it 'accept an optional main and no option', ->
-    params = parameters actions: [
+    params = parameters commands: [
       name: 'start'
       main:
         name: 'commanda'
     ]
     params.parse(['start', 'my --command']).should.eql
-      action: 'start'
+      command: 'start'
       commanda: 'my --command'
     params.parse(['start']).should.eql
-      action: 'start'
+      command: 'start'
     params.stringify
-      action: 'start'
+      command: 'start'
       commanda: 'my --command'
     .should.eql ['start', 'my --command']
     params.stringify
-      action: 'start'
+      command: 'start'
     .should.eql ['start']
 
-  it 'throw error if action is undefined', ->
-    params = parameters actions: [name: 'myaction']
+  it 'throw error if command is undefined', ->
+    params = parameters commands: [name: 'myaction']
     (->
       params.parse ['hum', '-s', 'my', '--command']
-    ).should.throw "Invalid action 'hum'"
+    ).should.throw "Invalid command 'hum'"
     (->
       params.stringify 
-        action: 'hum'
+        command: 'hum'
         myparam: true
-    ).should.throw "Invalid action 'hum'"
+    ).should.throw "Invalid command 'hum'"
 
   it 'throw error if no main and command provide extra arguments', ->
-    # Action with no option
-    params = parameters actions: [name: 'myaction']
+    # Command with no option
+    params = parameters commands: [name: 'mycommand']
     (->
-      params.parse ['myaction', 'mymain']
+      params.parse ['mycommand', 'mymain']
     ).should.throw "Fail to parse end of command \"mymain\""
-    # Action with one option
-    params = parameters actions: [name: 'myaction', options: [name:'arg']]
+    # Command with one option
+    params = parameters commands: [name: 'mycommand', options: [name:'arg']]
     (->
-      params.parse ['myaction', '--arg', 'myarg', 'mymain']
+      params.parse ['mycommand', '--arg', 'myarg', 'mymain']
     ).should.throw "Fail to parse end of command \"mymain\""
 
-  it 'customize action name', ->
+  it 'customize command name', ->
     params = parameters
-      action: 'myaction'
-      actions: [name: 'start']
+      command: 'mycommand'
+      commands: [name: 'start']
     params.parse(['start']).should.eql
-      myaction: 'start'
+      mycommand: 'start'
     params.stringify
-      myaction: 'start'
+      mycommand: 'start'
     .should.eql ['start']
 
   it 'mix with general options', ->
@@ -85,7 +85,7 @@ describe 'actions', ->
       options: [
         name: 'gopt'
       ]
-      actions: [
+      commands: [
         name: 'start'
         options: [
           name: 'aopt'
@@ -93,11 +93,11 @@ describe 'actions', ->
       ]
     params.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
       gopt: 'toto'
-      action: 'start'
+      command: 'start'
       aopt: 'lulu'
     params.stringify
       gopt: 'toto'
-      action: 'start'
+      command: 'start'
       aopt: 'lulu'
     .should.eql ['--gopt', 'toto', 'start', '--aopt', 'lulu']
 

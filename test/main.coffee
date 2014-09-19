@@ -4,63 +4,65 @@ parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'sr
 
 describe 'main', ->
 
-  it 'may follow action without any option', ->
-    params = parameters actions: [
-      name: 'myaction'
+  it 'may follow command without any option', ->
+    params = parameters commands: [
+      name: 'mycommand'
       main: 
-        name: 'command'
+        name: 'my_argument'
         required: true
     ]
-    params.parse(['myaction', 'mycommand']).should.eql
-      action: 'myaction'
+    params.parse(['mycommand', 'my value']).should.eql
       command: 'mycommand'
+      my_argument: 'my value'
     params.stringify 
-      action: 'myaction'
       command: 'mycommand'
-    .should.eql ['myaction', 'mycommand']
+      my_argument: 'my value'
+    .should.eql ['mycommand', 'my value']
 
   it 'may be optional', ->
-    params = parameters actions: [
-      name: 'myaction'
+    params = parameters commands: [
+      name: 'mycommand'
       main: 
-        name: 'command'
+        name: 'my_argument'
     ]
-    params.parse(['myaction']).should.eql
-      action: 'myaction'
+    params.parse(['mycommand']).should.eql
+      command: 'mycommand'
     params.stringify 
-      action: 'myaction'
-    .should.eql ['myaction']
+      command: 'mycommand'
+    .should.eql ['mycommand']
 
   it 'may be required', ->
-    params = parameters actions: [
-      name: 'myaction'
+    params = parameters commands: [
+      name: 'mycommand'
       main: 
-        name: 'command'
+        name: 'my_argument'
         required: true
     ]
-    params.parse(['myaction', 'my --command']).should.eql
-      action: 'myaction'
-      command: 'my --command'
+    params.parse(['mycommand', 'my --value']).should.eql
+      command: 'mycommand'
+      my_argument: 'my --value'
     (->
-      params.parse ['myaction']
-    ).should.throw 'Required main argument "command"'
+      params.parse ['mycommand']
+    ).should.throw 'Required main argument "my_argument"'
     params.stringify
-      action: 'myaction'
-      command: 'my --command'
-    .should.eql ['myaction', 'my --command']
+      command: 'mycommand'
+      my_argument: 'my --value'
+    .should.eql ['mycommand', 'my --value']
     (->
       params.stringify
-        action: 'myaction'
-    ).should.throw 'Required main argument "command"'
+        command: 'mycommand'
+    ).should.throw 'Required main argument "my_argument"'
 
   it 'work with no option', ->
     params = parameters
       main:
-        name: 'command'
+        name: 'my_argument'
     params.parse(['my --command']).should.eql
-      command: 'my --command'
+      my_argument: 'my --command'
     params.parse([]).should.eql {}
     params.stringify 
-      command: 'my --command'
+      my_argument: 'my --command'
     .should.eql ['my --command']
     params.stringify({}).should.eql []
+
+

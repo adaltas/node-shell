@@ -7,7 +7,7 @@ describe 'options type', ->
   describe 'string', ->
 
     it 'handle string option', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'watch'
@@ -15,17 +15,17 @@ describe 'options type', ->
         ]
       ]
       params.parse(['start', '--watch', __dirname]).should.eql
-        action: 'start'
+        command: 'start'
         watch: __dirname
       params.stringify 
-        action: 'start'
+        command: 'start'
         watch: __dirname
       .should.eql ['start', '--watch', __dirname]
 
   describe 'boolean', ->
 
     it 'handle boolean option', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'strict'
@@ -34,10 +34,10 @@ describe 'options type', ->
         ]
       ]
       params.parse(['start', '-s']).should.eql
-        action: 'start'
+        command: 'start'
         strict: true
       params.stringify 
-        action: 'start'
+        command: 'start'
         strict: true
       .should.eql ['start', '--strict']
 
@@ -54,7 +54,7 @@ describe 'options type', ->
   describe 'integer', ->
 
     it 'handle shortcut', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'integer'
@@ -63,17 +63,17 @@ describe 'options type', ->
         ]
       ]
       params.parse(['start', '-i', '5']).should.eql
-        action: 'start'
+        command: 'start'
         integer: 5
       params.stringify 
-        action: 'start'
+        command: 'start'
         integer: 5
       .should.eql ['start', '--integer', '5']
 
   describe 'array', ->
 
     it 'handle shortcut', ->
-      params = parameters actions: [
+      params = parameters commands: [
         name: 'start'
         options: [
           name: 'array'
@@ -82,10 +82,10 @@ describe 'options type', ->
         ]
       ]
       params.parse(['start', '-a', '3,2,1']).should.eql
-        action: 'start'
+        command: 'start'
         array: ['3','2','1']
       params.stringify 
-        action: 'start'
+        command: 'start'
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
 

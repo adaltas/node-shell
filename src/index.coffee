@@ -10,12 +10,12 @@ parameters(config)
 
 About options
 -------------
-Options are defined at the "config" level or for each action.
+Options are defined at the "config" level or for each command.
 
 About main
 ----------
 Main is what's left after the options. Like options, "main" is 
-defined at the "config" level or for each action.
+defined at the "config" level or for each command.
 
 Parameters are defined with the following properties
 *   name:     name of the two dash parameter in the command (eg "--my_name") and in the returned parse object unless label is defined.
@@ -28,41 +28,40 @@ Parameters are defined with the following properties
 Parameters = (config = {}) ->
   @config = config
   # Sanitize options
-  options = (action) ->
-    for option in action.options
+  options = (command) ->
+    for option in command.options
       # Access option by key
       do (option) ->
-        action.options.__defineGetter__ option.name, -> option
+        command.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
       throw new Error "Invalid type \"#{option.type}\"" if types.indexOf(option.type) is -1
-      action.shortcuts[option.shortcut] = option.name
-  # An object where key are action and values are object map between shortcuts and names
+      command.shortcuts[option.shortcut] = option.name
+  # An object where key are command and values are object map between shortcuts and names
   config.shortcuts = {}
   config.options ?= []
   options config
-  config.action ?= 'action'
-  config.actions ?= []
-  config.actions = [config.actions] unless Array.isArray config.actions
-  makeAction = (action) ->
-    config.actions.__defineGetter__ action.name, -> action
-    # main = action.main
-    action.strict ?= config.strict
-    action.shortcuts = {}
-    action.options ?= []
-    action.options = [action.options] unless Array.isArray action.options
-    options action
-  for action in config.actions
-    makeAction action
-  unless config.actions.help
-    if config.actions.length
-      actions = 
+  config.command ?= 'command'
+  config.commands ?= []
+  config.commands = [config.commands] unless Array.isArray config.commands
+  makeCommand = (command) ->
+    config.commands.__defineGetter__ command.name, -> command
+    command.strict ?= config.strict
+    command.shortcuts = {}
+    command.options ?= []
+    command.options = [command.options] unless Array.isArray command.options
+    options command
+  for command in config.commands
+    makeCommand command
+  unless config.commands.help
+    if config.commands.length
+      commands = 
         name: 'help'
         description: "Display help information about #{config.name}"
         main:
-          name: 'command'
-          description: 'Help about a specific action'
-      config.actions.push actions
-      makeAction actions
+          name: 'name'
+          description: 'Help about a specific command'
+      config.commands.push commands
+      makeCommand commands
     else 
       config.options.push 
         name: 'help'
@@ -136,9 +135,9 @@ Parameters.prototype.parse = (argv = process) ->
       if config.main
         params[config.main.name] = main
       else
-        if config.actions?[argv[index]]
-          config = @config.actions[argv[index]]
-          params[@config.action] = argv[index++]
+        if config.commands?[argv[index]]
+          config = @config.commands[argv[index]]
+          params[@config.command] = argv[index++]
           parse config, argv
         else
           throw new Error "Fail to parse end of command \"#{main}\""
@@ -149,14 +148,14 @@ Parameters.prototype.parse = (argv = process) ->
         throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
       # params[main.name] ?= null
     params
-  # If they are actions (other than help) and no arguments are provided,
+  # If they are commands (other than help) and no arguments are provided,
   # we default to the help action
-  if @config.actions.length and argv.length is index
+  if @config.commands.length and argv.length is index
     argv.push 'help'
-  if @config.actions.length and argv[index].substr(0,1) isnt '-'
-    config = @config.actions[argv[index]]
-    throw new Error "Invalid action '#{argv[index]}'" unless config
-    params[@config.action] = argv[index++]
+  if @config.commands.length and argv[index].substr(0,1) isnt '-'
+    config = @config.commands[argv[index]]
+    throw new Error "Invalid command '#{argv[index]}'" unless config
+    params[@config.command] = argv[index++]
   else
     config = @config
   parse config, argv
@@ -200,11 +199,11 @@ Parameters.prototype.stringify = (script, params) ->
       keys[config.main.name] = value
       argv.push value if value?
   stringify @config
-  if params[@config.action]
-    config = @config.actions[params[@config.action]]
-    throw new Error "Invalid action '#{params[@config.action]}'" unless config
-    argv.push params[@config.action]
-    keys[@config.action] = params[@config.action]
+  if params[@config.command]
+    config = @config.commands[params[@config.command]]
+    throw new Error "Invalid command '#{params[@config.command]}'" unless config
+    argv.push params[@config.command]
+    keys[@config.command] = params[@config.command]
     stringify config
   # Check keys
   for key, value of params
@@ -222,52 +221,54 @@ Parameters.prototype.stringify = (script, params) ->
 
 ###
 
-`help([action])`
+`help([command])`
 ----------------
 
-Return a string describing the usage of the overall command or one of its action.
+Return a string describing the usage of the overall command or one of its
+command.
 
 ###
-Parameters.prototype.help = (action) ->
-    command = @config.actions[action]
-    throw Error "Invalid command \"undefined\"" if action? and not command
+Parameters.prototype.help = (command) ->
+    config = @config.commands[command]
+    throw Error "Invalid command \"#{command}\"" if command? and not config
     describeOption = (option) ->
       content = pad "      -#{option.shortcut} --#{option.name}", 26
       content += option.description
       content += '\n'
-    describeCommand = (command) ->
-      content = pad "    #{command.name}", 24
-      content += command.description
+    describeCommand = (config) ->
+      content = pad "    #{config.name}", 24
+      content += config.description
       content += '\n'
-      if command.options then for option in command.options
+      if config.options then for option in config.options
         content += describeOption option
-      if command.main
-        content += pad "      #{command.main.name}", 26
-        content += command.main.description
+      if config.main
+        content += pad "      #{config.main.name}", 26
+        content += config.main.description
         content += '\n'
       content
-    if action and action isnt 'help'
-      command = @config.actions[action]
-      synopsis = @config.name + ' ' + action
-      if command.options.length
+    if command and command isnt 'help'
+      # Command help
+      config = @config.commands[command]
+      synopsis = @config.name + ' ' + command
+      if config.options.length
         options = 'options...'
-        options = "[#{options}]" unless (command.options.filter (o) -> o.required).length
+        options = "[#{options}]" unless (config.options.filter (o) -> o.required).length
         synopsis += " #{options}"
-      if command.main
-        main = "#{command.main.name}"
-        main = "[#{main}]" unless command.main.required
+      if config.main
+        main = "#{config.main.name}"
+        main = "[#{main}]" unless config.main.required
         synopsis += " #{main}"
       content = """
       NAME
-          #{@config.name} #{action} - #{command.description}
+          #{@config.name} #{command} - #{config.description}
       SYNOPSIS
           #{synopsis}
       DESCRIPTION
 
       """
-      content += describeCommand command
+      content += describeCommand config
     else
-      # Introduce the starstop command
+      # Full help
       content = """
       NAME
           #{@config.name} - #{@config.description}
@@ -275,20 +276,18 @@ Parameters.prototype.help = (action) ->
       """
       content += 'SYNOPSIS\n'
       content += "    #{@config.name}"
-      content += ' action' if @config.actions.length
+      content += ' command' if @config.commands.length
       content += ' [options...]'
-      # content += ' command' if @config.main or @config.actions.filter((el) -> el.main).length
       content += '\n'
-      if @config.actions.length
-        content += '    where action is one of'
+      if @config.commands.length
+        content += '    where command is one of'
         content += '\n'
-      for action in @config.actions
-        content += pad "      #{action.name}", 24
-        content += action.description
+      for command in @config.commands
+        content += pad "      #{command.name}", 24
+        content += command.description
         content += '\n'
       content += 'DESCRIPTION\n'
       # Describe each option
-      # content += describeCommand action
       for option in @config.options
         content += pad "    -#{option.shortcut} --#{option.name}", 24
         content += option.description
@@ -297,19 +296,16 @@ Parameters.prototype.help = (action) ->
         content += pad "    #{@config.main.name}", 24
         content += @config.main.description
         content += '\n'
-      # Describe each action
-      for action in @config.actions
-        content += describeCommand action
+      # Describe each command
+      for command in @config.commands
+        content += describeCommand command
       # Add examples
       content += 'EXAMPLES\n'
-      if @config.actions.length
+      if @config.commands.length
         content += "    #{@config.name} help       Show this message"
       else
         content += "    #{@config.name} --help     Show this message"
       content += '\n'
-      # for action of @config.actions
-      #   content += "    #{@config.name} help #{action}    Describe the #{action} action"
-      # content += '\n'
       content
 
 module.exports = (config) ->
