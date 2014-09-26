@@ -2,7 +2,19 @@
 should = require 'should'
 parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
   
-describe 'options strict', ->
+describe 'options strict false', ->
+
+  it 'throw error for an undefined shortcut', ->
+    # Test a boolean (no value) argument
+    params = parameters()
+    (->
+      params.parse ['-c']
+    ).should.throw "Invalid shortcut 'c'"
+    (->
+      params.parse ['-c', 'a value']
+    ).should.throw "Invalid shortcut 'c'"
+  
+describe 'options strict true', ->
 
   it 'throw error for an undefined argument', ->
     params = parameters strict: true
@@ -19,7 +31,7 @@ describe 'options strict', ->
     params = parameters strict: true
     (->
       params.parse ['-c']
-    ).should.throw "Invalid option 'c'"
+    ).should.throw "Invalid shortcut 'c'"
 
   it 'throw error for an undefined argument inside an command', ->
     params = parameters strict: true, commands: [name: 'mycommand']
@@ -37,7 +49,7 @@ describe 'options strict', ->
     params = parameters strict: true, commands: [name: 'mycommand']
     (->
       params.parse ['mycommand', '-c']
-    ).should.throw "Invalid option 'c'"
+    ).should.throw "Invalid shortcut 'c'"
 
 
 

@@ -108,7 +108,8 @@ Parameters.prototype.parse = (argv = process) ->
       shortcut = key if shortcut
       key = config.shortcuts[shortcut] if shortcut
       option = config.options?[key]
-      throw new Error "Invalid option '#{shortcut or key}'" if config.strict and not option
+      throw new Error "Invalid option '#{key}'" if not shortcut and config.strict and not option
+      throw new Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
       unless option
         type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'
         option = name: key, type: type
