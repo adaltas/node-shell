@@ -114,14 +114,14 @@ Parameters.prototype.parse = (argv = process) ->
         option = name: key, type: type
       switch option.type
         when 'boolean'
-          value = true
+          params[key] = true
         when 'string'
-          value = argv[index++]
+          params[key] = argv[index++]
         when 'integer'
-          value = parseInt argv[index++], 10
+          params[key] = parseInt argv[index++], 10
         when 'array'
-          value = argv[index++].split ','
-      params[key] = value
+          params[key] ?= []
+          params[key].push argv[index++].split(',')...
     # Check against required options
     options = config.options
     if options then for option in options

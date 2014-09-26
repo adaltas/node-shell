@@ -89,4 +89,21 @@ describe 'options type', ->
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
 
+    it 'handle multiple properties', ->
+      params = parameters commands: [
+        name: 'start'
+        options: [
+          name: 'array'
+          shortcut: 'a'
+          type: 'array'
+        ]
+      ]
+      params.parse(['start', '-a', '3', '-a', '2', '-a', '1']).should.eql
+        command: 'start'
+        array: ['3','2','1']
+      params.stringify 
+        command: 'start'
+        array: ['3','2','1']
+      .should.eql ['start', '--array', '3,2,1']
+
 
