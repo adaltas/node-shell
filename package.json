@@ -7,7 +7,7 @@
   "author": "David Worms <david@adaltas.com>",
   "contributors": [],
   "engines": {
-    "node": ">= 1.0.0"
+    "node": ">= 0.10.x"
   },
   "main": "./lib/index",
   "repository": {
