@@ -290,7 +290,8 @@ Parameters.prototype.help = (command) ->
       content += 'DESCRIPTION\n'
       # Describe each option
       for option in @config.options
-        content += pad "    -#{option.shortcut} --#{option.name}", 24
+        shortcut = if option.shortcut then "-#{option.shortcut} " else ''
+        content += pad "    #{shortcut}--#{option.name}", 24
         content += option.description
         content += '\n'
       if @config.main
