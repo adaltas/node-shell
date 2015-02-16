@@ -127,7 +127,7 @@ Parameters.prototype.parse = (argv = process) ->
     options = config.options
     if options then for option in options
       if option.required
-        throw new Error "Required argument \"#{option.name}\"" unless params[option.name]?
+        throw new Error "Required argument \"#{option.name}\"" unless params.help or params[option.name]?
       # params[option.name] ?= null
     # We still have some argument to parse
     if argv.length isnt index

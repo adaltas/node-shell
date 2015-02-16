@@ -80,7 +80,29 @@ describe 'help', ->
           name: 'myarg'
           description: 'MyArg'
         ]
-      console.log params.help()
+      params.help().should.eql """
+      NAME
+          myscript - Some description for myscript
+      SYNOPSIS
+          myscript [options...]
+      DESCRIPTION
+          --myarg             MyArg
+          -h --help           Display help information
+      EXAMPLES
+          myscript --help     Show this message
+
+      """
+
+    it 'should bypass required', ->
+      params = parameters
+        name: 'myscript'
+        description: 'Some description for myscript'
+        options: [
+          name: 'myarg'
+          description: 'MyArg'
+          required: true
+        ]
+      params.parse(['--help']).help.should.be.True
       params.help().should.eql """
       NAME
           myscript - Some description for myscript
