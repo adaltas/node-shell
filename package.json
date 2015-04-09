@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "coffee-script": "^1.9.1",
-    "mocha": "^2.2.3",
+    "mocha": "^2.2.4",
     "should": "^5.2.0"
   },
   "optionalDependencies": {},
