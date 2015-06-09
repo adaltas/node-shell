@@ -5,6 +5,7 @@
   "keywords": ["argument", "arg", "parameter", "param", "option", "command", "cli", "getopt", "parser"],
   "homepage": "http://www.adaltas.com/projects/node-parameters/",
   "author": "David Worms <david@adaltas.com>",
+  "license": "BSD-3-Clause",
   "contributors": [],
   "engines": {
     "node": ">= 0.10.x"
