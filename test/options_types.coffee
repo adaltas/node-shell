@@ -6,7 +6,7 @@ describe 'options type', ->
 
   describe 'string', ->
 
-    it 'handle string option', ->
+    it 'is default type', ->
       params = parameters commands: [
         name: 'start'
         options: [
