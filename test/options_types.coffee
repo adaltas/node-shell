@@ -1,6 +1,6 @@
 
 should = require 'should'
-parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
+parameters = require '../src'
   
 describe 'options type', ->
 
@@ -105,5 +105,3 @@ describe 'options type', ->
         command: 'start'
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
-
-

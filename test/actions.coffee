@@ -1,6 +1,6 @@
 
 should = require 'should'
-parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
+parameters = require '../src'
 
 describe 'commands', ->
 
@@ -100,4 +100,3 @@ describe 'commands', ->
       command: 'start'
       aopt: 'lulu'
     .should.eql ['--gopt', 'toto', 'start', '--aopt', 'lulu']
-

@@ -1,6 +1,6 @@
 
 should = require 'should'
-parameters = require "../#{if process.env.PARAMETERS_COV then 'lib-cov' else 'src'}"
+parameters = require '../src'
   
 describe 'options strict false', ->
 
@@ -50,6 +50,3 @@ describe 'options strict true', ->
     (->
       params.parse ['mycommand', '-c']
     ).should.throw "Invalid shortcut 'c'"
-
-
-
