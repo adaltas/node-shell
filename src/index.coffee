@@ -34,8 +34,10 @@ Parameters = (config = {}) ->
       do (option) ->
         command.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
-      throw new Error "Invalid type \"#{option.type}\"" if types.indexOf(option.type) is -1
+      throw new Error "Invalid option type #{JSON.stringify option.type}" if types.indexOf(option.type) is -1
       command.shortcuts[option.shortcut] = option.name
+      options.one_of = [options.one_of] if typeof options.one_of is 'string'
+      throw new Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if options.one_of and not Array.isArray options.one_of
   # An object where key are command and values are object map between shortcuts and names
   config.shortcuts = {}
   config.options ?= []
@@ -128,6 +130,11 @@ Parameters.prototype.parse = (argv = process) ->
     if options then for option in options
       if option.required
         throw new Error "Required argument \"#{option.name}\"" unless params.help or params[option.name]?
+      if option.one_of
+        values = params[option.name]
+        values = [values] unless Array.isArray values
+        for value in values
+          throw Error "Invalid value \"#{value}\" for option \"#{option.name}\"" unless value in option.one_of
       # params[option.name] ?= null
     # We still have some argument to parse
     if argv.length isnt index
@@ -181,9 +188,13 @@ Parameters.prototype.stringify = (script, params) ->
       keys[key] = true
       value = params[key]
       # delete params[key]
-      unless value?
-        continue unless option.required
-        throw new Error "Required option \"#{key}\"" 
+      throw new Error "Required option \"#{key}\"" if option.required and not value?
+      
+      if value? and option.one_of
+        value = [value] unless Array.isArray value
+        for val in value
+          throw Error "Invalid value \"#{val}\" for option \"#{option.name}\"" unless val in option.one_of
+        
       switch option.type
         when 'boolean'
           argv.push "--#{key}" if value
@@ -313,7 +324,3 @@ Parameters.prototype.help = (command) ->
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
-
-
-
-
