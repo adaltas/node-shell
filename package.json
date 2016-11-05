@@ -16,12 +16,12 @@
     "url": "git://github.com/wdavidw/node-parameters.git"
   },
   "dependencies": {
-    "pad": "^0.1.0"
+    "pad": "^1.0.0"
   },
   "devDependencies": {
     "coffee-script": "^1.9.3",
     "mocha": "^2.2.5",
-    "should": "^6.0.3"
+    "should": "^8.3.1"
   },
   "optionalDependencies": {},
   "scripts": {
