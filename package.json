@@ -13,7 +13,7 @@
   "main": "./lib/index",
   "repository": {
     "type": "git",
-    "url": "git://github.com/wdavidw/node-parameters.git"
+    "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
     "pad": "^1.0.0"
