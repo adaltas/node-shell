@@ -3,7 +3,7 @@
   "version": "0.1.6",
   "description": "Command line arguments parser and stringifier",
   "keywords": ["argument", "arg", "parameter", "param", "option", "command", "cli", "getopt", "parser"],
-  "homepage": "http://www.adaltas.com/projects/node-parameters/",
+  "homepage": "https://github.com/adaltas/node-parameters",
   "author": "David Worms <david@adaltas.com>",
   "license": "BSD-3-Clause",
   "contributors": [],
