@@ -105,3 +105,19 @@ describe 'options type', ->
         command: 'start'
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
+
+    it 'handle empty values', ->
+      params = parameters commands: [
+        name: 'start'
+        options: [
+          name: 'my_array'
+          type: 'array'
+        ]
+      ]
+      params.parse(['start', '--my_array', '', '--my_array', '2', '--my_array', '']).should.eql
+        command: 'start'
+        my_array: ['','2','']
+      params.stringify 
+        command: 'start'
+        array: ['','2','']
+      .should.eql ['start', '--array', ',2,']
