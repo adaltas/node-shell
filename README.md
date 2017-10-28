@@ -58,6 +58,9 @@ The properties for options are:
   A list of possible and accepted values.
 * `required` (boolean)   
   Whether or not this option must always be present.
+* `run` (function|string)   
+  Execute a function or the function return by a module, provide the params 
+  object as first argument and pass the returned value.
 * `shortcut` (char)   
   Single character alias for the option name.
 * `type` (string)   

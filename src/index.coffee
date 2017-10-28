@@ -5,15 +5,14 @@ pad = require 'pad'
 types = ['string', 'boolean', 'integer', 'array']
 
 ###
-parameters(config)
-==================
+# parameters(config)
 
-About options
--------------
+## About options
+
 Options are defined at the "config" level or for each command.
 
-About main
-----------
+## About main
+
 Main is what's left after the options. Like options, "main" is 
 defined at the "config" level or for each command.
 
@@ -73,8 +72,39 @@ Parameters = (config = {}) ->
 
 ###
 
-`parse([argv])`
-----------------
+## `run([argv])`
+
+Parse the arguments and execute the module defined by the "module" option.
+
+You should only pass the parameters and the not the script name.
+
+Example
+
+  result = parameters(
+    commands: [
+      name: 'start'
+      run: function(){ return 'something'; }
+      options: [
+        name: 'debug'
+      ]
+    ]
+  ).run ['start', '-d', 'Hello']
+
+###
+Parameters.prototype.run = (argv = process) ->
+  params = @parse argv
+  if params.command
+    run = @config.commands[params.command].run
+  else
+    run = @config.run
+  # Load the module
+  run = load run if typeof run is 'string'
+  run.call null, params
+  
+
+###
+
+## `parse([argv])`
 
 Convert process arguments into a usable object. Argument may
 be in the form of a string or an array. If not provided, it 
@@ -169,8 +199,7 @@ Parameters.prototype.parse = (argv = process) ->
 
 ###
 
-`stringify([script], params)`
-------------------------
+## `stringify([script], params)`
 
 Convert an object into process arguments.
 
@@ -230,8 +259,7 @@ Parameters.prototype.stringify = (script, params) ->
 
 ###
 
-`help([command])`
-----------------
+## `help([command])`
 
 Return a string describing the usage of the overall command or one of its
 command.
@@ -321,3 +349,9 @@ Parameters.prototype.help = (command) ->
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
+
+load = (module) ->
+  module = if module.substr(0, 1) is '.'
+  then path.resolve process.cwd(), module
+  else module
+  require.main.require module
