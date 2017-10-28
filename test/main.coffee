@@ -62,27 +62,3 @@ describe 'main', ->
         command: 'mycommand'
         my_argument: 'my value'
       .should.eql ['mycommand', 'my value']
-
-    it 'may be optional', ->
-      params = parameters commands: [
-        name: 'mycommand'
-        main: 
-          name: 'my_argument'
-      ]
-      params.parse(['mycommand']).should.eql
-        command: 'mycommand'
-      params.stringify 
-        command: 'mycommand'
-      .should.eql ['mycommand']
-
-    it 'honors required', ->
-      params = parameters commands: [
-        name: 'mycommand'
-        main: 
-          name: 'my_argument'
-      ]
-      params.parse(['mycommand']).should.eql
-        command: 'mycommand'
-      params.stringify 
-        command: 'mycommand'
-      .should.eql ['mycommand']
