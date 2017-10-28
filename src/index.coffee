@@ -194,10 +194,10 @@ Parameters.prototype.stringify = (script, params) ->
         value = [value] unless Array.isArray value
         for val in value
           throw Error "Invalid value \"#{val}\" for option \"#{option.name}\"" unless val in option.one_of
-        
-      switch option.type
+      # Serialize
+      if value then switch option.type
         when 'boolean'
-          argv.push "--#{key}" if value
+          argv.push "--#{key}"
         when 'string', 'integer'
           argv.push "--#{key}"
           argv.push "#{value}"
