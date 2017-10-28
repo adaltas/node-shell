@@ -2,7 +2,17 @@
   "name": "parameters",
   "version": "0.1.6",
   "description": "Command line arguments parser and stringifier",
-  "keywords": ["argument", "arg", "parameter", "param", "option", "command", "cli", "getopt", "parser"],
+  "keywords": [
+    "argument",
+    "arg",
+    "parameter",
+    "param",
+    "option",
+    "command",
+    "cli",
+    "getopt",
+    "parser"
+  ],
   "homepage": "https://github.com/adaltas/node-parameters",
   "author": "David Worms <david@adaltas.com>",
   "license": "BSD-3-Clause",
@@ -16,17 +26,17 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
-    "pad": "^1.0.0"
+    "pad": "^2.0.1"
   },
   "devDependencies": {
-    "coffee-script": "^1.9.3",
-    "mocha": "^2.2.5",
-    "should": "^8.3.1"
+    "coffeescript": "^2.0.2",
+    "mocha": "^4.0.1",
+    "should": "^13.1.3"
   },
   "optionalDependencies": {},
   "scripts": {
     "coffee": "./node_modules/.bin/coffee -b -o lib src",
     "pretest": "./node_modules/.bin/coffee -b -o lib src",
-    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register --reporter dot"
+    "test": "./node_modules/.bin/mocha test/**.coffee"
   }
 }
