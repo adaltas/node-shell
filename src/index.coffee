@@ -34,10 +34,10 @@ Parameters = (config = {}) ->
       do (option) ->
         command.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
-      throw new Error "Invalid option type #{JSON.stringify option.type}" if types.indexOf(option.type) is -1
+      throw Error "Invalid option type #{JSON.stringify option.type}" if types.indexOf(option.type) is -1
       command.shortcuts[option.shortcut] = option.name
       options.one_of = [options.one_of] if typeof options.one_of is 'string'
-      throw new Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if options.one_of and not Array.isArray options.one_of
+      throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if options.one_of and not Array.isArray options.one_of
   # An object where key are command and values are object map between shortcuts and names
   config.shortcuts = {}
   config.options ?= []
@@ -110,8 +110,8 @@ Parameters.prototype.parse = (argv = process) ->
       shortcut = key if shortcut
       key = config.shortcuts[shortcut] if shortcut
       option = config.options?[key]
-      throw new Error "Invalid option '#{key}'" if not shortcut and config.strict and not option
-      throw new Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
+      throw Error "Invalid option '#{key}'" if not shortcut and config.strict and not option
+      throw Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
       unless option
         type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'
         option = name: key, type: type
@@ -129,13 +129,12 @@ Parameters.prototype.parse = (argv = process) ->
     options = config.options
     if options then for option in options
       if option.required
-        throw new Error "Required option argument \"#{option.name}\"" unless params.help or params[option.name]?
+        throw Error "Required option argument \"#{option.name}\"" unless params.help or params[option.name]?
       if option.one_of
         values = params[option.name]
         values = [values] unless Array.isArray values
         for value in values
           throw Error "Invalid value \"#{value}\" for option \"#{option.name}\"" unless value in option.one_of
-      # params[option.name] ?= null
     # We still have some argument to parse
     if argv.length isnt index
       # Store the full command in the return object
@@ -148,12 +147,12 @@ Parameters.prototype.parse = (argv = process) ->
           params[@config.command] = argv[index++]
           parse config, argv
         else
-          throw new Error "Fail to parse end of command \"#{main}\""
+          throw Error "Fail to parse end of command \"#{main}\""
     # Check against required main
     main = config.main
     if main
       if main.required
-        throw new Error "Required main argument \"#{main.name}\"" unless params[main.name]?
+        throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
       # params[main.name] ?= null
     params
   # If they are commands (other than help) and no arguments are provided,
@@ -162,7 +161,7 @@ Parameters.prototype.parse = (argv = process) ->
     argv.push 'help'
   if @config.commands.length and argv[index].substr(0,1) isnt '-'
     config = @config.commands[argv[index]]
-    throw new Error "Invalid command '#{argv[index]}'" unless config
+    throw Error "Invalid command '#{argv[index]}'" unless config
     params[@config.command] = argv[index++]
   else
     config = @config
@@ -188,7 +187,7 @@ Parameters.prototype.stringify = (script, params) ->
       keys[key] = true
       value = params[key]
       # Validate required value
-      throw new Error "Required option argument \"#{key}\"" if option.required and not value?
+      throw Error "Required option argument \"#{key}\"" if option.required and not value?
       # Validate value against option "one_of"
       if value? and option.one_of
         value = [value] unless Array.isArray value
@@ -206,21 +205,20 @@ Parameters.prototype.stringify = (script, params) ->
           argv.push "#{value.join ','}"
     if config.main
       value = params[config.main.name]
-      throw new Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
+      throw Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
       keys[config.main.name] = value
       argv.push value if value?
   stringify @config
   if params[@config.command]
     config = @config.commands[params[@config.command]]
-    throw new Error "Invalid command '#{params[@config.command]}'" unless config
+    throw Error "Invalid command '#{params[@config.command]}'" unless config
     argv.push params[@config.command]
     keys[@config.command] = params[@config.command]
     stringify config
   # Check keys
   for key, value of params
-    # throw new Error "Invalid option '#{key}'" unless keys[key]
     continue if keys[key]
-    throw new Error "Invalid option '#{key}'" if @config.strict
+    throw Error "Invalid option '#{key}'" if @config.strict
     if typeof value is 'boolean'
       argv.push "--#{key}" if value
     else if typeof value is 'undefined' or value is null
