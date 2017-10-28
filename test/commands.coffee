@@ -28,25 +28,6 @@ describe 'commands', ->
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
-  it 'accept an optional main and no option', ->
-    params = parameters commands: [
-      name: 'start'
-      main:
-        name: 'commanda'
-    ]
-    params.parse(['start', 'my --command']).should.eql
-      command: 'start'
-      commanda: 'my --command'
-    params.parse(['start']).should.eql
-      command: 'start'
-    params.stringify
-      command: 'start'
-      commanda: 'my --command'
-    .should.eql ['start', 'my --command']
-    params.stringify
-      command: 'start'
-    .should.eql ['start']
-
   it 'throw error if command is undefined', ->
     params = parameters commands: [name: 'myaction']
     (->
@@ -57,18 +38,6 @@ describe 'commands', ->
         command: 'hum'
         myparam: true
     ).should.throw "Invalid command 'hum'"
-
-  it 'throw error if no main and command provide extra arguments', ->
-    # Command with no option
-    params = parameters commands: [name: 'mycommand']
-    (->
-      params.parse ['mycommand', 'mymain']
-    ).should.throw "Fail to parse end of command \"mymain\""
-    # Command with one option
-    params = parameters commands: [name: 'mycommand', options: [name:'arg']]
-    (->
-      params.parse ['mycommand', '--arg', 'myarg', 'mymain']
-    ).should.throw "Fail to parse end of command \"mymain\""
 
   it 'customize command name', ->
     params = parameters

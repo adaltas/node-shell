@@ -129,7 +129,7 @@ Parameters.prototype.parse = (argv = process) ->
     options = config.options
     if options then for option in options
       if option.required
-        throw new Error "Required argument \"#{option.name}\"" unless params.help or params[option.name]?
+        throw new Error "Required option argument \"#{option.name}\"" unless params.help or params[option.name]?
       if option.one_of
         values = params[option.name]
         values = [values] unless Array.isArray values
@@ -187,9 +187,9 @@ Parameters.prototype.stringify = (script, params) ->
       key = option.name
       keys[key] = true
       value = params[key]
-      # delete params[key]
-      throw new Error "Required option \"#{key}\"" if option.required and not value?
-      
+      # Validate required value
+      throw new Error "Required option argument \"#{key}\"" if option.required and not value?
+      # Validate value against option "one_of"
       if value? and option.one_of
         value = [value] unless Array.isArray value
         for val in value
@@ -206,7 +206,6 @@ Parameters.prototype.stringify = (script, params) ->
           argv.push "#{value.join ','}"
     if config.main
       value = params[config.main.name]
-      # delete params[config.main.name]
       throw new Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
       keys[config.main.name] = value
       argv.push value if value?
