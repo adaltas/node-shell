@@ -6,6 +6,52 @@ parameters = require '../src'
   
 describe 'options module', ->
   
+  describe 'function', ->
+    
+    it 'context is parameter instance', ->
+      parameters
+        run: (params) ->
+          @should.have.property('help').which.is.a.Function()
+          @should.have.property('parse').which.is.a.Function()
+          @should.have.property('stringify').which.is.a.Function()
+      .run []
+        
+    it '1st arg is params', ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: (params) ->
+          params.my_argument.should.eql 'my value'
+      .run ['--my_argument', 'my value']
+        
+    it '2nd arg is argv', ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: (params, argv) ->
+          argv.should.eql ['--my_argument', 'my value']
+      .run ['--my_argument', 'my value']
+        
+    it '3rd arg is config', ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: (params, argv, config) ->
+          config.options[0].name.should.eql 'my_argument'
+      .run ['--my_argument', 'my value']
+        
+    it 'return value is passed', ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: -> 'catch me'
+      .run ['--my_argument', 'my value']
+      .should.eql 'catch me'
+    
   describe 'without command', ->
   
     it 'run a function', ->

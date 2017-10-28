@@ -99,7 +99,7 @@ Parameters.prototype.run = (argv = process) ->
     run = @config.run
   # Load the module
   run = load run if typeof run is 'string'
-  run.call null, params
+  run.call @, params, argv, @config
   
 
 ###
