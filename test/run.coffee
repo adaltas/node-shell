@@ -51,6 +51,18 @@ describe 'options module', ->
       .run ['--my_argument', 'my value']
       .should.eql 'catch me'
     
+    it 'pass user arguments', (next) ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: (my_arg, my_callback, my_params) ->
+          err = Error 'Das ist kaput' unless my_params['my_argument'] is 'my value'
+          my_callback err, my_arg
+      .run ['--my_argument', 'my value'], 'sth', (err, my_arg)->
+        my_arg.should.eql 'sth' unless err
+        next err
+    
   describe 'without command', ->
   
     it 'run a function', ->

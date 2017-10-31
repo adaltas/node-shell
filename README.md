@@ -22,6 +22,10 @@ expecting a definition object and returning the following functions:
   Transform an array of arguments into a parameter object. If null
   or the native `process` object, the first two arguments (the node
   binary and the script file) are skipped.
+* `run`(argv[array:process], args[obj]...)   
+  Similar to parse but also call the function or the module defined by the "run"
+  option; first arguments are the arguments to parse, other arguments are simply
+  passed to the run function or module as first arguments.
 * `stringify(params[obj], options[obj])`   
   Convert an object of parameters into an array of arguments. Possible options
   are "no_default".

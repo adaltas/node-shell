@@ -91,15 +91,15 @@ Example
   ).run ['start', '-d', 'Hello']
 
 ###
-Parameters.prototype.run = (argv = process) ->
+Parameters.prototype.run = (argv = process, args...) ->
   params = @parse argv
-  if params.command
-    run = @config.commands[params.command].run
+  if params[@config.command]
+    run = @config.commands[params[@config.command]].run
   else
     run = @config.run
   # Load the module
   run = load run if typeof run is 'string'
-  run.call @, params, argv, @config
+  run.call @, args..., params, argv, @config
   
 
 ###
