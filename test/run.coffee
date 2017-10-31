@@ -1,7 +1,6 @@
 
 fs = require 'fs'
 os = require 'os'
-should = require 'should'
 parameters = require '../src'
   
 describe 'options module', ->

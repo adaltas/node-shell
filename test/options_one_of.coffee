@@ -1,5 +1,4 @@
 
-should = require 'should'
 parameters = require '../src'
   
 describe 'options one_of', ->

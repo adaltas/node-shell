@@ -3,6 +3,8 @@
 
 ## Trunk
 
+* test: should required by mocha
+* help: fix shortcut in commands
 * options: run get context, argv and config
 * options: run options accepts a function or a module
 * readme: API documentation
