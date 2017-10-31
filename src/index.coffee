@@ -132,16 +132,18 @@ Parameters.prototype.parse = (argv = process) ->
   # Extracted parameters
   params = {}
   parse = (config) =>
+    # Read options
     while true
-      break if argv.length is index or argv[index].substr(0, 1) isnt '-'
+      break if argv.length is index or argv[index][0] isnt '-'
       key = argv[index++]
-      shortcut = key.substr(1, 1) isnt '-'
+      shortcut = key[1] isnt '-'
       key = key.substring (if shortcut then 1 else 2), key.length
       shortcut = key if shortcut
       key = config.shortcuts[shortcut] if shortcut
       option = config.options?[key]
       throw Error "Invalid option #{JSON.stringify key}" if not shortcut and config.strict and not option
       throw Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
+      # Auto discovery
       unless option
         type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'
         option = name: key, type: type
@@ -149,12 +151,21 @@ Parameters.prototype.parse = (argv = process) ->
         when 'boolean'
           params[key] = true
         when 'string'
-          params[key] = argv[index++]
+          value = argv[index++]
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
+          params[key] = value
         when 'integer'
-          params[key] = parseInt argv[index++], 10
+          value = argv[index++]
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
+          params[key] = parseInt value, 10
         when 'array'
+          value = argv[index++]
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
+          throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
           params[key] ?= []
-          params[key].push argv[index++].split(',')...
+          params[key].push value.split(',')...
     # Check against required options
     options = config.options
     if options then for option in options

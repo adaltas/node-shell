@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* parse: better error handling
 * options: new default option
 * test: should required by mocha
 * help: fix shortcut in commands
