@@ -15,15 +15,16 @@ The parameters package is made available to your module with the declaration
 `parameters = require('parameters');`. The returned variable is a function
 expecting a definition object and returning the following functions:
 
-* `help(command[string]:null)`   
+* `help(command[string:null])`   
   Returned a string with the complete help content or the content of a single 
   command if the command argument is passed.
-* `parse(argv[array]:process)`   
+* `parse(argv[array:process])`   
   Transform an array of arguments into a parameter object. If null
   or the native `process` object, the first two arguments (the node
   binary and the script file) are skipped.
-* `stringify(params[obj])`   
-  Convert an object of parameters into an array of arguments.
+* `stringify(params[obj], options[obj])`   
+  Convert an object of parameters into an array of arguments. Possible options
+  are "no_default".
 
 ## Definition
 
@@ -50,6 +51,10 @@ The properties for commands are:
 
 The properties for options are:
 
+* `default` (anything)   
+  Default value if none is provided; always part of the object return by parse,
+  part of the arguments returned by stringify unless the "no_default" option is 
+  set.
 * `main` (object)   
   Anything left which is not a parameter at the end of the arguments.
 * `name` (string)   

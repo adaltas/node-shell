@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* options: new default option
 * test: should required by mocha
 * help: fix shortcut in commands
 * options: run get context, argv and config

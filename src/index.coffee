@@ -140,7 +140,7 @@ Parameters.prototype.parse = (argv = process) ->
       shortcut = key if shortcut
       key = config.shortcuts[shortcut] if shortcut
       option = config.options?[key]
-      throw Error "Invalid option '#{key}'" if not shortcut and config.strict and not option
+      throw Error "Invalid option #{JSON.stringify key}" if not shortcut and config.strict and not option
       throw Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
       unless option
         type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'
@@ -195,7 +195,14 @@ Parameters.prototype.parse = (argv = process) ->
     params[@config.command] = argv[index++]
   else
     config = @config
-  parse config, argv
+  params = parse config, argv
+  # Enrich params with default values
+  if params[@config.command]
+    for option in @config.commands[params[@config.command]].options
+      params[option.name] ?= option.default if option.default?
+  for option in @config.options
+    params[option.name] ?= option.default if option.default?
+  params
 
 ###
 
@@ -204,12 +211,19 @@ Parameters.prototype.parse = (argv = process) ->
 Convert an object into process arguments.
 
 ###
-Parameters.prototype.stringify = (script, params) ->
-  if arguments.length is 1
-    params = script
-    script = null
-  argv = if script then [process.execPath, script] else []
+Parameters.prototype.stringify = (params, options={}) ->
+  argv = if options.script then [process.execPath, options.script] else []
   keys = {}
+  # Validate command
+  if params[@config.command]
+    throw Error "Invalid command '#{params[@config.command]}'" unless @config.commands[params[@config.command]]
+  # Enrich params with default values
+  if params[@config.command]
+    for option in @config.commands[params[@config.command]].options
+      params[option.name] ?= option.default if option.default?
+  for option in @config.options
+    params[option.name] ?= option.default if option.default?
+  # Stringify
   stringify = (config) =>
     for option in config.options
       key = option.name
@@ -240,14 +254,13 @@ Parameters.prototype.stringify = (script, params) ->
   stringify @config
   if params[@config.command]
     config = @config.commands[params[@config.command]]
-    throw Error "Invalid command '#{params[@config.command]}'" unless config
     argv.push params[@config.command]
     keys[@config.command] = params[@config.command]
     stringify config
   # Check keys
   for key, value of params
     continue if keys[key]
-    throw Error "Invalid option '#{key}'" if @config.strict
+    throw Error "Invalid option #{JSON.stringify key}" if @config.strict
     if typeof value is 'boolean'
       argv.push "--#{key}" if value
     else if typeof value is 'undefined' or value is null
