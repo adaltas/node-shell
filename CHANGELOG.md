@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* package: update Node.js version inside Travis
 * parse: better error handling
 * options: new default option
 * test: should required by mocha
