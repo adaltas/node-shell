@@ -268,8 +268,10 @@ command.
 Parameters.prototype.help = (command) ->
     config = @config.commands[command]
     throw Error "Invalid command \"#{command}\"" if command? and not config
-    describeOption = (option) ->
-      content = pad "      -#{option.shortcut} --#{option.name}", 26
+    describeOption = (option, pad_option, pad_description) ->
+      shortcut = if option.shortcut then "-#{option.shortcut} " else ''
+      content = ' '.repeat pad_option
+      content += pad "#{shortcut}--#{option.name}", pad_description - pad_option
       content += option.description
       content += '\n'
     describeCommand = (config) ->
@@ -277,7 +279,7 @@ Parameters.prototype.help = (command) ->
       content += config.description
       content += '\n'
       if config.options then for option in config.options
-        content += describeOption option
+        content += describeOption option, 6, 26
       if config.main
         content += pad "      #{config.main.name}", 26
         content += config.main.description
@@ -326,10 +328,11 @@ Parameters.prototype.help = (command) ->
       content += 'DESCRIPTION\n'
       # Describe each option
       for option in @config.options
-        shortcut = if option.shortcut then "-#{option.shortcut} " else ''
-        content += pad "    #{shortcut}--#{option.name}", 24
-        content += option.description
-        content += '\n'
+        content += describeOption option, 4, 24
+        # shortcut = if option.shortcut then "-#{option.shortcut} " else ''
+        # content += pad "    #{shortcut}--#{option.name}", 24
+        # content += option.description
+        # content += '\n'
       if @config.main
         content += pad "    #{@config.main.name}", 24
         content += @config.main.description

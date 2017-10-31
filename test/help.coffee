@@ -72,27 +72,6 @@ describe 'help', ->
 
       """
 
-    it 'should print without shortcut', ->
-      params = parameters
-        name: 'myscript'
-        description: 'Some description for myscript'
-        options: [
-          name: 'myarg'
-          description: 'MyArg'
-        ]
-      params.help().should.eql """
-      NAME
-          myscript - Some description for myscript
-      SYNOPSIS
-          myscript [options...]
-      DESCRIPTION
-          --myarg             MyArg
-          -h --help           Display help information
-      EXAMPLES
-          myscript --help     Show this message
-
-      """
-
     it 'should bypass required', ->
       params = parameters
         name: 'myscript'
