@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.2.0
 
 * package: release commands
 * package: update Node.js version inside Travis
