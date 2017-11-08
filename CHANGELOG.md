@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* package: release commands
 * package: update Node.js version inside Travis
 * parse: better error handling
 * options: new default option

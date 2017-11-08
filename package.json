@@ -26,7 +26,7 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
-    "pad": "^2.0.1"
+    "pad": "^2.0.2"
   },
   "devDependencies": {
     "coffeescript": "^2.0.2",
@@ -35,6 +35,12 @@
   },
   "optionalDependencies": {},
   "scripts": {
+    "preversion": "grep '## Trunk' CHANGELOG.md && npm test",
+    "version": "version=`grep '^  \"version\": ' package.json | sed 's/.*\"\\([0-9\\.]*\\)\".*/\\1/'` && sed -i \"s/## Trunk/## Version $version/\" CHANGELOG.md && git add CHANGELOG.md",
+    "postversion": "git push && git push --tags && npm publish",
+    "patch": "npm version patch -m 'Bump to version %s'",
+    "minor": "npm version minor -m 'Bump to version %s'",
+    "major": "npm version major -m 'Bump to version %s'",
     "coffee": "./node_modules/.bin/coffee -b -o lib src",
     "pretest": "./node_modules/.bin/coffee -b -o lib src",
     "test": "./node_modules/.bin/mocha test/**.coffee"
