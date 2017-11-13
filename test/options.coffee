@@ -40,5 +40,6 @@ describe 'options', ->
       myparam: 'my value'
     params.parse(['-m', 'my value']).should.eql
       myparam: 'my value'
-    ['--myparam', 'my value'].should.eql params.stringify 
+    params.stringify 
       myparam: 'my value'
+    .should.eql ['--myparam', 'my value']
