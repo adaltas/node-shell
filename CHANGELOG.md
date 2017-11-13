@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* commands: default to help fixed on presence of options
 * run: error handling for humans
 
 ## Version 0.2.0

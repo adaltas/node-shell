@@ -13,6 +13,12 @@ describe 'help', ->
     params.parse([]).should.eql
       command: 'help'
 
+  it 'global options without a command', ->
+    params = parameters commands: [name: 'fake']
+    params.parse(['--param', 'value']).should.eql
+      param: 'value'
+      command: 'help'
+
   it 'handle help command', ->
     params = parameters commands: [name: 'help']
     params.parse(['help']).should.eql

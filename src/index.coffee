@@ -191,12 +191,15 @@ Parameters.prototype.parse = (argv = process) ->
           parse config, argv
         else
           throw Error "Fail to parse end of command \"#{main}\""
+    # Command mode but no command are found, default to help
+    # Happens with global options without a command
+    if @config.commands.length and not params[@config.command]
+      params[@config.command] = 'help'
     # Check against required main
     main = config.main
     if main
       if main.required
         throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
-      # params[main.name] ?= null
     params
   # If they are commands (other than help) and no arguments are provided,
   # we default to the help action
