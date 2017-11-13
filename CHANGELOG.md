@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.2.1
 
 * commands: default to help fixed on presence of options
 * run: error handling for humans
