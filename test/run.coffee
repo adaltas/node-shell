@@ -65,6 +65,12 @@ describe 'options module', ->
     
   describe 'without command', ->
   
+    it 'run not defined', ->
+      ( ->
+        parameters {}
+        .run []
+      ).should.throw 'Missing run definition'
+  
     it 'run a function', ->
       params = parameters
         run: (params) -> params.my_argument
@@ -88,7 +94,27 @@ describe 'options module', ->
       .should.eql 'my value'
         
     describe 'within command', ->
-    
+        
+      it 'run not defined with no matching command', ->
+        ( ->
+          parameters commands: [
+            name: 'my_command'
+            run: (params) -> params.my_argument
+            options: [
+              name: 'my_argument'
+            ]
+          ]
+          .run ['--param', 'value']
+        ).should.throw 'Missing run definition for command "help"'
+        
+      it 'run not defined', ->
+        ( ->
+          parameters commands: [
+            name: 'my_command'
+          ]
+          .run ['my_command']
+        ).should.throw 'Missing run definition for command "my_command"'
+        
       it 'run a function', ->
         params = parameters commands: [
           name: 'my_command'

@@ -95,8 +95,10 @@ Parameters.prototype.run = (argv = process, args...) ->
   params = @parse argv
   if params[@config.command]
     run = @config.commands[params[@config.command]].run
+    throw Error "Missing run definition for command #{JSON.stringify params[@config.command]}" unless run
   else
     run = @config.run
+    throw Error 'Missing run definition' unless run
   # Load the module
   run = load run if typeof run is 'string'
   run.call @, args..., params, argv, @config

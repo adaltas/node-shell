@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* run: error handling for humans
+
 ## Version 0.2.0
 
 * package: release commands
