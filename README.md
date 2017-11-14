@@ -15,18 +15,21 @@ The parameters package is made available to your module with the declaration
 `parameters = require('parameters');`. The returned variable is a function
 expecting a definition object and returning the following functions:
 
-* `help(command[string:null])`   
+* `help` (command[string:null])   
   Returned a string with the complete help content or the content of a single 
   command if the command argument is passed.
-* `parse(argv[array:process])`   
+* `parse` (argv[array:process])   
   Transform an array of arguments into a parameter object. If null
   or the native `process` object, the first two arguments (the node
   binary and the script file) are skipped.
-* `run`(argv[array:process], args[obj]...)   
+* `load` (module[string])   
+  Internal function used to load modules, see the "load" option to pass a
+  function or a module referencing the function.
+* `run` (argv[array:process], args[obj]...)   
   Similar to parse but also call the function or the module defined by the "run"
   option; first arguments are the arguments to parse, other arguments are simply
   passed to the run function or module as first arguments.
-* `stringify(params[obj], options[obj])`   
+* `stringify` (params[obj], options[obj])   
   Convert an object of parameters into an array of arguments. Possible options
   are "no_default".
 
@@ -39,6 +42,10 @@ The root properties are:
 
 * `commands` (object)   
   Group the parameters into a specific command.
+* `load` (function|string)   
+  Function or a module referencing the function to load modules, the default
+  implementation ensure modules starting with './' are relative to 
+  `process.cwd()` and use `require.main.require`.
 * `main` (object)   
   Anything left which is not a parameter at the end of the arguments.
 * `options` (object)

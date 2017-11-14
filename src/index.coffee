@@ -1,6 +1,6 @@
 
-path = require 'path'
 pad = require 'pad' 
+load = require './load'
 
 types = ['string', 'boolean', 'integer', 'array']
 
@@ -100,8 +100,25 @@ Parameters.prototype.run = (argv = process, args...) ->
     run = @config.run
     throw Error 'Missing run definition' unless run
   # Load the module
-  run = load run if typeof run is 'string'
+  run = @load run if typeof run is 'string'
   run.call @, args..., params, argv, @config
+
+###
+
+## `load(module)`
+
+Load and return a module, use `require.main.require` by default.
+
+###
+
+Parameters.prototype.load = (module) ->
+  unless @config.load
+    load module
+  else
+    if typeof @config.load is 'string'
+      load(@config.load)(module)
+    else
+      @config.load module
   
 
 ###
@@ -381,9 +398,3 @@ Parameters.prototype.help = (command) ->
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
-
-load = (module) ->
-  module = if module.substr(0, 1) is '.'
-  then path.resolve process.cwd(), module
-  else module
-  require.main.require module
