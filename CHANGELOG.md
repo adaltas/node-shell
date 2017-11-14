@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.2.2
 
 * load: custom user module loader
 
