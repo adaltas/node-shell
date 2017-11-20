@@ -24,12 +24,10 @@ command = parameters({
     description: 'Web server listen port'
   }]
 });
-
 // Print help
 console.log( command.help() );
-
 // Extract command arguments
-// Note, the argument array can be undefined
+// Note, if the argument array is undefined, it default to `process.argv`
 // and is similar to running the command
 // `node samples/commands.js --host 127.0.0.1 -p '80'`
 // from the project home directory
@@ -39,7 +37,6 @@ command.parse(
   host: '127.0.0.1',
   port: 80
 });
-
 // Create a command
 command.stringify({
   host: '127.0.0.1',

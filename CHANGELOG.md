@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* doc: improve run description
 * run: user arguments as last arguments, new extended option
 
 ## Version 0.3.0

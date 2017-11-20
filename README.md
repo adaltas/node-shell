@@ -18,20 +18,24 @@ The parameters package is made available to your module with the declaration
 `parameters = require('parameters');`. The returned variable is a function
 expecting a definition object and returning the following functions:
 
-* `help` (command[string:null])   
+* `help` (command[string|null])   
   Returned a string with the complete help content or the content of a single 
   command if the command argument is passed.
-* `parse` (argv[array:process])   
+* `parse` (argv[array|process])   
   Transform an array of arguments into a parameter object. If null
   or the native `process` object, the first two arguments (the node
   binary and the script file) are skipped.
 * `load` (module[string])   
   Internal function used to load modules, see the "load" option to pass a
   function or a module referencing the function.
-* `run` (argv[array:process], args[obj]...)   
-  Similar to parse but also call the function or the module defined by the "run"
-  option; first arguments are the arguments to parse, other arguments are simply
-  passed to the run function or module as first arguments.
+* `run` (argv[array|process], args[mixed]...)   
+  Similar to parse but it will also call the function defined by the "run"
+  option. The first argument is the arguments array to parse, other arguments
+  are simply transmitted to the run function or module as additionnal arguments.
+  The run function provided by the user receives the parsed parameters as its
+  first argument. If the option "extended" is activated, it also receives the
+  original arguments and configuration as second and third   arguments. Any user
+  provided arguments are transmitted as is as additionnal arguments.
 * `stringify` (params[obj], options[obj])   
   Convert an object of parameters into an array of arguments. Possible options
   are "no_default".
@@ -44,7 +48,9 @@ this package.
 The root properties are:
 
 * `commands` (object)   
-  Group the parameters into a specific command.
+  Group the parameters into a specific command. Support object and array notation. If
+  defined as an object, keys correpond to the "name" properties. If defined as 
+  an array, the "name" property is required.
 * `load` (function|string)   
   Function or a module referencing the function to load modules, the default
   implementation ensure modules starting with './' are relative to 
@@ -60,8 +66,10 @@ The properties for commands are:
 
 * `name` (string)   
   The command name.
-* `options` (object)
-  Defined the expected command parameters.
+* `options` (object|array)
+  Defined the expected command parameters. Support object and array notation. If
+  defined as an object, keys correpond to the "name" properties. If defined as 
+  an array, the "name" property is required.
 
 The properties for options are:
 
@@ -76,14 +84,15 @@ The properties for options are:
 * `main` (object)   
   Anything left which is not a parameter at the end of the arguments.
 * `name` (string)   
-  The name of the option.
+  The name of the option, required.
 * `one_of` (array)   
   A list of possible and accepted values.
 * `required` (boolean)   
   Whether or not this option must always be present.
 * `run` (function|string)   
-  Execute a function or the function return by a module, provide the params 
-  object as first argument and pass the returned value.
+  Execute a function or the function returned by a module if defined as a 
+  string, provide the params object as first argument and pass the returned
+  value.
 * `shortcut` (char)   
   Single character alias for the option name.
 * `type` (string)   
@@ -132,6 +141,10 @@ command = parameters({
 // Print help
 console.log( command.help() );
 // Extract command arguments
+// Note, if the argument array is undefined, it default to `process.argv`
+// and is similar to running the command
+// `node samples/commands.js --host 127.0.0.1 -p '80'`
+// from the project home directory
 command.parse(
   ['--host', '127.0.0.1', '-p', '80']
 ).should.eql({
@@ -168,6 +181,10 @@ command = parameters({
 // Print help
 console.log( command.help() );
 // Extract command arguments
+// Note, if the argument array is undefined, it default to `process.argv`
+// and is similar to running the command
+// `node samples/commands.js start --host 127.0.0.1 -p '80'`
+// from the project home directory
 command.parse(
   ['start', '--host', '127.0.0.1', '-p', '80']
 ).should.eql({
