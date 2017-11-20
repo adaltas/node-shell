@@ -38,9 +38,23 @@ describe 'help', ->
     .should.eql ['help', 'start']
 
   describe 'without command', ->
+    
+    it 'print without a name and a description', ->
+      parameters()
+      .help().should.eql """
+      NAME
+          myapp - No description yet
+      SYNOPSIS
+          myapp [options...]
+      DESCRIPTION
+          -h --help           Display help information
+      EXAMPLES
+          myapp --help        Show this message
+      
+      """
 
-    it 'should print multiple options', ->
-      params = parameters
+    it 'print multiple options', ->
+      parameters
         name: 'myscript'
         description: 'Some description for myscript'
         main: 
@@ -61,7 +75,7 @@ describe 'help', ->
           type: 'integer'
           description: 'Integer option in start'
         ]
-      params.help().should.eql """
+      .help().should.eql """
       NAME
           myscript - Some description for myscript
       SYNOPSIS
@@ -77,7 +91,7 @@ describe 'help', ->
 
       """
 
-    it 'should bypass required', ->
+    it 'bypass required', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
@@ -86,7 +100,7 @@ describe 'help', ->
           description: 'MyArg'
           required: true
         ]
-      params.parse(['--help']).help.should.be.True
+      params.parse(['--help']).help.should.be.True()
       params.help().should.eql """
       NAME
           myscript - Some description for myscript
@@ -101,8 +115,29 @@ describe 'help', ->
       """
 
   describe 'with command', ->
+    
+    it 'print without a name and a description', ->
+      parameters
+        commands:
+          'start': {}
+      .help().should.eql """
+      NAME
+          myapp - No description yet
+      SYNOPSIS
+          myapp command [options...]
+          where command is one of
+            start             No description yet for the start command
+            help              Display help information about myapp
+      DESCRIPTION
+          start               No description yet for the start command
+          help                Display help information about myapp
+            name                Help about a specific command
+      EXAMPLES
+          myapp help          Show this message
+      
+      """
 
-    it 'should print multiple commands with multiple options', ->
+    it 'print multiple commands with multiple options', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'

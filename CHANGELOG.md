@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* help: default app name and description
 * config: options and commands as objects literals
 
 ## Version 0.2.2

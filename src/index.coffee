@@ -16,12 +16,13 @@ Options are defined at the "config" level or for each command.
 Main is what's left after the options. Like options, "main" is 
 defined at the "config" level or for each command.
 
-Parameters are defined with the following properties
-*   name:     name of the two dash parameter in the command (eg "--my_name") and in the returned parse object unless label is defined.
-*   label:    not yet implemented, see name
-*   shortcut: name of the one dash parameter in the command (eg "-n"), must be one charactere
-*   required: boolean, throw an exception when true and the parameter is not defined
-*   type:     one of 'string', 'boolean', 'integer' or 'array'
+Parameters are defined with the following properties:
+
+* name:     name of the two dash parameter in the command (eg "--my_name") and in the returned parse object unless label is defined.
+* label:    not yet implemented, see name
+* shortcut: name of the one dash parameter in the command (eg "-n"), must be one charactere
+* required: boolean, throw an exception when true and the parameter is not defined
+* type:     one of 'string', 'boolean', 'integer' or 'array'
 
 ###
 Parameters = (config = {}) ->
@@ -50,8 +51,11 @@ Parameters = (config = {}) ->
     for name, command of config.commands
       throw Error "Incoherent Command Name: key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}" if command.name and command.name isnt name
       command.name = name
+      command.description ?= "No description yet for the #{command.name} command"
       sanitize_command command
   # An object where key are command and values are object map between shortcuts and names
+  config.name ?= 'myapp'
+  config.description ?= 'No description yet'
   config.shortcuts = {}
   config.strict ?= false
   config.command ?= 'command'
@@ -315,94 +319,92 @@ command.
 
 ###
 Parameters.prototype.help = (command) ->
-    config = @config.commands[command]
-    throw Error "Invalid command \"#{command}\"" if command? and not config
-    describeOption = (option, pad_option, pad_description) ->
-      shortcut = if option.shortcut then "-#{option.shortcut} " else ''
-      content = ' '.repeat pad_option
-      content += pad "#{shortcut}--#{option.name}", pad_description - pad_option
-      content += option.description
+  if command
+    throw Error "Invalid command \"#{command}\"" unless @config.commands[command]
+    command = @config.commands[command]
+  describeOption = (option, pad_option, pad_description) ->
+    shortcut = if option.shortcut then "-#{option.shortcut} " else ''
+    content = ' '.repeat pad_option
+    content += pad "#{shortcut}--#{option.name}", pad_description - pad_option
+    content += option.description
+    content += '\n'
+  describeCommand = (command) ->
+    {description} = command
+    content = pad "    #{command.name}", 24
+    content += command.description
+    content += '\n'
+    if command.options then for _, option of command.options
+      content += describeOption option, 6, 26
+    if command.main
+      content += pad "      #{command.main.name}", 26
+      content += command.main.description
       content += '\n'
-    describeCommand = (config) ->
-      content = pad "    #{config.name}", 24
-      content += config.description
-      content += '\n'
-      if config.options then for _, option of config.options
-        content += describeOption option, 6, 26
-      if config.main
-        content += pad "      #{config.main.name}", 26
-        content += config.main.description
-        content += '\n'
-      content
-    if command and command isnt 'help'
-      # Command help
-      config = @config.commands[command]
-      synopsis = @config.name + ' ' + command
-      if Object.keys(config.options).length
-        options = 'options...'
-        options = "[#{options}]" unless (Object.values(config.options).filter (o) -> o.required).length
-        synopsis += " #{options}"
-      if config.main
-        main = "#{config.main.name}"
-        main = "[#{main}]" unless config.main.required
-        synopsis += " #{main}"
-      content = """
-      NAME
-          #{@config.name} #{command} - #{config.description}
-      SYNOPSIS
-          #{synopsis}
-      DESCRIPTION
+    content
+  if command and command.name isnt 'help'
+    # Command help
+    synopsis = @config.name + ' ' + command.name
+    if Object.keys(command.options).length
+      options = 'options...'
+      options = "[#{options}]" unless (Object.values(command.options).filter (o) -> o.required).length
+      synopsis += " #{options}"
+    if command.main
+      main = "#{command.main.name}"
+      main = "[#{main}]" unless command.main.required
+      synopsis += " #{main}"
+    content = """
+    NAME
+        #{@config.name} #{command.name} - #{command.description}
+    SYNOPSIS
+        #{synopsis}
+    DESCRIPTION
 
-      """
-      content += describeCommand config
+    """
+    content += describeCommand command
+  else
+    {name, description} = @config
+    # Full help
+    content = """
+    NAME
+        #{@config.name} - #{@config.description}
+
+    """
+    content += 'SYNOPSIS\n'
+    content += "    #{name}"
+    content += ' command' if Object.keys(@config.commands).length
+    content += ' [options...]'
+    content += '\n'
+    if Object.keys(@config.commands).length
+      content += '    where command is one of'
+      content += '\n'
+    for _, command of @config.commands
+      content += pad "      #{command.name}", 24
+      content += command.description or "No description yet for the #{command.name} command"
+      content += '\n'
+    content += 'DESCRIPTION\n'
+    # Describe each option
+    for _, option of @config.options
+      content += describeOption option, 4, 24
+    if @config.main
+      content += pad "    #{@config.main.name}", 24
+      content += @config.main.description
+      content += '\n'
+    # Describe each command
+    for _, command of @config.commands
+      content += describeCommand command
+    # Add examples
+    content += 'EXAMPLES\n'
+    if Object.keys(@config.commands).length
+      content += pad "    #{@config.name or '/path/to/app'} help", 24
+      content += "Show this message"
     else
-      # Full help
-      content = """
-      NAME
-          #{@config.name} - #{@config.description}
-
-      """
-      content += 'SYNOPSIS\n'
-      content += "    #{@config.name}"
-      content += ' command' if Object.keys(@config.commands).length
-      content += ' [options...]'
-      content += '\n'
-      if Object.keys(@config.commands).length
-        content += '    where command is one of'
-        content += '\n'
-      for _, command of @config.commands
-        content += pad "      #{command.name}", 24
-        content += command.description
-        content += '\n'
-      content += 'DESCRIPTION\n'
-      # Describe each option
-      for _, option of @config.options
-        content += describeOption option, 4, 24
-        # shortcut = if option.shortcut then "-#{option.shortcut} " else ''
-        # content += pad "    #{shortcut}--#{option.name}", 24
-        # content += option.description
-        # content += '\n'
-      if @config.main
-        content += pad "    #{@config.main.name}", 24
-        content += @config.main.description
-        content += '\n'
-      # Describe each command
-      for _, command of @config.commands
-        content += describeCommand command
-      # Add examples
-      content += 'EXAMPLES\n'
-      if Object.keys(@config.commands).length
-        content += "    #{@config.name} help       Show this message"
-      else
-        content += "    #{@config.name} --help     Show this message"
-      content += '\n'
-      content
+      content += pad "    #{@config.name or '/path/to/app'} --help", 24
+      content += "Show this message"
+    content += '\n'
+    content
 
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
-
-
 
 is_object = (obj) ->
   obj and typeof obj is 'object' and not Array.isArray obj
