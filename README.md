@@ -8,6 +8,7 @@ Node parameters is sugar for parsing typical unix command line options.
 * Reversability: parse and stringify is bi-directional
 * Auto-discovery: extract unregistered options
 * Object literals: config and parsed results are serializable and human readable
+* Routing: run dedicated functions or modules based on user commands
 * Auto generated help
 * Complete tests coverages plus samples
 
