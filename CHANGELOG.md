@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* run: user arguments as last arguments, new extended option
+
 ## Version 0.3.0
 
 * help: default app name and description

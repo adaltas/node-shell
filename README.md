@@ -69,6 +69,10 @@ The properties for options are:
   Default value if none is provided; always part of the object return by parse,
   part of the arguments returned by stringify unless the "no_default" option is 
   set.
+* `extended` (object)   
+  Used with 'run', inject the parsed parameter, the original argv array and
+  the configuration as first arguments before passing the user arguments,
+  default is "false".
 * `main` (object)   
   Anything left which is not a parameter at the end of the arguments.
 * `name` (string)   

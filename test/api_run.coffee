@@ -17,29 +17,9 @@ describe 'run', ->
         
     it '1st arg is params', ->
       parameters
-        options: [
-          name: 'my_argument'
-        ]
+        options: 'my_argument': {}
         run: (params) ->
           params.my_argument.should.eql 'my value'
-      .run ['--my_argument', 'my value']
-        
-    it '2nd arg is argv', ->
-      parameters
-        options: [
-          name: 'my_argument'
-        ]
-        run: (params, argv) ->
-          argv.should.eql ['--my_argument', 'my value']
-      .run ['--my_argument', 'my value']
-        
-    it '3rd arg is config', ->
-      parameters
-        options: [
-          name: 'my_argument'
-        ]
-        run: (params, argv, config) ->
-          config.options['my_argument'].name.should.eql 'my_argument'
       .run ['--my_argument', 'my value']
         
     it 'return value is passed', ->
@@ -56,7 +36,7 @@ describe 'run', ->
         options: [
           name: 'my_argument'
         ]
-        run: (my_arg, my_callback, my_params) ->
+        run: (my_params, my_arg, my_callback) ->
           err = Error 'Das ist kaput' unless my_params['my_argument'] is 'my value'
           my_callback err, my_arg
       .run ['--my_argument', 'my value'], 'sth', (err, my_arg)->
