@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.3.0
 
 * help: default app name and description
 * config: options and commands as objects literals
