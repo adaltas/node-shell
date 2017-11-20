@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* config: options and commands as objects literals
+
 ## Version 0.2.2
 
 * load: custom user module loader

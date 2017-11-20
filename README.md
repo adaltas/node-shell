@@ -4,10 +4,11 @@
 
 Node parameters is sugar for parsing typical unix command line options. 
 
-*   Standard and commands-based command lines (think `git pull ...`)
-*   Reversability: parse and stringify is bi-directional
-*   Complete tests coverages plus samples
-*   Auto-discovery: extract unregistered options
+* Standard and commands-based command lines (think `git pull ...`)
+* Reversability: parse and stringify is bi-directional
+* Complete tests coverages plus samples
+* Auto-discovery: extract unregistered options
+* Object literals: config and parsed results are serializable and human readable
 
 ## Usage
 

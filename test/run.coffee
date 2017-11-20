@@ -3,7 +3,7 @@ fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
   
-describe 'options module', ->
+describe 'run', ->
   
   describe 'function', ->
     
@@ -39,7 +39,7 @@ describe 'options module', ->
           name: 'my_argument'
         ]
         run: (params, argv, config) ->
-          config.options[0].name.should.eql 'my_argument'
+          config.options['my_argument'].name.should.eql 'my_argument'
       .run ['--my_argument', 'my value']
         
     it 'return value is passed', ->

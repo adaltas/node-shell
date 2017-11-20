@@ -27,47 +27,51 @@ Parameters are defined with the following properties
 Parameters = (config = {}) ->
   @config = config
   # Sanitize options
-  options = (command) ->
-    for option in command.options
+  sanitize_options = (config) ->
+    config.options ?= {}
+    # Convert from object with keys as options name to an array
+    config.options = array_to_object config.options, 'name' if Array.isArray config.options
+    for name, option of config.options
+      option.name = name
       # Access option by key
-      do (option) ->
-        command.options.__defineGetter__ option.name, -> option
       option.type ?= 'string'
-      throw Error "Invalid option type #{JSON.stringify option.type}" if types.indexOf(option.type) is -1
-      command.shortcuts[option.shortcut] = option.name
-      options.one_of = [options.one_of] if typeof options.one_of is 'string'
-      throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if options.one_of and not Array.isArray options.one_of
-  # An object where key are command and values are object map between shortcuts and names
-  config.shortcuts = {}
-  config.options ?= []
-  options config
-  config.command ?= 'command'
-  config.commands ?= []
-  config.commands = [config.commands] unless Array.isArray config.commands
-  makeCommand = (command) ->
-    config.commands.__defineGetter__ command.name, -> command
+      throw Error "Invalid option type #{JSON.stringify option.type}" unless option.type in types
+      config.shortcuts[option.shortcut] = option.name if option.shortcut
+      option.one_of = [option.one_of] if typeof option.one_of is 'string'
+      throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if option.one_of and not Array.isArray option.one_of
+  sanitize_command = (command) ->
     command.strict ?= config.strict
     command.shortcuts = {}
-    command.options ?= []
-    command.options = [command.options] unless Array.isArray command.options
-    options command
-  for command in config.commands
-    makeCommand command
+    sanitize_options command
+    command
+  sanitize_commands = (config) ->
+    config.commands ?= {}
+    config.commands = array_to_object config.commands, 'name' if Array.isArray config.commands
+    for name, command of config.commands
+      throw Error "Incoherent Command Name: key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}" if command.name and command.name isnt name
+      command.name = name
+      sanitize_command command
+  # An object where key are command and values are object map between shortcuts and names
+  config.shortcuts = {}
+  config.strict ?= false
+  config.command ?= 'command'
+  sanitize_options config
+  sanitize_commands config
   unless config.commands.help
-    if config.commands.length
-      commands = 
+    if Object.keys(config.commands).length
+      command = sanitize_command
         name: 'help'
         description: "Display help information about #{config.name}"
         main:
           name: 'name'
           description: 'Help about a specific command'
-      config.commands.push commands
-      makeCommand commands
+      config.commands[command.name] = command
     else 
-      config.options.push 
+      config.options['help'] =
         name: 'help'
         shortcut: 'h'
-        description: "Display help information"
+        description: 'Display help information'
+        type: 'boolean'
   @
 
 ###
@@ -186,8 +190,7 @@ Parameters.prototype.parse = (argv = process) ->
           params[key] ?= []
           params[key].push value.split(',')...
     # Check against required options
-    options = config.options
-    if options then for option in options
+    for _, option of config.options
       if option.required
         throw Error "Required option argument \"#{option.name}\"" unless params.help or params[option.name]?
       if option.one_of
@@ -210,7 +213,7 @@ Parameters.prototype.parse = (argv = process) ->
           throw Error "Fail to parse end of command \"#{main}\""
     # Command mode but no command are found, default to help
     # Happens with global options without a command
-    if @config.commands.length and not params[@config.command]
+    if Object.keys(@config.commands).length and not params[@config.command]
       params[@config.command] = 'help'
     # Check against required main
     main = config.main
@@ -220,9 +223,9 @@ Parameters.prototype.parse = (argv = process) ->
     params
   # If they are commands (other than help) and no arguments are provided,
   # we default to the help action
-  if @config.commands.length and argv.length is index
+  if Object.keys(@config.commands).length and argv.length is index
     argv.push 'help'
-  if @config.commands.length and argv[index].substr(0,1) isnt '-'
+  if Object.keys(@config.commands).length and argv[index].substr(0,1) isnt '-'
     config = @config.commands[argv[index]]
     throw Error "Invalid command '#{argv[index]}'" unless config
     params[@config.command] = argv[index++]
@@ -231,9 +234,9 @@ Parameters.prototype.parse = (argv = process) ->
   params = parse config, argv
   # Enrich params with default values
   if params[@config.command]
-    for option in @config.commands[params[@config.command]].options
+    for _, option of @config.commands[params[@config.command]].options
       params[option.name] ?= option.default if option.default?
-  for option in @config.options
+  for _, option of @config.options
     params[option.name] ?= option.default if option.default?
   params
 
@@ -252,13 +255,13 @@ Parameters.prototype.stringify = (params, options={}) ->
     throw Error "Invalid command '#{params[@config.command]}'" unless @config.commands[params[@config.command]]
   # Enrich params with default values
   if params[@config.command]
-    for option in @config.commands[params[@config.command]].options
+    for _, option of @config.commands[params[@config.command]].options
       params[option.name] ?= option.default if option.default?
-  for option in @config.options
+  for _, option of @config.options
     params[option.name] ?= option.default if option.default?
   # Stringify
   stringify = (config) =>
-    for option in config.options
+    for _, option of config.options
       key = option.name
       keys[key] = true
       value = params[key]
@@ -324,7 +327,7 @@ Parameters.prototype.help = (command) ->
       content = pad "    #{config.name}", 24
       content += config.description
       content += '\n'
-      if config.options then for option in config.options
+      if config.options then for _, option of config.options
         content += describeOption option, 6, 26
       if config.main
         content += pad "      #{config.main.name}", 26
@@ -335,9 +338,9 @@ Parameters.prototype.help = (command) ->
       # Command help
       config = @config.commands[command]
       synopsis = @config.name + ' ' + command
-      if config.options.length
+      if Object.keys(config.options).length
         options = 'options...'
-        options = "[#{options}]" unless (config.options.filter (o) -> o.required).length
+        options = "[#{options}]" unless (Object.values(config.options).filter (o) -> o.required).length
         synopsis += " #{options}"
       if config.main
         main = "#{config.main.name}"
@@ -361,19 +364,19 @@ Parameters.prototype.help = (command) ->
       """
       content += 'SYNOPSIS\n'
       content += "    #{@config.name}"
-      content += ' command' if @config.commands.length
+      content += ' command' if Object.keys(@config.commands).length
       content += ' [options...]'
       content += '\n'
-      if @config.commands.length
+      if Object.keys(@config.commands).length
         content += '    where command is one of'
         content += '\n'
-      for command in @config.commands
+      for _, command of @config.commands
         content += pad "      #{command.name}", 24
         content += command.description
         content += '\n'
       content += 'DESCRIPTION\n'
       # Describe each option
-      for option in @config.options
+      for _, option of @config.options
         content += describeOption option, 4, 24
         # shortcut = if option.shortcut then "-#{option.shortcut} " else ''
         # content += pad "    #{shortcut}--#{option.name}", 24
@@ -384,11 +387,11 @@ Parameters.prototype.help = (command) ->
         content += @config.main.description
         content += '\n'
       # Describe each command
-      for command in @config.commands
+      for _, command of @config.commands
         content += describeCommand command
       # Add examples
       content += 'EXAMPLES\n'
-      if @config.commands.length
+      if Object.keys(@config.commands).length
         content += "    #{@config.name} help       Show this message"
       else
         content += "    #{@config.name} --help     Show this message"
@@ -398,3 +401,14 @@ Parameters.prototype.help = (command) ->
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
+
+
+
+is_object = (obj) ->
+  obj and typeof obj is 'object' and not Array.isArray obj
+
+array_to_object = (elements, key) ->
+    opts = {}
+    for element in elements
+      opts[element[key]] = element
+    opts

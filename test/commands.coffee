@@ -12,13 +12,36 @@ describe 'commands', ->
       command: 'start'
     .should.eql ['start']
 
-  it 'accept no main and a string option', ->
+  it 'command is of type object', ->
+    params = parameters
+      commands: 'start': {}
+    params.parse(['start']).should.eql
+      command: 'start'
+    params.stringify
+      command: 'start'
+    .should.eql ['start']
+
+  it 'options is of type array', ->
     params = parameters commands: [
       name: 'start'
       options: [
         name: 'myparam'
       ]
     ]
+    params.parse(['start', '--myparam', 'my value']).should.eql
+      command: 'start'
+      myparam: 'my value'
+    params.stringify
+      command: 'start'
+      myparam: 'my value'
+    .should.eql ['start', '--myparam', 'my value']
+
+  it 'options is of type object', ->
+    params = parameters
+      commands:
+        'start':
+          options:
+            myparam: {}
     params.parse(['start', '--myparam', 'my value']).should.eql
       command: 'start'
       myparam: 'my value'

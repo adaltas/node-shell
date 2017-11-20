@@ -8,8 +8,9 @@ describe 'options required', ->
     it 'may be optional with string', ->
       params = parameters commands: [
         name: 'mycommand'
-        options: 
+        options: [
           name: 'my_argument'
+        ]
       ]
       params.parse(['mycommand']).should.eql
         command: 'mycommand'
@@ -20,9 +21,10 @@ describe 'options required', ->
     it 'may be optional with array', ->
       params = parameters commands: [
         name: 'mycommand'
-        options: 
+        options: [
           name: 'my_argument'
           type: 'array'
+        ]
       ]
       params.parse(['mycommand']).should.eql
         command: 'mycommand'
@@ -35,9 +37,10 @@ describe 'options required', ->
     it 'honors required true if value is provided', ->
       params = parameters commands: [
         name: 'mycommand'
-        options: 
+        options: [
           name: 'my_argument'
           required: true
+        ]
       ]
       params.parse(['mycommand', '--my_argument', 'my --value']).should.eql
         command: 'mycommand'
@@ -50,9 +53,10 @@ describe 'options required', ->
     it 'honors required true if no value provided', ->
       params = parameters commands: [
         name: 'mycommand'
-        options: 
+        options:  [
           name: 'my_argument'
           required: true
+        ]
       ]
       (->
         params.parse ['mycommand']
