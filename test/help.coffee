@@ -137,7 +137,7 @@ describe 'help', ->
       
       """
 
-    it 'print multiple commands with multiple options', ->
+    it 'print all commands with multiple options', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
@@ -169,13 +169,9 @@ describe 'help', ->
             name: 'command'
             description: 'Command in stop'
           options: [
-            name: 'string'
-            shortcut: 's'
-            description: 'String option in stop'
-          ,
-            name: 'boolean'
-            shortcut: 'b'
-            description: 'Boolean option in stop'
+            name: 'array'
+            shortcut: 'a'
+            description: 'Array option in stop'
           ]
         ]
       params.help().should.eql """
@@ -194,8 +190,7 @@ describe 'help', ->
             -i --integer        Integer option in start
             command             Command in start
           stop                Description for the stop command
-            -s --string         String option in stop
-            -b --boolean        Boolean option in stop
+            -a --array          Array option in stop
             command             Command in stop
           help                Display help information about myscript
             name                Help about a specific command
@@ -205,7 +200,7 @@ describe 'help', ->
       """
       params.help().should.eql params.help 'help'
 
-    it 'describe an command', ->
+    it 'describe a specific command', ->
       params = parameters
         name: 'myscript'
         description: 'Some description for myscript'
@@ -237,9 +232,9 @@ describe 'help', ->
       params = parameters
         name: 'myscript'
         commands:[]
-      try
+      ( ->
         params.help('undefined')
-      catch e then e.message.should.eql 'Invalid command "undefined"'
+      ).should.throw 'Invalid Command: "undefined"'
 
     it 'display main without braket if required', ->
       params = parameters

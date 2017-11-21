@@ -54,12 +54,12 @@ describe 'commands', ->
     params = parameters commands: [name: 'myaction']
     (->
       params.parse ['hum', '-s', 'my', '--command']
-    ).should.throw "Invalid command 'hum'"
+    ).should.throw 'Invalid Command: "hum"'
     (->
       params.stringify 
         command: 'hum'
         myparam: true
-    ).should.throw "Invalid command 'hum'"
+    ).should.throw 'Invalid Command: "hum"'
 
   it 'customize command name', ->
     params = parameters
@@ -91,3 +91,66 @@ describe 'commands', ->
       command: 'start'
       aopt: 'lulu'
     .should.eql ['--gopt', 'toto', 'start', '--aopt', 'lulu']
+
+  describe 'nested', ->
+
+    it 'with the same command name', ->
+      params = parameters
+        options: [
+          name: 'opt_root'
+        ]
+        commands: [
+          name: 'parent'
+          options: [
+            name: 'opt_parent'
+          ]
+          commands: [
+            name: 'child'
+            options: [
+              name: 'opt_child'
+            ]
+          ]
+        ]
+      params.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
+        command: ['parent', 'child']
+        opt_root: 'val 0'
+        opt_parent: 'val 1'
+        opt_child: 'val 2'
+      params.stringify
+        command: ['parent', 'child']
+        opt_root: 'val 0'
+        opt_parent: 'val 1'
+        opt_child: 'val 2'
+      .should.eql ['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']
+
+    it 'with different command name', ->
+      params = parameters
+        options: [
+          name: 'opt_root'
+        ]
+        commands: [
+          name: 'parent'
+          options: [
+            name: 'opt_parent'
+          ]
+          command: 'subcommand'
+          commands: [
+            name: 'child'
+            options: [
+              name: 'opt_child'
+            ]
+          ]
+        ]
+      params.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
+        command: 'parent'
+        subcommand: 'child'
+        opt_root: 'val 0'
+        opt_parent: 'val 1'
+        opt_child: 'val 2'
+      params.stringify
+        command: 'parent'
+        subcommand: 'child'
+        opt_root: 'val 0'
+        opt_parent: 'val 1'
+        opt_child: 'val 2'
+      .should.eql ['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']
