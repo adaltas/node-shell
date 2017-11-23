@@ -1,10 +1,4 @@
 
-pad = require 'pad' 
-load = require './load'
-merge = require './merge'
-
-types = ['string', 'boolean', 'integer', 'array']
-
 ###
 # parameters(config)
 
@@ -86,6 +80,9 @@ Parameters = (config = {}) ->
 
 ## `run([argv])`
 
+* `argv`   
+  Array of arguments to parse, optional.
+
 Parse the arguments and execute the module defined by the "module" option.
 
 You should only pass the parameters and the not the script name.
@@ -122,25 +119,10 @@ Parameters.prototype.run = (argv = process, args...) ->
 
 ###
 
-## `load(module)`
-
-Load and return a module, use `require.main.require` by default.
-
-###
-
-Parameters.prototype.load = (module) ->
-  unless @config.load
-    load module
-  else
-    if typeof @config.load is 'string'
-      load(@config.load)(module)
-    else
-      @config.load module
-  
-
-###
-
 ## `parse([argv])`
+
+* `argv`   
+  Array of arguments to parse, optional.
 
 Convert process arguments into a usable object. Argument may
 be in the form of a string or an array. If not provided, it 
@@ -258,7 +240,14 @@ Parameters.prototype.parse = (argv = process) ->
 
 ###
 
-## `stringify([script], params)`
+## `stringify([script], params, [options])`
+
+* `script`   
+  A script which will prefixed the arguments, optional.
+* `params`   
+  Parameter object to stringify into arguments, required.
+* `options`   
+  Object containing any options, optional.
 
 Convert an object into process arguments.
 
@@ -329,7 +318,14 @@ Parameters.prototype.stringify = (params, options={}) ->
 
 ###
 
-## `help([command])`
+## `help(arv, [options])` or `help(commands..., [options])`
+
+* `params`   
+  Parameter object as returned by parsed, required if first argument is an object.
+* `commands`   
+  A list of commands passed as string, required if first argument is a string.
+* `options`   
+  Object containing any options, optional.
 
 Return a string describing the usage of the overall command or one of its
 command.
@@ -560,9 +556,39 @@ Parameters.prototype.help = (commands...) ->
     content += '\n'
     content
 
+###
+
+## `load(module)`
+
+* `module`   
+  Name of the module to load, required.
+
+Load and return a module, use `require.main.require` by default but can be
+overwritten by the `load` options passed in the configuration.
+
+###
+Parameters.prototype.load = (module) ->
+  unless @config.load
+    load module
+  else
+    if typeof @config.load is 'string'
+      load(@config.load)(module)
+    else
+      @config.load module
+
 module.exports = (config) ->
   new Parameters config
 module.exports.Parameters = Parameters
+
+# Dependencies
+
+pad = require 'pad' 
+load = require './load'
+merge = require './merge'
+
+# Internal
+
+types = ['string', 'boolean', 'integer', 'array']
 
 # Distinguish plain literal object from arrays
 is_object = (obj) ->
