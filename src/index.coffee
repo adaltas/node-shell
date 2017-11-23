@@ -230,7 +230,6 @@ Parameters.prototype.parse = (argv = process) ->
           params[config.command] = argv[index++]
         # Parse child configuration
         parse config.commands[command], argv
-          
     # Command mode but no command are found, default to help
     # Happens with global options without a command
     if Object.keys(@config.commands).length and not params[@config.command]
@@ -336,7 +335,145 @@ Return a string describing the usage of the overall command or one of its
 command.
 
 ###
-Parameters.prototype.help = (command) ->
+Parameters.prototype.help = (commands...) ->
+  commands = [] if commands.length is 1 and commands[0] is 'help'
+  config = @config
+  configs = [config]
+  for command, i in commands
+    config = config.commands[command]
+    throw Error "Invalid Command: \"#{commands.slice(0, i+1).join ' '}\"" unless config
+    configs.push config
+  # Init
+  content = []
+  content.push ''
+  # Name
+  content.push 'NAME'
+  name = configs.map((config) -> config.name).join ' '
+  description = configs[configs.length-1].description
+  content.push "    #{name} - #{description}"
+  # Synopsis
+  content.push ''
+  content.push 'SYNOPSIS'
+  synopsis = []
+  for config, i in configs
+    synopsis.push config.name
+    if Object.keys(config.options).length
+      synopsis.push "[#{config.name} options]"
+    # Is current config
+    if i is configs.length - 1
+      # There are more subcommand
+      if Object.keys(config.commands).length
+        synopsis.push "<#{config.command}>"
+      else if config.main
+        synopsis.push "{#{config.main.name}}"
+  content.push '    ' + synopsis.join ' '
+  # Options
+  for config in configs.slice(0).reverse()
+  # config = configs[configs.length - 1]
+    if Object.keys(config.options).length or config.main
+      content.push ''
+      if configs.length is 1
+        content.push "OPTIONS"
+      else
+        content.push "OPTIONS for #{config.name}"
+    if Object.keys(config.options).length
+      for _, option of config.options
+        # console.log option
+        shortcut = if option.shortcut then "-#{option.shortcut} " else ''
+        line = '    '
+        line += "#{shortcut}--#{option.name}"
+        # line += ' (required)' if option.required
+        line = pad line, 28
+        if line.length > 28
+          content.push line
+          line = ' '.repeat 28
+        line += option.description or "No description yet for the #{option.name} option."
+        line += ' Required.' if option.required
+        content.push line
+    if config.main
+      line = '    '
+      line += "#{config.main.name}"
+      line = pad line, 28
+      if line.length > 28
+        content.push line
+        line = ' '.repeat 28
+      line += config.main.description or "No description yet for the #{config.main.name} option."
+      content.push line
+    # if Object.keys(config.options).length or config.main
+    #   content.push ''
+  # Command
+  config = configs[configs.length - 1]
+  if Object.keys(config.commands).length
+    content.push ''
+    content.push 'COMMANDS'
+    for _, command of config.commands
+      line = ["#{command.name}"]
+      line = pad "    #{line.join ' '}", 28
+      if line.length > 28
+        content.push line
+        line = ' '.repeat 28
+      line += command.description or "No description yet for the #{command.name} command."
+      content.push line
+    # Detailed command information
+    for _, command of config.commands
+      content.push ''
+      content.push "COMMAND \"#{command.name}\""
+      # Raw command, no main, no child commands
+      if not Object.keys(command.commands).length and not command.main?.required
+        line = "#{command.name}"
+        line = pad "    #{line}", 28
+        if line.length > 28
+          content.push line
+          line = ' '.repeat 28
+        line += command.description or "No description yet for the #{command.name} command."
+        content.push line
+      # Command with main
+      if command.main
+        line = "#{command.name} {#{command.main.name}}"
+        line = pad "    #{line}", 28
+        if line.length > 28
+          content.push line
+          line = ' '.repeat 28
+        line += command.main.description or "No description yet for the #{command.main.name} option."
+        content.push line
+      # Command with child commands
+      if Object.keys(command.commands).length
+        line = ["#{command.name}"]
+        if Object.keys(command.options).length
+          line.push "[#{command.name} options]"
+        line.push "<#{command.command}>"
+        content.push '    ' + line.join ' '
+        commands = Object.keys command.commands
+        if commands.length is 1
+          content.push "    Where command is #{Object.keys command.commands}."
+        else if commands.length > 1
+          content.push "    Where command is one of #{Object.keys(command.commands).join ', '}."
+  # Add examples
+  config = configs[configs.length - 1]
+  has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
+  has_help_command = Object.values(config.commands).some (command) -> command.name is 'help'
+  has_help_option = true
+  content.push ''
+  content.push 'EXAMPLES'
+  cmd = configs.map((config) -> config.name).join  ' '
+  if has_help_option
+    line = pad "    #{cmd} --help", 28
+    if line.length > 28
+      content.push line
+      line = ' '.repeat 28
+    line += 'Show this message'
+    content.push line
+  if has_help_command
+    line = pad "    #{cmd} help", 28
+    if line.length > 28
+      content.push line
+      line = ' '.repeat 28
+    line += 'Show this message'
+    content.push line
+  content.push ''
+  console.log content.join '\n'
+  console.log ''
+  return content.join '\n'
   if command
     throw Error "Invalid Command: \"#{command}\"" unless @config.commands[command]
     command = @config.commands[command]
@@ -398,17 +535,20 @@ Parameters.prototype.help = (command) ->
       content += pad "      #{command.name}", 24
       content += command.description or "No description yet for the #{command.name} command"
       content += '\n'
-    content += 'DESCRIPTION\n'
-    # Describe each option
-    for _, option of @config.options
-      content += describeOption option, 4, 24
-    if @config.main
-      content += pad "    #{@config.main.name}", 24
-      content += @config.main.description
-      content += '\n'
+    if Object.keys(@config.options).length or @config.main
+      content += 'OPTIONS\n'
+      # Describe each option
+      for _, option of @config.options
+        content += describeOption option, 4, 24
+      if @config.main
+        content += pad "    #{@config.main.name}", 24
+        content += @config.main.description
+        content += '\n'
     # Describe each command
-    for _, command of @config.commands
-      content += describeCommand command
+    if Object.keys(@config.commands).length
+      content += 'COMMANDS\n'
+      for _, command of @config.commands
+        content += describeCommand command
     # Add examples
     content += 'EXAMPLES\n'
     if Object.keys(@config.commands).length

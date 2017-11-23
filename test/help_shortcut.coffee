@@ -14,15 +14,19 @@ describe 'help shortcut', ->
           description: 'MyArg'
         ]
       params.help().should.eql """
+      
       NAME
           myscript - Some description for myscript
+
       SYNOPSIS
-          myscript [options...]
-      DESCRIPTION
-          --myarg             MyArg
-          -h --help           Display help information
+          myscript [myscript options]
+
+      OPTIONS
+          --myarg                 MyArg
+          -h --help               Display help information
+
       EXAMPLES
-          myscript --help     Show this message
+          myscript --help         Show this message
 
       """
 
@@ -41,20 +45,27 @@ describe 'help shortcut', ->
           ]
         ]
       params.help().should.eql """
+
       NAME
           myscript - Some description for myscript
+
       SYNOPSIS
-          myscript command [options...]
-          where command is one of
-            status            Description for the status command
-            help              Display help information about myscript
-      DESCRIPTION
-          status              Description for the status command
-            --cluster_names     Ensure alias is not displayed
-          help                Display help information about myscript
-            name                Help about a specific command
+          myscript <command>
+
+      COMMANDS
+          status                  Description for the status command
+          help                    Display help information about myscript
+
+      COMMAND "status"
+          status                  Description for the status command
+
+      COMMAND "help"
+          help                    Display help information about myscript
+          help {name}             Help about a specific command
+
       EXAMPLES
-          myscript help       Show this message
+          myscript --help         Show this message
+          myscript help           Show this message
 
       """
       params.help().should.eql params.help 'help'
