@@ -10,6 +10,7 @@ describe 'api config', ->
       options:
         'help':
           name: 'help'
+          help: true
           description: 'Display help information'
           shortcut: 'h'
           type: 'boolean'
@@ -25,13 +26,20 @@ describe 'api config', ->
         'my_cmd':
           name: 'my_cmd'
           description: 'No description yet for the my_cmd command'
-          options: {}
+          options:
+            'help': 
+              name: 'help'
+              shortcut: 'h'
+              description: 'Display help information'
+              type: 'boolean'
+              help: true
           command: 'command'
           commands: {}
           strict: false
           shortcuts: {}
         'help':
-          name: 'help',
+          name: 'help'
+          help: true
           description: 'Display help information about myapp'
           main:
             name: 'name'
@@ -43,7 +51,13 @@ describe 'api config', ->
           shortcuts: {}
       name: 'myapp'
       description: 'No description yet'
-      options: {}
+      options:
+        'help': 
+          name: 'help'
+          shortcut: 'h'
+          description: 'Display help information'
+          type: 'boolean'
+          help: true
       shortcuts: {}
       strict: false
         
@@ -54,7 +68,13 @@ describe 'api config', ->
         'parent_cmd':
           name: 'parent_cmd'
           description: 'No description yet for the parent_cmd command'
-          options: {}
+          options:
+            'help': 
+              name: 'help'
+              shortcut: 'h'
+              description: 'Display help information'
+              type: 'boolean'
+              help: true
           strict: false
           shortcuts: {}
           command: 'command'
@@ -62,13 +82,20 @@ describe 'api config', ->
             'child_cmd':
               name: 'child_cmd'
               description: 'No description yet for the child_cmd command'
-              options: {}
+              options:
+                'help': 
+                  name: 'help'
+                  shortcut: 'h'
+                  description: 'Display help information'
+                  type: 'boolean'
+                  help: true
               command: 'command'
               commands: {}
               strict: false
               shortcuts: {}
         'help':
-          name: 'help',
+          name: 'help'
+          help: true
           description: 'Display help information about myapp'
           main:
             name: 'name'
@@ -80,7 +107,13 @@ describe 'api config', ->
           shortcuts: {}
       name: 'myapp'
       description: 'No description yet'
-      options: {}
+      options:
+        'help': 
+          name: 'help'
+          shortcut: 'h'
+          description: 'Display help information'
+          type: 'boolean'
+          help: true
       shortcuts: {}
       strict: false
 
@@ -102,12 +135,19 @@ describe 'api config', ->
             'myparam':
               name: 'myparam'
               type: 'string'
+            'help': 
+              name: 'help'
+              shortcut: 'h'
+              description: 'Display help information'
+              type: 'boolean'
+              help: true
           command: 'command'
           commands: {}
           strict: false,
           shortcuts: {}
         'help':
-          name: 'help',
+          name: 'help'
+          help: true
           description: 'Display help information about myapp'
           main:
             name: 'name'
@@ -119,6 +159,12 @@ describe 'api config', ->
           commands: {}
       name: 'myapp'
       description: 'No description yet'
-      options: {}
+      options:
+        'help': 
+          name: 'help'
+          shortcut: 'h'
+          description: 'Display help information'
+          type: 'boolean'
+          help: true
       shortcuts: {}
       strict: false

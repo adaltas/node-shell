@@ -5,6 +5,25 @@ describe 'help', ->
 
   describe 'without command', ->
     
+    it 'minimalist, no name, no description, no options, no main', ->
+      parameters {}
+      .help().should.eql """
+      
+      NAME
+          myapp - No description yet
+      
+      SYNOPSIS
+          myapp
+      
+      OPTIONS
+          -h --help               Display help information
+      
+      EXAMPLES
+          myapp --help            Show this message
+      
+      """
+
+    
     it 'print without a name and a description', ->
       parameters()
       .help().should.eql """
@@ -13,7 +32,7 @@ describe 'help', ->
           myapp - No description yet
 
       SYNOPSIS
-          myapp [myapp options]
+          myapp
 
       OPTIONS
           -h --help               Display help information
@@ -114,6 +133,9 @@ describe 'help', ->
       SYNOPSIS
           myapp <command>
 
+      OPTIONS
+          -h --help               Display help information
+
       COMMANDS
           start                   No description yet for the start command
           help                    Display help information about myapp
@@ -176,6 +198,9 @@ describe 'help', ->
       SYNOPSIS
           myscript <command>
 
+      OPTIONS
+          -h --help               Display help information
+
       COMMANDS
           start                   Description for the start command
           stop                    Description for the stop command
@@ -198,7 +223,7 @@ describe 'help', ->
           myscript help           Show this message
 
       """
-      params.help().should.eql params.help 'help'
+      # params.help().should.eql params.help 'help'
 
     it 'describe a specific command', ->
       params = parameters
@@ -226,7 +251,11 @@ describe 'help', ->
 
       OPTIONS for start
           -s --string             String option in start
+          -h --help               Display help information
           command                 Command in start
+      
+      OPTIONS for myscript
+          -h --help               Display help information
 
       EXAMPLES
           myscript start --help   Show this message
@@ -244,3 +273,44 @@ describe 'help', ->
       ( ->
         params.help('mycommand', 'undefined')
       ).should.throw 'Invalid Command: "mycommand undefined"'
+
+    it.skip 'display options without brakets at least one required', ->
+      params = parameters
+        name: 'myscript'
+        description: 'Some description for myscript'
+        options: [
+          name: 'root_opt'
+        ,
+          name: 'root_opt_w_sht'
+          shortcut: 'c'
+        ,
+          name: 'root_opt_rqd'
+          required: true
+        ]
+        commands: [
+          name: 'parent'
+          options: [
+            name: 'parent_opt'
+          ,
+            name: 'parent_opt_w_sht'
+            shortcut: 'c'
+          ,
+            name: 'parent_opt_rqd'
+            required: true
+          ]
+          commands: [
+            name: 'child'
+            options: [
+              name: 'child_opt'
+            ,
+              name: 'child_opt_w_sht'
+              shortcut: 'c'
+            ,
+              name: 'child_opt_rqd'
+              required: true
+            ]
+            main:
+              name: 'action'
+          ]
+        ]
+      params.help('parent') # , 'child'

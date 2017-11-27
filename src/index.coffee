@@ -35,6 +35,14 @@ Parameters = (config = {}) ->
       config.shortcuts[option.shortcut] = option.name if option.shortcut
       option.one_of = [option.one_of] if typeof option.one_of is 'string'
       throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if option.one_of and not Array.isArray option.one_of
+    # No "help" option for command "help"
+    unless config.help
+      config.options['help'] =
+        name: 'help'
+        shortcut: 'h'
+        description: 'Display help information'
+        type: 'boolean'
+        help: true
   sanitize_command = (command, parent) ->
     command.strict ?= parent.strict
     command.shortcuts = {}
@@ -58,22 +66,16 @@ Parameters = (config = {}) ->
   config.command ?= 'command'
   sanitize_options config
   sanitize_commands config
-  unless config.commands.help
-    if Object.keys(config.commands).length
-      command = sanitize_command
-        name: 'help'
-        description: "Display help information about #{config.name}"
-        main:
-          name: 'name'
-          description: 'Help about a specific command'
-      , config
-      config.commands[command.name] = command
-    else 
-      config.options['help'] =
-        name: 'help'
-        shortcut: 'h'
-        description: 'Display help information'
-        type: 'boolean'
+  if Object.keys(config.commands).length
+    command = sanitize_command
+      name: 'help'
+      description: "Display help information about #{config.name}"
+      main:
+        name: 'name'
+        description: 'Help about a specific command'
+      help: true
+    , config
+    config.commands[command.name] = merge config.commands[command.name], command
   @
 
 ###
@@ -101,7 +103,14 @@ Example
 
 ###
 Parameters.prototype.run = (argv = process, args...) ->
-  params = @parse argv
+  if Array.isArray argv
+    params = @parse argv
+  else if is_object argv
+    params = argv
+  else
+    throw "Invalid Arguments: first argument must be an argv array or an params object, got #{JSON.stringify argv}"
+  # Print help
+  return unless params
   if params[@config.command]
     run = @config.commands[params[@config.command]].run
     extended = @config.commands[params[@config.command]].extended
@@ -140,7 +149,7 @@ Example
     command: 'my --command'
 
 ###
-Parameters.prototype.parse = (argv = process) ->
+Parameters.prototype.parse = (argv = process, options = {}) ->
   argv = argv.split ' ' if typeof argv is 'string'
   index = 0
   # Remove node and script argv elements
@@ -184,10 +193,16 @@ Parameters.prototype.parse = (argv = process) ->
           throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
           params[key] ?= []
           params[key].push value.split(',')...
+    # Check if help is requested
+    helping = false
+    for _, option of config.options
+      continue unless option.help is true
+      helping = true if params[option.name]
+    return params if helping
     # Check against required options
     for _, option of config.options
       if option.required
-        throw Error "Required option argument \"#{option.name}\"" unless params.help or params[option.name]?
+        throw Error "Required option argument \"#{option.name}\"" unless helping or params[option.name]?
       if option.one_of
         values = params[option.name]
         values = [values] unless Array.isArray values
@@ -226,6 +241,7 @@ Parameters.prototype.parse = (argv = process) ->
   # we default to the help action
   if Object.keys(@config.commands).length and argv.length is index
     argv.push 'help'
+  # If there are commands... for the rest, i dont know, might be old leftover
   if Object.keys(@config.commands).length and argv[index].substr(0,1) isnt '-'
     config = @config.commands[argv[index]]
     throw Error "Invalid Command: \"#{argv[index]}\"" unless config
@@ -236,6 +252,11 @@ Parameters.prototype.parse = (argv = process) ->
   params = parse config, argv
   # Enrich params with default values
   set_default @config, params
+  # options.help ?= true
+  # console.log '!!!!!!!!!! help', @help params
+  # if options.help and help = @help params
+  #   process.stdout.write help
+  #   return
   params
 
 ###
@@ -255,18 +276,9 @@ Convert an object into process arguments.
 Parameters.prototype.stringify = (params, options={}) ->
   argv = if options.script then [process.execPath, options.script] else []
   keys = {}
-  # Validate command
-  # if params[@config.command]
-  #   throw Error "Invalid Command '#{params[@config.command]}'" unless @config.commands[params[@config.command]]
-  # Enrich params with default values
-  # if params[@config.command]
-  #   for _, option of @config.commands[params[@config.command]].options
-  #     params[option.name] ?= option.default if option.default?
-  # for _, option of @config.options
-  #   params[option.name] ?= option.default if option.default?
   set_default @config, params
   # Stringify
-  stringify = (config) =>
+  stringify = (config) ->
     for _, option of config.options
       key = option.name
       keys[key] = true
@@ -300,6 +312,7 @@ Parameters.prototype.stringify = (params, options={}) ->
       argv.push command
       keys[config.command] = command
       # Stringify child configuration
+      throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
       stringify config.commands[command]
   stringify @config
   # Handle params not defined in the configuration
@@ -318,21 +331,86 @@ Parameters.prototype.stringify = (params, options={}) ->
 
 ###
 
-## `help(arv, [options])` or `help(commands..., [options])`
+## `helping(params)` or `helping(arv)`
 
 * `params`   
+  Parameter object as returned by parsed.
+* `argv`   
+  An array of CLI arguments.
+
+Return zero to n commands if help not requested or null otherwise.
+
+###
+Parameters.prototype.helping = ->
+  args = Array.prototype.slice.call arguments
+  if Array.isArray args[0]
+    params = @parse args[0]
+    console.log params
+  else if is_object args[0]
+    params = args[0]
+  else
+    throw "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
+  params = merge {}, params
+  commands = []
+  # Build the commands array with help and without main
+  conf = @config
+  while conf
+    # Stop if there are no more sub commands
+    break unless Object.keys(conf.commands).length
+    command = params[conf.command]
+    if typeof command is 'string'
+      commands.push command
+      delete params[conf.command]
+    else if Array.isArray command
+      commands.push command[0]
+      command.shift()
+    conf = conf.commands[command]
+  conf = @config
+  helping = false
+  if Object.values(conf.options).filter((option) -> option.help).some( (options) -> params[options.name])
+    helping = true
+  for command, i in commands
+    if Object.values(conf.options).filter((option) -> option.help).some( (options) -> params[options.name])
+      helping = true
+    if conf.commands[command].help
+      helping = true
+      commands = commands.slice(0, i)
+      if params[conf.commands[command].main.name]
+        commands.push params[conf.commands[command].main.name].split(' ')...
+      break
+    conf = conf.commands[command]
+  if helping then commands else null
+
+###
+
+## `help(params, [options])` or `help(commands..., [options])`
+
+* `params(object)`   
   Parameter object as returned by parsed, required if first argument is an object.
-* `commands`   
-  A list of commands passed as string, required if first argument is a string.
-* `options`   
+* `commands(strings)`   
+  A list of commands passed as strings, required if first argument is a string.
+* `options(object)`   
   Object containing any options, optional.
 
 Return a string describing the usage of the overall command or one of its
 command.
 
 ###
-Parameters.prototype.help = (commands...) ->
-  commands = [] if commands.length is 1 and commands[0] is 'help'
+Parameters.prototype.help = ->
+  args = Array.prototype.slice.call arguments
+  # Get options
+  if args.length > 1
+    options = args.pop() if is_object args[args.length-1]
+  # Get commands as an array of sub commands
+  if is_object args[0]
+    throw 'Invalid Arguments' if args.length > 1
+    return unless commands = @helping args[0]
+  else
+    for arg in args then throw 'Invalid Arguments' if typeof arg isnt 'string'
+    commands = args
+  options ?= {}
+  # commands = [] if commands.length is 1 and commands[0] is 'help'
+  # Build a config array reflecting the hierarchical nature of commands
   config = @config
   configs = [config]
   for command, i in commands
@@ -353,7 +431,10 @@ Parameters.prototype.help = (commands...) ->
   synopsis = []
   for config, i in configs
     synopsis.push config.name
-    if Object.keys(config.options).length
+    # Find if there are options other than help
+    # has_options = Object.values(config.options).some((option) -> not option.help)
+    # if Object.keys(config.options).length
+    if Object.values(config.options).some((option) -> not option.help)
       synopsis.push "[#{config.name} options]"
     # Is current config
     if i is configs.length - 1
@@ -365,7 +446,6 @@ Parameters.prototype.help = (commands...) ->
   content.push '    ' + synopsis.join ' '
   # Options
   for config in configs.slice(0).reverse()
-  # config = configs[configs.length - 1]
     if Object.keys(config.options).length or config.main
       content.push ''
       if configs.length is 1
@@ -374,11 +454,9 @@ Parameters.prototype.help = (commands...) ->
         content.push "OPTIONS for #{config.name}"
     if Object.keys(config.options).length
       for _, option of config.options
-        # console.log option
         shortcut = if option.shortcut then "-#{option.shortcut} " else ''
         line = '    '
         line += "#{shortcut}--#{option.name}"
-        # line += ' (required)' if option.required
         line = pad line, 28
         if line.length > 28
           content.push line
@@ -395,8 +473,6 @@ Parameters.prototype.help = (commands...) ->
         line = ' '.repeat 28
       line += config.main.description or "No description yet for the #{config.main.name} option."
       content.push line
-    # if Object.keys(config.options).length or config.main
-    #   content.push ''
   # Command
   config = configs[configs.length - 1]
   if Object.keys(config.commands).length
@@ -520,8 +596,10 @@ set_default = (config, params, tempparams = null) ->
   if Object.keys(config.commands).length
     command = tempparams[config.command]
     command = tempparams[config.command].shift() if Array.isArray command
-    throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
-    params = set_default config.commands[command], params, tempparams
+    # We are not validating if the command is valid, it may not be set if help option is present
+    # throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
+    if config.commands[command]
+      params = set_default config.commands[command], params, tempparams
   for _, option of config.options
     params[option.name] ?= option.default if option.default?
   params

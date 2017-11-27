@@ -111,16 +111,62 @@ The properties for main are:
 
 ## Help usage
 
+From a user perspective, help can be displayed with two method, either with the
+`--help` option or with the `help` command.
+
+The `help` command is only available if other commands are registered in the
+configuration.
+
+Here's how ot display the help usage of the overall application.
+
+```
+./myapp --help
+```
+
+if some commands are registered, you could also use this alternative:
+
+```
+./myapp help
+```
+
+To display the help usage of a specific `hello` command, those two alternatives
+are equivalent:
+
+```
+# Option
+./myapp command --help
+# Command
+./myapp help command
+```
+
+By default, help is display to `stdout` when calling `parse`. It is possible to
+to disable this behavior by setting the `help` option to "false". Also, the 
+`help` option can be set to any [Node.js Writable Streams][ws].
+
+```javascript
+if(params = parameters(my_config).parse({help: true})){
+  // do sth
+}
+// Equivalant to
+if(params = parameters(my_config).parse({help: process.stdout})){
+  // do sth
+}
+```
+
 Call the `help` function and pass no argument to retrieve the global help and
 the name of a specific command.
 
 Here's an example on how to integrate the help functionnality inside your code:
 
 ```javascript
-params = parameters(my_config).parse())
-if( params.command === 'help' ){
-  return console.log(parameters.help(params.subcommand));
+const parameters = require('parameters')(my_config);
+const params = parameters.parse()
+if(commands = parameters.helping()){
+  return process.stdout.write(parameters.help(commands));
 }
+// Now work with the params object
+// Or call run if command routing is configured
+parameters.run(params)
 ```
 
 This will satisfy a help command with or without an extra command such as
@@ -333,3 +379,5 @@ Node.js versions.
 ## Contributors
 
 *   David Worms: <https://github.com/wdavidw>
+
+[ws]: https://nodejs.org/api/stream.html#stream_writable_streams

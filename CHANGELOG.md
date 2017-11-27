@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* helping: new function
 * help: new revisited format supporting nested commands
 * commands: unlimited nested dimensions
 * doc: improve run description

@@ -65,3 +65,43 @@ describe 'options required', ->
         params.stringify
           command: 'mycommand'
       ).should.throw 'Required option argument "my_argument"'
+  
+  describe 'compatible with help', ->
+    
+    it 'without command', ->
+      params = parameters()
+      params.parse(['--help']).should.eql
+        help: true
+    
+    it 'with command', ->
+      params = parameters
+        commands: [
+          name: 'parent'
+          commands: [
+            name: 'child'
+            options:  [
+              name: 'my_argument'
+              required: true
+            ]
+          ]
+        ]
+      params.parse(['parent', 'child', '--help']).should.eql
+        command: ['parent', 'child']
+        help: true
+    
+    it 'stop command nested discovery', ->
+      params = parameters
+        commands: [
+          name: 'parent'
+          commands: [
+            name: 'child'
+            options:  [
+              name: 'my_argument'
+              required: true
+            ]
+          ]
+        ]
+      params.parse(['parent', '--help', 'child']).should.eql
+        command: 'parent'
+        help: true
+      
