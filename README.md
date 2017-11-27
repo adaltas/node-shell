@@ -111,7 +111,7 @@ The properties for main are:
 
 ## Help usage
 
-From a user perspective, help can be displayed with two method, either with the
+From a user perspective, help can be displayed with two methods, either with the
 `--help` option or with the `help` command.
 
 The `help` command is only available if other commands are registered in the
@@ -129,34 +129,20 @@ if some commands are registered, you could also use this alternative:
 ./myapp help
 ```
 
-To display the help usage of a specific `hello` command, those two alternatives
+To display the help usage of the two commands `hello english`, those two alternatives
 are equivalent:
 
 ```
 # Option
-./myapp command --help
+./myapp hello english --help
 # Command
-./myapp help command
+./myapp help hello english
 ```
 
-By default, help is display to `stdout` when calling `parse`. It is possible to
-to disable this behavior by setting the `help` option to "false". Also, the 
-`help` option can be set to any [Node.js Writable Streams][ws].
+For the developer, help can be used with a combination of the `helping` and 
+`help` commands are, if routing is enabled, with `run`.
 
-```javascript
-if(params = parameters(my_config).parse({help: true})){
-  // do sth
-}
-// Equivalant to
-if(params = parameters(my_config).parse({help: process.stdout})){
-  // do sth
-}
-```
-
-Call the `help` function and pass no argument to retrieve the global help and
-the name of a specific command.
-
-Here's an example on how to integrate the help functionnality inside your code:
+Here's how to display help with `helping` and `help`:
 
 ```javascript
 const parameters = require('parameters')(my_config);
@@ -165,12 +151,15 @@ if(commands = parameters.helping(params)){
   return process.stdout.write(parameters.help(commands));
 }
 // Now work with the params object
-// Or call run if command routing is configured
-parameters.run(params)
 ```
 
-This will satisfy a help command with or without an extra command such as
-`myscript help` and `myscript help mycommand`.
+Here's how to display help with routing:
+
+```javascript
+// Routing to help required `help.run` to be set
+my_config.help = {run: './some/module'}
+require('parameters')(my_config).run(params)
+```
 
 ## Standard command line example
 

@@ -83,7 +83,7 @@ describe 'run', ->
             ]
           ]
           .run ['--param', 'value']
-        ).should.throw 'Missing run definition for command "help"'
+        ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
         
       it 'run not defined', ->
         ( ->
@@ -91,7 +91,7 @@ describe 'run', ->
             name: 'my_command'
           ]
           .run ['my_command']
-        ).should.throw 'Missing run definition for command "my_command"'
+        ).should.throw 'Missing "run" definition for command "my_command"'
         
       it 'run a function', ->
         parameters commands: [

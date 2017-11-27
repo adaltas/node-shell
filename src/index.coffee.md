@@ -78,10 +78,14 @@ Parameters are defined with the following properties:
         config.commands[command.name] = merge config.commands[command.name], command
       @
 
-## `run([argv])`
+## `run(argv)` or `run(params)` or `run(process)`
 
 * `argv`   
   Array of arguments to parse, optional.
+* `params`   
+  Paramters object as returned by `parse`, optional.
+* `process`   
+  The Node.js process object, optional.
 
 Parse the arguments and execute the module defined by the "module" option.
 
@@ -102,18 +106,25 @@ Example:
 ```
 
     Parameters.prototype.run = (argv = process, args...) ->
-      if Array.isArray argv
+      if Array.isArray(argv)
+        params = @parse argv
+      else if argv is process
         params = @parse argv
       else if is_object argv
         params = argv
       else
-        throw "Invalid Arguments: first argument must be an argv array or an params object, got #{JSON.stringify argv}"
+        throw "Invalid Arguments: first argument must be an argv array, a params object or the process object, got #{JSON.stringify argv}"
       # Print help
-      return unless params
-      if params[@config.command]
+      # return unless params
+      if commands = @helping params
+        [helpconfig] = Object.values(@config.commands).filter (command) -> command.help
+        throw Error "No Help Command" unless helpconfig
+        run = helpconfig.run
+        throw Error 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside' unless run
+      else if params[@config.command]
         run = @config.commands[params[@config.command]].run
         extended = @config.commands[params[@config.command]].extended
-        throw Error "Missing run definition for command #{JSON.stringify params[@config.command]}" unless run
+        throw Error "Missing \"run\" definition for command #{JSON.stringify params[@config.command]}" unless run
       else
         run = @config.run
         extended = @config.extended
@@ -147,7 +158,7 @@ params.should.eql
   command: 'my --command'
 ```
 
-    Parameters.prototype.parse = (argv = process, options = {}) ->
+    Parameters.prototype.parse = (argv = process) ->
       argv = argv.split ' ' if typeof argv is 'string'
       index = 0
       # Remove node and script argv elements
@@ -250,11 +261,6 @@ params.should.eql
       params = parse config, argv
       # Enrich params with default values
       set_default @config, params
-      # options.help ?= true
-      # console.log '!!!!!!!!!! help', @help params
-      # if options.help and help = @help params
-      #   process.stdout.write help
-      #   return
       params
 
 ## `stringify([script], params, [options])`

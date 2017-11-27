@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* run: route help options and command
 * src: convert to literate coffee
 * helping: new function
 * help: new revisited format supporting nested commands
