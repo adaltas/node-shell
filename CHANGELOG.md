@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.4.0
 
 * run: route help options and command
 * src: convert to literate coffee
