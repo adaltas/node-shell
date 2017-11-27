@@ -8,7 +8,7 @@ describe 'options shortcut', ->
     params = parameters()
     (->
       params.parse ['-c']
-    ).should.throw "Invalid shortcut 'c'"
+    ).should.throw 'Invalid Shortcut: "-c"'
     (->
       params.parse ['-c', 'a value']
-    ).should.throw "Invalid shortcut 'c'"
+    ).should.throw 'Invalid Shortcut: "-c"'

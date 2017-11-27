@@ -179,7 +179,11 @@ params.should.eql
           key = config.shortcuts[shortcut] if shortcut
           option = config.options?[key]
           throw Error "Invalid option #{JSON.stringify key}" if not shortcut and config.strict and not option
-          throw Error "Invalid shortcut '#{shortcut}'" if shortcut and not option
+          if shortcut and not option
+            if config.root
+              throw Error "Invalid Shortcut: \"-#{shortcut}\""
+            else
+              throw Error "Invalid Shortcut: \"-#{shortcut}\" in command \"#{config.name}\""
           # Auto discovery
           unless option
             type = if argv[index] and argv[index][0] isnt '-' then 'string' else 'boolean'

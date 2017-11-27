@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* shortcut: improve err message
 * config: root property for internal use
 
 ## Version 0.4.0

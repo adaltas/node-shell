@@ -18,7 +18,7 @@ describe 'options strict', ->
     params = parameters strict: true
     (->
       params.parse ['-c']
-    ).should.throw "Invalid shortcut 'c'"
+    ).should.throw 'Invalid Shortcut: "-c"'
 
   it 'throw error for an undefined argument inside an command', ->
     params = parameters strict: true, commands: [name: 'mycommand']
@@ -36,4 +36,4 @@ describe 'options strict', ->
     params = parameters strict: true, commands: [name: 'mycommand']
     (->
       params.parse ['mycommand', '-c']
-    ).should.throw "Invalid shortcut 'c'"
+    ).should.throw 'Invalid Shortcut: "-c" in command "mycommand"'
