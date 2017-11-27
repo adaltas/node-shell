@@ -9,7 +9,8 @@ describe 'api config', ->
       description: 'No description yet'
       root: true
       strict: false
-      shortcuts: {}
+      shortcuts:
+        'h': 'help'
       options:
         'help':
           name: 'help'
@@ -32,7 +33,8 @@ describe 'api config', ->
           description: 'Display help information'
           type: 'boolean'
           help: true
-      shortcuts: {}
+      shortcuts:
+        'h': 'help'
       strict: false
       command: 'command'
       commands:
@@ -49,7 +51,8 @@ describe 'api config', ->
           command: 'command'
           commands: {}
           strict: false
-          shortcuts: {}
+          shortcuts:
+            'h': 'help'
         'help':
           name: 'help'
           help: true
@@ -75,7 +78,8 @@ describe 'api config', ->
           description: 'Display help information'
           type: 'boolean'
           help: true
-      shortcuts: {}
+      shortcuts:
+        'h': 'help'
       strict: false
       command: 'command'
       commands:
@@ -90,7 +94,8 @@ describe 'api config', ->
               type: 'boolean'
               help: true
           strict: false
-          shortcuts: {}
+          shortcuts:
+            'h': 'help'
           command: 'command'
           commands:
             'child_cmd':
@@ -106,7 +111,8 @@ describe 'api config', ->
               command: 'command'
               commands: {}
               strict: false
-              shortcuts: {}
+              shortcuts:
+                'h': 'help'
         'help':
           name: 'help'
           help: true
@@ -139,7 +145,8 @@ describe 'api config', ->
           description: 'Display help information'
           type: 'boolean'
           help: true
-      shortcuts: {}
+      shortcuts:
+        'h': 'help'
       command: 'command'
       commands:
         'start':
@@ -157,8 +164,9 @@ describe 'api config', ->
               help: true
           command: 'command'
           commands: {}
-          strict: false,
-          shortcuts: {}
+          strict: false
+          shortcuts:
+            'h': 'help'
         'help':
           name: 'help'
           help: true

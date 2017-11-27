@@ -43,6 +43,7 @@ Parameters are defined with the following properties:
             description: 'Display help information'
             type: 'boolean'
             help: true
+          config.shortcuts[config.options['help'].shortcut] = config.options['help'].name if config.options['help'].shortcut
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}

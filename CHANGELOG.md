@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* help: handle shortcut
 * shortcut: improve err message
 * config: root property for internal use
 
