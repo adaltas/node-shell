@@ -161,7 +161,7 @@ Here's an example on how to integrate the help functionnality inside your code:
 ```javascript
 const parameters = require('parameters')(my_config);
 const params = parameters.parse()
-if(commands = parameters.helping()){
+if(commands = parameters.helping(params)){
   return process.stdout.write(parameters.help(commands));
 }
 // Now work with the params object
