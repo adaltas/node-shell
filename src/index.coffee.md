@@ -60,6 +60,7 @@ Parameters are defined with the following properties:
           sanitize_command command, config
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
+      config.root = true
       config.description ?= 'No description yet'
       config.shortcuts = {}
       config.strict ?= false
@@ -343,7 +344,6 @@ Return zero to n commands if help not requested or null otherwise.
       args = Array.prototype.slice.call arguments
       if Array.isArray args[0]
         params = @parse args[0]
-        console.log params
       else if is_object args[0]
         params = args[0]
       else

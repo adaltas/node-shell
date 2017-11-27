@@ -5,8 +5,11 @@ describe 'api config', ->
   
   it 'empty without command', ->
     parameters({}).config.should.eql
-      command: 'command'
-      commands: {}
+      name: 'myapp'
+      description: 'No description yet'
+      root: true
+      strict: false
+      shortcuts: {}
       options:
         'help':
           name: 'help'
@@ -14,13 +17,23 @@ describe 'api config', ->
           description: 'Display help information'
           shortcut: 'h'
           type: 'boolean'
-      name: 'myapp'
-      description: 'No description yet'
-      shortcuts: {}
-      strict: false
+      command: 'command'
+      commands: {}
         
   it 'empty with command', ->
     parameters(commands: 'my_cmd': {}).config.should.eql
+      name: 'myapp'
+      description: 'No description yet'
+      root: true
+      options:
+        'help': 
+          name: 'help'
+          shortcut: 'h'
+          description: 'Display help information'
+          type: 'boolean'
+          help: true
+      shortcuts: {}
+      strict: false
       command: 'command'
       commands:
         'my_cmd':
@@ -49,8 +62,12 @@ describe 'api config', ->
           command: 'command'
           commands: {}
           shortcuts: {}
+        
+  it 'empty with nested commands', ->
+    parameters(commands: 'parent_cmd': commands: 'child_cmd': {}).config.should.eql
       name: 'myapp'
       description: 'No description yet'
+      root: true
       options:
         'help': 
           name: 'help'
@@ -60,9 +77,6 @@ describe 'api config', ->
           help: true
       shortcuts: {}
       strict: false
-        
-  it 'empty with nested commands', ->
-    parameters(commands: 'parent_cmd': commands: 'child_cmd': {}).config.should.eql
       command: 'command'
       commands:
         'parent_cmd':
@@ -105,17 +119,6 @@ describe 'api config', ->
           command: 'command'
           commands: {}
           shortcuts: {}
-      name: 'myapp'
-      description: 'No description yet'
-      options:
-        'help': 
-          name: 'help'
-          shortcut: 'h'
-          description: 'Display help information'
-          type: 'boolean'
-          help: true
-      shortcuts: {}
-      strict: false
 
   it 'define command and options as an array', ->
     parameters
@@ -126,6 +129,17 @@ describe 'api config', ->
         ]
       ]
     .config.should.eql
+      name: 'myapp'
+      description: 'No description yet'
+      root: true
+      options:
+        'help': 
+          name: 'help'
+          shortcut: 'h'
+          description: 'Display help information'
+          type: 'boolean'
+          help: true
+      shortcuts: {}
       command: 'command'
       commands:
         'start':
@@ -157,14 +171,4 @@ describe 'api config', ->
           options: {}
           command: 'command'
           commands: {}
-      name: 'myapp'
-      description: 'No description yet'
-      options:
-        'help': 
-          name: 'help'
-          shortcut: 'h'
-          description: 'Display help information'
-          type: 'boolean'
-          help: true
-      shortcuts: {}
       strict: false

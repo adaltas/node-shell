@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* config: root property for internal use
+
 ## Version 0.4.0
 
 * run: route help options and command
