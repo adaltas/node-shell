@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.4.1
 
 * help: handle shortcut
 * shortcut: improve err message
