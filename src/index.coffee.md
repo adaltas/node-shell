@@ -125,7 +125,7 @@ Example:
       else if is_object argv
         params = argv
       else
-        throw "Invalid Arguments: first argument must be an argv array, a params object or the process object, got #{JSON.stringify argv}"
+        throw Error "Invalid Arguments: first argument must be an argv array, a params object or the process object, got #{JSON.stringify argv}"
       # Print help
       # return unless params
       if commands = @helping params
@@ -362,7 +362,7 @@ Return zero to n commands if help not requested or null otherwise.
       else if is_object args[0]
         params = args[0]
       else
-        throw "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
+        throw Error "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
       params = merge {}, params
       commands = []
       # Build the commands array with help and without main
@@ -413,7 +413,7 @@ command.
         options = args.pop() if is_object args[args.length-1]
       # Get commands as an array of sub commands
       if is_object args[0]
-        throw 'Invalid Arguments' if args.length > 1
+        throw Error 'Invalid Arguments: only one argument is expected if first argument is an object' if args.length > 1
         return unless commands = @helping args[0]
       else
         for arg in args then throw 'Invalid Arguments' if typeof arg isnt 'string'
