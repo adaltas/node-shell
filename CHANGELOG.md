@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.4.3
 
 * help: accept array as first argument
 * src: fix error thrown as string instead of object
