@@ -125,7 +125,7 @@ describe 'api config', ->
           command: 'command'
           commands: {}
           shortcuts: {}
-
+    
   it 'define command and options as an array', ->
     parameters
       commands: [
@@ -180,3 +180,68 @@ describe 'api config', ->
           command: 'command'
           commands: {}
       strict: false
+  
+  describe 'overwrite help', ->
+
+    it 'works', ->
+      parameters
+        commands:
+          'start':
+            options: [
+              name: 'myparam'
+            ]
+          'help':
+            description: 'Overwrite description'
+      .config.should.eql
+        name: 'myapp'
+        description: 'No description yet'
+        root: true
+        options:
+          'help': 
+            name: 'help'
+            shortcut: 'h'
+            description: 'Display help information'
+            type: 'boolean'
+            help: true
+        shortcuts:
+          'h': 'help'
+        command: 'command'
+        commands:
+          'start':
+            name: 'start'
+            description: 'No description yet for the start command'
+            options:
+              'myparam':
+                name: 'myparam'
+                type: 'string'
+              'help': 
+                name: 'help'
+                shortcut: 'h'
+                description: 'Display help information'
+                type: 'boolean'
+                help: true
+            command: 'command'
+            commands: {}
+            strict: false
+            shortcuts:
+              'h': 'help'
+          'help':
+            name: 'help'
+            help: true
+            description: 'Overwrite description'
+            main:
+              name: 'name'
+              description: 'Help about a specific command'
+            strict: false
+            shortcuts: {}
+            options: {}
+            command: 'command'
+            commands: {}
+        strict: false
+
+    it 'does not conflict with default description', ->
+      parameters
+        commands:
+          'start': {}
+          'help': {}
+      .config.commands.help.description.should.eql 'Display help information about myapp'

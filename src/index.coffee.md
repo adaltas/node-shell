@@ -35,15 +35,6 @@ Parameters are defined with the following properties:
           config.shortcuts[option.shortcut] = option.name if option.shortcut
           option.one_of = [option.one_of] if typeof option.one_of is 'string'
           throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if option.one_of and not Array.isArray option.one_of
-        # No "help" option for command "help"
-        unless config.help
-          config.options['help'] =
-            name: 'help'
-            shortcut: 'h'
-            description: 'Display help information'
-            type: 'boolean'
-            help: true
-          config.shortcuts[config.options['help'].shortcut] = config.options['help'].name if config.options['help'].shortcut
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
@@ -57,7 +48,7 @@ Parameters are defined with the following properties:
         for name, command of config.commands
           throw Error "Incoherent Command Name: key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}" if command.name and command.name isnt name
           command.name = name
-          command.description ?= "No description yet for the #{command.name} command"
+          # command.description ?= "No description yet for the #{command.name} command"
           sanitize_command command, config
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
@@ -77,7 +68,26 @@ Parameters are defined with the following properties:
             description: 'Help about a specific command'
           help: true
         , config
-        config.commands[command.name] = merge config.commands[command.name], command
+        config.commands[command.name] = merge command, config.commands[command.name]
+      # Second pass, add help options and set default
+      sanitize_options_enrich = (command) ->
+        # No "help" option for command "help"
+        unless command.help
+          command.options['help'] = merge command.options['help'],
+            name: 'help'
+            shortcut: 'h'
+            description: 'Display help information'
+            type: 'boolean'
+            help: true
+          command.shortcuts[command.options['help'].shortcut] = command.options['help'].name if command.options['help'].shortcut
+        for _, cmd of command.commands
+          sanitize_options_enrich cmd
+      sanitize_options_enrich config
+      sanitize_commands_enrich = (config) ->
+        for name, command of config.commands
+          command.description ?= "No description yet for the #{command.name} command"
+          sanitize_commands_enrich command, config
+      sanitize_commands_enrich config
       @
 
 ## `run(argv)` or `run(params)` or `run(process)`

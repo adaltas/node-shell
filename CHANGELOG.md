@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* help: overwrittable by user
+
 ## Version 0.4.1
 
 * help: handle shortcut
