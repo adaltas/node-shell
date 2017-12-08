@@ -241,7 +241,7 @@ describe 'help', ->
             description: 'String option in start'
           ]
         ]
-      params.help('start').should.eql """
+      expect = """
 
       NAME
           myscript start - Description for the start command
@@ -261,6 +261,9 @@ describe 'help', ->
           myscript start --help   Show this message
 
       """
+      params.help('start').should.eql expect
+      params.help(['start']).should.eql expect
+      params.help(command: 'help', name: 'start').should.eql expect
 
   describe 'with nested command', ->
 

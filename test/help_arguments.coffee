@@ -17,6 +17,13 @@ describe 'help arguments', ->
         'start': {}
     .help('start').should.match /myapp start - No description yet/
 
+  it 'command array', ->
+    
+    parameters
+      commands:
+        'start': {}
+    .help(['start']).should.match /myapp start - No description yet/
+
   describe 'params object', ->
 
     it 'help isnt requested, return null', ->

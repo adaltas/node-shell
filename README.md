@@ -145,12 +145,12 @@ For the developer, help can be used with a combination of the `helping` and
 Here's how to display help with `helping` and `help`:
 
 ```javascript
-const parameters = require('parameters')(my_config);
-const params = parameters.parse()
-if(commands = parameters.helping(params)){
-  return process.stdout.write(parameters.help(commands));
+const params = require('parameters')(my_config);
+const args = params.parse()
+if(commands = params.helping(args)){
+  return process.stdout.write(params.help(commands));
 }
-// Now work with the params object
+// Now work with the args object
 ```
 
 Here's how to display help with routing:
@@ -158,7 +158,7 @@ Here's how to display help with routing:
 ```javascript
 // Routing to help required `help.run` to be set
 my_config.help = {run: './some/module'}
-require('parameters')(my_config).run(params)
+require('parameters')(my_config).run(/*...user_arguments...*/)
 ```
 
 ## Standard command line example

@@ -1,6 +1,11 @@
 
 # Changelog
 
+## Trunk
+
+* help: accept array as first argument
+* src: fix error thrown as string instead of object
+
 ## Version 0.4.2
 
 * help: overwrittable by user

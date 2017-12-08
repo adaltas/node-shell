@@ -415,9 +415,16 @@ command.
       if is_object args[0]
         throw Error 'Invalid Arguments: only one argument is expected if first argument is an object' if args.length > 1
         return unless commands = @helping args[0]
-      else
-        for arg in args then throw 'Invalid Arguments' if typeof arg isnt 'string'
+      else if Array.isArray args[0]
+        for arg in args[0] then throw Error "Invalid Arguments: argument is not a string, got #{JSON.stringify arg}" if typeof arg isnt 'string'
+        commands = args[0]
+      else if typeof args[0] is 'string'
+        for arg in args then throw Error "Invalid Arguments: argument is not a string, got #{JSON.stringify arg}" if typeof arg isnt 'string'
         commands = args
+      else if args.length is 0
+        commands = []
+      else
+        throw Error "Invalid Arguments: first argument must be a string, an array or an object, got #{JSON.stringify args[0]}"
       options ?= {}
       # commands = [] if commands.length is 1 and commands[0] is 'help'
       # Build a config array reflecting the hierarchical nature of commands
