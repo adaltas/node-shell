@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* readme: add author company
 * package: relative paths
 
 ## Version 0.4.3

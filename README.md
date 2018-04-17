@@ -369,4 +369,6 @@ Node.js versions.
 
 *   David Worms: <https://github.com/wdavidw>
 
+This package is developed by [Adaltas](http://www.adaltas.com).
+
 [ws]: https://nodejs.org/api/stream.html#stream_writable_streams
