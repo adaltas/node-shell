@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* package: relative paths
+
 ## Version 0.4.3
 
 * help: accept array as first argument
