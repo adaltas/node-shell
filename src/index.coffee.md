@@ -588,8 +588,8 @@ overwritten by the `load` options passed in the configuration.
 Dependencies
 
     pad = require 'pad' 
-    load = require './load'
-    merge = require './merge'
+    load = require './utils/load'
+    merge = require './utils/merge'
 
 Internal types
 

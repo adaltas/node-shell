@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* lib: move load & merge to utils
 * readme: add author company
 * package: relative paths
 
