@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.4.4
 
 * one_of: handle optional params
 * lib: move load & merge to utils
