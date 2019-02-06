@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* one_of: handle optional params
 * lib: move load & merge to utils
 * readme: add author company
 * package: relative paths

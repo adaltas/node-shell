@@ -39,4 +39,16 @@ describe 'options one_of', ->
       params.stringify command: 'start', array: ['1','2']
       throw Error 'Invalid'
     catch e then e.message.should.eql 'Invalid value "2" for option "array"'
+      
+  it 'ensure optional argument are optional', ->
+    params = parameters commands: [
+      name: 'start'
+      options: [
+        name: 'array'
+        shortcut: 'a'
+        type: 'array'
+        one_of: ['1', '3']
+      ]
+    ]
+    params.parse(['start'])
     

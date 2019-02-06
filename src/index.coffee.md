@@ -230,9 +230,10 @@ params.should.eql
             throw Error "Required option argument \"#{option.name}\"" unless helping or params[option.name]?
           if option.one_of
             values = params[option.name]
-            values = [values] unless Array.isArray values
-            for value in values
-              throw Error "Invalid value \"#{value}\" for option \"#{option.name}\"" unless value in option.one_of
+            if not option.required and values isnt undefined
+              values = [values] unless Array.isArray values
+              for value in values
+                throw Error "Invalid value \"#{value}\" for option \"#{option.name}\"" unless value in option.one_of
         # We still have some argument to parse
         if argv.length isnt index
           # Store the full command in the return object
