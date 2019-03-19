@@ -42,7 +42,17 @@ describe 'run', ->
       .run ['--my_argument', 'my value'], 'sth', (err, my_arg)->
         my_arg.should.eql 'sth' unless err
         next err
-    
+          
+    it 'catch error', ->
+      (->
+        parameters
+          options: [
+            name: 'my_argument'
+          ]
+          run: -> throw Error 'catch me'
+        .run ['--my_argument', 'my value']
+      ).should.throw 'catch me'
+  
   describe 'without command', ->
   
     it 'run not defined', ->
