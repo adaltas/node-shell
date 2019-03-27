@@ -271,15 +271,8 @@ params.should.eql
       # we default to the help action
       if Object.keys(@config.commands).length and argv.length is index
         argv.push 'help'
-      # If there are commands... for the rest, i dont know, might be old leftover
-      if Object.keys(@config.commands).length and argv[index].substr(0,1) isnt '-'
-        config = @config.commands[argv[index]]
-        throw Error "Invalid Command: \"#{argv[index]}\"" unless config
-        params[@config.command] = argv[index++]
-      else
-        config = @config
       # Start the parser
-      params = parse config, argv
+      params = parse @config, argv
       # Enrich params with default values
       set_default @config, params
       params

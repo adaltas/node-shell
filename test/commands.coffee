@@ -50,17 +50,6 @@ describe 'commands', ->
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
-  it 'throw error if command is undefined', ->
-    params = parameters commands: [name: 'myaction']
-    (->
-      params.parse ['hum', '-s', 'my', '--command']
-    ).should.throw 'Invalid Command: "hum"'
-    (->
-      params.stringify 
-        command: 'hum'
-        myparam: true
-    ).should.throw 'Invalid Command: "hum"'
-
   it 'customize command name', ->
     params = parameters
       command: 'mycommand'
