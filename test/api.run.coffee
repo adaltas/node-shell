@@ -81,29 +81,10 @@ describe 'run', ->
       .run ['--my_argument', 'my value']
       .should.eql 'my value'
         
-    describe 'within command', ->
-        
-      it 'run not defined with no matching command', ->
-        ( ->
-          parameters commands: [
-            name: 'my_command'
-            run: (params) -> params.my_argument
-            options: [
-              name: 'my_argument'
-            ]
-          ]
-          .run ['--param', 'value']
-        ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
-        
-      it 'run not defined', ->
-        ( ->
-          parameters commands: [
-            name: 'my_command'
-          ]
-          .run ['my_command']
-        ).should.throw 'Missing "run" definition for command "my_command"'
-        
-      it 'run a function', ->
+  describe 'within command', ->
+      
+    it 'run not defined with no matching command', ->
+      ( ->
         parameters commands: [
           name: 'my_command'
           run: (params) -> params.my_argument
@@ -111,18 +92,37 @@ describe 'run', ->
             name: 'my_argument'
           ]
         ]
-        .run ['my_command', '--my_argument', 'my value']
-        .should.eql 'my value'
-
-      it 'run a module', ->
-        mod = "#{os.tmpdir()}/node_params"
-        fs.writeFileSync "#{mod}.coffee", 'module.exports = (params) -> params.my_argument'
+        .run ['--param', 'value']
+      ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
+      
+    it 'run not defined', ->
+      ( ->
         parameters commands: [
           name: 'my_command'
-          run: mod
-          options: [
-            name: 'my_argument'
-          ]
         ]
-        .run ['my_command', '--my_argument', 'my value']
-        .should.eql 'my value'
+        .run ['my_command']
+      ).should.throw 'Missing "run" definition for command "my_command"'
+      
+    it 'run a function', ->
+      parameters commands: [
+        name: 'my_command'
+        run: (params) -> params.my_argument
+        options: [
+          name: 'my_argument'
+        ]
+      ]
+      .run ['my_command', '--my_argument', 'my value']
+      .should.eql 'my value'
+
+    it 'run a module', ->
+      mod = "#{os.tmpdir()}/node_params"
+      fs.writeFileSync "#{mod}.coffee", 'module.exports = (params) -> params.my_argument'
+      parameters commands: [
+        name: 'my_command'
+        run: mod
+        options: [
+          name: 'my_argument'
+        ]
+      ]
+      .run ['my_command', '--my_argument', 'my value']
+      .should.eql 'my value'
