@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* parse: improve arguments validation
+
 ## Version 0.4.4
 
 * one_of: handle optional params

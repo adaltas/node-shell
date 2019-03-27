@@ -42,7 +42,7 @@ describe 'run', ->
       .run ['--my_argument', 'my value'], 'sth', (err, my_arg)->
         my_arg.should.eql 'sth' unless err
         next err
-          
+    
     it 'catch error', ->
       (->
         parameters

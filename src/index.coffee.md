@@ -150,14 +150,14 @@ Example:
 
 ## `parse([argv])`
 
-* `argv`   
+* `argv` (array|process|string, optional)   
   Array of arguments to parse, optional.
 
 Convert process arguments into a usable object. Argument may
 be in the form of a string or an array. If not provided, it 
 parse the arguments present in  `process.argv`.
 
-You should only pass the parameters and the not the script name.
+When provided as an array or a string, only pass the parameters without the script name.
 
 Example:
 
@@ -171,12 +171,16 @@ params.should.eql
 ```
 
     Parameters.prototype.parse = (argv = process) ->
-      argv = argv.split ' ' if typeof argv is 'string'
+      # argv = argv.split ' ' if typeof argv is 'string'
       index = 0
       # Remove node and script argv elements
       if argv is process
         index = 2
         argv = argv.argv
+      else if typeof argv is 'string'
+        argv = argv.split ' '
+      else unless Array.isArray argv
+        throw Error "Invalid Arguments: parse require arguments or process as first argument, got #{JSON.stringify process}"
       # Extracted parameters
       params = {}
       parse = (config) =>
