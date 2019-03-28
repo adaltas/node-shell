@@ -7,6 +7,7 @@ describe 'api.config', ->
     parameters({}).config.should.eql
       name: 'myapp'
       description: 'No description yet'
+      flatten: true
       root: true
       strict: false
       shortcuts:
@@ -24,6 +25,7 @@ describe 'api.config', ->
     parameters(commands: 'my_cmd': {}).config.should.eql
       name: 'myapp'
       description: 'No description yet'
+      flatten: true
       root: true
       options:
         'help': 
@@ -67,6 +69,7 @@ describe 'api.config', ->
     parameters(commands: 'parent_cmd': commands: 'child_cmd': {}).config.should.eql
       name: 'myapp'
       description: 'No description yet'
+      flatten: true
       root: true
       options:
         'help': 
@@ -131,6 +134,7 @@ describe 'api.config', ->
     .config.should.eql
       name: 'myapp'
       description: 'No description yet'
+      flatten: true
       root: true
       options:
         'help': 
@@ -187,6 +191,7 @@ describe 'api.config', ->
       .config.should.eql
         name: 'myapp'
         description: 'No description yet'
+        flatten: true
         root: true
         options:
           'help': 

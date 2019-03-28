@@ -13,10 +13,10 @@ describe 'options.discovery', ->
   it 'discover unregistered options in command', ->
     params = parameters commands: [name: 'mycommand']
     params.parse(['mycommand', '--myoption', 'my value']).should.eql
-      command: 'mycommand'
+      command: ['mycommand']
       myoption: 'my value'
     ['mycommand', '--myoption', 'my value'].should.eql params.stringify
-      command: 'mycommand'
+      command: ['mycommand']
       myoption: 'my value'
 
   it 'deal with boolean', ->

@@ -25,9 +25,9 @@ describe 'options.default', ->
         ]
       ]
       params.parse(['my_command']).should.eql
-        command: 'my_command'
+        command: ['my_command']
         my_argument: 'default value'
-      params.stringify command: 'my_command'
+      params.stringify command: ['my_command']
       .should.eql ['my_command', '--my_argument', 'default value']
           
     it 'preserve global option', ->
@@ -42,8 +42,8 @@ describe 'options.default', ->
           ]
         ]
       params.parse(['my_command']).should.eql
-        command: 'my_command'
+        command: ['my_command']
         global_argument: 'global value'
         command_argument: 'command value'
-      params.stringify command: 'my_command'
+      params.stringify command: ['my_command']
       .should.eql ['--global_argument', 'global value', 'my_command', '--command_argument', 'command value']

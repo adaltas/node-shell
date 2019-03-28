@@ -10,9 +10,9 @@ describe 'main.required', ->
         name: 'my_argument'
     ]
     params.parse(['mycommand']).should.eql
-      command: 'mycommand'
+      command: ['mycommand']
     params.stringify 
-      command: 'mycommand'
+      command: ['mycommand']
     .should.eql ['mycommand']
 
   it 'honors required true if value is provided', ->
@@ -23,10 +23,10 @@ describe 'main.required', ->
         required: true
     ]
     params.parse(['mycommand', 'my --value']).should.eql
-      command: 'mycommand'
+      command: ['mycommand']
       my_argument: 'my --value'
     params.stringify
-      command: 'mycommand'
+      command: ['mycommand']
       my_argument: 'my --value'
     .should.eql ['mycommand', 'my --value']
 
@@ -38,9 +38,9 @@ describe 'main.required', ->
         required: true
     ]
     (->
-      params.parse ['mycommand']
+      params.parse 'mycommand'
     ).should.throw 'Required main argument "my_argument"'
     (->
       params.stringify
-        command: 'mycommand'
+        command: ['mycommand']
     ).should.throw 'Required main argument "my_argument"'

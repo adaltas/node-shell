@@ -14,10 +14,10 @@ describe 'options.one_of', ->
       ]
     ]
     params.parse(['start', '-a', '1', '-a', '2']).should.eql
-      command: 'start'
+      command: ['start']
       array: ['1','2']
     params.stringify 
-      command: 'start'
+      command: ['start']
       array: ['1','2']
     .should.eql ['start', '--array', '1,2']
       
@@ -36,7 +36,7 @@ describe 'options.one_of', ->
       throw Error 'Invalid'
     catch e then e.message.should.eql 'Invalid value "2" for option "array"'
     try
-      params.stringify command: 'start', array: ['1','2']
+      params.stringify command: ['start'], array: ['1','2']
       throw Error 'Invalid'
     catch e then e.message.should.eql 'Invalid value "2" for option "array"'
       

@@ -40,10 +40,10 @@ describe 'main', ->
           name: 'commanda'
       ]
       params.parse(['start', 'my --command']).should.eql
-        command: 'start'
+        command: ['start']
         commanda: 'my --command'
       params.stringify
-        command: 'start'
+        command: ['start']
         commanda: 'my --command'
       .should.eql ['start', 'my --command']
 
@@ -55,9 +55,9 @@ describe 'main', ->
           required: true
       ]
       params.parse(['mycommand', 'my value']).should.eql
-        command: 'mycommand'
+        command: ['mycommand']
         my_argument: 'my value'
       params.stringify 
-        command: 'mycommand'
+        command: ['mycommand']
         my_argument: 'my value'
       .should.eql ['mycommand', 'my value']

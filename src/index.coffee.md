@@ -29,7 +29,6 @@ Parameters are defined with the following properties:
         config.options = array_to_object config.options, 'name' if Array.isArray config.options
         for name, option of config.options
           option.name = name
-          # Access option by key
           option.type ?= 'string'
           throw Error "Invalid option type #{JSON.stringify option.type}" unless option.type in types
           config.shortcuts[option.shortcut] = option.name if option.shortcut
@@ -40,6 +39,7 @@ Parameters are defined with the following properties:
         command.shortcuts = {}
         # command.command ?= parent.command
         throw Error "Invalid Configuration: command property can only be declared at the application level, not inside a command, got #{command.command}" if command.command?
+        throw Error 'Invalid Command: flatten cannot be declared inside a command' if command.flatten?
         sanitize_options command
         sanitize_commands command
         command
@@ -53,6 +53,8 @@ Parameters are defined with the following properties:
           sanitize_command command, config
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
+      config.flatten ?= true
+      throw Error "Invalid Configuration: flatten must be a boolean, got #{JSON.stringify config.flatten}" unless typeof config.flatten is 'boolean'
       config.root = true
       config.description ?= 'No description yet'
       config.shortcuts = {}
@@ -183,8 +185,9 @@ params.should.eql
       else unless Array.isArray argv
         throw Error "Invalid Arguments: parse require arguments or process as first argument, got #{JSON.stringify process}"
       # Extracted parameters
-      params = {}
+      full_params = []
       parse = (config) =>
+        full_params.push params = {}
         # Read options
         while true
           break if argv.length is index or argv[index][0] isnt '-'
@@ -246,22 +249,17 @@ params.should.eql
           if config.main
             params[config.main.name] = leftover
           else
-            command = argv[index]
+            command = argv[index++]
             # Validate the command
             throw Error "Fail to parse end of command \"#{leftover}\"" unless config.commands[command]
-            # Set the parameter relative to the command
-            if typeof params[@config.command] is 'string'
-              params[@config.command] = [params[@config.command]]
-            if Array.isArray params[@config.command]
-              params[@config.command].push argv[index++]
-            else
-              params[@config.command] = argv[index++]
             # Parse child configuration
-            parse config.commands[command], argv
+            child_params = parse(config.commands[command], argv)
+            # Enrich child with command
+            child_params[@config.command] = command
         # Tommand mode but no command are found, default to help
         # Default to help is help property is set and no command is found in user args 
         # Happens with global options without a command
-        if Object.keys(@config.commands).length and not params[@config.command]
+        if Object.keys(config.commands).length and not command
           params[@config.command] = 'help'
         # Check against required main
         main = config.main
@@ -270,7 +268,20 @@ params.should.eql
             throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
         params
       # Start the parser
-      params = parse @config, argv
+      parse @config, argv
+      # console.log full_params
+      if @config.flatten
+        params = {}
+        if Object.keys(@config.commands).length
+          params[@config.command] = []
+        for command_params in full_params
+          for k, v of command_params
+            if k is @config.command
+              params[k].push v
+            else
+              params[k] = v
+      else
+        params = full_params
       # Enrich params with default values
       set_default @config, params
       params

@@ -13,9 +13,9 @@ describe 'options.required', ->
         ]
       ]
       params.parse(['mycommand']).should.eql
-        command: 'mycommand'
+        command: ['mycommand']
       params.stringify 
-        command: 'mycommand'
+        command: ['mycommand']
       .should.eql ['mycommand']
 
     it 'may be optional with array', ->
@@ -27,9 +27,9 @@ describe 'options.required', ->
         ]
       ]
       params.parse(['mycommand']).should.eql
-        command: 'mycommand'
+        command: ['mycommand']
       params.stringify 
-        command: 'mycommand'
+        command: ['mycommand']
       .should.eql ['mycommand']
 
   describe 'enforce', ->
@@ -43,10 +43,10 @@ describe 'options.required', ->
         ]
       ]
       params.parse(['mycommand', '--my_argument', 'my --value']).should.eql
-        command: 'mycommand'
+        command: ['mycommand']
         my_argument: 'my --value'
       params.stringify
-        command: 'mycommand'
+        command: ['mycommand']
         my_argument: 'my --value'
       .should.eql ['mycommand', '--my_argument', 'my --value']
 
@@ -63,7 +63,7 @@ describe 'options.required', ->
       ).should.throw 'Required option argument "my_argument"'
       (->
         params.stringify
-          command: 'mycommand'
+          command: ['mycommand']
       ).should.throw 'Required option argument "my_argument"'
   
   describe 'compatible with help', ->
@@ -102,6 +102,6 @@ describe 'options.required', ->
           ]
         ]
       params.parse(['parent', '--help', 'child']).should.eql
-        command: 'parent'
+        command: ['parent']
         help: true
       

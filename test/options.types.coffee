@@ -14,10 +14,10 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '--watch', __dirname]).should.eql
-        command: 'start'
+        command: ['start']
         watch: __dirname
       params.stringify 
-        command: 'start'
+        command: ['start']
         watch: __dirname
       .should.eql ['start', '--watch', __dirname]
 
@@ -33,10 +33,10 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '-s']).should.eql
-        command: 'start'
+        command: ['start']
         strict: true
       params.stringify 
-        command: 'start'
+        command: ['start']
         strict: true
       .should.eql ['start', '--strict']
 
@@ -62,10 +62,10 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '-i', '5']).should.eql
-        command: 'start'
+        command: ['start']
         integer: 5
       params.stringify 
-        command: 'start'
+        command: ['start']
         integer: 5
       .should.eql ['start', '--integer', '5']
 
@@ -81,10 +81,10 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '-a', '3,2,1']).should.eql
-        command: 'start'
+        command: ['start']
         array: ['3','2','1']
       params.stringify 
-        command: 'start'
+        command: ['start']
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
 
@@ -98,10 +98,10 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '-a', '3', '-a', '2', '-a', '1']).should.eql
-        command: 'start'
+        command: ['start']
         array: ['3','2','1']
       params.stringify 
-        command: 'start'
+        command: ['start']
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
 
@@ -114,9 +114,9 @@ describe 'options.type', ->
         ]
       ]
       params.parse(['start', '--my_array', '', '--my_array', '2', '--my_array', '']).should.eql
-        command: 'start'
+        command: ['start']
         my_array: ['','2','']
       params.stringify 
-        command: 'start'
+        command: ['start']
         array: ['','2','']
       .should.eql ['start', '--array', ',2,']

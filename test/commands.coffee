@@ -7,18 +7,18 @@ describe 'commands', ->
     params = parameters
       commands: [name: 'start']
     params.parse(['start']).should.eql
-      command: 'start'
+      command: ['start']
     params.stringify
-      command: 'start'
+      command: ['start']
     .should.eql ['start']
 
   it 'command is of type object', ->
     params = parameters
       commands: 'start': {}
     params.parse(['start']).should.eql
-      command: 'start'
+      command: ['start']
     params.stringify
-      command: 'start'
+      command: ['start']
     .should.eql ['start']
 
   it 'options is of type array', ->
@@ -29,10 +29,10 @@ describe 'commands', ->
       ]
     ]
     params.parse(['start', '--myparam', 'my value']).should.eql
-      command: 'start'
+      command: ['start']
       myparam: 'my value'
     params.stringify
-      command: 'start'
+      command: ['start']
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
@@ -43,10 +43,10 @@ describe 'commands', ->
           options:
             myparam: {}
     params.parse(['start', '--myparam', 'my value']).should.eql
-      command: 'start'
+      command: ['start']
       myparam: 'my value'
     params.stringify
-      command: 'start'
+      command: ['start']
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
@@ -55,9 +55,9 @@ describe 'commands', ->
       command: 'mycommand'
       commands: [name: 'start']
     params.parse(['start']).should.eql
-      mycommand: 'start'
+      mycommand: ['start']
     params.stringify
-      mycommand: 'start'
+      mycommand: ['start']
     .should.eql ['start']
 
   it 'mix with general options', ->
@@ -73,11 +73,11 @@ describe 'commands', ->
       ]
     params.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
       gopt: 'toto'
-      command: 'start'
+      command: ['start']
       aopt: 'lulu'
     params.stringify
       gopt: 'toto'
-      command: 'start'
+      command: ['start']
       aopt: 'lulu'
     .should.eql ['--gopt', 'toto', 'start', '--aopt', 'lulu']
 

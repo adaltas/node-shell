@@ -101,7 +101,7 @@ describe 'api.run', ->
           name: 'my_command'
         ]
         .run ['my_command']
-      ).should.throw 'Missing "run" definition for command "my_command"'
+      ).should.throw 'Missing "run" definition for command ["my_command"]'
       
     it 'run a function', ->
       parameters commands: [

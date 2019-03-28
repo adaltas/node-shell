@@ -59,12 +59,12 @@ describe 'options', ->
           ]
         ]
       params.parse(['start', '--watch', __dirname, '-s', 'my', '--value']).should.eql
-        command: 'start'
+        command: ['start']
         watch: __dirname
         strict: true
         my_argument: 'my --value'
       params.stringify 
-        command: 'start'
+        command: ['start']
         watch: __dirname
         strict: true
         my_argument: 'my --value'
