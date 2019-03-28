@@ -19,6 +19,17 @@ describe 'help parse', ->
       param: 'value'
       command: 'help'
 
+  it.skip 'global options without a sub command', ->
+    # Note, this test illustrate a bug where parse reference @config instead of config:
+    # if Object.keys(@config.commands).length and not params[@config.command]
+    #   params[@config.command] = 'help'
+    # The assertion is what we expect in current version but in a future version,
+    # it shall only work if a new `help` config is declared
+    params = parameters commands: [name: 'level1', commands: [name: 'level2']]
+    params.parse(['--param', 'value', 'level1']).should.eql
+      param: 'value'
+      command: ['value1', 'help']
+
   it 'handle help command', ->
     params = parameters commands: [name: 'help']
     params.parse(['help']).should.eql

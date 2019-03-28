@@ -257,7 +257,8 @@ params.should.eql
               params[config.command] = argv[index++]
             # Parse child configuration
             parse config.commands[command], argv
-        # Command mode but no command are found, default to help
+        # Tommand mode but no command are found, default to help
+        # Default to help is help property is set and no command is found in user args 
         # Happens with global options without a command
         if Object.keys(@config.commands).length and not params[@config.command]
           params[@config.command] = 'help'
@@ -267,10 +268,6 @@ params.should.eql
           if main.required
             throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
         params
-      # If they are commands (other than help) and no arguments are provided,
-      # we default to the help action
-      if Object.keys(@config.commands).length and argv.length is index
-        argv.push 'help'
       # Start the parser
       params = parse @config, argv
       # Enrich params with default values
