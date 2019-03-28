@@ -111,35 +111,3 @@ describe 'commands', ->
         opt_parent: 'val 1'
         opt_child: 'val 2'
       .should.eql ['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']
-
-    it 'with different command name', ->
-      params = parameters
-        options: [
-          name: 'opt_root'
-        ]
-        commands: [
-          name: 'parent'
-          options: [
-            name: 'opt_parent'
-          ]
-          command: 'subcommand'
-          commands: [
-            name: 'child'
-            options: [
-              name: 'opt_child'
-            ]
-          ]
-        ]
-      params.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
-        command: 'parent'
-        subcommand: 'child'
-        opt_root: 'val 0'
-        opt_parent: 'val 1'
-        opt_child: 'val 2'
-      params.stringify
-        command: 'parent'
-        subcommand: 'child'
-        opt_root: 'val 0'
-        opt_parent: 'val 1'
-        opt_child: 'val 2'
-      .should.eql ['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']

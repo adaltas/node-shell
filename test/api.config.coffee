@@ -18,7 +18,6 @@ describe 'api config', ->
           description: 'Display help information'
           shortcut: 'h'
           type: 'boolean'
-      command: 'command'
       commands: {}
         
   it 'empty with command', ->
@@ -48,7 +47,6 @@ describe 'api config', ->
               description: 'Display help information'
               type: 'boolean'
               help: true
-          command: 'command'
           commands: {}
           strict: false
           shortcuts:
@@ -62,7 +60,6 @@ describe 'api config', ->
             description: 'Help about a specific command'
           strict: false
           options: {}
-          command: 'command'
           commands: {}
           shortcuts: {}
         
@@ -96,7 +93,6 @@ describe 'api config', ->
           strict: false
           shortcuts:
             'h': 'help'
-          command: 'command'
           commands:
             'child_cmd':
               name: 'child_cmd'
@@ -108,7 +104,6 @@ describe 'api config', ->
                   description: 'Display help information'
                   type: 'boolean'
                   help: true
-              command: 'command'
               commands: {}
               strict: false
               shortcuts:
@@ -122,7 +117,6 @@ describe 'api config', ->
             description: 'Help about a specific command'
           strict: false
           options: {}
-          command: 'command'
           commands: {}
           shortcuts: {}
     
@@ -162,7 +156,6 @@ describe 'api config', ->
               description: 'Display help information'
               type: 'boolean'
               help: true
-          command: 'command'
           commands: {}
           strict: false
           shortcuts:
@@ -177,7 +170,6 @@ describe 'api config', ->
           strict: false
           shortcuts: {}
           options: {}
-          command: 'command'
           commands: {}
       strict: false
   
@@ -220,7 +212,6 @@ describe 'api config', ->
                 description: 'Display help information'
                 type: 'boolean'
                 help: true
-            command: 'command'
             commands: {}
             strict: false
             shortcuts:
@@ -235,7 +226,6 @@ describe 'api config', ->
             strict: false
             shortcuts: {}
             options: {}
-            command: 'command'
             commands: {}
         strict: false
 

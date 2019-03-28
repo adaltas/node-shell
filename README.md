@@ -33,11 +33,11 @@ expecting a definition object and returning the following functions:
 * `run` (argv[array|process], args[mixed]...)   
   Similar to parse but it will also call the function defined by the "run"
   option. The first argument is the arguments array to parse, other arguments
-  are simply transmitted to the run function or module as additionnal arguments.
+  are simply transmitted to the run function or module as additional arguments.
   The run function provided by the user receives the parsed parameters as its
   first argument. If the option "extended" is activated, it also receives the
   original arguments and configuration as second and third   arguments. Any user
-  provided arguments are transmitted as is as additionnal arguments.
+  provided arguments are transmitted as is as additional arguments.
 * `stringify` (params[obj], options[obj])   
   Convert an object of parameters into an array of arguments. Possible options
   are "no_default".

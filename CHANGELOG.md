@@ -4,6 +4,7 @@
 ## Trunk
 
 * parse: improve arguments validation
+* command: only declared at application level
 
 ## Version 0.4.4
 

@@ -38,7 +38,8 @@ Parameters are defined with the following properties:
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
-        command.command ?= parent.command
+        # command.command ?= parent.command
+        throw Error "Invalid Configuration: command property can only be declared at the application level, not inside a command, got #{command.command}" if command.command?
         sanitize_options command
         sanitize_commands command
         command
@@ -56,10 +57,10 @@ Parameters are defined with the following properties:
       config.description ?= 'No description yet'
       config.shortcuts = {}
       config.strict ?= false
-      config.command ?= 'command'
       sanitize_options config
       sanitize_commands config
       if Object.keys(config.commands).length
+        config.command ?= 'command'
         command = sanitize_command
           name: 'help'
           description: "Display help information about #{config.name}"
@@ -249,12 +250,12 @@ params.should.eql
             # Validate the command
             throw Error "Fail to parse end of command \"#{leftover}\"" unless config.commands[command]
             # Set the parameter relative to the command
-            if typeof params[config.command] is 'string'
-              params[config.command] = [params[config.command]]
-            if Array.isArray params[config.command]
-              params[config.command].push argv[index++]
+            if typeof params[@config.command] is 'string'
+              params[@config.command] = [params[@config.command]]
+            if Array.isArray params[@config.command]
+              params[@config.command].push argv[index++]
             else
-              params[config.command] = argv[index++]
+              params[@config.command] = argv[index++]
             # Parse child configuration
             parse config.commands[command], argv
         # Tommand mode but no command are found, default to help
@@ -290,7 +291,7 @@ Convert an object into process arguments.
       keys = {}
       set_default @config, params
       # Stringify
-      stringify = (config) ->
+      stringify = (config) =>
         for _, option of config.options
           key = option.name
           keys[key] = true
@@ -319,10 +320,10 @@ Convert an object into process arguments.
           argv.push value if value?
         # Recursive
         if Object.keys(config.commands).length
-          command = params[config.command]
-          command = params[config.command].shift() if Array.isArray command
+          command = params[@config.command]
+          command = params[@config.command].shift() if Array.isArray command
           argv.push command
-          keys[config.command] = command
+          keys[@config.command] = command
           # Stringify child configuration
           throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
           stringify config.commands[command]
