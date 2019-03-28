@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* help: new sample
 * help: remove info per command
 * package: use mixme
 * parse: improve arguments validation

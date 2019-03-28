@@ -1,5 +1,5 @@
 
-var parameters = require('..');
+const parameters = require('..');
 require('should');
 
 // NAME
@@ -13,7 +13,7 @@ require('should');
 // EXAMPLES
 //     server --help     Show this message
 
-command = parameters({
+const command = parameters({
   name: 'server',
   description: 'Start a web server',
   options: [{

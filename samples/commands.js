@@ -18,7 +18,7 @@ require('should');
 // EXAMPLES
 //     server help       Show this message
 
-command = parameters({
+const command = parameters({
   name: 'server',
   description: 'Manage a web server',
   commands: [{
@@ -43,13 +43,13 @@ console.log( command.help() );
 command.parse(
   ['start', '--host', '127.0.0.1', '-p', '80']
 ).should.eql({
-  command: 'start',
+  command: ['start'],
   host: '127.0.0.1',
   port: 80
 });
 // Create a command
 command.stringify({
-  command: 'start',
+  command: ['start'],
   host: '127.0.0.1',
   port: 80
 }).should.eql(
