@@ -3,7 +3,7 @@ fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
   
-describe 'run', ->
+describe 'api.run', ->
   
   describe 'function', ->
     

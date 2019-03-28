@@ -1,7 +1,7 @@
 
 parameters = require '../src'
   
-describe 'options one_of', ->
+describe 'options.one_of', ->
   
   it 'match elements in an array', ->
     params = parameters commands: [

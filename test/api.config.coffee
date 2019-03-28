@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'api config', ->
+describe 'api.config', ->
   
   it 'empty without command', ->
     parameters({}).config.should.eql

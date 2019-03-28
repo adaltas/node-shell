@@ -1,7 +1,7 @@
 
 parameters = require '../src'
   
-describe 'options type', ->
+describe 'options.type', ->
 
   describe 'string', ->
 

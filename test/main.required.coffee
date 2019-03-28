@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'main required', ->
+describe 'main.required', ->
 
   it 'may be optional', ->
     params = parameters commands: [

@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'help parse', ->
+describe 'api.help_parse', ->
 
   it 'handle an empty command as help', ->
     params = parameters commands: [name: 'help']

@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'parse', ->
+describe 'api.parse', ->
 
   it 'doesnot alter params', ->
     params = parameters commands: [

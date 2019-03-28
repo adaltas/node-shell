@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'options required', ->
+describe 'options.required', ->
   
   describe 'optional', ->
 

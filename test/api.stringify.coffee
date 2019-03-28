@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'stringify', ->
+describe 'api.stringify', ->
   
   describe 'options script', ->
 

@@ -1,7 +1,7 @@
 
 parameters = require '../src'
   
-describe 'options discovery', ->
+describe 'options.discovery', ->
 
   it 'discover unregistered options', ->
     params = parameters()

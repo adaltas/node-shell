@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'options extended', ->
+describe 'options.extended', ->
     
   it 'with no argument', ->
     params = parameters

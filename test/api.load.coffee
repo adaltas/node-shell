@@ -3,7 +3,7 @@ fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
   
-describe 'api load', ->
+describe 'api.load', ->
 
   it 'load relative to require.main', ->
     cwd = process.cwd()

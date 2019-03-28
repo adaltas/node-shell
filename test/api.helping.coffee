@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'helping', ->
+describe 'api.helping', ->
 
     it 'with help command only', ->
       # With argv

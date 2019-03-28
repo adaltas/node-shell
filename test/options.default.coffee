@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'options default', ->
+describe 'options.default', ->
   
   describe 'without commands', ->
     

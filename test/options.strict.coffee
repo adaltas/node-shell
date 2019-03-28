@@ -1,7 +1,7 @@
 
 parameters = require '../src'
   
-describe 'options strict', ->
+describe 'options.strict', ->
 
   it 'throw error for an undefined argument', ->
     params = parameters strict: true

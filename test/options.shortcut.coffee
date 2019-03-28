@@ -1,7 +1,7 @@
 
 parameters = require '../src'
   
-describe 'options shortcut', ->
+describe 'options.shortcut', ->
 
   it 'throw error for an undefined shortcut', ->
     # Test a boolean (no value) argument
