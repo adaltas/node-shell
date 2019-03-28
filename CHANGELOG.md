@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* package: use mixme
 * parse: improve arguments validation
 * command: only declared at application level
 

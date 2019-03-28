@@ -71,12 +71,12 @@ Parameters are defined with the following properties:
             description: 'Help about a specific command'
           help: true
         , config
-        config.commands[command.name] = merge command, config.commands[command.name]
+        config.commands[command.name] = mixme command, config.commands[command.name]
       # Second pass, add help options and set default
       sanitize_options_enrich = (command) ->
         # No "help" option for command "help"
         unless command.help
-          command.options['help'] = merge command.options['help'],
+          command.options['help'] = mixme command.options['help'],
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
@@ -370,7 +370,7 @@ Return zero to n commands if help not requested or null otherwise.
         params = args[0]
       else
         throw Error "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
-      params = merge {}, params
+      params = mixme params
       commands = []
       # Build the commands array with help and without main
       conf = @config
@@ -596,7 +596,7 @@ Dependencies
 
     pad = require 'pad' 
     load = require './utils/load'
-    merge = require './utils/merge'
+    mixme = require 'mixme'
 
 Internal types
 
@@ -618,7 +618,7 @@ Convert an array to an object
 Given a configuration, apply default values to the parameters
 
     set_default = (config, params, tempparams = null) ->
-      tempparams = merge {}, params unless tempparams?
+      tempparams = mixme params unless tempparams?
       if Object.keys(config.commands).length
         command = tempparams[config.command]
         command = tempparams[config.command].shift() if Array.isArray command
