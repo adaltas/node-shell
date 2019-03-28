@@ -59,13 +59,6 @@ describe 'api.help_shortcut', ->
           status                  Description for the status command
           help                    Display help information about myscript
 
-      COMMAND "status"
-          status                  Description for the status command
-
-      COMMAND "help"
-          help                    Display help information about myscript
-          help {name}             Help about a specific command
-
       EXAMPLES
           myscript --help         Show this message
           myscript help           Show this message

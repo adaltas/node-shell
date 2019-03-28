@@ -140,13 +140,6 @@ describe 'api.help', ->
           start                   No description yet for the start command
           help                    Display help information about myapp
 
-      COMMAND "start"
-          start                   No description yet for the start command
-
-      COMMAND "help"
-          help                    Display help information about myapp
-          help {name}             Help about a specific command
-
       EXAMPLES
           myapp --help            Show this message
           myapp help              Show this message
@@ -205,18 +198,6 @@ describe 'api.help', ->
           start                   Description for the start command
           stop                    Description for the stop command
           help                    Display help information about myscript
-
-      COMMAND "start"
-          start                   Description for the start command
-          start {command}         Command in start
-
-      COMMAND "stop"
-          stop                    Description for the stop command
-          stop {command}          Command in stop
-
-      COMMAND "help"
-          help                    Display help information about myscript
-          help {name}             Help about a specific command
 
       EXAMPLES
           myscript --help         Show this message

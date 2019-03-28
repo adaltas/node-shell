@@ -101,6 +101,11 @@ minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
 
+mixme@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/mixme/-/mixme-0.0.1.tgz#0348b176dda0361e101a1cfb8db26bc80e5298e3"
+  integrity sha512-AlB1FTj+mSFPINx6SWZascbRvZiN71NBVZhhwejc5nkKv2xZPQ6WjIpJrmWN1awern5lvl99dmrOW6P4rR9QEA==
+
 mkdirp@0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
