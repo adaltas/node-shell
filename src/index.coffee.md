@@ -302,6 +302,8 @@ Convert an object into process arguments.
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
       set_default @config, params
+      # Convert command parameter to a 1 element array if provided as a string
+      params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
       # Stringify
       stringify = (config) =>
         for _, option of config.options
@@ -332,8 +334,7 @@ Convert an object into process arguments.
           argv.push value if value?
         # Recursive
         if Object.keys(config.commands).length
-          command = params[@config.command]
-          command = params[@config.command].shift() if Array.isArray command
+          command = params[@config.command].shift()
           argv.push command
           keys[@config.command] = command
           # Stringify child configuration
