@@ -3,6 +3,9 @@
 
 ## Trunk
 
+Breaking compatibility
+* run: 1st arg as info with params and extended
+
 * stringify: check 2nd argument
 * help: new sample
 * help: remove info per command

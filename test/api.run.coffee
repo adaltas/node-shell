@@ -5,45 +5,49 @@ parameters = require '../src'
   
 describe 'api.run', ->
   
-  describe 'function', ->
+  describe 'validate', ->
+  
+    it 'application requires a run definition', ->
+      ( ->
+        parameters {}
+        .run []
+      ).should.throw 'Missing run definition'
+    
+    it 'command requires a run definition', ->
+      ( ->
+        parameters
+          commands:
+            my_command: {}
+        .run ['my_command']
+      ).should.throw 'Missing "run" definition for command ["my_command"]'
+  
+    it 'the help command must point to a valid route handler', ->
+      # Note, this test cover a valid point, when routing is enable, we must
+      # ensure that there is a route for help, however
+      # - the help route can be automatically created and register (eg "parameters/lib/routes/help")
+      # - the below exemple is activating `helping` which is not necessary a brilliant idea
+      ( ->
+        parameters commands: [
+          name: 'my_command'
+          run: ({params}) -> params.my_argument
+          options: [
+            name: 'my_argument'
+          ]
+        ]
+        .run ['--param', 'value']
+      ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
+
+  describe 'handler', ->
     
     it 'context is parameter instance', ->
       parameters
-        run: (params) ->
+        run: ({params}) ->
           @should.have.property('help').which.is.a.Function()
           @should.have.property('parse').which.is.a.Function()
           @should.have.property('stringify').which.is.a.Function()
       .run []
-        
-    it '1st arg is params', ->
-      parameters
-        options: 'my_argument': {}
-        run: (params) ->
-          params.my_argument.should.eql 'my value'
-      .run ['--my_argument', 'my value']
-        
-    it 'return value is passed', ->
-      parameters
-        options: [
-          name: 'my_argument'
-        ]
-        run: -> 'catch me'
-      .run ['--my_argument', 'my value']
-      .should.eql 'catch me'
-    
-    it 'pass user arguments', (next) ->
-      parameters
-        options: [
-          name: 'my_argument'
-        ]
-        run: (my_params, my_arg, my_callback) ->
-          err = Error 'Das ist kaput' unless my_params['my_argument'] is 'my value'
-          my_callback err, my_arg
-      .run ['--my_argument', 'my value'], 'sth', (err, my_arg)->
-        my_arg.should.eql 'sth' unless err
-        next err
-    
-    it 'catch error', ->
+
+    it 'propagate error', ->
       (->
         parameters
           options: [
@@ -53,60 +57,46 @@ describe 'api.run', ->
         .run ['--my_argument', 'my value']
       ).should.throw 'catch me'
   
-  describe 'without command', ->
-  
-    it 'run not defined', ->
-      ( ->
-        parameters {}
-        .run []
-      ).should.throw 'Missing run definition'
-  
-    it 'run a function', ->
+  describe 'arguments', ->
+
+    it 'pass a single info argument by default', ->
       parameters
-        run: (params) -> params.my_argument
+        options: [
+          name: 'my_argument'
+        ]
+        run: (info) ->
+          Object.keys(info).should.eql ['params', 'argv', 'config']
+          arguments.length.should.eql 1
+      .run ['--my_argument', 'my value']
+
+    it 'pass user arguments', (next) ->
+      parameters
+        options: [
+          name: 'my_argument'
+        ]
+        run: ({params, argv}, my_param, callback) ->
+          my_param.should.eql 'my value'
+          callback.should.be.a.Function()
+          callback null, 'something'
+      .run ['--my_argument', 'my value'], 'my value', (err, value) ->
+        value.should.eql 'something'
+        next()
+  
+  describe 'returned value', ->
+
+    it 'inside an application', ->
+      parameters
+        run: ({params}) -> params.my_argument
         options: [
           name: 'my_argument'
         ]
       .run ['--my_argument', 'my value']
       .should.eql 'my value'
 
-    it 'run a module', ->
-      mod = "#{os.tmpdir()}/node_params"
-      fs.writeFileSync "#{mod}.coffee", 'module.exports = (params) -> params.my_argument'
-      parameters
-        run: mod
-        options: [
-          name: 'my_argument'
-        ]
-      .run ['--my_argument', 'my value']
-      .should.eql 'my value'
-        
-  describe 'within command', ->
-      
-    it 'run not defined with no matching command', ->
-      ( ->
-        parameters commands: [
-          name: 'my_command'
-          run: (params) -> params.my_argument
-          options: [
-            name: 'my_argument'
-          ]
-        ]
-        .run ['--param', 'value']
-      ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
-      
-    it 'run not defined', ->
-      ( ->
-        parameters commands: [
-          name: 'my_command'
-        ]
-        .run ['my_command']
-      ).should.throw 'Missing "run" definition for command ["my_command"]'
-      
-    it 'run a function', ->
+    it 'inside a command', ->
       parameters commands: [
         name: 'my_command'
-        run: (params) -> params.my_argument
+        run: ({params}) -> params.my_argument
         options: [
           name: 'my_argument'
         ]
@@ -114,15 +104,28 @@ describe 'api.run', ->
       .run ['my_command', '--my_argument', 'my value']
       .should.eql 'my value'
 
-    it 'run a module', ->
+  describe 'load', ->
+
+    it 'application route', ->
       mod = "#{os.tmpdir()}/node_params"
-      fs.writeFileSync "#{mod}.coffee", 'module.exports = (params) -> params.my_argument'
-      parameters commands: [
-        name: 'my_command'
+      fs.writeFileSync "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
+      parameters
         run: mod
         options: [
           name: 'my_argument'
         ]
-      ]
+      .run ['--my_argument', 'my value']
+      .should.eql 'my value'
+
+    it 'command route', ->
+      mod = "#{os.tmpdir()}/node_params"
+      fs.writeFileSync "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
+      parameters
+        commands:
+          'my_command':
+            run: mod
+            options: [
+              name: 'my_argument'
+            ]
       .run ['my_command', '--my_argument', 'my value']
       .should.eql 'my value'

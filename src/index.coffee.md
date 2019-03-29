@@ -146,10 +146,7 @@ Example:
         throw Error 'Missing run definition' unless run
       # Load the module
       run = @load run if typeof run is 'string'
-      inject = [params]
-      inject.push argv if extended
-      inject.push @config if extended
-      run.call @, inject..., args...
+      run.call @, {params: params, argv: argv, config: @config}, ...args
 
 ## `parse([argv])`
 
