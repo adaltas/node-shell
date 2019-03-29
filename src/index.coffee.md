@@ -299,6 +299,7 @@ Convert an object into process arguments.
 
     Parameters.prototype.stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
+      throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
       set_default @config, params
       # Stringify

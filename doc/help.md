@@ -66,7 +66,7 @@ TODO: describe how help could be printed for every non leaf command if requested
 
 ### Overwriting
 
-It is totally possible to overwrite the default help options and commands such as to provide a personalised message:
+It is possible to overwrite the default help options and commands such as to provide a personalised message:
 
 ```
 require('parameters')({

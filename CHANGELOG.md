@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* stringify: check 2nd argument
 * help: new sample
 * help: remove info per command
 * package: use mixme
