@@ -39,7 +39,7 @@ Parameters are defined with the following properties:
         command.shortcuts = {}
         # command.command ?= parent.command
         throw Error "Invalid Configuration: command property can only be declared at the application level, not inside a command, got #{command.command}" if command.command?
-        throw Error 'Invalid Command: flatten cannot be declared inside a command' if command.flatten?
+        throw Error 'Invalid Command: extended cannot be declared inside a command' if command.extended?
         sanitize_options command
         sanitize_commands command
         command
@@ -53,8 +53,8 @@ Parameters are defined with the following properties:
           sanitize_command command, config
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
-      config.flatten ?= true
-      throw Error "Invalid Configuration: flatten must be a boolean, got #{JSON.stringify config.flatten}" unless typeof config.flatten is 'boolean'
+      config.extended ?= false
+      throw Error "Invalid Configuration: extended must be a boolean, got #{JSON.stringify config.extended}" unless typeof config.extended is 'boolean'
       config.root = true
       config.description ?= 'No description yet'
       config.shortcuts = {}
@@ -130,7 +130,6 @@ Example:
       else
         throw Error "Invalid Arguments: first argument must be an argv array, a params object or the process object, got #{JSON.stringify argv}"
       # Print help
-      # return unless params
       if commands = @helping params
         [helpconfig] = Object.values(@config.commands).filter (command) -> command.help
         throw Error "No Help Command" unless helpconfig
@@ -253,7 +252,7 @@ params.should.eql
             child_params = parse(config.commands[command], argv)
             # Enrich child with command
             child_params[@config.command] = command
-        # Tommand mode but no command are found, default to help
+        # Command mode but no command are found, default to help
         # Default to help is help property is set and no command is found in user args 
         # Happens with global options without a command
         if Object.keys(config.commands).length and not command
@@ -266,8 +265,7 @@ params.should.eql
         params
       # Start the parser
       parse @config, argv
-      # console.log full_params
-      if @config.flatten
+      unless @config.extended
         params = {}
         if Object.keys(@config.commands).length
           params[@config.command] = []
@@ -296,17 +294,20 @@ Convert an object into process arguments.
 
     Parameters.prototype.stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
+      extended = options.extended or @config.extended
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
+      # In extended mode, the params array will be truncated
+      # params = mixme params unless @config.extended
       set_default @config, params
       # Convert command parameter to a 1 element array if provided as a string
       params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
       # Stringify
-      stringify = (config) =>
+      stringify = (config, lparams) =>
         for _, option of config.options
           key = option.name
           keys[key] = true
-          value = params[key]
+          value = lparams[key]
           # Validate required value
           throw Error "Required option argument \"#{key}\"" if option.required and not value?
           # Validate value against option "one_of"
@@ -325,31 +326,33 @@ Convert an object into process arguments.
               argv.push "--#{key}"
               argv.push "#{value.join ','}"
         if config.main
-          value = params[config.main.name]
+          value = lparams[config.main.name]
           throw Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
           keys[config.main.name] = value
           argv.push value if value?
         # Recursive
-        if Object.keys(config.commands).length
-          command = params[@config.command].shift()
+        has_child_commands = if extended then params.length else Object.keys(config.commands).length
+        if has_child_commands
+          command = if extended then params[0][@config.command] else params[@config.command].shift()
+          throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
           argv.push command
           keys[@config.command] = command
           # Stringify child configuration
-          throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
-          stringify config.commands[command]
-      stringify @config
-      # Handle params not defined in the configuration
-      # Note, they are always pushed to the end and associated with the deepest child
-      for key, value of params
-        continue if keys[key]
-        throw Error "Invalid option #{JSON.stringify key}" if @config.strict
-        if typeof value is 'boolean'
-          argv.push "--#{key}" if value
-        else if typeof value is 'undefined' or value is null
-          # nothing
-        else
-          argv.push "--#{key}"
-          argv.push "#{value}"
+          stringify config.commands[command], if extended then params.shift() else lparams
+        if extended or not has_child_commands
+          # Handle params not defined in the configuration
+          # Note, they are always pushed to the end and associated with the deepest child
+          for key, value of lparams
+            continue if keys[key]
+            throw Error "Invalid option #{JSON.stringify key}" if @config.strict
+            if typeof value is 'boolean'
+              argv.push "--#{key}" if value
+            else if typeof value is 'undefined' or value is null
+              # nothing
+            else
+              argv.push "--#{key}"
+              argv.push "#{value}"
+      stringify @config, if extended then params.shift() else params
       argv
 
 ## `helping(params)` or `helping(arv)`

@@ -22,12 +22,12 @@ describe 'main', ->
     it 'work with no option', ->
       params = parameters
         main:
-          name: 'my_argument'
+          name: 'leftover'
       params.parse(['my --command']).should.eql
-        my_argument: 'my --command'
+        leftover: 'my --command'
       params.parse([]).should.eql {}
       params.stringify 
-        my_argument: 'my --command'
+        leftover: 'my --command'
       .should.eql ['my --command']
       params.stringify({}).should.eql []
   
@@ -37,27 +37,27 @@ describe 'main', ->
       params = parameters commands: [
         name: 'start'
         main:
-          name: 'commanda'
+          name: 'leftover'
       ]
       params.parse(['start', 'my --command']).should.eql
         command: ['start']
-        commanda: 'my --command'
+        leftover: 'my --command'
       params.stringify
         command: ['start']
-        commanda: 'my --command'
+        leftover: 'my --command'
       .should.eql ['start', 'my --command']
 
     it 'may follow command without any option', ->
       params = parameters commands: [
         name: 'mycommand'
         main: 
-          name: 'my_argument'
+          name: 'leftover'
           required: true
       ]
       params.parse(['mycommand', 'my value']).should.eql
         command: ['mycommand']
-        my_argument: 'my value'
+        leftover: 'my value'
       params.stringify 
         command: ['mycommand']
-        my_argument: 'my value'
+        leftover: 'my value'
       .should.eql ['mycommand', 'my value']

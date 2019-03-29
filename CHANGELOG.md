@@ -6,6 +6,10 @@
 Breaking compatibility
 * run: 1st arg as info with params and extended
 
+New functionnality
+* extended: parse and stringify without merging
+
+Fix and improvements
 * stringify: check 2nd argument
 * help: new sample
 * help: remove info per command

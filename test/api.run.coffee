@@ -27,13 +27,13 @@ describe 'api.run', ->
       # - the help route can be automatically created and register (eg "parameters/lib/routes/help")
       # - the below exemple is activating `helping` which is not necessary a brilliant idea
       ( ->
-        parameters commands: [
-          name: 'my_command'
-          run: ({params}) -> params.my_argument
-          options: [
-            name: 'my_argument'
-          ]
-        ]
+        parameters
+          commands:
+            'my_command':
+              run: ({params}) -> params.my_argument
+              options: [
+                name: 'my_argument'
+              ]
         .run ['--param', 'value']
       ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
 
