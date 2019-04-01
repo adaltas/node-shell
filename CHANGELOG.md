@@ -10,6 +10,7 @@ New functionnality
 * extended: parse and stringify without merging
 
 Fix and improvements
+* helping: complete re-implementation
 * stringify: check 2nd argument
 * help: new sample
 * help: remove info per command

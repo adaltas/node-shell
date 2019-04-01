@@ -61,7 +61,8 @@ Parameters are defined with the following properties:
       config.strict ?= false
       sanitize_options config
       sanitize_commands config
-      if Object.keys(config.commands).length
+      sanitize_help_command = (config) ->
+        return unless Object.keys(config.commands).length
         config.command ?= 'command'
         command = sanitize_command
           name: 'help'
@@ -72,6 +73,7 @@ Parameters are defined with the following properties:
           help: true
         , config
         config.commands[command.name] = mixme command, config.commands[command.name]
+      sanitize_help_command @config
       # Second pass, add help options and set default
       sanitize_options_enrich = (command) ->
         # No "help" option for command "help"
@@ -85,12 +87,12 @@ Parameters are defined with the following properties:
           command.shortcuts[command.options['help'].shortcut] = command.options['help'].name if command.options['help'].shortcut
         for _, cmd of command.commands
           sanitize_options_enrich cmd
-      sanitize_options_enrich config
+      sanitize_options_enrich @config
       sanitize_commands_enrich = (config) ->
         for name, command of config.commands
           command.description ?= "No description yet for the #{command.name} command"
           sanitize_commands_enrich command, config
-      sanitize_commands_enrich config
+      sanitize_commands_enrich @config
       @
 
 ## `run(argv)` or `run(params)` or `run(process)`
@@ -355,7 +357,7 @@ Convert an object into process arguments.
       stringify @config, if extended then params.shift() else params
       argv
 
-## `helping(params)` or `helping(arv)`
+## `helping(params)` or `helping(argv)`
 
 * `params`   
   Parameter object as returned by parsed.
@@ -373,34 +375,26 @@ Return zero to n commands if help not requested or null otherwise.
       else
         throw Error "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
       params = mixme params
-      commands = []
-      # Build the commands array with help and without main
-      conf = @config
-      while conf
-        # Stop if there are no more sub commands
-        break unless Object.keys(conf.commands).length
-        command = params[conf.command]
-        if typeof command is 'string'
-          commands.push command
-          delete params[conf.command]
-        else if Array.isArray command
-          commands.push command[0]
-          command.shift()
-        conf = conf.commands[command]
-      conf = @config
-      helping = false
-      if Object.values(conf.options).filter((option) -> option.help).some( (options) -> params[options.name])
+      params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
+      commands = params[@config.command] or []
+      if commands.length and @config.commands and @config.commands[commands[0]].help
         helping = true
-      for command, i in commands
-        if Object.values(conf.options).filter((option) -> option.help).some( (options) -> params[options.name])
-          helping = true
-        if conf.commands[command].help
-          helping = true
-          commands = commands.slice(0, i)
-          if params[conf.commands[command].main.name]
-            commands.push params[conf.commands[command].main.name].split(' ')...
-          break
-        conf = conf.commands[command]
+        # if argv is ['help'], there is no leftover and main is null
+        leftover = params[@config.commands[commands[0]].main.name]
+        commands = if leftover then leftover.split() else []
+      search = (config) ->
+        return true if config.options and Object.values(config.options)
+        # Search the help option
+        .filter (options) -> options.help
+        # Check if it is present in the parsed parameters
+        .some (options) -> params[options.name]?
+        return false unless commands?.length
+        command = commands[0]
+        config = config.commands[commands.shift()]
+        if config
+        then search config
+        else throw Error "Invalid Arguments: command #{JSON.stringify command} is not registed"
+      helping = search @config unless helping
       if helping then commands else null
 
 ## `help(params, [options])` or `help(commands..., [options])`

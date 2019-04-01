@@ -33,12 +33,14 @@ describe 'api.help_arguments', ->
         .help
           command: 'start'
       )
-      should.not.exist(
+
+    it 'error if parameters match an undefined command', ->
+      (->
         parameters
           commands: 'start': {}
         .help
           command: ['start', 'sth']
-      )
+      ).should.throw 'Invalid Arguments: command "sth" is not registed'
 
     it 'display help of the app', ->
       # With an options

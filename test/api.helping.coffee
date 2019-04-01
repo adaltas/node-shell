@@ -60,11 +60,11 @@ describe 'api.helping', ->
       parameters
         commands: 'start': commands: 'server': {}
       .helping ['start', 'server', '--help']
-      .should.eql ['start']
+      .should.eql ['start', 'server']
       # With params
       parameters
         commands: 'start': commands: 'server': {}
       .helping
         command: ['start', 'server']
         help: true
-      .should.eql ['start']
+      .should.eql ['start', 'server']
