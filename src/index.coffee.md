@@ -460,7 +460,7 @@ command.
         if i is configs.length - 1
           # There are more subcommand
           if Object.keys(config.commands).length
-            synopsis.push "<#{config.command}>"
+            synopsis.push "<#{@config.command}>"
           else if config.main
             synopsis.push "{#{config.main.name}}"
       content.push '    ' + synopsis.join ' '
@@ -506,40 +506,40 @@ command.
             line = ' '.repeat 28
           line += command.description or "No description yet for the #{command.name} command."
           content.push line
-        # # Detailed command information
-        # for _, command of config.commands
-        #   content.push ''
-        #   content.push "COMMAND \"#{command.name}\""
-        #   # Raw command, no main, no child commands
-        #   if not Object.keys(command.commands).length and not command.main?.required
-        #     line = "#{command.name}"
-        #     line = pad "    #{line}", 28
-        #     if line.length > 28
-        #       content.push line
-        #       line = ' '.repeat 28
-        #     line += command.description or "No description yet for the #{command.name} command."
-        #     content.push line
-        #   # Command with main
-        #   if command.main
-        #     line = "#{command.name} {#{command.main.name}}"
-        #     line = pad "    #{line}", 28
-        #     if line.length > 28
-        #       content.push line
-        #       line = ' '.repeat 28
-        #     line += command.main.description or "No description yet for the #{command.main.name} option."
-        #     content.push line
-        #   # Command with child commands
-        #   if Object.keys(command.commands).length
-        #     line = ["#{command.name}"]
-        #     if Object.keys(command.options).length
-        #       line.push "[#{command.name} options]"
-        #     line.push "<#{command.command}>"
-        #     content.push '    ' + line.join ' '
-        #     commands = Object.keys command.commands
-        #     if commands.length is 1
-        #       content.push "    Where command is #{Object.keys command.commands}."
-        #     else if commands.length > 1
-        #       content.push "    Where command is one of #{Object.keys(command.commands).join ', '}."
+        # Detailed command information
+        if options.extended then for _, command of config.commands
+          content.push ''
+          content.push "COMMAND \"#{command.name}\""
+          # Raw command, no main, no child commands
+          if not Object.keys(command.commands).length and not command.main?.required
+            line = "#{command.name}"
+            line = pad "    #{line}", 28
+            if line.length > 28
+              content.push line
+              line = ' '.repeat 28
+            line += command.description or "No description yet for the #{command.name} command."
+            content.push line
+          # Command with main
+          if command.main
+            line = "#{command.name} {#{command.main.name}}"
+            line = pad "    #{line}", 28
+            if line.length > 28
+              content.push line
+              line = ' '.repeat 28
+            line += command.main.description or "No description yet for the #{command.main.name} option."
+            content.push line
+          # Command with child commands
+          if Object.keys(command.commands).length
+            line = ["#{command.name}"]
+            if Object.keys(command.options).length
+              line.push "[#{command.name} options]"
+            line.push "<#{command.command}>"
+            content.push '    ' + line.join ' '
+            commands = Object.keys command.commands
+            if commands.length is 1
+              content.push "    Where command is #{Object.keys command.commands}."
+            else if commands.length > 1
+              content.push "    Where command is one of #{Object.keys(command.commands).join ', '}."
       # Add examples
       config = configs[configs.length - 1]
       has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
