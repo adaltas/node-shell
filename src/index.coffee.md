@@ -122,7 +122,7 @@ Example:
   ).run ['start', '-d', 'Hello']
 ```
 
-    Parameters.prototype.run = (argv = process, args...) ->
+    Parameters::run = (argv = process, args...) ->
       if Array.isArray(argv)
         params = @parse argv
       else if argv is process
@@ -171,7 +171,7 @@ params.should.eql
   command: 'my --command'
 ```
 
-    Parameters.prototype.parse = (argv = process) ->
+    Parameters::parse = (argv = process) ->
       # argv = argv.split ' ' if typeof argv is 'string'
       index = 0
       # Remove node and script argv elements
@@ -294,7 +294,7 @@ params.should.eql
 
 Convert an object into process arguments.
 
-    Parameters.prototype.stringify = (params, options={}) ->
+    Parameters::stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
       extended = options.extended or @config.extended
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
@@ -366,7 +366,7 @@ Convert an object into process arguments.
 
 Return zero to n commands if help not requested or null otherwise.
 
-    Parameters.prototype.helping = ->
+    Parameters::helping = ->
       args = Array.prototype.slice.call arguments
       if Array.isArray args[0]
         params = @parse args[0]
@@ -409,7 +409,7 @@ Return zero to n commands if help not requested or null otherwise.
 Return a string describing the usage of the overall command or one of its
 command.
 
-    Parameters.prototype.help = ->
+    Parameters::help = ->
       args = Array.prototype.slice.call arguments
       # Get options
       if args.length > 1
@@ -573,7 +573,7 @@ command.
 Load and return a module, use `require.main.require` by default but can be
 overwritten by the `load` options passed in the configuration.
 
-    Parameters.prototype.load = (module) ->
+    Parameters::load = (module) ->
       unless @config.load
         load module
       else
