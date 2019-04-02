@@ -14,7 +14,7 @@ Without any argument, the `help` method return the application help without the 
 ### Standard command line example
 
 ```javascript
-command = parameters({
+app = parameters({
   name: 'server',
   description: 'Start a web server',
   options: [{
@@ -26,13 +26,13 @@ command = parameters({
   }]
 });
 // Print help
-process.stdout.write( command.help() );
+process.stdout.write( app.help() );
 ```
 
 ### Command-based command line example
 
 ```javascript
-command = parameters({
+app = parameters({
   name: 'server',
   description: 'Manage a web server',
   commands: [{
@@ -48,7 +48,7 @@ command = parameters({
   }]
 });
 // Print help
-process.stdout.write( command.help() );
+process.stdout.write( app.help() );
 ```
 
 

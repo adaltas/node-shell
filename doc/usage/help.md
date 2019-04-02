@@ -35,13 +35,13 @@ For the developer, printing help uses a combination of the `helping` and
 
 Here's how to display help with `helping` and `help`:
 
-```javascript
-const params = require('parameters')(my_config);
-const args = params.parse()
-if(commands = params.helping(args)){
-  return process.stdout.write(params.help(commands));
+```js
+const app = require('parameters')(my_config);
+const params = app.parse()
+if(commands = app.helping(params)){
+  return process.stdout.write(app.help(commands));
 }
-// Now work with the args object
+// Now work with the params object
 ```
 
 ### With routing
@@ -50,10 +50,11 @@ Routing is enabled if the application or its command defined the `run` property 
 
 Here's how to display help with routing:
 
-```javascript
+```js
 // Routing to help required `help.run` to be set
-my_config.help = {run: './some/module'}
-require('parameters')(my_config).run(/*...user_arguments...*/)
+require('parameters')({
+  run: './some/module'
+}).run(/*...optional user arguments...*/)
 ```
 
 ### Invalid or incomplete command
@@ -68,7 +69,7 @@ TODO: describe how help could be printed for every non leaf command if requested
 
 It is possible to overwrite the default help options and commands such as to provide a personalised message:
 
-```
+```js
 require('parameters')({
 { options:
   { help: 

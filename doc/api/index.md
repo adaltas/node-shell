@@ -2,8 +2,8 @@
 # Usage
 
 The parameters package is made available to your module with the declaration
-`parameters = require('parameters');`. The returned variable is a function
-expecting a definition object and returning the following functions:
+`const parameters = require('parameters');`. The returned variable is a function
+expecting a configuration object and returning the following functions:
 
 * `help` (command[string|null])   
   Returned a string with the complete help content or the content of a single 
