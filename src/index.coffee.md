@@ -21,6 +21,12 @@ Parameters are defined with the following properties:
 * type:     one of 'string', 'boolean', 'integer' or 'array'
 
     Parameters = (config = {}) ->
+      @configure config
+      @
+
+## `configure(config)`
+
+    Parameters::configure = (config) ->
       @config = config
       properties = {}
       # Sanitize options
@@ -109,7 +115,6 @@ Parameters are defined with the following properties:
           command.description ?= "No description yet for the #{command.name} command"
           sanitize_commands_enrich command, config
       sanitize_commands_enrich @config
-      @
 
 ## `run(argv)` or `run(params)` or `run(process)`
 

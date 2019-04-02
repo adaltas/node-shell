@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'config.options', ->
+describe 'configure.options', ->
   
   describe 'validation', ->
     

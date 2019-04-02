@@ -23,8 +23,11 @@ describe 'api.config', ->
             type: 'boolean'
         commands: {}
           
-    it 'empty with command', ->
-      parameters(commands: 'my_cmd': {}).config.should.eql
+    it 'command command', ->
+      parameters
+        commands:
+          'my_cmd': {}
+      .config.should.eql
         name: 'myapp'
         description: 'No description yet'
         extended: false
@@ -69,8 +72,13 @@ describe 'api.config', ->
             commands: {}
             shortcuts: {}
           
-    it 'empty with nested commands', ->
-      parameters(commands: 'parent_cmd': commands: 'child_cmd': {}).config.should.eql
+    it 'nested empty commands', ->
+      parameters
+        commands:
+          'parent_cmd':
+            commands:
+              'child_cmd': {}
+      .config.should.eql
         name: 'myapp'
         description: 'No description yet'
         extended: false
@@ -131,123 +139,17 @@ describe 'api.config', ->
             shortcuts: {}
       
     it 'define command and options as an array', ->
-      parameters
+      array = parameters
         commands: [
           name: 'start'
           options: [
             name: 'myparam'
           ]
         ]
-      .config.should.eql
-        name: 'myapp'
-        description: 'No description yet'
-        extended: false
-        root: true
-        options:
-          'help': 
-            name: 'help'
-            shortcut: 'h'
-            description: 'Display help information'
-            type: 'boolean'
-            help: true
-        shortcuts:
-          'h': 'help'
-        command: 'command'
+      object = parameters(
         commands:
           'start':
-            name: 'start'
-            description: 'No description yet for the start command'
-            command: ['start']
             options:
-              'myparam':
-                name: 'myparam'
-                type: 'string'
-              'help': 
-                name: 'help'
-                shortcut: 'h'
-                description: 'Display help information'
-                type: 'boolean'
-                help: true
-            commands: {}
-            strict: false
-            shortcuts:
-              'h': 'help'
-          'help':
-            name: 'help'
-            help: true
-            description: 'Display help information about myapp'
-            command: ['help']
-            main:
-              name: 'name'
-              description: 'Help about a specific command'
-            strict: false
-            shortcuts: {}
-            options: {}
-            commands: {}
-        strict: false
-  
-  describe 'overwrite help', ->
-
-    it 'works', ->
-      parameters
-        commands:
-          'start':
-            options: [
-              name: 'myparam'
-            ]
-          'help':
-            description: 'Overwrite description'
-      .config.should.eql
-        name: 'myapp'
-        description: 'No description yet'
-        extended: false
-        root: true
-        options:
-          'help': 
-            name: 'help'
-            shortcut: 'h'
-            description: 'Display help information'
-            type: 'boolean'
-            help: true
-        shortcuts:
-          'h': 'help'
-        command: 'command'
-        commands:
-          'start':
-            name: 'start'
-            description: 'No description yet for the start command'
-            command: ['start']
-            options:
-              'myparam':
-                name: 'myparam'
-                type: 'string'
-              'help': 
-                name: 'help'
-                shortcut: 'h'
-                description: 'Display help information'
-                type: 'boolean'
-                help: true
-            commands: {}
-            strict: false
-            shortcuts:
-              'h': 'help'
-          'help':
-            name: 'help'
-            help: true
-            description: 'Overwrite description'
-            command: ['help']
-            main:
-              name: 'name'
-              description: 'Help about a specific command'
-            strict: false
-            shortcuts: {}
-            options: {}
-            commands: {}
-        strict: false
-
-    it 'does not conflict with default description', ->
-      parameters
-        commands:
-          'start': {}
-          'help': {}
-      .config.commands.help.description.should.eql 'Display help information about myapp'
+              'myparam': {}
+      )
+      array.config.should.eql object.config

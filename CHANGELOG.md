@@ -10,6 +10,7 @@ New functionnality
 * extended: parse and stringify without merging
 
 Fix and improvements
+* configure: isolate into its own method
 * options: prevent collisions in flatten mode
 * help: new extended option
 * helping: complete re-implementation
