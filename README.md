@@ -16,9 +16,18 @@ Node parameters is sugar for parsing typical unix command line options.
 
 ## Documentation
 
-* [Usage](./doc/usage/)
-* [Config](./doc/config/)
-* [Options](./doc/options/)
-* [Commands](./doc/commands/)
-* [Help](./doc/help/)
-* [Contribute](./doc/contribute/)
+* [API](https://github.com/adaltas/node-parameters/blob/master/doc/api/index.md)
+  * [Method `help`](https://github.com/adaltas/node-parameters/blob/master/doc/api/help.md)
+  * [Method `helping`](https://github.com/adaltas/node-parameters/blob/master/doc/api/helping.md)
+  * [Method `parse`](https://github.com/adaltas/node-parameters/blob/master/doc/api/parse.md)
+  * [Method `stringify`](https://github.com/adaltas/node-parameters/blob/master/doc/api/stringify.md)
+* Usage
+  * [Config](https://github.com/adaltas/node-parameters/blob/master/doc/usage/config.md)
+  * [Extended](https://github.com/adaltas/node-parameters/blob/master/doc/usage/extended.md)
+  * [Options](https://github.com/adaltas/node-parameters/blob/master/doc/usage/options.md)
+  * [Commands](https://github.com/adaltas/node-parameters/blob/master/doc/usage/commands.md)
+  * [Help](https://github.com/adaltas/node-parameters/blob/master/doc/usage/help.md)
+* Project
+  * [License](https://github.com/adaltas/node-parameters/blob/master/LICENSE)
+  * [Changelog](https://github.com/adaltas/node-parameters/blob/master/CHANGELOG.md)
+  * [Contribute](https://github.com/adaltas/node-parameters/blob/master/doc/project/contribute.md)
