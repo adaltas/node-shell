@@ -4,24 +4,24 @@ parameters = require '../src'
 describe 'options.discovery', ->
 
   it 'discover unregistered options', ->
-    params = parameters()
-    params.parse(['--myoption', 'my value']).should.eql
+    app = parameters()
+    app.parse(['--myoption', 'my value']).should.eql
       myoption: 'my value'
-    ['--myoption', 'my value'].should.eql params.stringify 
+    ['--myoption', 'my value'].should.eql app.stringify 
       myoption: 'my value'
 
   it 'discover unregistered options in command', ->
-    params = parameters commands: [name: 'mycommand']
-    params.parse(['mycommand', '--myoption', 'my value']).should.eql
+    app = parameters commands: [name: 'mycommand']
+    app.parse(['mycommand', '--myoption', 'my value']).should.eql
       command: ['mycommand']
       myoption: 'my value'
-    ['mycommand', '--myoption', 'my value'].should.eql params.stringify
+    ['mycommand', '--myoption', 'my value'].should.eql app.stringify
       command: ['mycommand']
       myoption: 'my value'
 
   it 'deal with boolean', ->
-    params = parameters()
-    params.parse(['--myoption']).should.eql
+    app = parameters()
+    app.parse(['--myoption']).should.eql
       myoption: true
-    ['--myoption'].should.eql params.stringify 
+    ['--myoption'].should.eql app.stringify 
       myoption: true

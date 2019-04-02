@@ -85,7 +85,7 @@ describe 'api.help', ->
       """
 
     it 'bypass required', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
         options: [
@@ -93,8 +93,8 @@ describe 'api.help', ->
           description: 'MyArg'
           required: true
         ]
-      params.parse(['--help']).help.should.be.True()
-      params.help().should.eql """
+      app.parse(['--help']).help.should.be.True()
+      app.help().should.eql """
 
       NAME
           myscript - Some description for myscript
@@ -114,11 +114,11 @@ describe 'api.help', ->
   describe 'with command', ->
 
     it 'error if command isnt defined', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         commands: []
       ( ->
-        params.help('undefined')
+        app.help('undefined')
       ).should.throw 'Invalid Command: "undefined"'
         
     it 'minimalist, no name, no description, no options, no main', ->
@@ -147,7 +147,7 @@ describe 'api.help', ->
       """
 
     it 'print all commands with multiple options', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
         commands: [
@@ -183,7 +183,7 @@ describe 'api.help', ->
             description: 'Array option in stop'
           ]
         ]
-      params.help().should.eql """
+      app.help().should.eql """
 
       NAME
           myscript - Some description for myscript
@@ -204,10 +204,10 @@ describe 'api.help', ->
           myscript help           Show this message
 
       """
-      # params.help().should.eql params.help 'help'
+      # app.help().should.eql app.help 'help'
 
     it 'describe a specific command', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
         commands:[
@@ -242,24 +242,24 @@ describe 'api.help', ->
           myscript start --help   Show this message
 
       """
-      params.help('start').should.eql expect
-      params.help(['start']).should.eql expect
-      params.help(command: 'help', name: 'start').should.eql expect
+      app.help('start').should.eql expect
+      app.help(['start']).should.eql expect
+      app.help(command: 'help', name: 'start').should.eql expect
 
   describe 'with nested command', ->
 
     it 'error if command isnt defined', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         commands: [
           name: 'mycommand'
         ]
       ( ->
-        params.help('mycommand', 'undefined')
+        app.help('mycommand', 'undefined')
       ).should.throw 'Invalid Command: "mycommand undefined"'
 
     it.skip 'display options without brakets at least one required', ->
-      params = parameters
+      app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
         options: [
@@ -297,4 +297,4 @@ describe 'api.help', ->
               name: 'action'
           ]
         ]
-      params.help('parent') # , 'child'
+      app.help('parent') # , 'child'

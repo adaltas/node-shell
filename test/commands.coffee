@@ -4,64 +4,64 @@ parameters = require '../src'
 describe 'commands', ->
 
   it 'accept no main and no option', ->
-    params = parameters
+    app = parameters
       commands: [name: 'start']
-    params.parse(['start']).should.eql
+    app.parse(['start']).should.eql
       command: ['start']
-    params.stringify
+    app.stringify
       command: ['start']
     .should.eql ['start']
 
   it 'command is of type object', ->
-    params = parameters
+    app = parameters
       commands: 'start': {}
-    params.parse(['start']).should.eql
+    app.parse(['start']).should.eql
       command: ['start']
-    params.stringify
+    app.stringify
       command: ['start']
     .should.eql ['start']
 
   it 'options is of type array', ->
-    params = parameters commands: [
+    app = parameters commands: [
       name: 'start'
       options: [
         name: 'myparam'
       ]
     ]
-    params.parse(['start', '--myparam', 'my value']).should.eql
+    app.parse(['start', '--myparam', 'my value']).should.eql
       command: ['start']
       myparam: 'my value'
-    params.stringify
+    app.stringify
       command: ['start']
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
   it 'options is of type object', ->
-    params = parameters
+    app = parameters
       commands:
         'start':
           options:
             myparam: {}
-    params.parse(['start', '--myparam', 'my value']).should.eql
+    app.parse(['start', '--myparam', 'my value']).should.eql
       command: ['start']
       myparam: 'my value'
-    params.stringify
+    app.stringify
       command: ['start']
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
 
   it 'customize command name', ->
-    params = parameters
+    app = parameters
       command: 'mycommand'
       commands: [name: 'start']
-    params.parse(['start']).should.eql
+    app.parse(['start']).should.eql
       mycommand: ['start']
-    params.stringify
+    app.stringify
       mycommand: ['start']
     .should.eql ['start']
 
   it 'mix with general options', ->
-    params = parameters
+    app = parameters
       options: [
         name: 'gopt'
       ]
@@ -71,11 +71,11 @@ describe 'commands', ->
           name: 'aopt'
         ]
       ]
-    params.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
+    app.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
       gopt: 'toto'
       command: ['start']
       aopt: 'lulu'
-    params.stringify
+    app.stringify
       gopt: 'toto'
       command: ['start']
       aopt: 'lulu'
@@ -84,7 +84,7 @@ describe 'commands', ->
   describe 'nested', ->
 
     it 'with the same command name', ->
-      params = parameters
+      app = parameters
         options: [
           name: 'opt_root'
         ]
@@ -100,12 +100,12 @@ describe 'commands', ->
             ]
           ]
         ]
-      params.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
+      app.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
         command: ['parent', 'child']
         opt_root: 'val 0'
         opt_parent: 'val 1'
         opt_child: 'val 2'
-      params.stringify
+      app.stringify
         command: ['parent', 'child']
         opt_root: 'val 0'
         opt_parent: 'val 1'

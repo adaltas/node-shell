@@ -4,7 +4,7 @@ parameters = require '../src'
 describe 'api.parse', ->
 
   it 'doesnot alter params', ->
-    params = parameters commands: [
+    app = parameters commands: [
       name: 'start'
       options: [
         name: 'watch'
@@ -12,11 +12,11 @@ describe 'api.parse', ->
       ]
     ]
     argv = ['start', '--watch', __dirname]
-    params.parse(argv)
+    app.parse(argv)
     argv.should.eql ['start', '--watch', __dirname]
 
   it 'catch argument without a value because end of argv', ->
-    params = parameters commands: [
+    app = parameters commands: [
       name: 'start'
       options: [
         name: 'an_int'
@@ -30,17 +30,17 @@ describe 'api.parse', ->
       ]
     ]
     ( ->
-      params.parse(['start', '--an_int'])
+      app.parse(['start', '--an_int'])
     ).should.throw 'Invalid Option: no value found for option "an_int"'
     ( ->
-      params.parse(['start', '--a_string'])
+      app.parse(['start', '--a_string'])
     ).should.throw 'Invalid Option: no value found for option "a_string"'
     ( ->
-      params.parse(['start', '--an_array'])
+      app.parse(['start', '--an_array'])
     ).should.throw 'Invalid Option: no value found for option "an_array"'
 
   it 'catch argument without a value because next argv is a shortcut', ->
-    params = parameters commands: [
+    app = parameters commands: [
       name: 'start'
       options: [
         name: 'an_int'
@@ -57,11 +57,11 @@ describe 'api.parse', ->
       ]
     ]
     ( ->
-      params.parse(['start', '--an_int', '--some', 'thing'])
+      app.parse(['start', '--an_int', '--some', 'thing'])
     ).should.throw 'Invalid Option: no value found for option "an_int"'
     ( ->
-      params.parse(['start', '--a_string', '--some', 'thing'])
+      app.parse(['start', '--a_string', '--some', 'thing'])
     ).should.throw 'Invalid Option: no value found for option "a_string"'
     ( ->
-      params.parse(['start', '--an_array', '--some', 'thing'])
+      app.parse(['start', '--an_array', '--some', 'thing'])
     ).should.throw 'Invalid Option: no value found for option "an_array"'

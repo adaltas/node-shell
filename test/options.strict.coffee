@@ -4,36 +4,36 @@ parameters = require '../src'
 describe 'options.strict', ->
 
   it 'throw error for an undefined argument', ->
-    params = parameters strict: true
+    app = parameters strict: true
     (->
-      params.parse ['--myoption', 'my', '--command']
+      app.parse ['--myoption', 'my', '--command']
     ).should.throw 'Invalid option "myoption"'
     (->
-      params.stringify
+      app.stringify
         myoption: true
     ).should.throw 'Invalid option "myoption"'
 
   it 'throw error for an undefined shortcut', ->
     # Test a boolean (no value) argument
-    params = parameters strict: true
+    app = parameters strict: true
     (->
-      params.parse ['-c']
+      app.parse ['-c']
     ).should.throw 'Invalid Shortcut: "-c"'
 
   it 'throw error for an undefined argument inside an command', ->
-    params = parameters strict: true, commands: [name: 'mycommand']
+    app = parameters strict: true, commands: [name: 'mycommand']
     (->
-      params.parse ['mycommand', '--myoption', 'my', '--command']
+      app.parse ['mycommand', '--myoption', 'my', '--command']
     ).should.throw 'Invalid option "myoption"'
     (->
-      params.stringify
+      app.stringify
         command: 'mycommand'
         myoption: true
     ).should.throw 'Invalid option "myoption"'
 
   it 'throw error for an undefined shortcut inside an command', ->
     # Test a boolean (no value) argument
-    params = parameters strict: true, commands: [name: 'mycommand']
+    app = parameters strict: true, commands: [name: 'mycommand']
     (->
-      params.parse ['mycommand', '-c']
+      app.parse ['mycommand', '-c']
     ).should.throw 'Invalid Shortcut: "-c" in command "mycommand"'

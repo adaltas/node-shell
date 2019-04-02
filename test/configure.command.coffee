@@ -7,7 +7,7 @@ describe 'configure.command', ->
     
     it 'only at application level', ->
       (->
-        params = parameters
+        app = parameters
           commands: [
             name: 'server'
             command: 'invalid'

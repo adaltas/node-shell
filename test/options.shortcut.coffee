@@ -5,12 +5,12 @@ describe 'options.shortcut', ->
 
   it 'throw error for an undefined shortcut', ->
     # Test a boolean (no value) argument
-    params = parameters()
+    app = parameters()
     (->
-      params.parse ['-c']
+      app.parse ['-c']
     ).should.throw 'Invalid Shortcut: "-c"'
     (->
-      params.parse ['-c', 'a value']
+      app.parse ['-c', 'a value']
     ).should.throw 'Invalid Shortcut: "-c"'
 
   it 'handle help shortcut', ->
