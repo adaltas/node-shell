@@ -22,12 +22,23 @@ Parameters are defined with the following properties:
 
     Parameters = (config = {}) ->
       @config = config
+      properties = {}
       # Sanitize options
-      sanitize_options = (config) ->
+      sanitize_options = (config) =>
         config.options ?= {}
         # Convert from object with keys as options name to an array
         config.options = array_to_object config.options, 'name' if Array.isArray config.options
         for name, option of config.options
+          # Prevent collision
+          throw Error [
+            'Invalid Option Configuration:'
+            "option #{JSON.stringify name}"
+            "in command #{JSON.stringify config.command.join ' '}"
+            "collide with the one in #{if properties[name].length is 0 then 'application' else JSON.stringify properties[name].join ' '},"
+            "change its name or use the extended property"
+          ].join ' ' if properties[name] and not @config.extended
+          properties[name] = if config.root then [] else config.command
+          # Normalize option
           option.name = name
           option.type ?= 'string'
           throw Error "Invalid option type #{JSON.stringify option.type}" unless option.type in types
@@ -38,7 +49,6 @@ Parameters are defined with the following properties:
         command.strict ?= parent.strict
         command.shortcuts = {}
         # command.command ?= parent.command
-        throw Error "Invalid Configuration: command property can only be declared at the application level, not inside a command, got #{command.command}" if command.command?
         throw Error 'Invalid Command: extended cannot be declared inside a command' if command.extended?
         sanitize_options command
         sanitize_commands command
@@ -49,7 +59,12 @@ Parameters are defined with the following properties:
         for name, command of config.commands
           throw Error "Incoherent Command Name: key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}" if command.name and command.name isnt name
           command.name = name
-          # command.description ?= "No description yet for the #{command.name} command"
+          throw Error [
+            'Invalid Command Configuration:'
+            'command property can only be declared at the application level,'
+            "not inside a command, got #{command.command}"
+          ].join ' ' if command.command?
+          command.command = if config.root then [name] else [...config.command, name]
           sanitize_command command, config
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
@@ -67,6 +82,7 @@ Parameters are defined with the following properties:
         command = sanitize_command
           name: 'help'
           description: "Display help information about #{config.name}"
+          command: ['help']
           main:
             name: 'name'
             description: 'Help about a specific command'
