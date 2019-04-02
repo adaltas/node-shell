@@ -15,7 +15,7 @@
   ],
   "homepage": "https://github.com/adaltas/node-parameters",
   "author": "David Worms <david@adaltas.com>",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "contributors": [],
   "engines": {
     "node": ">= 0.10.x"
