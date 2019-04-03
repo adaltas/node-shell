@@ -5,6 +5,7 @@
 
 Breaking compatibility
 * run: 1st arg as info with params and extended
+* help: only accept a command, no params
 
 New functionnality
 * extended: parse and stringify without merging

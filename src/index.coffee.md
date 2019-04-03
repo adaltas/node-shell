@@ -357,7 +357,7 @@ Convert an object into process arguments.
         has_child_commands = if extended then params.length else Object.keys(config.commands).length
         if has_child_commands
           command = if extended then params[0][@config.command] else params[@config.command].shift()
-          throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
+          throw Error "Invalid Command: command #{JSON.stringify command} is not registed" unless config.commands[command]
           argv.push command
           keys[@config.command] = command
           # Stringify child configuration
@@ -418,7 +418,7 @@ Return zero to n commands if help not requested or null otherwise.
       helping = search @config unless helping
       if helping then commands else null
 
-## `help(params, [options])` or `help(commands..., [options])`
+## `help(commands, [options])`
 
 * `params(object)`   
   Parameter object as returned by parsed, required if first argument is an object.
@@ -430,28 +430,9 @@ Return zero to n commands if help not requested or null otherwise.
 Return a string describing the usage of the overall command or one of its
 command.
 
-    Parameters::help = ->
-      args = Array.prototype.slice.call arguments
-      # Get options
-      if args.length > 1
-        options = args.pop() if is_object args[args.length-1]
-      # Get commands as an array of sub commands
-      if is_object args[0]
-        throw Error 'Invalid Arguments: only one argument is expected if first argument is an object' if args.length > 1
-        return unless commands = @helping args[0]
-      else if Array.isArray args[0]
-        for arg in args[0] then throw Error "Invalid Arguments: argument is not a string, got #{JSON.stringify arg}" if typeof arg isnt 'string'
-        commands = args[0]
-      else if typeof args[0] is 'string'
-        for arg in args then throw Error "Invalid Arguments: argument is not a string, got #{JSON.stringify arg}" if typeof arg isnt 'string'
-        commands = args
-      else if args.length is 0
-        commands = []
-      else
-        throw Error "Invalid Arguments: first argument must be a string, an array or an object, got #{JSON.stringify args[0]}"
-      options ?= {}
-      # commands = [] if commands.length is 1 and commands[0] is 'help'
-      # Build a config array reflecting the hierarchical nature of commands
+    Parameters::help = (commands=[], options={}) ->
+      commands = commands.split ' ' if typeof commands is 'string'
+      throw Error "Invalid Arguments: expect commands to be an array as first argument, got #{JSON.stringify commands}" unless Array.isArray commands
       config = @config
       configs = [config]
       for command, i in commands
@@ -473,8 +454,6 @@ command.
       for config, i in configs
         synopsis.push config.name
         # Find if there are options other than help
-        # has_options = Object.values(config.options).some((option) -> not option.help)
-        # if Object.keys(config.options).length
         if Object.values(config.options).some((option) -> not option.help)
           synopsis.push "[#{config.name} options]"
         # Is current config

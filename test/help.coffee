@@ -244,7 +244,6 @@ describe 'api.help', ->
       """
       app.help('start').should.eql expect
       app.help(['start']).should.eql expect
-      app.help(command: 'help', name: 'start').should.eql expect
 
   describe 'with nested command', ->
 
@@ -255,7 +254,7 @@ describe 'api.help', ->
           name: 'mycommand'
         ]
       ( ->
-        app.help('mycommand', 'undefined')
+        app.help(['mycommand', 'undefined'])
       ).should.throw 'Invalid Command: "mycommand undefined"'
 
     it.skip 'display options without brakets at least one required', ->
@@ -297,4 +296,19 @@ describe 'api.help', ->
               name: 'action'
           ]
         ]
-      app.help('parent') # , 'child'
+      app.help('parent')
+  
+  describe 'name', ->
+
+    it 'display help of the app', ->
+      # With an options
+      parameters()
+      .help()
+      .should.match /myapp - No description yet/
+
+    it 'display help of a command with --help option', ->
+      # With an options
+      parameters
+        commands: 'start': {}
+      .help ['start']
+      .should.match /myapp start - No description yet/

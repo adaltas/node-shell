@@ -1,5 +1,5 @@
 
-# Help usage
+# Displaying help
 
 Help print detailed information about how to use a command or one of its sub commands.
 

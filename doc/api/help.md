@@ -1,3 +1,9 @@
+---
+title: API method `help`
+description: How to use the `help` method to print help to the user
+keywords: ['parameters', 'shell', 'cli', 'api', 'help', 'print']
+maturity: done
+---
 
 # Method `help`
 
@@ -9,48 +15,47 @@ Format the configuration into a readable documentation string.
 
 ## Integration
 
-Without any argument, the `help` method return the application help without the specific documentation of each sub commands. With the command name, it returned the help of the requested command as well as the options of the parent commands and application.
+Without any argument, the `help` method return the application help without the specific documentation of each sub commands. With the command name, it returned the help of the requested command as well as the options of the application and any parent commands.
 
-### Standard command line example
+Calling `help` will always return a string, it does not detect if help was requested by the user for display. To achieve this behaviour, it is expected to be used conjointly with [`helping`](/api/helping/), see the [the help usage documentation](/usage/help/) for additional information.
+
+## Examples
+
+### Printing help for the application
 
 ```javascript
-app = parameters({
+const parameters = require('parameters')
+const app = parameters({
   name: 'server',
   description: 'Start a web server',
-  options: [{
-    name: 'host', shortcut: 'h', 
-    description: 'Web server listen host'
-  },{
-    name: 'port', shortcut: 'p', type: 'integer', 
-    description: 'Web server listen port'
-  }]
-});
+  options: {
+    'config': { shortcut: 'c', description: 'Path to configuration' }
+  }
+})
 // Print help
-process.stdout.write( app.help() );
+process.stdout.write( app.help() )
 ```
 
-### Command-based command line example
+### Printing help for a command
 
 ```javascript
-app = parameters({
+const parameters = require('parameters')
+const app = parameters({
   name: 'server',
   description: 'Manage a web server',
-  commands: [{
-    name: 'start',
-    description: 'Start a web server',
-    options: [{
-      name: 'host', shortcut: 'h', 
-      description: 'Web server listen host'
-    },{
-      name: 'port', shortcut: 'p', type: 'integer', 
-      description: 'Web server listen port'
-    }]
-  }]
+  commands: {
+    'start': {
+      description: 'Start a web server',
+      options: {
+        'host': {shortcut: 'h', description: 'Web server listen host'},
+        'port': {shortcut: 'p', type: 'integer', description: 'Web server listen port'}
+      }
+    }
+  }
 });
-// Print help
-process.stdout.write( app.help() );
+// Print help of the "start" command
+process.stdout.write( app.help(['start']) );
 ```
-
 
 ## Implementation
 
@@ -88,7 +93,7 @@ require("assert")
 )
 ```
 
-### Command `--help`
+### Command `help <commands...>`
 
 Internally, an `help` command is registered if at least another command is defined:
 
