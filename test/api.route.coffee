@@ -3,23 +3,23 @@ fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
   
-describe 'api.run', ->
+describe 'api.route', ->
   
   describe 'validate', ->
   
-    it 'application requires a run definition', ->
+    it 'application requires a route definition', ->
       ( ->
         parameters {}
-        .run []
-      ).should.throw 'Missing run definition'
+        .route []
+      ).should.throw 'Missing route definition'
     
-    it 'command requires a run definition', ->
+    it 'command requires a route definition', ->
       ( ->
         parameters
           commands:
             my_command: {}
-        .run ['my_command']
-      ).should.throw 'Missing "run" definition for command ["my_command"]'
+        .route ['my_command']
+      ).should.throw 'Missing "route" definition for command ["my_command"]'
   
     it 'the help command must point to a valid route handler', ->
       # Note, this test cover a valid point, when routing is enable, we must
@@ -30,22 +30,22 @@ describe 'api.run', ->
         parameters
           commands:
             'my_command':
-              run: ({params}) -> params.my_argument
+              route: ({params}) -> params.my_argument
               options: [
                 name: 'my_argument'
               ]
-        .run ['--param', 'value']
-      ).should.throw 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside'
+        .route ['--param', 'value']
+      ).should.throw 'Missing "route" definition for help: please insert a command of name "help" with a "route" property inside'
 
   describe 'handler', ->
     
     it 'context is parameter instance', ->
       parameters
-        run: ({params}) ->
+        route: ({params}) ->
           @should.have.property('help').which.is.a.Function()
           @should.have.property('parse').which.is.a.Function()
           @should.have.property('stringify').which.is.a.Function()
-      .run []
+      .route []
 
     it 'propagate error', ->
       (->
@@ -53,8 +53,8 @@ describe 'api.run', ->
           options: [
             name: 'my_argument'
           ]
-          run: -> throw Error 'catch me'
-        .run ['--my_argument', 'my value']
+          route: -> throw Error 'catch me'
+        .route ['--my_argument', 'my value']
       ).should.throw 'catch me'
   
   describe 'arguments', ->
@@ -64,21 +64,21 @@ describe 'api.run', ->
         options: [
           name: 'my_argument'
         ]
-        run: (info) ->
+        route: (info) ->
           Object.keys(info).should.eql ['params', 'argv', 'config']
           arguments.length.should.eql 1
-      .run ['--my_argument', 'my value']
+      .route ['--my_argument', 'my value']
 
     it 'pass user arguments', (next) ->
       parameters
         options: [
           name: 'my_argument'
         ]
-        run: ({params, argv}, my_param, callback) ->
+        route: ({params, argv}, my_param, callback) ->
           my_param.should.eql 'my value'
           callback.should.be.a.Function()
           callback null, 'something'
-      .run ['--my_argument', 'my value'], 'my value', (err, value) ->
+      .route ['--my_argument', 'my value'], 'my value', (err, value) ->
         value.should.eql 'something'
         next()
   
@@ -86,22 +86,22 @@ describe 'api.run', ->
 
     it 'inside an application', ->
       parameters
-        run: ({params}) -> params.my_argument
+        route: ({params}) -> params.my_argument
         options: [
           name: 'my_argument'
         ]
-      .run ['--my_argument', 'my value']
+      .route ['--my_argument', 'my value']
       .should.eql 'my value'
 
     it 'inside a command', ->
       parameters commands: [
         name: 'my_command'
-        run: ({params}) -> params.my_argument
+        route: ({params}) -> params.my_argument
         options: [
           name: 'my_argument'
         ]
       ]
-      .run ['my_command', '--my_argument', 'my value']
+      .route ['my_command', '--my_argument', 'my value']
       .should.eql 'my value'
 
   describe 'load', ->
@@ -110,11 +110,11 @@ describe 'api.run', ->
       mod = "#{os.tmpdir()}/node_params"
       fs.writeFileSync "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
       parameters
-        run: mod
+        route: mod
         options: [
           name: 'my_argument'
         ]
-      .run ['--my_argument', 'my value']
+      .route ['--my_argument', 'my value']
       .should.eql 'my value'
 
     it 'command route', ->
@@ -123,9 +123,9 @@ describe 'api.run', ->
       parameters
         commands:
           'my_command':
-            run: mod
+            route: mod
             options: [
               name: 'my_argument'
             ]
-      .run ['my_command', '--my_argument', 'my value']
+      .route ['my_command', '--my_argument', 'my value']
       .should.eql 'my value'

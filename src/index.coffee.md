@@ -116,7 +116,7 @@ Parameters are defined with the following properties:
           sanitize_commands_enrich command, config
       sanitize_commands_enrich @config
 
-## `run(argv)` or `run(params)` or `run(process)`
+## `route(argv)` or `route(params)` or `route(process)`
 
 * `argv`   
   Array of arguments to parse, optional.
@@ -135,15 +135,15 @@ Example:
   result = parameters(
     commands: [
       name: 'start'
-      run: function(){ return 'something'; }
+      route: function(){ return 'something'; }
       options: [
         name: 'debug'
       ]
     ]
-  ).run ['start', '-d', 'Hello']
+  ).route ['start', '-d', 'Hello']
 ```
 
-    Parameters::run = (argv = process, args...) ->
+    Parameters::route = (argv = process, args...) ->
       if Array.isArray(argv)
         params = @parse argv
       else if argv is process
@@ -156,19 +156,19 @@ Example:
       if commands = @helping params
         [helpconfig] = Object.values(@config.commands).filter (command) -> command.help
         throw Error "No Help Command" unless helpconfig
-        run = helpconfig.run
-        throw Error 'Missing "run" definition for help: please insert a command of name "help" with a "run" property inside' unless run
+        route = helpconfig.route
+        throw Error 'Missing "route" definition for help: please insert a command of name "help" with a "route" property inside' unless route
       else if params[@config.command]
-        run = @config.commands[params[@config.command]].run
+        route = @config.commands[params[@config.command]].route
         extended = @config.commands[params[@config.command]].extended
-        throw Error "Missing \"run\" definition for command #{JSON.stringify params[@config.command]}" unless run
+        throw Error "Missing \"route\" definition for command #{JSON.stringify params[@config.command]}" unless route
       else
-        run = @config.run
+        route = @config.route
         extended = @config.extended
-        throw Error 'Missing run definition' unless run
+        throw Error 'Missing route definition' unless route
       # Load the module
-      run = @load run if typeof run is 'string'
-      run.call @, {params: params, argv: argv, config: @config}, ...args
+      route = @load route if typeof route is 'string'
+      route.call @, {params: params, argv: argv, config: @config}, ...args
 
 ## `parse([argv])`
 

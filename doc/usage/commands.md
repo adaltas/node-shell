@@ -63,7 +63,7 @@ defining the "server" command, we add a new "commands" entry:
 Usage of the "start" command is now:
 `myapp [options] server [server options] start [start options]`.
 
-The final definition, enriched with "run" definition to route the command to
+The final definition, enriched with "route" definition to route the command to
 our own modules, looks like:
 
 ```
@@ -76,7 +76,7 @@ our own modules, looks like:
   }],
   "commands": [{
     "name": "info",
-    "run": "./lib/config"
+    "route": "./lib/config"
   },{
     "name": "server",
     "options": {
@@ -84,14 +84,14 @@ our own modules, looks like:
     },
     "commands": [{
       "name": "start",
-      "run": "./lib/server/start"
+      "route": "./lib/server/start"
       "options": {
         "name": "port",
         "required": true
       }
     }, {
       "name": "stop",
-      "run": "./lib/server/stop"
+      "route": "./lib/server/stop"
     }]
   }]
 }
@@ -102,5 +102,5 @@ the root of your project which looks like:
 
 ```
 config = require('./config')
-require('parameters').run(config)
+require('parameters').route(config)
 ```

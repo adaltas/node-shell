@@ -38,7 +38,7 @@ Here's how to display help with `helping` and `help`:
 ```js
 const app = require('parameters')(my_config);
 const params = app.parse()
-if(commands = app.helping(params)){
+if(let commands = app.helping(params)){
   return process.stdout.write(app.help(commands));
 }
 // Now work with the params object
@@ -46,15 +46,15 @@ if(commands = app.helping(params)){
 
 ### With routing
 
-Routing is enabled if the application or its command defined the `run` property which point to a function or a module name.
+Routing is enabled if the application or its command defined the `route` property which point to a function or a module name.
 
 Here's how to display help with routing:
 
 ```js
-// Routing to help required `help.run` to be set
+// Routing to help required `help.route` to be set
 require('parameters')({
-  run: './some/module'
-}).run(/*...optional user arguments...*/)
+  route: './some/module'
+}).route(/*...optional user arguments...*/)
 ```
 
 ### Invalid or incomplete command

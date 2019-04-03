@@ -15,11 +15,11 @@ expecting a configuration object and returning the following functions:
 * `load` (module[string])   
   Internal function used to load modules, see the "load" option to pass a
   function or a module referencing the function.
-* `run` (argv[array|process], args[mixed]...)   
-  Similar to parse but it will also call the function defined by the "run"
+* `route` (argv[array|process], args[mixed]...)   
+  Similar to parse but it will also call the function defined by the "route"
   option. The first argument is the arguments array to parse, other arguments
-  are simply transmitted to the run function or module as additional arguments.
-  The run function provided by the user receives the parsed parameters as its
+  are simply transmitted to the `route` method or module as additional arguments.
+  The `route` method provided by the user receives the parsed parameters as its
   first argument. If the option "extended" is activated, it also receives the
   original arguments and configuration as second and third   arguments. Any user
   provided arguments are transmitted as is as additional arguments.
