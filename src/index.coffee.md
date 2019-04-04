@@ -9,7 +9,6 @@ Options are defined at the "config" level or for each command.
 
 ## About main
 
-Main is what's left after the options. Like options, "main" is 
 defined at the "config" level or for each command.
 
 Parameters are defined with the following properties:
@@ -51,11 +50,16 @@ Parameters are defined with the following properties:
           config.shortcuts[option.shortcut] = option.name if option.shortcut
           option.one_of = [option.one_of] if typeof option.one_of is 'string'
           throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if option.one_of and not Array.isArray option.one_of
+      # Sanitize main
+      sanitize_main = (config) ->
+        return config unless config.main
+        config.main = name: config.main if typeof config.main is 'string'
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
         # command.command ?= parent.command
         throw Error 'Invalid Command: extended cannot be declared inside a command' if command.extended?
+        sanitize_main command
         sanitize_options command
         sanitize_commands command
         command
@@ -80,6 +84,7 @@ Parameters are defined with the following properties:
       config.description ?= 'No description yet'
       config.shortcuts = {}
       config.strict ?= false
+      sanitize_main @config
       sanitize_options config
       sanitize_commands config
       sanitize_help_command = (config) ->
