@@ -21,6 +21,9 @@
     "node": ">= 0.10.x"
   },
   "main": "./lib/index",
+  "files": [
+    "/lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/adaltas/node-parameters.git"

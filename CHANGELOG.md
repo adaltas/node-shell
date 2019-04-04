@@ -23,6 +23,7 @@ Fix and improvements
 * parse: improve arguments validation
 * command: only declared at application level
 * license: switch to MIT license
+* package: use file instead of npm ignore
 
 ## Version 0.4.4
 
