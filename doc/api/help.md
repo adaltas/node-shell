@@ -1,19 +1,18 @@
 ---
 title: API method `help`
-description: How to use the `help` method to print help to the user
-keywords: ['parameters', 'shell', 'cli', 'api', 'help', 'print']
-maturity: done
+description: How to use the `help` method to print help to the user console.
+keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'print']
+maturity: review
 ---
 
-# Method `help`
+# Method `help(command)`
 
 Format the configuration into a readable documentation string.
 
-* `help(command)`
-  * `command`: `[string] | string` The string or array containing the command name if any, optional
-  * Returns: `string` The formatted help to be printed.
+* `command`: `[string] | string` The string or array containing the command name if any, optional
+* Returns: `string` The formatted help to be printed.
 
-## Integration
+## Description
 
 Without any argument, the `help` method return the application help without the specific documentation of each sub commands. With the command name, it returned the help of the requested command as well as the options of the application and any parent commands.
 
@@ -21,24 +20,9 @@ Calling `help` will always return a string, it does not detect if help was reque
 
 ## Examples
 
-### Printing help for the application
+Considering a "server" application containing a "start" command and initialized with the following configuration:
 
-```javascript
-const parameters = require('parameters')
-const app = parameters({
-  name: 'server',
-  description: 'Start a web server',
-  options: {
-    'config': { shortcut: 'c', description: 'Path to configuration' }
-  }
-})
-// Print help
-process.stdout.write( app.help() )
-```
-
-### Printing help for a command
-
-```javascript
+```js
 const parameters = require('parameters')
 const app = parameters({
   name: 'server',
@@ -53,8 +37,20 @@ const app = parameters({
     }
   }
 });
-// Print help of the "start" command
-process.stdout.write( app.help(['start']) );
+```
+
+To print the help of the overall application does not require any arguments. It behaves the same as calling the `help` method with an empty array.
+
+```js
+process.stdout.write( app.help() )
+process.stdout.write( app.help( [] ) )
+```
+
+Pass the name of the command as an array to print the help of any sub command. It behaves the same as defining the command as a string.
+
+```js
+process.stdout.write( app.help( ['start'] ) );
+process.stdout.write( app.help( 'start' ) );
 ```
 
 ## Implementation

@@ -304,16 +304,15 @@ params.should.eql
       set_default @config, params
       params
 
-## `stringify([script], params, [options])`
+## Method `stringify(command, [options])`
 
-* `script`   
-  A script which will prefixed the arguments, optional.
-* `params`   
-  Parameter object to stringify into arguments, required.
-* `options`   
-  Object containing any options, optional.
+Convert a parameters object to an arguments array.
 
-Convert an object into process arguments.
+* `params`: `object` The parameter object to be converted into an array of arguments, optional.
+* `options`: `object` Option used to alter the behavior of the `stringify` method.
+  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, option, default to `false` in flatten mode.
+  * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
+* Returns: `array` The command line arguments.
 
     Parameters::stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
@@ -321,7 +320,7 @@ Convert an object into process arguments.
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
       # In extended mode, the params array will be truncated
-      # params = mixme params unless @config.extended
+      # params = mixme params unless extended
       set_default @config, params
       # Convert command parameter to a 1 element array if provided as a string
       params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
@@ -418,17 +417,12 @@ Return zero to n commands if help not requested or null otherwise.
       helping = search @config unless helping
       if helping then commands else null
 
-## `help(commands, [options])`
+## Method `help(command)`
 
-* `params(object)`   
-  Parameter object as returned by parsed, required if first argument is an object.
-* `commands(strings)`   
-  A list of commands passed as strings, required if first argument is a string.
-* `options(object)`   
-  Object containing any options, optional.
+Format the configuration into a readable documentation string.
 
-Return a string describing the usage of the overall command or one of its
-command.
+* `command`: `[string] | string` The string or array containing the command name if any, optional
+* Returns: `string` The formatted help to be printed.
 
     Parameters::help = (commands=[], options={}) ->
       commands = commands.split ' ' if typeof commands is 'string'
