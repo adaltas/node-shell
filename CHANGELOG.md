@@ -11,6 +11,7 @@ Breaking compatibility
 
 New functionnality
 * extended: parse and stringify without merging
+* main: string declaration shortcut
 
 Fix and improvements
 * configure: isolate into its own method
