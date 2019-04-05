@@ -42,8 +42,8 @@ describe 'api.help_parse', ->
     app = parameters commands: [name: 'toto']
     app.parse(['help', 'start']).should.eql
       command: ['help']
-      name: 'start'
+      name: ['start']
     app.stringify
       command: ['help']
-      name: 'start'
+      name: ['start']
     .should.eql ['help', 'start']

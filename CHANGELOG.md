@@ -9,9 +9,11 @@ Breaking compatibility
 * route: rename run method and configuration to route
 * helping: only accept params, no more argv
 
-New functionnality
+New functionality
 * extended: parse and stringify without merging
 * main: string declaration shortcut
+* parse: main as an array
+* stringify: main from an array
 
 Fix and improvements
 * configure: isolate into its own method

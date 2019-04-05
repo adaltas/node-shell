@@ -74,7 +74,8 @@ Working with commands is quite similar:
 ```javascript
 app.parse(
   ["--config", "app.yml", "start", "--host", "127.0.0.1", "-p", "80"]
-).should.eql({
+)
+.should.eql({
   config: "app.yml",
   command: ["start"],
   host: "127.0.0.1",
@@ -85,9 +86,12 @@ app.parse(
 In extended mode, the parameters output will be an array with 2 elements instead of an object:
 
 ```javascript
-app.parse(
-  ["--config", "app.yml", "start", "--host", "127.0.0.1", "-p", "80"]
-).should.eql([{
+app.parse([
+  "--config", "app.yml", "start", "--host", "127.0.0.1", "-p", "80"]
+], {
+  extended: true
+})
+.should.eql([{
   config: "app.yml"
 }, {
   command: "start",

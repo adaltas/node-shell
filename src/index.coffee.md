@@ -255,8 +255,8 @@ Convert an arguments list to a parameters object.
                 throw Error "Invalid value \"#{value}\" for option \"#{option.name}\"" unless value in option.one_of
         # We still have some argument to parse
         if argv.length isnt index
-          # Store the full command in the return object
-          leftover = argv.slice(index).join(' ')
+          # Store the full command in the return array
+          leftover = argv.slice(index)
           if config.main
             params[config.main.name] = leftover
           else
@@ -342,8 +342,10 @@ Convert a parameters object to an arguments array.
         if config.main
           value = lparams[config.main.name]
           throw Error "Required main argument \"#{config.main.name}\"" if config.main.required and not value?
-          keys[config.main.name] = value
-          argv.push value if value?
+          if value?
+            throw Error "Invalid Arguments: expect main to be an array, got #{JSON.stringify value}" unless Array.isArray value
+            keys[config.main.name] = value
+            argv = argv.concat value
         # Recursive
         has_child_commands = if options.extended then params.length else Object.keys(config.commands).length
         if has_child_commands
