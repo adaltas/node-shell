@@ -9,7 +9,10 @@ describe 'main.required', ->
       main: 
         name: 'my_argument'
     ]
-    app.parse(['mycommand']).should.eql
+    app.parse [
+      'mycommand'
+    ]
+    .should.eql
       command: ['mycommand']
     app.stringify 
       command: ['mycommand']
@@ -22,12 +25,15 @@ describe 'main.required', ->
         name: 'my_argument'
         required: true
     ]
-    app.parse(['mycommand', 'my --value']).should.eql
+    app.parse [
+      'mycommand', 'my --value'
+    ]
+    .should.eql
       command: ['mycommand']
-      my_argument: 'my --value'
+      my_argument: ['my --value']
     app.stringify
       command: ['mycommand']
-      my_argument: 'my --value'
+      my_argument: ['my --value']
     .should.eql ['mycommand', 'my --value']
 
   it 'honors required true if no value provided', ->
