@@ -30,14 +30,14 @@ describe 'configure.extended', ->
         extended: true
         main:
           name: 'leftover'
-      app.parse(['my --command']).should.eql [
-        leftover: 'my --command'
+      app.parse(['my value']).should.eql [
+        leftover: ['my value']
       ]
       app.parse([]).should.eql [{}]
       app.stringify [
-        leftover: 'my --command'
+        leftover: ['my value']
       ]
-      .should.eql ['my --command']
+      .should.eql ['my value']
       app.stringify([{}]).should.eql []
         
     it 'application with configured commands get leftover', ->
@@ -49,10 +49,10 @@ describe 'configure.extended', ->
           subcommand: {}
       app.parse(['my --command']).should.eql [
         command: "help" # TODO, SHALL BE REMOVED
-        leftover: 'my --command'
+        leftover: ['my --command']
       ]
       app.stringify [
-        leftover: 'my --command'
+        leftover: ['my --command']
       ]
       .should.eql ['my --command']
   

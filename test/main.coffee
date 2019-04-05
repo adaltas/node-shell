@@ -19,17 +19,38 @@ describe 'main', ->
   
   describe 'without command', ->
 
-    it 'work with no option', ->
+    it 'workout any main arguments', ->
       app = parameters
         main:
           name: 'leftover'
-      app.parse(['my --command']).should.eql
-        leftover: 'my --command'
       app.parse([]).should.eql {}
-      app.stringify 
-        leftover: 'my --command'
-      .should.eql ['my --command']
       app.stringify({}).should.eql []
+
+    it 'preserve space in main arguments', ->
+      app = parameters
+        main:
+          name: 'leftover'
+      app.parse [
+        'my value'
+      ]
+      .should.eql
+        leftover: ['my value']
+      app.stringify 
+        leftover: ['my value']
+      .should.eql ['my value']
+
+    it 'handle multiple main arguments', ->
+      app = parameters
+        main:
+          name: 'leftover'
+      app.parse [
+        'my', 'value'
+      ]
+      .should.eql
+        leftover: ['my', 'value']
+      app.stringify 
+        leftover: ['my', 'value']
+      .should.eql ['my', 'value']
   
   describe 'with command', ->
 
@@ -39,13 +60,16 @@ describe 'main', ->
         main:
           name: 'leftover'
       ]
-      app.parse(['start', 'my --command']).should.eql
+      app.parse [
+        'start', 'my', 'value true'
+      ]
+      .should.eql
         command: ['start']
-        leftover: 'my --command'
+        leftover: ['my', 'value true']
       app.stringify
         command: ['start']
-        leftover: 'my --command'
-      .should.eql ['start', 'my --command']
+        leftover: ['my', 'value true']
+      .should.eql ['start', 'my', 'value true']
 
     it 'may follow command without any option', ->
       app = parameters commands: [
@@ -54,10 +78,13 @@ describe 'main', ->
           name: 'leftover'
           required: true
       ]
-      app.parse(['mycommand', 'my value']).should.eql
+      app.parse [
+        'mycommand', 'my value'
+      ]
+      .should.eql
         command: ['mycommand']
-        leftover: 'my value'
+        leftover: ['my value']
       app.stringify 
         command: ['mycommand']
-        leftover: 'my value'
+        leftover: ['my value']
       .should.eql ['mycommand', 'my value']

@@ -62,10 +62,10 @@ describe 'options', ->
         command: ['start']
         watch: __dirname
         strict: true
-        my_argument: 'my --value'
+        my_argument: ['my', '--value']
       app.stringify 
         command: ['start']
         watch: __dirname
         strict: true
-        my_argument: 'my --value'
-      .should.eql ['start', '--watch', __dirname, '--strict', 'my --value']
+        my_argument: ['my', '--value']
+      .should.eql ['start', '--watch', __dirname, '--strict', 'my', '--value']

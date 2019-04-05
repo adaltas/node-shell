@@ -3,7 +3,7 @@ parameters = require '../src'
 
 describe 'api.parse', ->
 
-  it 'doesnot alter params', ->
+  it 'does not alter input arguments', ->
     app = parameters commands: [
       name: 'start'
       options: [
