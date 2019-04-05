@@ -364,23 +364,19 @@ Convert a parameters object to an arguments array.
       stringify @config, if options.extended then params.shift() else params
       argv
 
-## `helping(params)` or `helping(argv)`
+## Method `helping(params)`
 
-* `params`   
-  Parameter object as returned by parsed.
-* `argv`   
-  An array of CLI arguments.
+Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
 
-Return zero to n commands if help not requested or null otherwise.
+* `params`: `[object] | object` The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
+* Returns: `array | null` The formatted help to be printed.
 
-    Parameters::helping = ->
-      args = Array.prototype.slice.call arguments
-      if Array.isArray args[0]
-        params = @parse args[0]
-      else if is_object args[0]
-        params = args[0]
-      else
-        throw Error "Invalid Arguments: expect a params object or an argv array as first argument, got #{JSON.stringify args[0]}"
+    Parameters::helping = (params) ->
+      throw Error [
+        "Invalid Arguments:"
+        "`helping` expect a params object or an argv array as first argument,"
+        "got #{JSON.stringify params}"
+      ].join ' ' unless is_object params
       params = mixme params
       params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
       commands = params[@config.command] or []
@@ -408,7 +404,7 @@ Return zero to n commands if help not requested or null otherwise.
 
 Format the configuration into a readable documentation string.
 
-* `command`: `[string] | string` The string or array containing the command name if any, optional
+* `command`: `[string] | string` The string or array containing the command name if any, optional.
 * Returns: `string` The formatted help to be printed.
 
     Parameters::help = (commands=[], options={}) ->

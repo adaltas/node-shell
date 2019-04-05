@@ -9,7 +9,7 @@ maturity: review
 
 Format the configuration into a readable documentation string.
 
-* `command`: `[string] | string` The string or array containing the command name if any, optional
+* `command`: `[string] | string` The string or array containing the command name if any, optional.
 * Returns: `string` The formatted help to be printed.
 
 ## Description
