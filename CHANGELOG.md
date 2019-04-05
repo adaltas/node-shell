@@ -20,6 +20,7 @@ Fix and improvements
 * help: new sample
 * help: remove info per command
 * package: use mixme
+* parse: new extended option
 * parse: improve arguments validation
 * command: only declared at application level
 * license: switch to MIT license

@@ -10,8 +10,8 @@ maturity: review
 Convert a parameters object to an arguments array.
 
 * `params`: `object` The parameter object to be converted into an array of arguments, optional.
-* `options`: `object` Option used to alter the behavior of the `stringify` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, option, default to `false` in flatten mode.
+* `options`: `object` Options used to alter the behavior of the `stringify` method.
+  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
@@ -23,7 +23,7 @@ It supports both the default flatten mode and the extended mode. The `extended` 
 
 ## Examples
 
-Considering a "server" application containing a "start" command and initialized with the following configuration:
+Considering a "server" application containing a "start" command and initialised with the following configuration:
 
 ```js
 require("should")

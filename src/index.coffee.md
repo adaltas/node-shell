@@ -170,30 +170,17 @@ Example:
       route = @load route if typeof route is 'string'
       route.call @, {params: params, argv: argv, config: @config}, ...args
 
-## `parse([argv])`
+## Method `parse([arguments])`
 
-* `argv` (array|process|string, optional)   
-  Array of arguments to parse, optional.
+Convert an arguments list to a parameters object.
 
-Convert process arguments into a usable object. Argument may
-be in the form of a string or an array. If not provided, it 
-parse the arguments present in  `process.argv`.
+* `arguments`: `[string] | string | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional.
+* `options`: `object` Options used to alter the behavior of the `stringify` method.
+  * `extended`: `boolean` The value `true` indicates that the parameters are returned in extended format, default to the configuration `extended` value which is `false` by default.
+* Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
 
-When provided as an array or a string, only pass the parameters without the script name.
-
-Example:
-
-```
-params = argv.parse ['start', '--watch', __dirname, '-s', 'my', '--command']
-params.should.eql
-  action: 'start'
-  watch: __dirname
-  strict: true
-  command: 'my --command'
-```
-
-    Parameters::parse = (argv = process) ->
-      # argv = argv.split ' ' if typeof argv is 'string'
+    Parameters::parse = (argv = process, options={}) ->
+      options.extended ?= @config.extended
       index = 0
       # Remove node and script argv elements
       if argv is process
@@ -288,7 +275,7 @@ params.should.eql
         params
       # Start the parser
       parse @config, argv
-      unless @config.extended
+      unless options.extended
         params = {}
         if Object.keys(@config.commands).length
           params[@config.command] = []
@@ -309,14 +296,14 @@ params.should.eql
 Convert a parameters object to an arguments array.
 
 * `params`: `object` The parameter object to be converted into an array of arguments, optional.
-* `options`: `object` Option used to alter the behavior of the `stringify` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, option, default to `false` in flatten mode.
+* `options`: `object` Options used to alter the behavior of the `stringify` method.
+  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
     Parameters::stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
-      extended = options.extended or @config.extended
+      options.extended ?= @config.extended
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
       # In extended mode, the params array will be truncated
@@ -353,15 +340,15 @@ Convert a parameters object to an arguments array.
           keys[config.main.name] = value
           argv.push value if value?
         # Recursive
-        has_child_commands = if extended then params.length else Object.keys(config.commands).length
+        has_child_commands = if options.extended then params.length else Object.keys(config.commands).length
         if has_child_commands
-          command = if extended then params[0][@config.command] else params[@config.command].shift()
+          command = if options.extended then params[0][@config.command] else params[@config.command].shift()
           throw Error "Invalid Command: command #{JSON.stringify command} is not registed" unless config.commands[command]
           argv.push command
           keys[@config.command] = command
           # Stringify child configuration
-          stringify config.commands[command], if extended then params.shift() else lparams
-        if extended or not has_child_commands
+          stringify config.commands[command], if options.extended then params.shift() else lparams
+        if options.extended or not has_child_commands
           # Handle params not defined in the configuration
           # Note, they are always pushed to the end and associated with the deepest child
           for key, value of lparams
@@ -374,7 +361,7 @@ Convert a parameters object to an arguments array.
             else
               argv.push "--#{key}"
               argv.push "#{value}"
-      stringify @config, if extended then params.shift() else params
+      stringify @config, if options.extended then params.shift() else params
       argv
 
 ## `helping(params)` or `helping(argv)`
