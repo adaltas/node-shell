@@ -9,6 +9,7 @@ Options are defined at the "config" level or for each command.
 
 ## About main
 
+Main is what's left after the options. Like options, "main" is 
 defined at the "config" level or for each command.
 
 Parameters are defined with the following properties:
@@ -84,7 +85,7 @@ Parameters are defined with the following properties:
       config.description ?= 'No description yet'
       config.shortcuts = {}
       config.strict ?= false
-      sanitize_main @config
+      sanitize_main config
       sanitize_options config
       sanitize_commands config
       sanitize_help_command = (config) ->

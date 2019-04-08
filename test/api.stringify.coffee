@@ -16,3 +16,13 @@ describe 'api.stringify', ->
       ]
     .stringify command: 'start'
     .should.eql ['start']
+    
+  it 'catch main argument with type of string', ->
+    app = parameters
+      main: 'leftover'
+    (->
+      app.stringify
+        leftover: 'my value'
+    ).should.throw 'Invalid Arguments: expect main to be an array, got "my value"'
+    
+  
