@@ -23,12 +23,15 @@ Fix and improvements
 * stringify: check 2nd argument
 * help: new sample
 * help: remove info per command
-* package: use mixme
 * parse: new extended option
 * parse: improve arguments validation
 * command: only declared at application level
+
+Management
 * license: switch to MIT license
+* package: use mixme
 * package: use file instead of npm ignore
+* package: latest package dependencies
 
 ## Version 0.4.4
 

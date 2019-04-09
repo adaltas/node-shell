@@ -58,7 +58,9 @@ describe 'options', ->
             type: 'boolean'
           ]
         ]
-      app.parse(['start', '--watch', __dirname, '-s', 'my', '--value']).should.eql
+      app.parse(
+        ['start', '--watch', __dirname, '-s', 'my', '--value']
+      ).should.eql
         command: ['start']
         watch: __dirname
         strict: true

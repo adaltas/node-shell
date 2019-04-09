@@ -610,14 +610,7 @@ Dependencies
 
     pad = require 'pad' 
     load = require './utils/load'
-    merge = require 'mixme'
-    clone = (obj) ->
-      if Array.isArray obj
-        obj.map (el) -> clone el
-      else if obj? and typeof obj is 'object'
-        merge obj
-      else
-        obj
+    {merge, clone} = require 'mixme'
 
 Internal types
 
@@ -631,10 +624,10 @@ Distinguish plain literal object from arrays
 Convert an array to an object
 
     array_to_object = (elements, key) ->
-        opts = {}
-        for element in elements
-          opts[element[key]] = element
-        opts
+      opts = {}
+      for element in elements
+        opts[element[key]] = element
+      opts
 
 Given a configuration, apply default values to the parameters
 

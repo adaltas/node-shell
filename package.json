@@ -29,12 +29,12 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
-    "mixme": "^0.1.0",
+    "mixme": "^0.3.0",
     "pad": "^2.3.0"
   },
   "devDependencies": {
-    "coffeescript": "^2.4.0",
-    "mocha": "^6.0.2",
+    "coffeescript": "^2.4.1",
+    "mocha": "^6.1.2",
     "should": "^13.2.3"
   },
   "optionalDependencies": {},
