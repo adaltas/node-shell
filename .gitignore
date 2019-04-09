@@ -5,4 +5,3 @@
 !.gitignore
 !.npmignore
 !.travis.yml
-!yarn.lock
