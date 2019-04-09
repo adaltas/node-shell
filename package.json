@@ -16,7 +16,12 @@
   "homepage": "https://github.com/adaltas/node-parameters",
   "author": "David Worms <david@adaltas.com>",
   "license": "MIT",
-  "contributors": [],
+  "contributors": [
+    {
+      "name": "Sergei Kudinov",
+      "email": "sergei@adaltas.com"
+    }
+  ],
   "engines": {
     "node": ">= 0.10.x"
   },

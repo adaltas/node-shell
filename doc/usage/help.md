@@ -1,7 +1,13 @@
+---
+title: Help usage
+description: How to use the help.
+keywords: ['parameters', 'node.js', 'cli', 'usage', 'help', 'print']
+maturity: review
+---
 
-# Displaying help
+# Displaying the help
 
-Help print detailed information about how to use a command or one of its sub commands.
+Help prints detailed information about how to use a command or one of its sub commands.
 
 ## Usage
 
@@ -13,7 +19,7 @@ From a user perspective, there are multiple ways to print the help to the consol
 
 Use `./myapp --help` to print the help usage of the overall application. The `help` option is automatically registered to the application as well as to every commands.
 
-If at least one command is registered, use `./myapp help` to print the usage of the application or `myapp help <command...>` to print the usage of specific commands
+If at least one command is registered, use `./myapp help` to print the usage of the application or `myapp help <command...>` to print the usage of specific commands.
 
 For example, an application `myapp` which has a command `secrets` with a sub command `set` could print the usage of the subcommand `secrets set` with the arguments `./myapp help secrets set`.
 
@@ -59,7 +65,7 @@ require('parameters')({
 
 ### Invalid or incomplete command
 
-TODO: describe how help could be printed when an error occured.
+TODO: describe how help could be printed when an error occurred.
 
 ### Non-leaf command
 

@@ -1,19 +1,25 @@
+---
+title: Configuration
+description: Configuration object for passing as an argument to the function
+keywords: ['parameters', 'node.js', 'cli', 'usage', 'config', 'configuration']
+maturity: review
+---
 
 # Configuration
 
-The configuration parameter is an object passed as an argument to the function exported by
-this package.
+The configuration parameter is an object passed as an argument to the function
+which is exported by this package.
 
 ```js
 parameters = require("parameters")
 app = parameters(config)
 ```
 
-The root properties are:
+## The root properties
 
 * `commands` (object)   
   Group the parameters into a specific command. Support object and array notation. If
-  defined as an object, keys correpond to the "name" properties. If defined as 
+  defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
 * `load` (function|string)   
   Function or a module referencing the function to load modules, the default
@@ -26,20 +32,22 @@ The root properties are:
 * `strict` (boolean)   
   Disable auto-discovery.
 
-The properties for `commands` are:
+### The properties for `commands` are
 
 * `name` (string)   
   The command name.
 * `options` (object|array)
   Defined the expected command parameters. Support object and array notation. If
-  defined as an object, keys correpond to the "name" properties. If defined as 
+  defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
 
-The properties for `main` are:
+## The properties for `main`
 
 * `name` (string)   
   The name of the main property.
 * `required` (boolean)   
   Whether or not the value must always be present.
 
-The properties for `options` are described on the [Option page](./options)
+## The properties for `options`
+
+Described on the [Option page](./options)
