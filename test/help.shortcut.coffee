@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'api.help_shortcut', ->
+describe 'help.shortcut', ->
 
   describe 'without command', ->
 

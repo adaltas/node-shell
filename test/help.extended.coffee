@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'api.help.extended', ->
+describe 'help.extended', ->
 
   it 'print command related information', ->
     parameters

@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'api.help', ->
+describe 'help', ->
 
   describe 'without command', ->
     
