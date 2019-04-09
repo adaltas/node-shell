@@ -256,47 +256,6 @@ describe 'help', ->
       ( ->
         app.help(['mycommand', 'undefined'])
       ).should.throw 'Invalid Command: "mycommand undefined"'
-
-    it.skip 'display options without brakets at least one required', ->
-      app = parameters
-        name: 'myscript'
-        description: 'Some description for myscript'
-        options: [
-          name: 'root_opt'
-        ,
-          name: 'root_opt_w_sht'
-          shortcut: 'c'
-        ,
-          name: 'root_opt_rqd'
-          required: true
-        ]
-        commands: [
-          name: 'parent'
-          options: [
-            name: 'parent_opt'
-          ,
-            name: 'parent_opt_w_sht'
-            shortcut: 'c'
-          ,
-            name: 'parent_opt_rqd'
-            required: true
-          ]
-          commands: [
-            name: 'child'
-            options: [
-              name: 'child_opt'
-            ,
-              name: 'child_opt_w_sht'
-              shortcut: 'c'
-            ,
-              name: 'child_opt_rqd'
-              required: true
-            ]
-            main:
-              name: 'action'
-          ]
-        ]
-      app.help('parent')
   
   describe 'name', ->
 

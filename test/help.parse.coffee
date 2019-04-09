@@ -25,8 +25,12 @@ describe 'help.parse', ->
     #   params[@config.command] = 'help'
     # The assertion is what we expect in current version but in a future version,
     # it shall only work if a new `help` config is declared
-    app = parameters commands: [name: 'level1', commands: [name: 'level2']]
-    app.parse(['--param', 'value', 'level1']).should.eql
+    parameters
+      commands:
+        'level1':
+          commands:
+            'level2': {}
+    .parse(['--param', 'value', 'level1']).should.eql
       param: 'value'
       command: ['value1', 'help']
 
