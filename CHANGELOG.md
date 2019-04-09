@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.5.0
 
 Breaking compatibility
 * run: 1st arg as info with params and extended
