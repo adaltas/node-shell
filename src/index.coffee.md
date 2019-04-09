@@ -100,13 +100,13 @@ Parameters are defined with the following properties:
             description: 'Help about a specific command'
           help: true
         , config
-        config.commands[command.name] = mixme command, config.commands[command.name]
+        config.commands[command.name] = merge command, config.commands[command.name]
       sanitize_help_command @config
       # Second pass, add help options and set default
       sanitize_options_enrich = (command) ->
         # No "help" option for command "help"
         unless command.help
-          command.options['help'] = mixme command.options['help'],
+          command.options['help'] = merge command.options['help'],
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
@@ -313,7 +313,7 @@ Convert a parameters object to an arguments array.
       throw Error "Invalid Arguments: 2nd argument option must be an object, got #{JSON.stringify options}" unless is_object options
       keys = {}
       # In extended mode, the params array will be truncated
-      # params = mixme params unless extended
+      # params = merge params unless extended
       set_default @config, params
       # Convert command parameter to a 1 element array if provided as a string
       params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
@@ -379,33 +379,66 @@ Determine if help was requested by returning zero to n commands if help is reque
 * `params`: `[object] | object` The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
 * Returns: `array | null` The formatted help to be printed.
 
-    Parameters::helping = (params) ->
-      throw Error [
-        "Invalid Arguments:"
-        "`helping` expect a params object or an argv array as first argument,"
-        "got #{JSON.stringify params}"
-      ].join ' ' unless is_object params
-      params = mixme params
-      params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
-      commands = params[@config.command] or []
+    Parameters::helping = (params, options={}) ->
+      params = clone params
+      options.extended ?= @config.extended
+      unless options.extended
+        throw Error [
+          "Invalid Arguments:"
+          "`helping` expect a params object as first argument"
+          "in flatten mode,"
+          "got #{JSON.stringify params}"
+        ].join ' ' unless is_object params
+      else
+        throw Error [
+          "Invalid Arguments:"
+          "`helping` expect a params array with literal objects as first argument"
+          "in extended mode,"
+          "got #{JSON.stringify params}"
+        ].join ' ' unless Array.isArray(params) and not params.some (cparams) -> not is_object cparams
+      # Extract the current commands from the parameters arguments
+      unless options.extended
+        throw Error [
+          'Invalid Arguments:'
+          "parameter #{JSON.stringify @config.command} must be an array in flatten mode,"
+          "got #{JSON.stringify params[@config.command]}"
+        ].join ' ' if params[@config.command] and not Array.isArray params[@config.command]
+        #unless Array.isArray params[@config.command]
+        # throw Error 'Invalid Argument' if typeof params[@config.command] is 'string'
+        # params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
+        commands = params[@config.command] or []
+      else
+        commands = params.slice(1).map (cparams) =>
+          cparams[@config.command]
+      # Handle help command
+      # if this is the help command, transform the leftover into a new command
       if commands.length and @config.commands and @config.commands[commands[0]].help
         helping = true
-        # if argv is ['help'], there is no leftover and main is null
-        leftover = params[@config.commands[commands[0]].main.name]
-        commands = if leftover then leftover.split() else []
-      search = (config) ->
-        return true if config.options and Object.values(config.options)
+        # Note, when argv equals ['help'], there is no leftover and main is null
+        leftover = unless options.extended
+        then params[@config.commands[commands[0]].main.name]
+        else params[1][@config.commands[commands[0]].main.name]
+        return if leftover then leftover.split() else []
+      # Handle help option:
+      # search if the help option is provided and for which command it apply
+      search = (config, commands, params) ->
+        cparams = unless options.extended then params else params.shift()
+        helping = Object.values(config.options)
         # Search the help option
         .filter (options) -> options.help
         # Check if it is present in the parsed parameters
-        .some (options) -> params[options.name]?
+        .some (options) -> cparams[options.name]?
+        if helping
+          throw Error 'Invalid Argument: `help` must be associated with a leaf command' if options.extended and commands.length
+          return true
+        # Helping is not requested and there are no more commands to search
         return false unless commands?.length
-        command = commands[0]
-        config = config.commands[commands.shift()]
-        if config
-        then search config
-        else throw Error "Invalid Arguments: command #{JSON.stringify command} is not registed"
-      helping = search @config unless helping
+        command = commands.shift()
+        return false if options.extended and params.length is 0
+        config = config.commands[command]
+        throw Error "Invalid Arguments: command #{JSON.stringify command} is not registed" unless config
+        search config, commands, params
+      helping = search @config, clone(commands), params
       if helping then commands else null
 
 ## Method `help(command)`
@@ -577,7 +610,14 @@ Dependencies
 
     pad = require 'pad' 
     load = require './utils/load'
-    mixme = require 'mixme'
+    merge = require 'mixme'
+    clone = (obj) ->
+      if Array.isArray obj
+        obj.map (el) -> clone el
+      else if obj? and typeof obj is 'object'
+        merge obj
+      else
+        obj
 
 Internal types
 
@@ -599,7 +639,7 @@ Convert an array to an object
 Given a configuration, apply default values to the parameters
 
     set_default = (config, params, tempparams = null) ->
-      tempparams = mixme params unless tempparams?
+      tempparams = merge params unless tempparams?
       if Object.keys(config.commands).length
         command = tempparams[config.command]
         command = tempparams[config.command].shift() if Array.isArray command

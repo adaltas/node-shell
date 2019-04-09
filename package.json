@@ -29,7 +29,7 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
-    "mixme": "^0.0.1",
+    "mixme": "^0.1.0",
     "pad": "^2.3.0"
   },
   "devDependencies": {
