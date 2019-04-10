@@ -48,6 +48,13 @@ app = parameters(config)
 * `required` (boolean)   
   Whether or not the value must always be present.
 
+## The properties for `help`
+
+* `writer` (string|StreamWriter)   
+  Where to print the help output. Possible string values include "stdout" and "stderr" and default to "stderr". The property is used internally by the help route.
+* `route` (function|string)   
+  The function or module name of the route which responsible for printing help information.
+
 ## The properties for `options`
 
 Described on the [Option page](./options)
