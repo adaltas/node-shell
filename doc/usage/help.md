@@ -1,5 +1,5 @@
 ---
-title: Help usage
+title: Displaying the help
 description: How to use the help.
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'help', 'print']
 maturity: review
@@ -7,9 +7,11 @@ maturity: review
 
 # Displaying the help
 
+## Description
+
 Help prints detailed information about how to use a command or one of its sub commands.
 
-## Usage
+## How to display the help
 
 From a user perspective, there are multiple ways to print the help to the console:
 * by passing the `--help` argument in the command or after a sub command, for example `./app print --help`.

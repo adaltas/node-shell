@@ -703,13 +703,18 @@ Load and return a module, use `require.main.require` by default but can be
 overwritten by the `load` options passed in the configuration.
 
     Parameters::load = (module) ->
-      unless @config.load
-        load module
-      else
+      throw Error [
+        'Invalid Load Argument:'
+        'load is expecting string,'
+        "got #{JSON.stringify module}"
+      ].join ' ' unless typeof module is 'string'
+      if @config.load
         if typeof @config.load is 'string'
           load(@config.load)(module)
         else
           @config.load module
+      else
+        load module
 
     module.exports = (config) ->
       new Parameters config

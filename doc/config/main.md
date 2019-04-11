@@ -2,15 +2,26 @@
 title: Main parameter usage
 description: How to use main parameter.
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'main']
-maturity: review
+maturity: initial
 ---
 
-# Main parameter
+# Main
+
+## Description
 
 Main is what is left once the option and the commands have been extracted. 
 Like options, "main" is defined at the "config" level or for each command.
 
-## Configuration
+## Properties
+
+* `name` (string)   
+  The name of the main property.
+* `required` (boolean)   
+  Whether or not the value must always be present.
+  
+## Examples of configuration
+
+### In the root property
 
 ```js
 require("parameters")(
@@ -27,6 +38,34 @@ require("parameters")(
 )
 ```
 
+Usage of the "main" parameter is now:
+`myapp [leftover]`.
+
 ### In a command
 
-TODO: describe how main could be configured in a command.
+```js
+require("parameters")(
+{ commands: [
+  { name: 'server'
+    main: 'leftover' } ] }
+)
+```
+
+Usage of the "main" parameter is now:
+`myapp server [leftover]`.
+
+
+### In a sub command
+
+```js
+require("parameters")(
+{ commands: [
+  { name: 'server'
+  commands: [
+    { name: 'start'
+      main: 'leftover' } ] } ] }
+)
+```
+
+Usage of the "main" parameter is now:
+`myapp server start [leftover]`.

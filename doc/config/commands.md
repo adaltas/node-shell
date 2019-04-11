@@ -1,5 +1,5 @@
 ---
-title: Commands configuration
+title: Commands
 description: How to define commands
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'commands']
 maturity: review
@@ -7,15 +7,26 @@ maturity: review
 
 # Commands
 
+## Description
+
 Commands define the arguments passed to a shell scripts.
 
+## Properties
+
+* `name` (string)   
+  The command name.
+* `options` (object|array)
+  Defined the expected command parameters. Support object and array notation. If
+  defined as an object, keys correspond to the "name" properties. If defined as 
+  an array, the "name" property is required.
+  
 ## Multi-level commands
 
 The package can handle simple argument definitions as well as complex command
 based definitions including one or multiple nested sub commands. Thus, large 
 applications can group all its functionalities into one parent CLI entry point.
 
-## Examples
+## Examples of configuration
 
 ### Basic application
 
@@ -117,14 +128,4 @@ our own modules, looks like:
     }]
   }]
 }
-```
-
-## JSON configuration
-
-Place the configuration inside "config.json", and create a file "index.js" at 
-the root of your project which looks like:
-
-```
-config = require('./config')
-require('parameters').route(config)
 ```

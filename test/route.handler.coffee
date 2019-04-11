@@ -22,8 +22,18 @@ describe 'route.handler', ->
         route: -> throw Error 'catch me'
       .route ['--my_argument', 'my value']
     ).should.throw 'catch me'
-
-  describe 'arguments', ->
+    
+  it 'load with custom function handler', ->
+    fs.writeFileSync "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> "Hello"'
+    parameters
+      route: './something'
+      load: (module) ->
+        require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
+    .route []
+    .should.eql 'Hello'
+    fs.unlinkSync "#{os.tmpdir()}/renamed_module.coffee"
+  
+describe 'arguments', ->
 
     it 'pass a single info argument by default', ->
       parameters

@@ -7,9 +7,11 @@ maturity: review
 
 # Options
 
+## Description
+
 Options define the arguments passed to a shell scripts when prefixed with `--` followed by their name or `-` followed by their shortcut alternative.
 
-## Available properties
+## Properties
 
 * `default` (anything)   
   Default value if none is provided; always part of the object return by parse,
@@ -52,7 +54,7 @@ require("parameters")(
 )
 ```
 
-Options may apply to the [application](./config/) like in the above or to the [command](./commands/) like below:
+Options may apply to the [application](./) like in the above or to the [command](./commands/) like below:
 
 ```js
 require("parameters")(

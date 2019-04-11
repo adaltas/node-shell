@@ -11,7 +11,9 @@ For the sake of simplicity, the module operates by default in flatten mode. When
 
 ## Examples
 
-For example, consider an application which register a "config" property for the overall application as well as a `start` command:
+### Flatten mode
+
+For example, consider an application which register a "config" property for the overall application as well as a `start` command in flatten mode:
 
 ```js
 require("parameters")({
@@ -20,7 +22,7 @@ require("parameters")({
   },
   commands: {
     "start": {}
-  }
+  },
 })
 ```
 
@@ -31,4 +33,52 @@ The overall application can be started with the command `./myapp --config ./conf
   "config": "./config.yml" }
 ```
 
-However, let's imaging that we need to add a new option to provide a configuration specific to the start command. Declaring a new "config" option will throw an error "Invalid Option Configuration: ..." in the default flatten mode to prevent collision from happening. 
+However, let's imaging that we need to add a new option to provide a configuration specific to the start command. 
+
+```js
+require("parameters")({
+  options: {
+    "config": {},
+  },
+  commands: {
+    "start": {
+      options: {
+        "config": {},
+      },
+    }
+  },
+})
+```
+
+Declaring a new "config" option will throw an error "Invalid Option Configuration: ..." in the default flatten mode to prevent collision from happening:
+
+```
+Error: Invalid Option Configuration: option "config" in command "start" collide with the one in application, change its name or use the extended property
+```
+
+### Extended mode
+
+The above example will correctly work in extended mode:
+
+```js
+require("parameters")({
+  options: {
+    "config": {},
+  },
+  commands: {
+    "start": {
+      options: {
+        "config": {},
+      },
+    }
+  },
+  extended: true
+})
+```
+
+It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml` and its parameters in extended mode will be parsed like:
+
+```json
+[ { "config": "./config.yml" },
+  { "command": "start", "config": "./start-config.yml" } ]
+```

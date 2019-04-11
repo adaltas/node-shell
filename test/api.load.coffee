@@ -19,15 +19,10 @@ describe 'api.load', ->
     process.chdir cwd
     fs.unlinkSync "#{os.tmpdir()}/relative_module.coffee"
 
-  it 'load with custom function handler', ->
-    fs.writeFileSync "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> params.my_argument'
-    parameters
-      route: './something'
-      load: (module) ->
-        require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
-      options: [
-        name: 'my_argument'
-      ]
-    .route ['--my_argument', 'my value']
-    .should.eql 'my value'
-    fs.unlinkSync "#{os.tmpdir()}/renamed_module.coffee"
+  it 'load is not a string', ->
+    (->
+      parameters
+        name: 'start'
+      .load {name: 'something'}
+    )
+    .should.throw 'Invalid Load Argument: load is expecting string, got {"name":"something"}'
