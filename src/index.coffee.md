@@ -179,10 +179,20 @@ result = parameters(
 ```
 
     Parameters::route = (argv = process, args...) ->
+      route_error = (error, commands) =>
+        argv = if commands.length
+        then ['help', ...commands]
+        else ['--help']
+        params = @parse argv
+        route = @load @config.help.route
+        route.call @, {argv: argv, config: @config, params: params, error: error}, ...args
+      # Normalize arguments
       if Array.isArray(argv)
-        params = @parse argv
+        try params = @parse argv
+        catch error then return route_error error, error.command or []
       else if argv is process
-        params = @parse argv
+        try params = @parse argv
+        catch error then return route_error error, error.command or []
       else
         throw Error "Invalid Arguments: first argument must be an argv array or the process object, got #{JSON.stringify argv}"
       route = (config, commands) =>
@@ -244,8 +254,10 @@ Convert an arguments list to a parameters object.
         throw Error "Invalid Arguments: parse require arguments or process as first argument, got #{JSON.stringify process}"
       # Extracted parameters
       full_params = []
-      parse = (config) =>
+      parse = (config, command) =>
         full_params.push params = {}
+        # Add command name provided by parent
+        params[@config.command] = command if command?
         # Read options
         while true
           break if argv.length is index or argv[index][0] isnt '-'
@@ -255,7 +267,11 @@ Convert an arguments list to a parameters object.
           shortcut = key if shortcut
           key = config.shortcuts[shortcut] if shortcut
           option = config.options?[key]
-          throw Error "Invalid option #{JSON.stringify key}" if not shortcut and config.strict and not option
+          if not shortcut and config.strict and not option
+            error = Error "Invalid option #{JSON.stringify key}"
+            error.command = full_params.slice(1).map (params) =>
+              params[@config.command]
+            throw error
           if shortcut and not option
             if config.root
               throw Error "Invalid Shortcut: \"-#{shortcut}\""
@@ -311,9 +327,9 @@ Convert an arguments list to a parameters object.
             # Validate the command
             throw Error "Fail to parse end of command \"#{leftover}\"" unless config.commands[command]
             # Parse child configuration
-            child_params = parse(config.commands[command], argv)
+            child_params = parse config.commands[command], command
             # Enrich child with command
-            child_params[@config.command] = command
+            # child_params[@config.command] = command
         # Command mode but no command are found, default to help
         # Default to help is help property is set and no command is found in user args 
         # Happens with global options without a command
@@ -321,12 +337,11 @@ Convert an arguments list to a parameters object.
           params[@config.command] = 'help'
         # Check against required main
         main = config.main
-        if main
-          if main.required
-            throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
+        if main and main.required
+          throw Error "Required main argument \"#{main.name}\"" unless params[main.name]?
         params
       # Start the parser
-      parse @config, argv
+      parse @config, null
       unless options.extended
         params = {}
         if Object.keys(@config.commands).length
