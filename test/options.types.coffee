@@ -16,7 +16,7 @@ describe 'options.type', ->
       app.parse(['start', '--watch', __dirname]).should.eql
         command: ['start']
         watch: __dirname
-      app.stringify 
+      app.stringify
         command: ['start']
         watch: __dirname
       .should.eql ['start', '--watch', __dirname]
@@ -35,7 +35,7 @@ describe 'options.type', ->
       app.parse(['start', '-s']).should.eql
         command: ['start']
         strict: true
-      app.stringify 
+      app.stringify
         command: ['start']
         strict: true
       .should.eql ['start', '--strict']
@@ -47,7 +47,7 @@ describe 'options.type', ->
           shortcut: 'd'
           type: 'boolean'
         ]
-      [].should.eql app.stringify 
+      [].should.eql app.stringify
         detached: null
 
   describe 'integer', ->
@@ -64,7 +64,7 @@ describe 'options.type', ->
       app.parse(['start', '-i', '5']).should.eql
         command: ['start']
         integer: 5
-      app.stringify 
+      app.stringify
         command: ['start']
         integer: 5
       .should.eql ['start', '--integer', '5']
@@ -83,7 +83,7 @@ describe 'options.type', ->
       app.parse(['start', '-a', '3,2,1']).should.eql
         command: ['start']
         array: ['3','2','1']
-      app.stringify 
+      app.stringify
         command: ['start']
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
@@ -100,7 +100,7 @@ describe 'options.type', ->
       app.parse(['start', '-a', '3', '-a', '2', '-a', '1']).should.eql
         command: ['start']
         array: ['3','2','1']
-      app.stringify 
+      app.stringify
         command: ['start']
         array: ['3','2','1']
       .should.eql ['start', '--array', '3,2,1']
@@ -116,7 +116,7 @@ describe 'options.type', ->
       app.parse(['start', '--my_array', '', '--my_array', '2', '--my_array', '']).should.eql
         command: ['start']
         my_array: ['','2','']
-      app.stringify 
+      app.stringify
         command: ['start']
         array: ['','2','']
       .should.eql ['start', '--array', ',2,']

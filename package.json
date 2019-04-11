@@ -13,6 +13,19 @@
     "getopt",
     "parser"
   ],
+  "coffeelintConfig": {
+    "indentation" : {
+      "level" : "error",
+      "value" : 2
+    },
+    "line_endings" : {
+      "level" : "error",
+      "value" : "unix"
+    },
+    "max_line_length": {
+      "level": "ignore"
+    }
+  },
   "homepage": "https://github.com/adaltas/node-parameters",
   "author": "David Worms <david@adaltas.com>",
   "license": "MIT",

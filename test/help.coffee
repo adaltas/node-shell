@@ -46,9 +46,9 @@ describe 'help', ->
       parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        main: 
+        main:
           name: 'command'
-          description: 'Command in start' 
+          description: 'Command in start'
         options: [
           name: 'string'
           shortcut: 's'
@@ -153,9 +153,9 @@ describe 'help', ->
         commands: [
           name: 'start'
           description: 'Description for the start command'
-          main: 
+          main:
             name: 'command'
-            description: 'Command in start' 
+            description: 'Command in start'
           options: [
             name: 'string'
             shortcut: 's'
@@ -213,9 +213,9 @@ describe 'help', ->
         commands:[
           name: 'start'
           description: 'Description for the start command'
-          main: 
+          main:
             name: 'command'
-            description: 'Command in start' 
+            description: 'Command in start'
           options: [
             name: 'string'
             shortcut: 's'

@@ -14,7 +14,7 @@ describe 'options.required', ->
       ]
       app.parse(['mycommand']).should.eql
         command: ['mycommand']
-      app.stringify 
+      app.stringify
         command: ['mycommand']
       .should.eql ['mycommand']
 
@@ -28,7 +28,7 @@ describe 'options.required', ->
       ]
       app.parse(['mycommand']).should.eql
         command: ['mycommand']
-      app.stringify 
+      app.stringify
         command: ['mycommand']
       .should.eql ['mycommand']
 

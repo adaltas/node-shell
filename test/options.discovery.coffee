@@ -7,7 +7,7 @@ describe 'options.discovery', ->
     app = parameters()
     app.parse(['--myoption', 'my value']).should.eql
       myoption: 'my value'
-    ['--myoption', 'my value'].should.eql app.stringify 
+    ['--myoption', 'my value'].should.eql app.stringify
       myoption: 'my value'
 
   it 'discover unregistered options in command', ->
@@ -23,5 +23,5 @@ describe 'options.discovery', ->
     app = parameters()
     app.parse(['--myoption']).should.eql
       myoption: true
-    ['--myoption'].should.eql app.stringify 
+    ['--myoption'].should.eql app.stringify
       myoption: true

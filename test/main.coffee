@@ -15,7 +15,7 @@ describe 'main', ->
       ).should.throw "Fail to parse end of command \"mymain\""
       # Command with one option
       app = parameters
-        commands: 
+        commands:
           'mycommand': options: 'arg': {}
       (->
         app.parse ['mycommand', '--arg', 'myarg', 'mymain']
@@ -39,7 +39,7 @@ describe 'main', ->
       ]
       .should.eql
         leftover: ['my value']
-      app.stringify 
+      app.stringify
         leftover: ['my value']
       .should.eql ['my value']
 
@@ -52,7 +52,7 @@ describe 'main', ->
       ]
       .should.eql
         leftover: ['my', 'value']
-      app.stringify 
+      app.stringify
         leftover: ['my', 'value']
       .should.eql ['my', 'value']
   
@@ -78,7 +78,7 @@ describe 'main', ->
     it 'may follow command without any option', ->
       app = parameters commands: [
         name: 'mycommand'
-        main: 
+        main:
           name: 'leftover'
           required: true
       ]
@@ -88,7 +88,7 @@ describe 'main', ->
       .should.eql
         command: ['mycommand']
         leftover: ['my value']
-      app.stringify 
+      app.stringify
         command: ['mycommand']
         leftover: ['my value']
       .should.eql ['mycommand', 'my value']

@@ -331,7 +331,7 @@ Convert an arguments list to a parameters object.
             # Enrich child with command
             # child_params[@config.command] = command
         # Command mode but no command are found, default to help
-        # Default to help is help property is set and no command is found in user args 
+        # Default to help is help property is set and no command is found in user args
         # Happens with global options without a command
         if Object.keys(config.commands).length and not command
           params[@config.command] = 'help'

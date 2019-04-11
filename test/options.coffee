@@ -38,7 +38,7 @@ describe 'options', ->
         myparam: 'my value'
       app.parse(['-m', 'my value']).should.eql
         myparam: 'my value'
-      app.stringify 
+      app.stringify
         myparam: 'my value'
       .should.eql ['--myparam', 'my value']
 
@@ -46,7 +46,7 @@ describe 'options', ->
       app = parameters
         commands: [
           name: 'start'
-          main: 
+          main:
             name: 'my_argument'
             required: true
           options: [
@@ -65,7 +65,7 @@ describe 'options', ->
         watch: __dirname
         strict: true
         my_argument: ['my', '--value']
-      app.stringify 
+      app.stringify
         command: ['start']
         watch: __dirname
         strict: true

@@ -34,7 +34,7 @@ describe 'options.default', ->
       .should.eql ['my_command', '--my_argument', 'default value']
           
     it 'preserve global option', ->
-      app = parameters 
+      app = parameters
         options: [
           name: 'global_argument', default: 'global value'
         ]

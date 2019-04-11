@@ -16,7 +16,7 @@ describe 'options.one_of', ->
     app.parse(['start', '-a', '1', '-a', '2']).should.eql
       command: ['start']
       array: ['1','2']
-    app.stringify 
+    app.stringify
       command: ['start']
       array: ['1','2']
     .should.eql ['start', '--array', '1,2']

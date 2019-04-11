@@ -42,7 +42,7 @@ describe 'configure', ->
           route: path.resolve __dirname, '../src/routes/help'
         root: true
         options:
-          'help': 
+          'help':
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
@@ -58,7 +58,7 @@ describe 'configure', ->
             description: 'No description yet for the my_cmd command'
             command: ['my_cmd']
             options:
-              'help': 
+              'help':
                 name: 'help'
                 shortcut: 'h'
                 description: 'Display help information'
@@ -98,7 +98,7 @@ describe 'configure', ->
           route: path.resolve __dirname, '../src/routes/help'
         root: true
         options:
-          'help': 
+          'help':
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
@@ -114,7 +114,7 @@ describe 'configure', ->
             description: 'No description yet for the parent_cmd command'
             command: ['parent_cmd']
             options:
-              'help': 
+              'help':
                 name: 'help'
                 shortcut: 'h'
                 description: 'Display help information'
@@ -129,7 +129,7 @@ describe 'configure', ->
                 description: 'No description yet for the child_cmd command'
                 command: ['parent_cmd', 'child_cmd']
                 options:
-                  'help': 
+                  'help':
                     name: 'help'
                     shortcut: 'h'
                     description: 'Display help information'

@@ -6,7 +6,7 @@ describe 'main.required', ->
   it 'may be optional', ->
     app = parameters commands: [
       name: 'mycommand'
-      main: 
+      main:
         name: 'my_argument'
     ]
     app.parse [
@@ -14,14 +14,14 @@ describe 'main.required', ->
     ]
     .should.eql
       command: ['mycommand']
-    app.stringify 
+    app.stringify
       command: ['mycommand']
     .should.eql ['mycommand']
 
   it 'honors required true if value is provided', ->
     app = parameters commands: [
       name: 'mycommand'
-      main: 
+      main:
         name: 'my_argument'
         required: true
     ]
@@ -39,7 +39,7 @@ describe 'main.required', ->
   it 'honors required true if no value provided', ->
     app = parameters commands: [
       name: 'mycommand'
-      main: 
+      main:
         name: 'my_argument'
         required: true
     ]
