@@ -21,7 +21,7 @@ describe 'configure.extended', ->
         app = parameters commands:
           mycmd:
             extended: true
-      ).should.throw 'Invalid Command: extended cannot be declared inside a command'
+      ).should.throw 'Invalid Command Configuration: extended property cannot be declared inside a command'
       
   describe 'main', ->
     
@@ -39,7 +39,7 @@ describe 'configure.extended', ->
       ]
       .should.eql ['my value']
       app.stringify([{}]).should.eql []
-        
+    
     it 'application with configured commands get leftover', ->
       app = parameters
         extended: true

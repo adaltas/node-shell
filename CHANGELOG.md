@@ -7,6 +7,9 @@ New functionality
 * router: redirect error to help route
 * router: handle help options and commands
 
+Fix and improvements
+* project: normalise error messages
+
 ## Version 0.5.0
 
 Breaking compatibility

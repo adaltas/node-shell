@@ -28,4 +28,4 @@ describe 'help.arguments', ->
       parameters
         commands: 'start': {}
       .help ['start', 'sth']
-    ).should.throw 'Invalid Command: "start sth"'
+    ).should.throw 'Invalid Command: argument "start sth" is not a valid command'

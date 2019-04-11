@@ -13,13 +13,13 @@ writer = (callback) ->
   .on 'finish', ->
     callback chunks.join ''
 
-describe 'route.error', ->
+describe 'route.help', ->
 
   it 'Unhandled leftover', (next) ->
     parameters
       help:
         writer: writer (output) ->
-          output.should.match /^\s+Fail to parse end of command "invalid,leftover"/
+          output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
           output.should.match /^\s+myapp - No description yet/m
           next()
         end: true
@@ -29,7 +29,7 @@ describe 'route.error', ->
     parameters
       help:
         writer: writer (output) ->
-          output.should.match /^\s+Invalid option "opt"/
+          output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp - No description yet/m
           next()
         end: true
@@ -42,7 +42,7 @@ describe 'route.error', ->
         'server': {}
       help:
         writer: writer (output) ->
-          output.should.match /^\s+Invalid option "opt"/
+          output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp server - No description yet for the server command/m
           next()
         end: true

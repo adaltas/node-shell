@@ -118,8 +118,8 @@ describe 'help', ->
         name: 'myscript'
         commands: []
       ( ->
-        app.help('undefined')
-      ).should.throw 'Invalid Command: "undefined"'
+        app.help('invalid')
+      ).should.throw 'Invalid Command: argument "invalid" is not a valid command'
         
     it 'minimalist, no name, no description, no options, no main', ->
       parameters
@@ -254,8 +254,8 @@ describe 'help', ->
           name: 'mycommand'
         ]
       ( ->
-        app.help(['mycommand', 'undefined'])
-      ).should.throw 'Invalid Command: "mycommand undefined"'
+        app.help(['mycommand', 'invalid'])
+      ).should.throw 'Invalid Command: argument "mycommand invalid" is not a valid command'
   
   describe 'name', ->
 

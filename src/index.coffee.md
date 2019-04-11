@@ -47,10 +47,18 @@ Parameters are defined with the following properties:
           # Normalize option
           option.name = name
           option.type ?= 'string'
-          throw Error "Invalid option type #{JSON.stringify option.type}" unless option.type in types
+          throw Error [
+            'Invalid Option Configuration:'
+            "supported options types are #{JSON.stringify types},"
+            "got #{JSON.stringify option.type}"
+          ].join ' ' unless option.type in types
           config.shortcuts[option.shortcut] = option.name if option.shortcut
           option.one_of = [option.one_of] if typeof option.one_of is 'string'
-          throw Error "Invalid option one_of \"#{JSON.stringify option.one_of}\"" if option.one_of and not Array.isArray option.one_of
+          throw Error [
+            'Invalid Option Configuration:'
+            'option property "one_of" must be a string or an array,'
+            "got #{option.one_of}"
+          ].join ' ' if option.one_of and not Array.isArray option.one_of
       # Sanitize main
       sanitize_main = (config) ->
         return config unless config.main
@@ -59,17 +67,19 @@ Parameters are defined with the following properties:
       sanitize_route = (config) ->
         return config unless config.route
         throw Error [
-          'Invalid Route Configuration: '
-          "accept string or function "
-          "in application, " unless Array.isArray config.command
-          "in command #{JSON.stringify config.command.join ' '}, " if Array.isArray config.command
+          'Invalid Route Configuration:'
+          "accept string or function"
+          "in application," unless Array.isArray config.command
+          "in command #{JSON.stringify config.command.join ' '}," if Array.isArray config.command
           "got #{JSON.stringify config.route}"
-        ].join '' unless typeof config.route in ['function', 'string']
+        ].filter((i)->i).join ' ' unless typeof config.route in ['function', 'string']
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
-        # command.command ?= parent.command
-        throw Error 'Invalid Command: extended cannot be declared inside a command' if command.extended?
+        throw Error [
+          'Invalid Command Configuration:'
+          'extended property cannot be declared inside a command'
+        ].join ' ' if command.extended?
         sanitize_main command
         sanitize_route command
         sanitize_options command
@@ -79,7 +89,10 @@ Parameters are defined with the following properties:
         config.commands ?= {}
         config.commands = array_to_object config.commands, 'name' if Array.isArray config.commands
         for name, command of config.commands
-          throw Error "Incoherent Command Name: key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}" if command.name and command.name isnt name
+          throw Error [
+            'Incoherent Command Name:'
+            "key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}"
+          ].join ' ' if command.name and command.name isnt name
           command.name = name
           throw Error [
             'Invalid Command Configuration:'
@@ -91,7 +104,11 @@ Parameters are defined with the following properties:
       # An object where key are command and values are object map between shortcuts and names
       config.name ?= 'myapp'
       config.extended ?= false
-      throw Error "Invalid Configuration: extended must be a boolean, got #{JSON.stringify config.extended}" unless typeof config.extended is 'boolean'
+      throw Error [
+        'Invalid Configuration:'
+        'extended must be a boolean,'
+        "got #{JSON.stringify config.extended}"
+      ].join ' ' unless typeof config.extended is 'boolean'
       config.root = true
       config.description ?= 'No description yet'
       config.shortcuts = {}
@@ -194,15 +211,25 @@ result = parameters(
         try params = @parse argv
         catch error then return route_error error, error.command or []
       else
-        throw Error "Invalid Arguments: first argument must be an argv array or the process object, got #{JSON.stringify argv}"
+        throw Error [
+          'Invalid Arguments:'
+          'first argument must be an argv array or the process object,'
+          "got #{JSON.stringify argv}"
+        ].join ' '
       route = (config, commands) =>
         route = config.route
         unless route
           # Provide an error message if leaf command does not define any route
           unless Object.keys(config.commands).length or route
             error = if config.root
-            then Error "Missing \"route\" definition for application"
-            else Error "Missing \"route\" definition for command #{JSON.stringify params[@config.command]}"
+            then Error [
+              'Missing Application Route:'
+              'a \"route\" definition is required when no commands are defined'
+            ].join ' '
+            else Error [
+              'Missing Command Route:'
+              "a \"route\" definition #{JSON.stringify params[@config.command]} is required when no child commands are defined"
+            ].join ' '
           # Convert argument to an help command
           argv = if commands.length
           then ['help', ...commands]
@@ -268,7 +295,10 @@ Convert an arguments list to a parameters object.
           key = config.shortcuts[shortcut] if shortcut
           option = config.options?[key]
           if not shortcut and config.strict and not option
-            error = Error "Invalid option #{JSON.stringify key}"
+            error = Error [
+              'Invalid Argument:'
+              "the argument #{if shortcut then "-" else "--"}#{key} is not a valid option"
+            ].join ' '
             error.command = full_params.slice(1).map (params) =>
               params[@config.command]
             throw error
@@ -286,21 +316,28 @@ Convert an arguments list to a parameters object.
               params[key] = true
             when 'string'
               value = argv[index++]
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
+              throw Error [
+                'Invalid Option:'
+                "no value found for option #{JSON.stringify key}"
+              ].join ' ' unless value? and value[0] isnt '-'
               params[key] = value
             when 'integer'
               value = argv[index++]
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
+              throw Error [
+                'Invalid Option:'
+                "no value found for option #{JSON.stringify key}"
+              ].join ' ' unless value? and value[0] isnt '-'
               params[key] = parseInt value, 10
             when 'array'
               value = argv[index++]
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" unless value?
-              throw Error "Invalid Option: no value found for option #{JSON.stringify key}" if value[0] is '-'
+              throw Error [
+                'Invalid Option:'
+                "no value found for option #{JSON.stringify key}"
+              ].join ' ' unless value? and value[0] isnt '-'
               params[key] ?= []
               params[key].push value.split(',')...
         # Check if help is requested
+        # TODO: this doesnt seem right, also, the test in help.parse seems wrong as well
         helping = false
         for _, option of config.options
           continue unless option.help is true
@@ -325,11 +362,12 @@ Convert an arguments list to a parameters object.
           else
             command = argv[index++]
             # Validate the command
-            throw Error "Fail to parse end of command \"#{leftover}\"" unless config.commands[command]
+            throw Error [
+              'Invalid Argument:'
+              "fail to interpret all arguments \"#{leftover.join ' '}\""
+            ].join ' ' unless config.commands[command]
             # Parse child configuration
-            child_params = parse config.commands[command], command
-            # Enrich child with command
-            # child_params[@config.command] = command
+            parse config.commands[command], command
         # Command mode but no command are found, default to help
         # Default to help is help property is set and no command is found in user args
         # Happens with global options without a command
@@ -422,7 +460,10 @@ Convert a parameters object to an arguments array.
           # Note, they are always pushed to the end and associated with the deepest child
           for key, value of lparams
             continue if keys[key]
-            throw Error "Invalid option #{JSON.stringify key}" if @config.strict
+            throw Error [
+              'Invalid Parameter:'
+              "the property --#{key} is not a registered argument"
+            ].join ' ' if @config.strict
             if typeof value is 'boolean'
               argv.push "--#{key}" if value
             else if typeof value is 'undefined' or value is null
@@ -490,14 +531,16 @@ Determine if help was requested by returning zero to n commands if help is reque
         # Check if it is present in the parsed parameters
         .some (options) -> cparams[options.name]?
         if helping
-          throw Error 'Invalid Argument: `help` must be associated with a leaf command' if options.extended and commands.length
+          throw Error [
+            'Invalid Argument:'
+            '`help` must be associated with a leaf command'
+          ].join ' ' if options.extended and commands.length
           return true
         # Helping is not requested and there are no more commands to search
         return false unless commands?.length
         command = commands.shift()
         return false if options.extended and params.length is 0
         config = config.commands[command]
-        throw Error "Invalid Arguments: command #{JSON.stringify command} is not registed" unless config
         search config, commands, params
       helping = search @config, clone(commands), params
       if helping then commands else null
@@ -511,12 +554,19 @@ Format the configuration into a readable documentation string.
 
     Parameters::help = (commands=[], options={}) ->
       commands = commands.split ' ' if typeof commands is 'string'
-      throw Error "Invalid Help Arguments: expect commands to be an array as first argument, got #{JSON.stringify commands}" unless Array.isArray commands
+      throw Error [
+        'Invalid Help Arguments:'
+        'expect commands to be an array as first argument,'
+        "got #{JSON.stringify commands}"
+      ].join ' ' unless Array.isArray commands
       config = @config
       configs = [config]
       for command, i in commands
         config = config.commands[command]
-        throw Error "Invalid Command: \"#{commands.slice(0, i+1).join ' '}\"" unless config
+        throw Error [
+          'Invalid Command:'
+          "argument \"#{commands.slice(0, i+1).join ' '}\" is not a valid command"
+        ].join ' ' unless config
         configs.push config
       # Init
       content = []

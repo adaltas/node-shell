@@ -5,6 +5,20 @@ describe 'configure.options', ->
   
   describe 'validation', ->
     
+    it 'enforce types', ->
+    (->
+      parameters
+        options:
+          key: type: 'invalid'
+    ).should.throw 'Invalid Option Configuration: supported options types are ["string","boolean","integer","array"], got "invalid"'
+    
+    it 'enforce one_of', ->
+    (->
+      parameters
+        options:
+          key: one_of: true
+    ).should.throw 'Invalid Option Configuration: option property "one_of" must be a string or an array, got true'
+    
     it 'detect collision between application and command options', ->
       # OK in extended mode
       app = parameters

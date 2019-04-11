@@ -12,14 +12,14 @@ describe 'main', ->
           'mycommand': {}
       (->
         app.parse ['mycommand', 'mymain']
-      ).should.throw "Fail to parse end of command \"mymain\""
+      ).should.throw 'Invalid Argument: fail to interpret all arguments "mymain"'
       # Command with one option
       app = parameters
         commands:
           'mycommand': options: 'arg': {}
       (->
         app.parse ['mycommand', '--arg', 'myarg', 'mymain']
-      ).should.throw "Fail to parse end of command \"mymain\""
+      ).should.throw 'Invalid Argument: fail to interpret all arguments "mymain"'
   
   describe 'without command', ->
 

@@ -13,7 +13,7 @@ writer = (callback) ->
   .on 'finish', ->
     callback chunks.join ''
 
-describe 'route.help', ->
+describe 'route.error', ->
   
   describe 'option', ->
 
@@ -45,7 +45,7 @@ describe 'route.help', ->
       parameters
         help:
           writer: writer (output) ->
-            output.should.match /^\s+Missing "route" definition for application/
+            output.should.match /^\s+Missing Application Route: a "route" definition is required when no commands are defined/
             output.should.match /^\s+myapp - No description yet/m
             next()
           end: true
@@ -70,7 +70,7 @@ describe 'route.help', ->
       parameters
         help:
           writer: writer (output) ->
-            output.should.not.match /^\s+Missing "route" definition/
+            output.should.not.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child commands are defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
           end: true
@@ -86,7 +86,7 @@ describe 'route.help', ->
       parameters
         help:
           writer: writer (output) ->
-            output.should.match /^\s+Missing "route" definition for command \["server","start"\]/
+            output.should.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child commands are defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
           end: true
@@ -102,7 +102,7 @@ describe 'route.help', ->
       parameters
         help:
           writer: writer (output) ->
-            output.should.match /^\s+Fail to parse end of command "invalid,leftover"/
+            output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
             output.should.match /^\s+myapp - No description yet/m
             next()
           end: true
@@ -112,7 +112,7 @@ describe 'route.help', ->
       parameters
         help:
           writer: writer (output) ->
-            output.should.match /^\s+Invalid option "opt"/
+            output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp - No description yet/m
             next()
           end: true
@@ -125,7 +125,7 @@ describe 'route.help', ->
           'server': {}
         help:
           writer: writer (output) ->
-            output.should.match /^\s+Invalid option "opt"/
+            output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp server - No description yet for the server command/m
             next()
           end: true
