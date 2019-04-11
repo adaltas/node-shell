@@ -1,7 +1,8 @@
 
+path = require 'path'
 parameters = require '../src'
 
-describe 'api.config', ->
+describe 'configure', ->
 
   describe 'normalisation', ->
 
@@ -10,6 +11,10 @@ describe 'api.config', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
+        help:
+          end: false
+          writer: 'stderr'
+          route: path.resolve __dirname, '../src/routes/help'
         root: true
         strict: false
         shortcuts:
@@ -31,6 +36,10 @@ describe 'api.config', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
+        help:
+          end: false
+          writer: 'stderr'
+          route: path.resolve __dirname, '../src/routes/help'
         root: true
         options:
           'help': 
@@ -67,6 +76,7 @@ describe 'api.config', ->
             main:
               name: 'name'
               description: 'Help about a specific command'
+            route: path.resolve __dirname, '../src/routes/help'
             strict: false
             options: {}
             commands: {}
@@ -82,6 +92,10 @@ describe 'api.config', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
+        help:
+          end: false
+          writer: 'stderr'
+          route: path.resolve __dirname, '../src/routes/help'
         root: true
         options:
           'help': 
@@ -133,6 +147,7 @@ describe 'api.config', ->
             main:
               name: 'name'
               description: 'Help about a specific command'
+            route: path.resolve __dirname, '../src/routes/help'
             strict: false
             options: {}
             commands: {}

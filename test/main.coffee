@@ -7,12 +7,16 @@ describe 'main', ->
 
     it 'command extra arguments without main', ->
       # Command with no option
-      app = parameters commands: [name: 'mycommand']
+      app = parameters
+        commands:
+          'mycommand': {}
       (->
         app.parse ['mycommand', 'mymain']
       ).should.throw "Fail to parse end of command \"mymain\""
       # Command with one option
-      app = parameters commands: [name: 'mycommand', options: [name:'arg']]
+      app = parameters
+        commands: 
+          'mycommand': options: 'arg': {}
       (->
         app.parse ['mycommand', '--arg', 'myarg', 'mymain']
       ).should.throw "Fail to parse end of command \"mymain\""

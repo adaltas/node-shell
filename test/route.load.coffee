@@ -2,7 +2,7 @@
 fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
-  
+
 describe 'route.load', ->
 
   it 'application route', ->

@@ -1,8 +1,25 @@
 
+path = require 'path'
 parameters = require '../src'
+{ Writable } = require('stream')
 
 describe 'configure.help', ->
   
+  describe 'help', ->
+    
+    it "accept string and stream.Writable", ->
+      parameters({})
+      .config.help.should.eql
+        end: false
+        writer: 'stderr'
+        route: path.resolve __dirname, '../src/routes/help'
+      parameters
+        help: writer: new Writable()
+      .config.help.should.eql
+        end: false
+        writer: new Writable()
+        route: path.resolve __dirname, '../src/routes/help'
+
   describe 'options', ->
   
     it 'auto generate the help options in application', ->
@@ -51,6 +68,7 @@ describe 'configure.help', ->
         main:
           name: 'name'
           description: 'Help about a specific command'
+        route: path.resolve __dirname, '../src/routes/help'
         strict: false
         shortcuts: {}
         options: {}

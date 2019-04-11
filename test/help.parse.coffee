@@ -4,18 +4,23 @@ parameters = require '../src'
 describe 'help.parse', ->
 
   it 'handle an empty command as help', ->
-    app = parameters commands: [name: 'help']
+    app = parameters
+      commands: [name: 'help']
     app.parse([]).should.eql
       command: ['help']
 
   it 'handle an empty command as even if help is not defined', ->
-    app = parameters commands: [name: 'fake']
-    app.parse([]).should.eql
+    parameters
+      commands: [name: 'fake']
+    .parse []
+    .should.eql
       command: ['help']
 
   it 'global options without a command', ->
-    app = parameters commands: [name: 'fake']
-    app.parse(['--param', 'value']).should.eql
+    parameters
+      commands: [name: 'fake']
+    .parse ['--param', 'value']
+    .should.eql
       param: 'value'
       command: ['help']
 
@@ -30,7 +35,8 @@ describe 'help.parse', ->
         'level1':
           commands:
             'level2': {}
-    .parse(['--param', 'value', 'level1']).should.eql
+    .parse ['--param', 'value', 'level1']
+    .should.eql
       param: 'value'
       command: ['value1', 'help']
 

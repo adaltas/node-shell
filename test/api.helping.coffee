@@ -60,7 +60,7 @@ describe 'api.helping', ->
         commands: 'start': commands: 'server': {}
       .helping
         command: ['help']
-        name: 'start'
+        name: ['start']
       .should.eql ['start']
 
     it 'in extended mode', ->
@@ -69,7 +69,7 @@ describe 'api.helping', ->
         extended: true
       .helping [ {},
         command: 'help'
-        name: 'start'
+        name: ['start']
       ]
       .should.eql ['start']
   

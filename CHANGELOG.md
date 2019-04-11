@@ -1,6 +1,11 @@
 
 # Changelog
 
+## Trunk
+
+New functionality
+* router: handle help options and commands
+
 ## Version 0.5.0
 
 Breaking compatibility

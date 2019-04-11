@@ -55,12 +55,23 @@ Parameters are defined with the following properties:
       sanitize_main = (config) ->
         return config unless config.main
         config.main = name: config.main if typeof config.main is 'string'
+      # Sanitize main
+      sanitize_route = (config) ->
+        return config unless config.route
+        throw Error [
+          'Invalid Route Configuration: '
+          "accept string or function "
+          "in application, " unless Array.isArray config.command
+          "in command #{JSON.stringify config.command.join ' '}, " if Array.isArray config.command
+          "got #{JSON.stringify config.route}"
+        ].join '' unless typeof config.route in ['function', 'string']
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
         # command.command ?= parent.command
         throw Error 'Invalid Command: extended cannot be declared inside a command' if command.extended?
         sanitize_main command
+        sanitize_route command
         sanitize_options command
         sanitize_commands command
         command
@@ -86,35 +97,53 @@ Parameters are defined with the following properties:
       config.shortcuts = {}
       config.strict ?= false
       sanitize_main config
+      sanitize_route config
       sanitize_options config
       sanitize_commands config
-      sanitize_help_command = (config) ->
-        return unless Object.keys(config.commands).length
-        config.command ?= 'command'
-        command = sanitize_command
-          name: 'help'
-          description: "Display help information about #{config.name}"
-          command: ['help']
-          main:
-            name: 'name'
-            description: 'Help about a specific command'
-          help: true
-        , config
-        config.commands[command.name] = merge command, config.commands[command.name]
-      sanitize_help_command @config
+      sanitize_help = (config) ->
+        config.help ?= {}
+        config.help.writer ?= 'stderr'
+        config.help.end ?= false
+        config.help.route ?= path.resolve __dirname, './routes/help'
+        if typeof config.help.writer is 'string'
+          throw Error [
+            'Invalid Help Configuration:'
+            'accepted values are ["stdout", "stderr"] when writer is a string,'
+            "got #{JSON.stringify config.help.writer}"
+          ].join ' ' unless config.help.writer in ['stdout', 'stderr']
+        else unless config.help.writer instanceof stream.Writable
+          throw Error [
+            "Invalid Help Configuration:"
+            "writer must be a string or an instance of stream.Writer,"
+            "got #{JSON.stringify config.help.writer}"
+          ].join ' ' unless config.help.writer in ['stdout', 'stderr']
+        if Object.keys(config.commands).length
+          config.command ?= 'command'
+          command = sanitize_command
+            name: 'help'
+            description: "Display help information about #{config.name}"
+            command: ['help']
+            main:
+              name: 'name'
+              description: 'Help about a specific command'
+            help: true
+            route: config.help.route
+          , config
+          config.commands[command.name] = merge command, config.commands[command.name]
+      sanitize_help @config
       # Second pass, add help options and set default
-      sanitize_options_enrich = (command) ->
+      sanitize_options_enrich = (config) ->
         # No "help" option for command "help"
-        unless command.help
-          command.options['help'] = merge command.options['help'],
+        if config.root or not config.help
+          config.options['help'] = merge config.options['help'],
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
             type: 'boolean'
             help: true
-          command.shortcuts[command.options['help'].shortcut] = command.options['help'].name if command.options['help'].shortcut
-        for _, cmd of command.commands
-          sanitize_options_enrich cmd
+          config.shortcuts[config.options['help'].shortcut] = config.options['help'].name if config.options['help'].shortcut
+        for _, command of config.commands
+          sanitize_options_enrich command
       sanitize_options_enrich @config
       sanitize_commands_enrich = (config) ->
         for name, command of config.commands
@@ -138,15 +167,15 @@ You should only pass the parameters and the not the script name.
 Example:
 
 ```
-  result = parameters(
-    commands: [
-      name: 'start'
-      route: function(){ return 'something'; }
-      options: [
-        name: 'debug'
-      ]
+result = parameters(
+  commands: [
+    name: 'start'
+    route: function(){ return 'something'; }
+    options: [
+      name: 'debug'
     ]
-  ).route ['start', '-d', 'Hello']
+  ]
+).route ['start', '-d', 'Hello']
 ```
 
     Parameters::route = (argv = process, args...) ->
@@ -154,27 +183,44 @@ Example:
         params = @parse argv
       else if argv is process
         params = @parse argv
-      else if is_object argv
-        params = argv
       else
-        throw Error "Invalid Arguments: first argument must be an argv array, a params object or the process object, got #{JSON.stringify argv}"
+        throw Error "Invalid Arguments: first argument must be an argv array or the process object, got #{JSON.stringify argv}"
+      route = (config, commands) =>
+        route = config.route
+        unless route
+          # Provide an error message if leaf command does not define any route
+          unless Object.keys(config.commands).length or route
+            error = if config.root
+            then Error "Missing \"route\" definition for application"
+            else Error "Missing \"route\" definition for command #{JSON.stringify params[@config.command]}"
+          # Convert argument to an help command
+          argv = if commands.length
+          then ['help', ...commands]
+          else ['--help']
+          params = @parse argv
+          route = @load @config.help.route
+        else
+          route = @load route if typeof route is 'string'
+        return route.call @, {argv: argv, config: @config, params: params, error: error}, ...args
       # Print help
       if commands = @helping params
-        [helpconfig] = Object.values(@config.commands).filter (command) -> command.help
-        throw Error "No Help Command" unless helpconfig
-        route = helpconfig.route
-        throw Error 'Missing "route" definition for help: please insert a command of name "help" with a "route" property inside' unless route
-      else if params[@config.command]
-        route = @config.commands[params[@config.command]].route
-        extended = @config.commands[params[@config.command]].extended
-        throw Error "Missing \"route\" definition for command #{JSON.stringify params[@config.command]}" unless route
+        route = @load @config.help.route
+        route.call @, {argv: argv, config: @config, params: params}, ...args
+        return
+      # Load a command route
+      else if commands = params[@config.command]
+        # TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
+        commands = (for i in [0...params.length] then params[i][@config.command]) if @config.extended
+        config = (configure = (config, commands) ->
+          config = config.commands[commands.shift()]
+          if commands.length
+          then configure config, commands
+          else config
+        )(@config, clone commands)
+        route config, commands
+      # Load an application route
       else
-        route = @config.route
-        extended = @config.extended
-        throw Error 'Missing route definition' unless route
-      # Load the module
-      route = @load route if typeof route is 'string'
-      route.call @, {params: params, argv: argv, config: @config}, ...args
+        route @config, []
 
 ## Method `parse([arguments])`
 
@@ -418,7 +464,7 @@ Determine if help was requested by returning zero to n commands if help is reque
         leftover = unless options.extended
         then params[@config.commands[commands[0]].main.name]
         else params[1][@config.commands[commands[0]].main.name]
-        return if leftover then leftover.split() else []
+        return if leftover then leftover else []
       # Handle help option:
       # search if the help option is provided and for which command it apply
       search = (config, commands, params) ->
@@ -450,7 +496,7 @@ Format the configuration into a readable documentation string.
 
     Parameters::help = (commands=[], options={}) ->
       commands = commands.split ' ' if typeof commands is 'string'
-      throw Error "Invalid Arguments: expect commands to be an array as first argument, got #{JSON.stringify commands}" unless Array.isArray commands
+      throw Error "Invalid Help Arguments: expect commands to be an array as first argument, got #{JSON.stringify commands}" unless Array.isArray commands
       config = @config
       configs = [config]
       for command, i in commands
@@ -608,7 +654,9 @@ overwritten by the `load` options passed in the configuration.
 
 Dependencies
 
-    pad = require 'pad' 
+    pad = require 'pad'
+    path = require 'path'
+    stream = require 'stream'
     load = require './utils/load'
     {merge, clone} = require 'mixme'
 
