@@ -180,30 +180,11 @@ Parameters are defined with the following properties:
 
 ## `route(argv)` or `route(params)` or `route(process)`
 
-* `argv`   
-  Array of arguments to parse, optional.
-* `params`   
-  Paramters object as returned by `parse`, optional.
-* `process`   
-  The Node.js process object, optional.
+* `cli_arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings, optional, default to `process`.
+* `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
+* Returns: `any` Whatever the route function returns.
 
-Parse the arguments and execute the module defined by the "module" option.
-
-You should only pass the parameters and the not the script name.
-
-Example:
-
-```
-result = parameters(
-  commands: [
-    name: 'start'
-    route: function(){ return 'something'; }
-    options: [
-      name: 'debug'
-    ]
-  ]
-).route ['start', '-d', 'Hello']
-```
+How to use the `route` method to execute code associated with a particular command.
 
     Parameters::route = (argv = process, args...) ->
       route_error = (err, commands) =>

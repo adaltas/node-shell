@@ -7,11 +7,11 @@ maturity: initial
 
 # Method `route([cli_arguments], ...users_arguments)`
 
-How to use the `route` method to execute code associated with a particular command.
-
 * `cli_arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings, optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
 * Returns: `any` Whatever the route function returns.
+
+How to use the `route` method to execute code associated with a particular command.
 
 ## Description
 
