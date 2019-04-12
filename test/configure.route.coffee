@@ -7,9 +7,9 @@ describe 'configure.route', ->
     
     it 'accept function', ->
       # In application
-      app = parameters
+      parameters
         route: (->)
-      app = parameters
+      parameters
         commands: [
           name: 'server'
           route: (->)
@@ -17,9 +17,9 @@ describe 'configure.route', ->
           
     it 'accept string', ->
       # In application
-      app = parameters
+      parameters
         route: 'path/to/module'
-      app = parameters
+      parameters
         commands: [
           name: 'server'
           route: 'path/to/module'
@@ -28,12 +28,12 @@ describe 'configure.route', ->
     it 'throw error if not valid', ->
       # In application
       (->
-        app = parameters
+        parameters
           route: {}
       ).should.throw 'Invalid Route Configuration: accept string or function in application, got {}'
       # In command
       (->
-        app = parameters
+        parameters
           commands: [
             name: 'server'
             route: {}

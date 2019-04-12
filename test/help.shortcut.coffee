@@ -6,14 +6,15 @@ describe 'help.shortcut', ->
   describe 'without command', ->
 
     it 'should print without shortcut', ->
-      app = parameters
+      parameters
         name: 'myscript'
         description: 'Some description for myscript'
         options: [
           name: 'myarg'
           description: 'MyArg'
         ]
-      app.help().should.eql """
+      .help()
+      .should.eql """
       
       NAME
           myscript - Some description for myscript
@@ -33,7 +34,7 @@ describe 'help.shortcut', ->
   describe 'with command', ->
 
     it 'should not print alias if not defined', ->
-      app = parameters
+      parameters
         name: 'myscript'
         description: 'Some description for myscript'
         commands: [
@@ -44,7 +45,8 @@ describe 'help.shortcut', ->
             description: 'Ensure alias is not displayed'
           ]
         ]
-      app.help().should.eql """
+      .help()
+      .should.eql """
 
       NAME
           myscript - Some description for myscript
@@ -64,4 +66,3 @@ describe 'help.shortcut', ->
           myscript help           Show this message
 
       """
-      # app.help().should.eql app.help 'help'

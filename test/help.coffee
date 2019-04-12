@@ -93,7 +93,9 @@ describe 'help', ->
           description: 'MyArg'
           required: true
         ]
-      app.parse(['--help']).help.should.be.True()
+      app
+      .parse(['--help'])
+      .help.should.be.True()
       app.help().should.eql """
 
       NAME
@@ -114,18 +116,19 @@ describe 'help', ->
   describe 'with command', ->
 
     it 'error if command isnt defined', ->
-      app = parameters
-        name: 'myscript'
-        commands: []
       ( ->
-        app.help('invalid')
+        parameters
+          name: 'myscript'
+          commands: []
+        .help('invalid')
       ).should.throw 'Invalid Command: argument "invalid" is not a valid command'
         
     it 'minimalist, no name, no description, no options, no main', ->
       parameters
         commands:
           'start': {}
-      .help().should.eql """
+      .help()
+      .should.eql """
 
       NAME
           myapp - No description yet
@@ -147,7 +150,7 @@ describe 'help', ->
       """
 
     it 'print all commands with multiple options', ->
-      app = parameters
+      parameters
         name: 'myscript'
         description: 'Some description for myscript'
         commands: [
@@ -183,7 +186,7 @@ describe 'help', ->
             description: 'Array option in stop'
           ]
         ]
-      app.help().should.eql """
+      .help().should.eql """
 
       NAME
           myscript - Some description for myscript
@@ -248,13 +251,13 @@ describe 'help', ->
   describe 'with nested command', ->
 
     it 'error if command isnt defined', ->
-      app = parameters
-        name: 'myscript'
-        commands: [
-          name: 'mycommand'
-        ]
       ( ->
-        app.help(['mycommand', 'invalid'])
+        parameters
+          name: 'myscript'
+          commands: [
+            name: 'mycommand'
+          ]
+        .help(['mycommand', 'invalid'])
       ).should.throw 'Invalid Command: argument "mycommand invalid" is not a valid command'
   
   describe 'name', ->

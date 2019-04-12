@@ -4,9 +4,10 @@ parameters = require '../src'
 describe 'help.parse', ->
 
   it 'handle an empty command as help', ->
-    app = parameters
+    parameters
       commands: [name: 'help']
-    app.parse([]).should.eql
+    .parse []
+    .should.eql
       command: ['help']
 
   it 'handle an empty command as even if help is not defined', ->
@@ -42,7 +43,8 @@ describe 'help.parse', ->
 
   it 'handle help command', ->
     app = parameters commands: [name: 'help']
-    app.parse(['help']).should.eql
+    app.parse ['help']
+    .should.eql
       command: ['help']
     app.stringify
       command: ['help']
@@ -50,7 +52,8 @@ describe 'help.parse', ->
 
   it 'handle help command with a command', ->
     app = parameters commands: [name: 'toto']
-    app.parse(['help', 'start']).should.eql
+    app.parse ['help', 'start']
+    .should.eql
       command: ['help']
       name: ['start']
     app.stringify

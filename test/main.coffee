@@ -7,18 +7,18 @@ describe 'main', ->
 
     it 'command extra arguments without main', ->
       # Command with no option
-      app = parameters
-        commands:
-          'mycommand': {}
       (->
-        app.parse ['mycommand', 'mymain']
+        parameters
+          commands:
+            'mycommand': {}
+        .parse ['mycommand', 'mymain']
       ).should.throw 'Invalid Argument: fail to interpret all arguments "mymain"'
       # Command with one option
-      app = parameters
-        commands:
-          'mycommand': options: 'arg': {}
       (->
-        app.parse ['mycommand', '--arg', 'myarg', 'mymain']
+        parameters
+          commands:
+            'mycommand': options: 'arg': {}
+        .parse ['mycommand', '--arg', 'myarg', 'mymain']
       ).should.throw 'Invalid Argument: fail to interpret all arguments "mymain"'
   
   describe 'without command', ->

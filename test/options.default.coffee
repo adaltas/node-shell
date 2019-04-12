@@ -10,7 +10,8 @@ describe 'options.default', ->
         options: [
           name: 'my_argument', default: 'default value'
         ]
-      app.parse([]).should.eql
+      app.parse []
+      .should.eql
         my_argument: 'default value'
       app.stringify {}
       .should.eql ['--my_argument', 'default value']
@@ -24,9 +25,9 @@ describe 'options.default', ->
           name: 'my_argument', default: 'default value'
         ]
       ]
-      app.parse([
+      app.parse [
         'my_command'
-      ])
+      ]
       .should.eql
         command: ['my_command']
         my_argument: 'default value'

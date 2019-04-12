@@ -6,22 +6,22 @@ describe 'options', ->
   describe 'normalisation', ->
     
     it 'accept array', ->
-      app = parameters
+      parameters
         options: [
           name: 'myparam'
           shortcut: 'm'
         ]
-      app.config.options.myparam.should.eql
+      .config.options.myparam.should.eql
         name: 'myparam'
         shortcut: 'm'
         type: 'string'
         
     it 'accept object', ->
-      app = parameters
+      parameters
         options:
           myparam:
             shortcut: 'm'
-      app.config.options.myparam.should.eql
+      .config.options.myparam.should.eql
         name: 'myparam'
         shortcut: 'm'
         type: 'string'
@@ -34,9 +34,15 @@ describe 'options', ->
           name: 'myparam'
           shortcut: 'm'
         ]
-      app.parse(['--myparam', 'my value']).should.eql
+      app.parse [
+        '--myparam', 'my value'
+      ]
+      .should.eql
         myparam: 'my value'
-      app.parse(['-m', 'my value']).should.eql
+      app.parse [
+        '-m', 'my value'
+      ]
+      .should.eql
         myparam: 'my value'
       app.stringify
         myparam: 'my value'
@@ -58,9 +64,10 @@ describe 'options', ->
             type: 'boolean'
           ]
         ]
-      app.parse(
-        ['start', '--watch', __dirname, '-s', 'my', '--value']
-      ).should.eql
+      app.parse [
+        'start', '--watch', __dirname, '-s', 'my', '--value'
+      ]
+      .should.eql
         command: ['start']
         watch: __dirname
         strict: true

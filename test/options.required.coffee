@@ -12,7 +12,8 @@ describe 'options.required', ->
           name: 'my_argument'
         ]
       ]
-      app.parse(['mycommand']).should.eql
+      app.parse ['mycommand']
+      .should.eql
         command: ['mycommand']
       app.stringify
         command: ['mycommand']
@@ -26,7 +27,8 @@ describe 'options.required', ->
           type: 'array'
         ]
       ]
-      app.parse(['mycommand']).should.eql
+      app.parse ['mycommand']
+      .should.eql
         command: ['mycommand']
       app.stringify
         command: ['mycommand']
@@ -42,7 +44,8 @@ describe 'options.required', ->
           required: true
         ]
       ]
-      app.parse(['mycommand', '--my_argument', 'my --value']).should.eql
+      app.parse ['mycommand', '--my_argument', 'my --value']
+      .should.eql
         command: ['mycommand']
         my_argument: 'my --value'
       app.stringify

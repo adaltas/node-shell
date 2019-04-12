@@ -6,7 +6,8 @@ describe 'commands', ->
   it 'accept no main and no option', ->
     app = parameters
       commands: [name: 'start']
-    app.parse(['start']).should.eql
+    app.parse ['start']
+    .should.eql
       command: ['start']
     app.stringify
       command: ['start']
@@ -15,7 +16,8 @@ describe 'commands', ->
   it 'command is of type object', ->
     app = parameters
       commands: 'start': {}
-    app.parse(['start']).should.eql
+    app.parse ['start']
+    .should.eql
       command: ['start']
     app.stringify
       command: ['start']
@@ -28,7 +30,10 @@ describe 'commands', ->
         name: 'myparam'
       ]
     ]
-    app.parse(['start', '--myparam', 'my value']).should.eql
+    app.parse [
+      'start', '--myparam', 'my value'
+    ]
+    .should.eql
       command: ['start']
       myparam: 'my value'
     app.stringify
@@ -42,7 +47,10 @@ describe 'commands', ->
         'start':
           options:
             myparam: {}
-    app.parse(['start', '--myparam', 'my value']).should.eql
+    app.parse [
+      'start', '--myparam', 'my value'
+    ]
+    .should.eql
       command: ['start']
       myparam: 'my value'
     app.stringify
@@ -54,7 +62,8 @@ describe 'commands', ->
     app = parameters
       command: 'mycommand'
       commands: [name: 'start']
-    app.parse(['start']).should.eql
+    app.parse ['start']
+    .should.eql
       mycommand: ['start']
     app.stringify
       mycommand: ['start']
@@ -71,7 +80,10 @@ describe 'commands', ->
           name: 'aopt'
         ]
       ]
-    app.parse(['--gopt', 'toto', 'start', '--aopt', 'lulu']).should.eql
+    app.parse [
+      '--gopt', 'toto', 'start', '--aopt', 'lulu'
+    ]
+    .should.eql
       gopt: 'toto'
       command: ['start']
       aopt: 'lulu'
@@ -100,7 +112,10 @@ describe 'commands', ->
             ]
           ]
         ]
-      app.parse(['--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2']).should.eql
+      app.parse [
+        '--opt_root', 'val 0', 'parent', '--opt_parent', 'val 1', 'child', '--opt_child', 'val 2'
+      ]
+      .should.eql
         command: ['parent', 'child']
         opt_root: 'val 0'
         opt_parent: 'val 1'

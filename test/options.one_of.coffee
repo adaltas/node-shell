@@ -44,7 +44,7 @@ describe 'options.one_of', ->
     ).should.throw 'Invalid Parameter Value: the value of option "array" must be one of ["1","3"], got "2"'
   
   it 'ensure optional argument are optional', ->
-    app = parameters commands: [
+    parameters commands: [
       name: 'start'
       options: [
         name: 'array'
@@ -53,5 +53,5 @@ describe 'options.one_of', ->
         one_of: ['1', '3']
       ]
     ]
-    app.parse(['start'])
+    .parse(['start'])
     

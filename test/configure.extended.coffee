@@ -7,18 +7,18 @@ describe 'configure.extended', ->
 
     it 'must be a boolean', ->
       # Command with no option
-      app = parameters extended: true
-      app = parameters extended: false
+      parameters extended: true
+      parameters extended: false
       (->
-        app = parameters extended: 'sth'
+        parameters extended: 'sth'
       ).should.throw 'Invalid Configuration: extended must be a boolean, got "sth"'
       (->
-        app = parameters extended: {}
+        parameters extended: {}
       ).should.throw 'Invalid Configuration: extended must be a boolean, got {}'
 
     it 'cannot be declared inside a command', ->
       (->
-        app = parameters commands:
+        parameters commands:
           mycmd:
             extended: true
       ).should.throw 'Invalid Command Configuration: extended property cannot be declared inside a command'
