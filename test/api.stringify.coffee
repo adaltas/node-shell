@@ -7,7 +7,7 @@ describe 'api.stringify', ->
     (->
       parameters()
       .stringify {}, 'invalid'
-    ).should.throw 'Invalid Arguments: 2nd argument option must be an object, got "invalid"'
+    ).should.throw 'Invalid Stringify Arguments: 2nd argument option must be an object, got "invalid"'
   
   it 'command string is converted to a 1 element array internally', ->
     parameters
@@ -18,11 +18,27 @@ describe 'api.stringify', ->
     .should.eql ['start']
     
   it 'catch main argument with type of string', ->
-    app = parameters
-      main: 'leftover'
     (->
-      app.stringify
+      parameters
+        main: 'leftover'
+      .stringify
         leftover: 'my value'
-    ).should.throw 'Invalid Arguments: expect main to be an array, got "my value"'
-    
+    ).should.throw 'Invalid Parameter Type: expect main to be an array, got "my value"'
   
+  it 'check a command is registered', ->
+    (->
+      parameters
+        commands:
+          'start': {}
+          'stop': {}
+      .stringify
+        command: ['status']
+    ).should.throw 'Invalid Command Parameter: command "status" is not registed, expect one of ["help","start","stop"]'
+    (->
+      parameters
+        commands: 'server': commands:
+          'start': {}
+          'stop': {}
+      .stringify
+        command: ['server', 'status']
+    ).should.throw 'Invalid Command Parameter: command "status" is not registed, expect one of ["start","stop"] in command "server"'

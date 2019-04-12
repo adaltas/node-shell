@@ -45,8 +45,8 @@ describe 'main.required', ->
     ]
     (->
       app.parse 'mycommand'
-    ).should.throw 'Required main argument "my_argument"'
+    ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'
     (->
       app.stringify
         command: ['mycommand']
-    ).should.throw 'Required main argument "my_argument"'
+    ).should.throw 'Required Main Parameter: no suitable arguments for "my_argument"'

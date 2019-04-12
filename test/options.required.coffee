@@ -60,11 +60,11 @@ describe 'options.required', ->
       ]
       (->
         app.parse ['mycommand']
-      ).should.throw 'Required option argument "my_argument"'
+      ).should.throw 'Required Option Argument: the "my_argument" option must be provided'
       (->
         app.stringify
           command: ['mycommand']
-      ).should.throw 'Required option argument "my_argument"'
+      ).should.throw 'Required Option Parameter: the "my_argument" option must be provided'
   
   describe 'compatible with help', ->
     

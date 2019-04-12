@@ -5,19 +5,34 @@ describe 'configure.options', ->
   
   describe 'validation', ->
     
-    it 'enforce types', ->
-    (->
-      parameters
-        options:
-          key: type: 'invalid'
-    ).should.throw 'Invalid Option Configuration: supported options types are ["string","boolean","integer","array"], got "invalid"'
+    it 'enforce types at application level', ->
+      (->
+        parameters
+          options:
+            key: type: 'invalid'
+      ).should.throw [
+        'Invalid Option Configuration:'
+        'supported options types are ["string","boolean","integer","array"],'
+        'got "invalid" for option "key"'
+      ].join ' '
+    
+    it 'enforce types at command level', ->
+      (->
+        parameters
+          commands: 'server': commands: 'start': options:
+            key: type: 'invalid'
+      ).should.throw [
+        'Invalid Option Configuration:'
+        'supported options types are ["string","boolean","integer","array"],'
+        'got "invalid" for option "key" in command "server start"'
+      ].join ' '
     
     it 'enforce one_of', ->
-    (->
-      parameters
-        options:
-          key: one_of: true
-    ).should.throw 'Invalid Option Configuration: option property "one_of" must be a string or an array, got true'
+      (->
+        parameters
+          options:
+            key: one_of: true
+      ).should.throw 'Invalid Option Configuration: option property "one_of" must be a string or an array, got true'
   
   describe 'collision', ->
     
