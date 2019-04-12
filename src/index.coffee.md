@@ -420,7 +420,7 @@ Convert a parameters object to an arguments array.
         'Invalid Stringify Arguments:'
         '2nd argument option must be an object,'
         "got #{JSON.stringify options}"
-      ] unless is_object options
+      ] unless is_object_literal options
       keys = {}
       # In extended mode, the params array will be truncated
       # params = merge params unless extended
@@ -520,14 +520,14 @@ Determine if help was requested by returning zero to n commands if help is reque
           "`helping` expect a params object as first argument"
           "in flatten mode,"
           "got #{JSON.stringify params}"
-        ] unless is_object params
+        ] unless is_object_literal params
       else
         throw error [
           "Invalid Arguments:"
           "`helping` expect a params array with literal objects as first argument"
           "in extended mode,"
           "got #{JSON.stringify params}"
-        ] unless Array.isArray(params) and not params.some (cparams) -> not is_object cparams
+        ] unless Array.isArray(params) and not params.some (cparams) -> not is_object_literal cparams
       # Extract the current commands from the parameters arguments
       unless options.extended
         throw error [
@@ -759,21 +759,11 @@ Dependencies
     stream = require 'stream'
     load = require './utils/load'
     error = require './utils/error'
-    {merge, clone} = require 'mixme'
+    {clone, merge, is_object_literal} = require 'mixme'
 
 Internal types
 
     types = ['string', 'boolean', 'integer', 'array']
-
-Distinguish plain literal object from arrays
-
-    is_object = (obj) ->
-      obj and typeof obj is 'object' and not Array.isArray obj
-
-    config_get = (config, commands=[]) ->
-      for command in commands
-        config = config.commands[command]
-      config
 
 Convert an array to an object
 
