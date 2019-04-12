@@ -28,22 +28,29 @@ Parameters are defined with the following properties:
 
     Parameters::configure = (config) ->
       @config = config
-      properties = {}
       # Sanitize options
+      collision = {}
       sanitize_options = (config) =>
         config.options ?= {}
         # Convert from object with keys as options name to an array
         config.options = array_to_object config.options, 'name' if Array.isArray config.options
         for name, option of config.options
           # Prevent collision
-          throw Error [
-            'Invalid Option Configuration:'
-            "option #{JSON.stringify name}"
-            "in command #{JSON.stringify config.command.join ' '}"
-            "collide with the one in #{if properties[name].length is 0 then 'application' else JSON.stringify properties[name].join ' '},"
-            "change its name or use the extended property"
-          ].join ' ' if properties[name] and not @config.extended
-          properties[name] = if config.root then [] else config.command
+          unless @config.extended
+            unless config.root
+              # Compare the current command with the options previously registered
+              collide = collision[name] and collision[name].filter((cmd, i) ->
+                config.command[i] isnt cmd
+              ).length is 0
+              throw Error [
+                'Invalid Option Configuration:'
+                "option #{JSON.stringify name}"
+                "in command #{JSON.stringify config.command.join ' '}"
+                "collide with the one in #{if collision[name].length is 0 then 'application' else JSON.stringify collision[name].join ' '},"
+                "change its name or use the extended property"
+              ].join ' ' if collide
+            # Associate options with their declared command
+            collision[name] = if config.root then [] else config.command
           # Normalize option
           option.name = name
           option.type ?= 'string'
@@ -97,7 +104,7 @@ Parameters are defined with the following properties:
           throw Error [
             'Invalid Command Configuration:'
             'command property can only be declared at the application level,'
-            "not inside a command, got #{command.command}"
+            "got command #{JSON.stringify command.command}"
           ].join ' ' if command.command?
           command.command = if config.root then [name] else [...config.command, name]
           sanitize_command command, config

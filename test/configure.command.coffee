@@ -15,5 +15,5 @@ describe 'configure.command', ->
               name: 'start'
             ]
           ]
-      ).should.throw 'Invalid Command Configuration: command property can only be declared at the application level, not inside a command, got invalid'
+      ).should.throw 'Invalid Command Configuration: command property can only be declared at the application level, got command "invalid"'
       

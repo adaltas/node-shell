@@ -18,44 +18,57 @@ describe 'configure.options', ->
         options:
           key: one_of: true
     ).should.throw 'Invalid Option Configuration: option property "one_of" must be a string or an array, got true'
+  
+  describe 'collision', ->
     
-    it 'detect collision between application and command options', ->
-      # OK in extended mode
-      app = parameters
+    it 'dont detect collision in extended mode', ->
+      parameters
         extended: true
         options:
-          config: {}
+          collide: {}
         commands:
           start:
-            options: config: {}
-      # Not OK in flatten mode
+            options: collide: {}
+    
+    it 'dont detect collision on a same command level', ->
+      parameters
+        # options: collide: {}
+        commands:
+          server:
+            commands:
+              start:
+                options: collide: {}
+              stop:
+                options: collide: {}
+
+    it 'detect collision between application and command options', ->
       (->
-        app = parameters
+        parameters
           options:
-            config: {}
+            collide: {}
           commands:
             start:
-              options: config: {}
-      ).should.throw 'Invalid Option Configuration: option "config" in command "start" collide with the one in application, change its name or use the extended property'
-        
+              options: collide: {}
+      ).should.throw 'Invalid Option Configuration: option "collide" in command "start" collide with the one in application, change its name or use the extended property'
+    
     it 'detect collision between 2 command options', ->
-      app = parameters
+      parameters
         extended: true
         commands:
           server:
             options:
-              config: {}
+              collide: {}
             commands:
               start:
-                options: config: {}
+                options: v: {}
       # Not OK in flatten mode
       (->
-        app = parameters
+        parameters
           commands:
             server:
               options:
-                config: {}
+                collide: {}
               commands:
                 start:
-                  options: config: {}
-      ).should.throw 'Invalid Option Configuration: option "config" in command "server start" collide with the one in "server", change its name or use the extended property'
+                  options: collide: {}
+      ).should.throw 'Invalid Option Configuration: option "collide" in command "server start" collide with the one in "server", change its name or use the extended property'

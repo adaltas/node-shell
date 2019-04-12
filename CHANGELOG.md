@@ -9,6 +9,7 @@ New functionality
 
 Fix and improvements
 * project: normalise error messages
+* options: fix collision detection for sibling commands
 
 ## Version 0.5.0
 
