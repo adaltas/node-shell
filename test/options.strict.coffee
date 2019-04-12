@@ -13,13 +13,6 @@ describe 'options.strict', ->
         myoption: true
     ).should.throw 'Invalid Parameter: the property --myoption is not a registered argument'
 
-  it 'throw error for an undefined shortcut', ->
-    # Test a boolean (no value) argument
-    app = parameters strict: true
-    (->
-      app.parse ['-c']
-    ).should.throw 'Invalid Shortcut: "-c"'
-
   it 'throw error for an undefined argument inside an command', ->
     app = parameters strict: true, commands: [name: 'mycommand']
     (->
@@ -30,10 +23,3 @@ describe 'options.strict', ->
         command: 'mycommand'
         myoption: true
     ).should.throw 'Invalid Parameter: the property --myoption is not a registered argument'
-
-  it 'throw error for an undefined shortcut inside an command', ->
-    # Test a boolean (no value) argument
-    app = parameters strict: true, commands: [name: 'mycommand']
-    (->
-      app.parse ['mycommand', '-c']
-    ).should.throw 'Invalid Shortcut: "-c" in command "mycommand"'

@@ -26,7 +26,7 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
   Execute a function or the function exported by a module if defined as a 
   string, provide the params object, see the [routing documentation](/usage/routing/).
 * `shortcut` (char)   
-  Single character alias for the option name.
+  Single character alias for the option name. Shortcuts must always be declared in the configuration and will not be automatically be extracted like options are when the "strict" property is not enabled.
 * `type` (string)   
   The type used to cast between a string argument and a JS value, not all types 
   share the same behaviour. Accepted values are 'boolean', 'string', 'integer'

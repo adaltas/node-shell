@@ -10,6 +10,7 @@ New functionality
 Fix and improvements
 * project: normalise error messages
 * options: fix collision detection for sibling commands
+* shortcut: no need to test in strict mode
 
 ## Version 0.5.0
 
