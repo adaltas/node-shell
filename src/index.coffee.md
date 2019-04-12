@@ -20,13 +20,14 @@ Parameters are defined with the following properties:
 * required: boolean, throw an exception when true and the parameter is not defined
 * type:     one of 'string', 'boolean', 'integer' or 'array'
 
-    Parameters = (config = {}) ->
+    Parameters = (config) ->
       @configure config
       @
 
 ## `configure(config)`
 
-    Parameters::configure = (config) ->
+    Parameters::configure = (config = {}) ->
+      config = clone config
       @config = config
       # Sanitize options
       collision = {}

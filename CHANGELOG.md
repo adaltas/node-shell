@@ -8,6 +8,7 @@ New functionality
 * router: handle help options and commands
 
 Fix and improvements
+* configure: immutable input
 * project: normalise error messages
 * options: fix collision detection for sibling commands
 * shortcut: no need to test in strict mode

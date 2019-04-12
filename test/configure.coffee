@@ -5,6 +5,11 @@ parameters = require '../src'
 describe 'configure', ->
 
   describe 'normalisation', ->
+    
+    it 'is immutable', ->
+      config = {}
+      parameters config
+      config.should.eql {}
 
     it 'empty without command', ->
       parameters({}).config.should.eql
