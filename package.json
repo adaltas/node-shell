@@ -1,6 +1,6 @@
 {
   "name": "parameters",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Command line arguments parser and stringifier",
   "keywords": [
     "argument",
@@ -14,13 +14,13 @@
     "parser"
   ],
   "coffeelintConfig": {
-    "indentation" : {
-      "level" : "error",
-      "value" : 2
+    "indentation": {
+      "level": "error",
+      "value": 2
     },
-    "line_endings" : {
-      "level" : "error",
-      "value" : "unix"
+    "line_endings": {
+      "level": "error",
+      "value": "unix"
     },
     "max_line_length": {
       "level": "ignore"

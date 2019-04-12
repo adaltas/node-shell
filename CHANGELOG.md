@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.6.0
 
 New functionality
 * router: redirect error to help route
