@@ -1,6 +1,12 @@
 
 # Changelog
 
+## Trunk
+
+New functionality
+* config: dsl api plugin
+* project: plugin architecture
+
 ## Version 0.6.0
 
 New functionality

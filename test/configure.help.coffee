@@ -7,12 +7,14 @@ describe 'configure.help', ->
   
   describe 'help', ->
     
-    it "accept string and stream.Writable", ->
+    it "accept string (eg stderr)", ->
       parameters({})
       .config.help.should.eql
         end: false
         writer: 'stderr'
         route: path.resolve __dirname, '../src/routes/help'
+          
+    it "stream.Writable", ->
       parameters
         help: writer: new Writable()
       .config.help.should.eql

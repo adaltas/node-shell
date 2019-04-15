@@ -1,0 +1,135 @@
+
+## `route(argv)` or `route(params)` or `route(process)`
+
+* `cli_arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings, optional, default to `process`.
+* `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
+* Returns: `any` Whatever the route function returns.
+
+How to use the `route` method to execute code associated with a particular command.
+
+    # Dependecies
+    path = require 'path'
+    error = require '../utils/error'
+    {clone, merge, is_object_literal} = require 'mixme'
+    # Parameters & plugins
+    Parameters = require '../Parameters'
+    require '../plugins/config'
+
+    Parameters::configure = ( (parent) ->
+      ->
+        config = parent.call @, arguments...
+        return config if arguments.length is 0
+        config = @config
+        sanitize_help = (config) ->
+          return
+          config.help ?= {}
+          config.help.writer ?= 'stderr'
+          config.help.end ?= false
+          config.help.route ?= path.resolve __dirname, './routes/help'
+          if typeof config.help.writer is 'string'
+            throw error [
+              'Invalid Help Configuration:'
+              'accepted values are ["stdout", "stderr"] when writer is a string,'
+              "got #{JSON.stringify config.help.writer}"
+            ] unless config.help.writer in ['stdout', 'stderr']
+          else unless config.help.writer instanceof stream.Writable
+            throw error [
+              "Invalid Help Configuration:"
+              "writer must be a string or an instance of stream.Writer,"
+              "got #{JSON.stringify config.help.writer}"
+            ] unless config.help.writer in ['stdout', 'stderr']
+          if Object.keys(config.commands).length
+            config.command ?= 'command'
+            command = sanitize_command
+              name: 'help'
+              description: "Display help information about #{config.name}"
+              command: ['help']
+              main:
+                name: 'name'
+                description: 'Help about a specific command'
+              help: true
+              route: config.help.route
+            , config
+            config.commands[command.name] = merge command, config.commands[command.name]
+        sanitize_help @config
+        sanitize_route = (config) ->
+          return config unless config.route
+          throw error [
+            'Invalid Route Configuration:'
+            "accept string or function"
+            "in application," unless Array.isArray config.command
+            "in command #{JSON.stringify config.command.join ' '}," if Array.isArray config.command
+            "got #{JSON.stringify config.route}"
+          ] unless typeof config.route in ['function', 'string']
+        sanitize_commands = (config) ->
+          for _, command of config.commands
+            sanitize_route command
+            sanitize_commands command
+        sanitize_route config
+        sanitize_commands config
+        config
+    )(Parameters::configure)
+    
+    Parameters::route = (argv = process, args...) ->
+      route_error = (err, commands) =>
+        argv = if commands.length
+        then ['help', ...commands]
+        else ['--help']
+        params = @parse argv
+        route = @load @config.help.route
+        route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
+      # Normalize arguments
+      if Array.isArray(argv)
+        try params = @parse argv
+        catch err then return route_error err, err.command or []
+      else if argv is process
+        try params = @parse argv
+        catch err then return route_error err, err.command or []
+      else
+        throw error [
+          'Invalid Arguments:'
+          'first argument must be an argv array or the process object,'
+          "got #{JSON.stringify argv}"
+        ]
+      route = (config, commands) =>
+        route = config.route
+        unless route
+          # Provide an error message if leaf command does not define any route
+          unless Object.keys(config.commands).length or route
+            err = if config.root
+            then error [
+              'Missing Application Route:'
+              'a \"route\" definition is required when no commands are defined'
+            ]
+            else error [
+              'Missing Command Route:'
+              "a \"route\" definition #{JSON.stringify params[@config.command]} is required when no child commands are defined"
+            ]
+          # Convert argument to an help command
+          argv = if commands.length
+          then ['help', ...commands]
+          else ['--help']
+          params = @parse argv
+          route = @load @config.help.route
+        else
+          route = @load route if typeof route is 'string'
+        return route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
+      # Print help
+      if commands = @helping params
+        route = @load @config.help.route
+        route.call @, {argv: argv, config: @config, params: params}, ...args
+        return
+      # Load a command route
+      else if commands = params[@config.command]
+        # TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
+        commands = (for i in [0...params.length] then params[i][@config.command]) if @config.extended
+        config = (configure = (config, commands) ->
+          config = config.commands[commands.shift()]
+          if commands.length
+          then configure config, commands
+          else config
+        )(@config, clone commands)
+        route config, commands
+      # Load an application route
+      else
+        route @config, []
