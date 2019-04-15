@@ -32,7 +32,7 @@
             lconfig.commands[name] ?= {}
             lconfig = lconfig.commands[name]
           mutate lconfig, values
-          handler = ctx.hook 'configure_commands_set',
+          ctx.hook 'configure_commands_set',
             config: lconfig
             command: command
             values: values
