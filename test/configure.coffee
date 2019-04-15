@@ -16,7 +16,7 @@ describe 'configure', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
-        help:
+        router:
           end: false
           writer: 'stderr'
           route: path.resolve __dirname, '../src/routes/help'
@@ -41,7 +41,7 @@ describe 'configure', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
-        help:
+        router:
           end: false
           writer: 'stderr'
           route: path.resolve __dirname, '../src/routes/help'
@@ -97,7 +97,7 @@ describe 'configure', ->
         name: 'myapp'
         description: 'No description yet'
         extended: false
-        help:
+        router:
           end: false
           writer: 'stderr'
           route: path.resolve __dirname, '../src/routes/help'

@@ -7,6 +7,7 @@
     
     commands_builder = (pconfig) ->
       builder = (command) =>
+        ctx = @
         command = [command] if typeof command is 'string'
         lconfig = pconfig
         for name in command
@@ -30,8 +31,13 @@
             # A new command doesn't have a config registered yet
             lconfig.commands[name] ?= {}
             lconfig = lconfig.commands[name]
-            lconfig.name = name
           mutate lconfig, values
+          handler = ctx.hook 'configure_commands_set',
+            config: lconfig
+            command: command
+            values: values
+          , ({config, command, values}) ->
+            config.name = name
           @
         remove: ->
           delete lconfig.options[command]
@@ -64,13 +70,14 @@
     
     Parameters::configure = ( (parent) ->
       ->
-        config = @config
-        parent.get = ->
-          return config
-        parent.options = options_builder.call @, config
-        parent.commands = commands_builder.call @, config
+        return parent.call @, arguments... if arguments.length
+        parent.set = =>
+          @hook 'configure_app_set', config: @config, (->)
+        parent.get = =>
+          return @config
+        parent.options = options_builder.call @, @config
+        parent.commands = commands_builder.call @, @config
         parent.show = ->
-          return config
-        parent.call @, arguments...
+          return @config
         parent
     )(Parameters::configure)

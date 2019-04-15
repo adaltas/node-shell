@@ -1,9 +1,37 @@
 
 # Parameters
 
+    registry = []
+    register = (plugin) ->
+      registry.push plugin
+
     Parameters = (config) ->
+      @registry = []
+      @init()
       @configure config
+      @configure().set @config
       @
+    
+    Parameters::init = (->)
+  
+    Parameters::register = (plugin) ->
+      throw error [
+        'Invalid Plugin Registration:'
+        'plugin must consist of keys representing the hook names'
+        'associated with function implementing the hook,'
+        "got #{plugin}"
+      ] unless is_object_literal plugin
+      @registry.push plugin
+      @
+  
+    Parameters::hook = (name, args..., handler) ->
+      res = null
+      for plugin in registry
+        handler = plugin.call @, args..., handler if plugin[name]
+      for plugin in @registry
+        handler = plugin[name].call @, args..., handler if plugin[name]
+      handler.call @, args...
+      handler
 
 ## `configure(config)`
 
@@ -54,16 +82,6 @@
       sanitize_main = (config) ->
         return config unless config.main
         config.main = name: config.main if typeof config.main is 'string'
-      # Sanitize main
-      # sanitize_route = (config) ->
-      #   return config unless config.route
-      #   throw error [
-      #     'Invalid Route Configuration:'
-      #     "accept string or function"
-      #     "in application," unless Array.isArray config.command
-      #     "in command #{JSON.stringify config.command.join ' '}," if Array.isArray config.command
-      #     "got #{JSON.stringify config.route}"
-      #   ] unless typeof config.route in ['function', 'string']
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
@@ -72,7 +90,6 @@
           'extended property cannot be declared inside a command'
         ] if command.extended?
         sanitize_main command
-        # sanitize_route command
         sanitize_options command
         sanitize_commands command
         command
@@ -105,26 +122,9 @@
       config.shortcuts = {}
       config.strict ?= false
       sanitize_main config
-      # sanitize_route config
       sanitize_options config
       sanitize_commands config
       sanitize_help = (config) ->
-        config.help ?= {}
-        config.help.writer ?= 'stderr'
-        config.help.end ?= false
-        config.help.route ?= path.resolve __dirname, './routes/help'
-        if typeof config.help.writer is 'string'
-          throw error [
-            'Invalid Help Configuration:'
-            'accepted values are ["stdout", "stderr"] when writer is a string,'
-            "got #{JSON.stringify config.help.writer}"
-          ] unless config.help.writer in ['stdout', 'stderr']
-        else unless config.help.writer instanceof stream.Writable
-          throw error [
-            "Invalid Help Configuration:"
-            "writer must be a string or an instance of stream.Writer,"
-            "got #{JSON.stringify config.help.writer}"
-          ] unless config.help.writer in ['stdout', 'stderr']
         if Object.keys(config.commands).length
           config.command ?= 'command'
           command = sanitize_command
@@ -135,7 +135,7 @@
               name: 'name'
               description: 'Help about a specific command'
             help: true
-            route: config.help.route
+            route: path.resolve __dirname, './routes/help' # config.help.route
           , config
           config.commands[command.name] = merge command, config.commands[command.name]
       sanitize_help @config

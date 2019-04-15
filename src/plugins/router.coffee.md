@@ -9,49 +9,42 @@ How to use the `route` method to execute code associated with a particular comma
 
     # Dependecies
     path = require 'path'
+    stream = require 'stream'
     error = require '../utils/error'
     {clone, merge, is_object_literal} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
     require '../plugins/config'
 
+    Parameters::init = ( (parent) ->
+      ->
+        @register configure_app_set: ({config, command}, handler) ->
+          return handler unless config.root
+          config.router ?= {}
+          config.router.writer ?= 'stderr'
+          config.router.end ?= false
+          config.router.route ?= path.resolve __dirname, '../routes/help'
+          if typeof config.router.writer is 'string'
+            throw error [
+              'Invalid Help Configuration:'
+              'accepted values are ["stdout", "stderr"] when writer is a string,'
+              "got #{JSON.stringify config.router.writer}"
+            ] unless config.router.writer in ['stdout', 'stderr']
+          else unless config.router.writer instanceof stream.Writable
+            throw error [
+              "Invalid Help Configuration:"
+              "writer must be a string or an instance of stream.Writer,"
+              "got #{JSON.stringify config.router.writer}"
+            ] unless config.router.writer in ['stdout', 'stderr']
+          handler
+        parent.call @, arguments...
+    )(Parameters::init)
+
     Parameters::configure = ( (parent) ->
       ->
         config = parent.call @, arguments...
         return config if arguments.length is 0
         config = @config
-        sanitize_help = (config) ->
-          return
-          config.help ?= {}
-          config.help.writer ?= 'stderr'
-          config.help.end ?= false
-          config.help.route ?= path.resolve __dirname, './routes/help'
-          if typeof config.help.writer is 'string'
-            throw error [
-              'Invalid Help Configuration:'
-              'accepted values are ["stdout", "stderr"] when writer is a string,'
-              "got #{JSON.stringify config.help.writer}"
-            ] unless config.help.writer in ['stdout', 'stderr']
-          else unless config.help.writer instanceof stream.Writable
-            throw error [
-              "Invalid Help Configuration:"
-              "writer must be a string or an instance of stream.Writer,"
-              "got #{JSON.stringify config.help.writer}"
-            ] unless config.help.writer in ['stdout', 'stderr']
-          if Object.keys(config.commands).length
-            config.command ?= 'command'
-            command = sanitize_command
-              name: 'help'
-              description: "Display help information about #{config.name}"
-              command: ['help']
-              main:
-                name: 'name'
-                description: 'Help about a specific command'
-              help: true
-              route: config.help.route
-            , config
-            config.commands[command.name] = merge command, config.commands[command.name]
-        sanitize_help @config
         sanitize_route = (config) ->
           return config unless config.route
           throw error [
@@ -76,7 +69,7 @@ How to use the `route` method to execute code associated with a particular comma
         then ['help', ...commands]
         else ['--help']
         params = @parse argv
-        route = @load @config.help.route
+        route = @load @config.router.route
         route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
       # Normalize arguments
       if Array.isArray(argv)
@@ -110,13 +103,13 @@ How to use the `route` method to execute code associated with a particular comma
           then ['help', ...commands]
           else ['--help']
           params = @parse argv
-          route = @load @config.help.route
+          route = @load @config.router.route
         else
           route = @load route if typeof route is 'string'
         return route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
       # Print help
       if commands = @helping params
-        route = @load @config.help.route
+        route = @load @config.router.route
         route.call @, {argv: argv, config: @config, params: params}, ...args
         return
       # Load a command route

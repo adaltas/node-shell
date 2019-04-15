@@ -1,7 +1,7 @@
 
 parameters = require '../src'
 
-describe 'config.get', ->
+describe 'plugin.config', ->
   
   describe 'get', ->
   
@@ -128,3 +128,13 @@ describe 'config.get', ->
         name: 'stop'
         route: 'path/to/route'
         options: 'force': {}
+      
+    it 'call the hook', ->
+      parameters {}
+      .register
+        'configure_commands_set': ({config, command, values}, handler) ->
+          config.test = 'was here'
+          handler
+      .configure().commands('start').set
+        route: 'path/to/route'
+      .show().test.should.eql 'was here'

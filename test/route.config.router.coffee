@@ -3,21 +3,21 @@ path = require 'path'
 parameters = require '../src'
 { Writable } = require('stream')
 
-describe 'configure.help', ->
+describe 'configure.router', ->
   
-  describe 'help', ->
+  describe 'router', ->
     
     it "accept string (eg stderr)", ->
       parameters({})
-      .config.help.should.eql
+      .config.router.should.eql
         end: false
         writer: 'stderr'
         route: path.resolve __dirname, '../src/routes/help'
           
     it "stream.Writable", ->
       parameters
-        help: writer: new Writable()
-      .config.help.should.eql
+        router: writer: new Writable()
+      .config.router.should.eql
         end: false
         writer: new Writable()
         route: path.resolve __dirname, '../src/routes/help'

@@ -4,6 +4,10 @@
 ## Trunk
 
 New functionality
+* router: rename root property help to router
+* hook: configure_app_set hook
+* hook: configure_commands_set hook
+* hook: new plugin/hook system
 * config: dsl api plugin
 * project: plugin architecture
 
