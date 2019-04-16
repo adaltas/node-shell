@@ -63,21 +63,6 @@
             @collision[name] = if config.root then [] else config.command
           # Normalize option
           option.name = name
-          option.type ?= 'string'
-          throw error [
-            'Invalid Option Configuration:'
-            "supported options types are #{JSON.stringify types},"
-            "got #{JSON.stringify option.type}"
-            "for option #{JSON.stringify name}"
-            "in command #{JSON.stringify config.command.join ' '}" if Array.isArray config.command
-          ] unless option.type in types
-          config.shortcuts[option.shortcut] = option.name if option.shortcut
-          option.one_of = [option.one_of] if typeof option.one_of is 'string'
-          throw error [
-            'Invalid Option Configuration:'
-            'option property "one_of" must be a string or an array,'
-            "got #{option.one_of}"
-          ] if option.one_of and not Array.isArray option.one_of
       # Sanitize main
       sanitize_main = (config) ->
         return config unless config.main
