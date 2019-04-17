@@ -9,7 +9,8 @@ describe 'plugin.config.options', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().options.list().should.eql ['config', 'help']
+      .configure().options.list()
+      .should.eql ['config', 'help']
 
     it 'for a command', ->
       parameters

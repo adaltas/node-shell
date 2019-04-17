@@ -16,9 +16,14 @@
           lconfig.commands[name] ?= {}
           lconfig = lconfig.commands[name]
         commands: commands_builder.call @, command
-        options: options_builder.call @, lconfig
+        main: builder_main.call @, lconfig
+        options: options_builder.call @, command
         get: ->
-          lconfig
+          config = ctx.config
+          for name in command
+            throw Error 'Invalid Command' unless config.commands[name]
+            config = config.commands[name]
+          config
         set: ->
           values = null
           if arguments.length is 2
@@ -46,16 +51,36 @@
               @options(k).set v
             for k, v of config.commands
               @commands(k).set v
+            @main.set config.main
           @
         remove: ->
           delete lconfig.options[command]
         show: ->
           lconfig
       builder
+  
+  
+    builder_main = (config) ->
+      builder = {}
+      builder.get = ->
+        config.main
+      builder.set = (value) ->
+        # Do nothing if value is undefined
+        return builder if value is undefined
+        # Unset the property if null
+        if value is null
+          config.main = undefined
+          return builder
+        value = name: value if typeof value is 'string'
+        config.main = value
+        builder
+      builder
     
-    options_builder = (config) ->
+    options_builder = (command) ->
+      ctx = @
       builder = (name) ->
         get: (properties) ->
+          config = ctx.configure().commands(command).get()
           properties = [properties] if typeof properties is 'string'
           if Array.isArray properties
             options = {}
@@ -65,8 +90,10 @@
           else
             config.options[name]
         remove: (name) ->
+          config = ctx.configure().commands(command).get()
           delete config.options[name]
         set: ->
+          config = ctx.configure().commands(command).get()
           values = null
           if arguments.length is 2
             values = [arguments[0]]: arguments[1]
@@ -97,8 +124,10 @@
           @
       builder.__proto__ =
         list: ->
+          config = ctx.configure().commands(command).get()
           Object.keys config.options
         get: (name) ->
+          config = ctx.configure().commands(command).get()
           config.options[name]
       builder
     
@@ -112,10 +141,12 @@
               parent.options(k).set v
             for k, v of @config.commands
               parent.commands(k).set v
+            parent.main.set @config.main
         parent.get = =>
           return @config
-        parent.options = options_builder.call @, @config
-        parent.commands = commands_builder.call @, @config
+        parent.commands = commands_builder.call @, []
+        parent.main = builder_main.call @, @config
+        parent.options = options_builder.call @, []
         parent.show = ->
           return @config
         parent

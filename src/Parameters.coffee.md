@@ -63,10 +63,6 @@
             @collision[name] = if config.root then [] else config.command
           # Normalize option
           option.name = name
-      # Sanitize main
-      sanitize_main = (config) ->
-        return config unless config.main
-        config.main = name: config.main if typeof config.main is 'string'
       sanitize_command = (command, parent) ->
         command.strict ?= parent.strict
         command.shortcuts = {}
@@ -74,7 +70,6 @@
           'Invalid Command Configuration:'
           'extended property cannot be declared inside a command'
         ] if command.extended?
-        sanitize_main command
         sanitize_options command
         sanitize_commands command
         command
@@ -106,7 +101,6 @@
       config.description ?= 'No description yet'
       config.shortcuts = {}
       config.strict ?= false
-      sanitize_main config
       sanitize_options config
       sanitize_commands config
       sanitize_help = (config) ->
