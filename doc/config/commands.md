@@ -15,7 +15,9 @@ Commands define the arguments passed to a shell scripts.
 
 * `name` (string)   
   The command name.
-* `options` (object|array)
+* `description` (string)   
+  The command description.
+* `options` (object|array)   
   Defined the expected command parameters. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
@@ -71,9 +73,9 @@ with a new "commands" entry:
 Usage of the "server" command is now:
 `myapp [options] server [server options]`.
 
-### Sub commands
+### Subcommands
 
-We now want to defined sub command to control our server such as "start" and 
+We now want to defined subcommand to control our server such as "start" and 
 "stop". The "start" command will require an option "port". Inside the object 
 defining the "server" command, we add a new "commands" entry:
 

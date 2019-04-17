@@ -2,7 +2,7 @@
 
 # `npm install parameters`
 
-Node parameters is sugar for parsing typical unix command line options. 
+Node.js Parameters is sugar for parsing typical unix command line options. 
 
 * Standard and commands-based command lines (eg `git-pull ...` or `git pull ...`)
 * Reversability: parse and stringify is bi-directional

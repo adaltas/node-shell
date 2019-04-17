@@ -13,11 +13,12 @@ expecting a configuration object and returning the following functions:
 
 * [`help`](./help/) (command)   
   Format the configuration into a readable documentation string.
+* [`helping`](./helping/) (command)   
+  Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
 * [`parse`](./parse/) ([arguments])   
   Convert an arguments list to a parameters object.
 * [`load`](./load/) (module[string])   
-  Internal function used to load modules, see the "load" option to pass a
-  function or a module referencing the function.
+  Internal function used to load modules, see the [`load`](/config/load/) option to pass a function or a module referencing the function.
 * [`route`](./route/) (argv[array|process], args[mixed]...)   
   Similar to parse but it will also call the function defined by the "route"
   option. The first argument is the arguments array to parse, other arguments
