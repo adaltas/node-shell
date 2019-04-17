@@ -11,8 +11,8 @@ maturity: initial
 
 **what you will learn, what do final app will achieve**
 
-This tutorial covers the basics of using Node.js Parameters. 
-It contains 4 sections:
+This tutorial covers the basics of using the Node.js Parameters package. It contains 4 sections:
+
 - What is Parameters?
 - Getting ready
 - Configuring application
@@ -22,58 +22,119 @@ Starting from scratch and go on to advanced usage of its APIs.
 
 ## What is Parameters?
 
-Parameters is a Node.js package hosted on NPM which is used as for parsing typical unix command line arguments.
+Parameters is a Node.js package published on NPM to build CLI application. At its core, it parses command line arguments. It also offer powerful features such as ...
 **It can be useful for building your own CLI ...**
 
-## Getting ready
+## Getting started
 
-**Where to get, how to install node.js**
-Once you have installed Node, create a basic Node.js project:
+**Download and install Node.js, initialise your project**
 
-```
-mkdir myapp
-cd myapp
+For users not familiar with the Node.js environment, you can follow the [official installation instructions](https://nodejs.org/en/download/) to get started and have the `node`, `npm` and `npx` command available on your system.
+
+The `node` command execute JavaScript scripts. The `npm` command expose the NPM package manager for JavaScript. The `npx` is intended to help round out the experience of using packages from the npm registry 
+
+Once you have installed Node, create a basic Node.js project which is called a package:
+
+```bash
+# Create a new project directory
+mkdir myapp && cd myapp
+# Initialise the package
 npm init
+cat package.json
+# Add the "parameters" dependency
 npm add parameters
-touch app.js
+cat package.js | grep parameters
+# Create a new script
+echo 'console.log("hello")' > app.js
+node app
 ```
 
-The parameters dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "myapp.js" file.
+The parameters dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "app.js" file.
 
-## Configuring application
-
-### Initialisation
+### Parsing arguments
 
 **load parameters, pass a simple configuration using declarative style and run it**
-  
-We will start with a simple configuration for parameters package.
-Where we initialize option which take the name of...
+
+Let's consider a simple application by modifying the "app.js" file as follow
 
 ```js
-const parameters = require('parameters');
-
+// Import the "parameter" package
+const parameters = require('parameters')
+// Create a new instance
 const app = parameters({
-  name: 'myapp',
-  description: 'My pretty application',
-  main: 'source',
+  main: 'hello'
 })
-
+// Parse CLI arguments
 const args = app.parse()
-
-console.log(args.source)
+console.log(args)
 ```
+
+The "parameters" package export a function which expect to a configuration object describing your commands.
+
+Consider the configuration as the schema or the model of your application arguments. The `main` property retrieve all the arguments which are not mapped otherwise of an application in the form of an array.
+
+The `parse` method convert the arguments into a parameter object. You can provide your own arguments or let `parse` discover them automatically if no argument is provided like above. Node.js expose the CLI arguments with `process.argv`  as an array. The first 2 arguments are the path to the node binary and the script being executed. Parameters will strip those arguments and only parse whats left.
+
+You can now execute `node app world` and it shall print:
+
+```js
+{ hello: [ 'world' ] }
+```
+
+## Argument topology
+
+We have explain how to use the `main` property to retrieve all the arguments but there are other types of properties. Considering a rather complex command such as:
+
+```
+node app --config "./my/repo" start --force 0.0.0.0:80
+```
+
+This CLI command is made of multiple sections.
+* `application`: the overall configuration define the application.
+* `command`: "reset" is a called a command in param and is a subset of an application. It has its own options and main properties, dissociated from the ones defined at the application level.
+* `options`: both "config" and "hard" are options. The "deamonize" option is associated with a value and the "hard" option is boolean indicating the presence of the option.
+* `main`: whichever arguments not recognized by the parser is pushed into the "main" property.
+
+For the sake of curiosity, Configuring Parameters as:
+
+```js
+const parameters = require("parameters")
+parameters({
+  options: {
+  	"config": {}
+  },
+  commands: {
+  	"start": {
+      main: "address",
+  	  options: {
+  	  	"force": {
+          type: "boolean"
+} } } } })
+.parse()
+```
+
+leads to
+
+```js
+{ command: [ 'start' ],
+  config: './my/repo',
+  force: true,
+  address: [ '0.0.0.0:80' ] }
+```
+
+Let's now deep dive on options and commands.
 
 ### Adding options
 
 Simple configuration.
 
 ```js
-const parameters = require('parameters');
+const parameters = require('parameters')
 
 const app = parameters({
   options: {
     'source': {
-      description: 'Path to the log file',
+      description: 'Path to the log file'
     },
   },
 })
