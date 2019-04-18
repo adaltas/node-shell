@@ -76,24 +76,26 @@
         builder
       builder
     
-    options_builder = (command) ->
+    options_builder = (commands) ->
       ctx = @
       builder = (name) ->
         get: (properties) ->
-          config = ctx.configure().commands(command).get()
+          options = {}
+          for command in commands
+            config = ctx.configure().commands(command).get()
+          config = ctx.configure().commands(commands).get()
           properties = [properties] if typeof properties is 'string'
           if Array.isArray properties
-            options = {}
             for property in properties
               options[property] = config.options[name][property]
             options
           else
             config.options[name]
         remove: (name) ->
-          config = ctx.configure().commands(command).get()
+          config = ctx.configure().commands(commands).get()
           delete config.options[name]
         set: ->
-          config = ctx.configure().commands(command).get()
+          config = ctx.configure().commands(commands).get()
           values = null
           if arguments.length is 2
             values = [arguments[0]]: arguments[1]
@@ -123,12 +125,21 @@
           ] if option.one_of and not Array.isArray option.one_of
           @
       builder.__proto__ =
+        # get: (name) ->
+        #   config = ctx.configure().commands(commands).get()
+        #   config.options[name]
+        get_cascaded: ->
+          options = {}
+          config = ctx.config
+          for command in commands
+            for name, option of config.options
+              continue unless option.cascade
+              options[name] = option
+            config = config.commands[command]
+          options
         list: ->
-          config = ctx.configure().commands(command).get()
+          config = ctx.configure().commands(commands).get()
           Object.keys config.options
-        get: (name) ->
-          config = ctx.configure().commands(command).get()
-          config.options[name]
       builder
     
     Parameters::configure = ( (parent) ->

@@ -35,11 +35,6 @@ describe 'plugin.config.options', ->
         commands: 'server': commands: 'start': {}
       .configure().options('config').get()
       .name.should.eql 'config'
-      parameters
-        options: 'config': {}
-        commands: 'server': commands: 'start': {}
-      .configure().options.get('config')
-      .name.should.eql 'config'
     
     it 'selected properties from option', ->
       parameters
