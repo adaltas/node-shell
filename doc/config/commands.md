@@ -20,7 +20,9 @@ Commands define the arguments passed to a shell scripts.
 * `options` (object|array)   
   Defined the expected command parameters. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
-  an array, the "name" property is required.
+  an array, the "name" property is required.  
+* `main` (object|string)   
+  What is left once the option and the commands have been extracted.
   
 ## Multi-level commands
 
