@@ -33,6 +33,8 @@ app = parameters(config)
   Defined the expected main parameters.
 * `strict` (boolean)   
   Disable auto-discovery.
+* `description` (string)
+  The description of the application.
 
 ## The properties for `help`
 
