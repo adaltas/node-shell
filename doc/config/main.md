@@ -18,6 +18,8 @@ Like options, "main" is defined at the "config" level or for each command.
   The name of the main property.
 * `required` (boolean)   
   Whether or not the value must always be present.
+* `description` (string)   
+  The description of the main argument.
   
 ## Examples of configuration
 

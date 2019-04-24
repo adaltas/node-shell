@@ -238,8 +238,8 @@ This configuration object consists:
 In the configuration above we have prepared the model of our application. For the further handling and adding the functionality we will operate with the `args` object returned with the method `parse`, for example like this:
 
 ```js
+// Parsing arguments
 const args = app.parse()
-
 // The example of handling arguments
 switch(args.command[0]){
   case 'append':
@@ -254,8 +254,10 @@ switch(args.command[0]){
 Let's add a logic to our logging application:
 
 ```js
+// Parsing arguments
+const args = app.parse()
 // Use file system module
-var fs = require("fs");
+var fs = require("fs")
 // Handling commands
 switch (args.command[0]) {
   case 'append':
@@ -270,7 +272,7 @@ switch (args.command[0]) {
         console.log('Reverse mode') // TODO reverse mode
       else
         process.stdout.write(buf.toString())
-    });
+    })
     break
 }
 ```
@@ -303,42 +305,149 @@ The output is:
 the first string of the file mylog.txt
 ```
 
-------------------
-
 ### Getting help
 
-Enabling help in the application
+In every CLI it is expected to be a few commands and options: `help`, `--help` and `-h`, which should obviously show help menus. We should also default to a main help menu if no command is specified. This can be easily implemented in our application by adding just a few strings of code:
 
 ```js
+// Getting help
+// Wether or not help was requested
 if(commands = app.helping(args)){
+  // Print a help information
   process.stdout.write(app.help(commands))
+  // Terminate the process
+  process.exit()
 }
 ```
 
-Now you can get help:
+Let's add this code into application and write descriptions for each of commands and options. Here is the complete code of application:
 
-```
-node app -h
-```
-
-If the configuration contains commands you can get help for the specified command:
-
-```
-{
-  commands: {
-    'start': {
-      description: 'Start something.',
-    },
+```js
+// Configuring application
+const parameters = require('parameters')
+const app = parameters({
+  name: 'log',
+  description: 'Log information',
+  options: {
+    'source': {
+      shortcut: 's',
+      default: 'log.txt',
+      description: 'The path to a file in which the logged information are stored'
+    }
   },
+  commands: {
+    'append': {
+      description: 'Append strings to a log file',
+      main: {
+        name: 'data',
+        required: true,
+        description: 'Logged data'
+      }
+    },
+    'read': {
+      description: 'Read log file',
+      options: {
+        'recent': {
+          type: 'boolean',
+          description: 'Reading in reverse mode'
+} } } } } )
+// Parsing arguments
+const args = app.parse()
+// Getting help
+// Wether or not help was requested
+if(commands = app.helping(args)){
+  // Print a help information
+  process.stdout.write(app.help(commands))
+  // Terminate the process
+  process.exit()
+}
+// Use file system module
+var fs = require("fs")
+// Handling commands and options
+switch (args.command[0]) {
+  case 'append':
+    // Appending the string to the file
+    fs.appendFile(args.source, args.data + "\n", (err) => {
+      if(err) throw err
+    })
+    break
+  case 'read':
+    // Reading the file
+    fs.readFile(args.source, function(err, buf) {
+      if(err) throw err
+      if(args.recent)
+        console.log('Reverse mode') // TODO reverse mode
+      else
+        process.stdout.write(buf.toString())
+    })
+    break
 }
 ```
 
+Now you can get help information with one these commands:
+
 ```
-node app help start 
+node log --help
+node log help
+node log -h
+node log
 ```
 
-[Read more](/api/help/) about the help API.
+It will print information like:
 
-### Structuring the code with routing
+```
+NAME
+    log - Log information
 
-Example of refactoring of the application.
+SYNOPSIS
+    log [log options] <command>
+
+OPTIONS
+    -s --source             The path to a file in which the logged information are stored
+    -h --help               Display help information
+
+COMMANDS
+    append                  Append strings to a log file
+    read                    Read log file
+    help                    Display help information about log
+
+EXAMPLES
+    log --help              Show this message
+    log help                Show this message
+```
+
+You also can print a help for a specific command:
+
+```
+node log read -h
+```
+
+Displays: 
+
+```
+NAME
+    log read - Read log file
+
+SYNOPSIS
+    log [log options] read [read options]
+
+OPTIONS for read
+    --recent                Reading in reverse mode
+    -h --help               Display help information
+
+OPTIONS for log
+    -s --source             The path to a file in which the logged information are stored
+    -h --help               Display help information
+
+EXAMPLES
+    log read --help         Show this message
+```
+
+## Structuring the code with routing
+
+We can build very simple CLI application using only one file like we did above with app.js and log.js. When the application is getting complex, the best practice is to load and configure the router in a separate, top-level module that is dedicated to routing. The `route` method dispatch the commands of the CLI into a function based on the `route` configuration property of the application or of the command.
+
+The route function receive as first argument a context object with the following properties:
+- `argv` - the CLI arguments, either passed to the `route` method or obtained from `process.argv`
+- `params` - the parameters object derived from `argv`
+- `config` - the configuration object used to initialise the parameters instance

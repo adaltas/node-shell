@@ -31,10 +31,12 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
   The type used to cast between a string argument and a JS value, not all types 
   share the same behaviour. Accepted values are 'boolean', 'string', 'integer'
   and 'array'.
+* `description` (string)   
+  The description of the option. 
 
 ## Examples of configuration
 
-When option is defined as an object, the keys are mapped to the option name. For example, an option `message` with an shortcut `m` is defined as:
+When option is defined as an object, the keys are mapped to the option name. For example, an option `message` with a shortcut `m` is defined as:
 
 ```js
 require("parameters")(
