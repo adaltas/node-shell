@@ -11,9 +11,7 @@ describe 'api.stringify', ->
   
   it 'command string is converted to a 1 element array internally', ->
     parameters
-      commands: [
-        name: 'start'
-      ]
+      commands: 'start': {}
     .stringify command: 'start'
     .should.eql ['start']
     

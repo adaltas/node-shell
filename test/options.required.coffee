@@ -6,12 +6,9 @@ describe 'options.required', ->
   describe 'optional', ->
 
     it 'may be optional with string', ->
-      app = parameters commands: [
-        name: 'mycommand'
-        options: [
-          name: 'my_argument'
-        ]
-      ]
+      app = parameters
+        commands: 'mycommand':
+          options: 'my_argument': {}
       app.parse ['mycommand']
       .should.eql
         command: ['mycommand']
@@ -20,13 +17,10 @@ describe 'options.required', ->
       .should.eql ['mycommand']
 
     it 'may be optional with array', ->
-      app = parameters commands: [
-        name: 'mycommand'
-        options: [
-          name: 'my_argument'
-          type: 'array'
-        ]
-      ]
+      app = parameters
+        commands: 'mycommand':
+          options: 'my_argument':
+            type: 'array'
       app.parse ['mycommand']
       .should.eql
         command: ['mycommand']
@@ -37,13 +31,10 @@ describe 'options.required', ->
   describe 'enforce', ->
 
     it 'honors required true if value is provided', ->
-      app = parameters commands: [
-        name: 'mycommand'
-        options: [
-          name: 'my_argument'
-          required: true
-        ]
-      ]
+      app = parameters
+        commands: 'mycommand':
+          options: 'my_argument':
+            required: true
       app.parse ['mycommand', '--my_argument', 'my --value']
       .should.eql
         command: ['mycommand']
@@ -54,13 +45,10 @@ describe 'options.required', ->
       .should.eql ['mycommand', '--my_argument', 'my --value']
 
     it 'honors required true if no value provided', ->
-      app = parameters commands: [
-        name: 'mycommand'
-        options:  [
-          name: 'my_argument'
-          required: true
-        ]
-      ]
+      app = parameters
+        commands: 'mycommand':
+          options: 'my_argument':
+            required: true
       (->
         app.parse ['mycommand']
       ).should.throw 'Required Option Argument: the "my_argument" option must be provided'
@@ -78,32 +66,20 @@ describe 'options.required', ->
     
     it 'with command', ->
       parameters
-        commands: [
-          name: 'parent'
-          commands: [
-            name: 'child'
-            options:  [
-              name: 'my_argument'
+        commands: 'parent':
+          commands: 'child':
+            options:  'my_argument':
               required: true
-            ]
-          ]
-        ]
       .parse(['parent', 'child', '--help']).should.eql
         command: ['parent', 'child']
         help: true
     
     it 'stop command nested discovery', ->
       parameters
-        commands: [
-          name: 'parent'
-          commands: [
-            name: 'child'
-            options:  [
-              name: 'my_argument'
+        commands: 'parent':
+          commands: 'child':
+            options:  'my_argument':
               required: true
-            ]
-          ]
-        ]
       .parse(['parent', '--help', 'child']).should.eql
         command: ['parent']
         help: true

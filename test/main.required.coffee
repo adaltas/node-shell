@@ -4,11 +4,10 @@ parameters = require '../src'
 describe 'main.required', ->
 
   it 'may be optional', ->
-    app = parameters commands: [
-      name: 'mycommand'
-      main:
-        name: 'my_argument'
-    ]
+    app = parameters
+      commands: 'mycommand':
+        main:
+          name: 'my_argument'
     app.parse [
       'mycommand'
     ]
@@ -19,12 +18,11 @@ describe 'main.required', ->
     .should.eql ['mycommand']
 
   it 'honors required true if value is provided', ->
-    app = parameters commands: [
-      name: 'mycommand'
-      main:
-        name: 'my_argument'
-        required: true
-    ]
+    app = parameters
+      commands: 'mycommand':
+        main:
+          name: 'my_argument'
+          required: true
     app.parse [
       'mycommand', 'my --value'
     ]
@@ -37,12 +35,11 @@ describe 'main.required', ->
     .should.eql ['mycommand', 'my --value']
 
   it 'honors required true if no value provided', ->
-    app = parameters commands: [
-      name: 'mycommand'
-      main:
-        name: 'my_argument'
-        required: true
-    ]
+    app = parameters
+      commands: 'mycommand':
+        main:
+          name: 'my_argument'
+          required: true
     (->
       app.parse 'mycommand'
     ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'

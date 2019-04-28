@@ -9,10 +9,8 @@ describe 'help.shortcut', ->
       parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        options: [
-          name: 'myarg'
+        options: 'myarg':
           description: 'MyArg'
-        ]
       .help()
       .should.eql """
       
@@ -23,8 +21,8 @@ describe 'help.shortcut', ->
           myscript [myscript options]
 
       OPTIONS
-          --myarg                 MyArg
           -h --help               Display help information
+          --myarg                 MyArg
 
       EXAMPLES
           myscript --help         Show this message
@@ -37,14 +35,11 @@ describe 'help.shortcut', ->
       parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        commands: [
-          name: 'status'
+        commands: 'status':
           description: 'Description for the status command'
-          options: [
-            name: 'cluster_names', type: 'string'
+          options: 'cluster_names':
+            type: 'string'
             description: 'Ensure alias is not displayed'
-          ]
-        ]
       .help()
       .should.eql """
 
@@ -59,7 +54,7 @@ describe 'help.shortcut', ->
 
       COMMANDS
           status                  Description for the status command
-          help                    Display help information about myscript
+          help                    Display help information
 
       EXAMPLES
           myscript --help         Show this message

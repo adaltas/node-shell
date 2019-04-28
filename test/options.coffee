@@ -4,17 +4,6 @@ parameters = require '../src'
 describe 'options', ->
   
   describe 'normalisation', ->
-    
-    it 'accept array', ->
-      parameters
-        options: [
-          name: 'myparam'
-          shortcut: 'm'
-        ]
-      .config.options.myparam.should.eql
-        name: 'myparam'
-        shortcut: 'm'
-        type: 'string'
         
     it 'accept object', ->
       parameters
@@ -30,10 +19,8 @@ describe 'options', ->
 
     it 'run without main', ->
       app = parameters
-        options: [
-          name: 'myparam'
+        options: 'myparam':
           shortcut: 'm'
-        ]
       app.parse [
         '--myparam', 'my value'
       ]
@@ -50,20 +37,16 @@ describe 'options', ->
 
     it 'commands with multiple options', ->
       app = parameters
-        commands: [
-          name: 'start'
+        commands: 'start':
           main:
             name: 'my_argument'
             required: true
-          options: [
-            name: 'watch'
-            shortcut: 'w'
-          ,
-            name: 'strict'
-            shortcut: 's'
-            type: 'boolean'
-          ]
-        ]
+          options:
+            'watch':
+              shortcut: 'w'
+            'strict':
+              shortcut: 's'
+              type: 'boolean'
       app.parse [
         'start', '--watch', __dirname, '-s', 'my', '--value'
       ]

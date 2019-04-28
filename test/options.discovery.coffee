@@ -15,7 +15,7 @@ describe 'options.discovery', ->
     .should.eql ['--myoption', 'my value']
 
   it 'discover unregistered options in command', ->
-    app = parameters commands: [name: 'mycommand']
+    app = parameters commands: 'mycommand': {}
     app.parse(['mycommand', '--myoption', 'my value']).should.eql
       command: ['mycommand']
       myoption: 'my value'

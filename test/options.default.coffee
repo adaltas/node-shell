@@ -7,9 +7,8 @@ describe 'options.default', ->
     
     it 'set value if not defined', ->
       app = parameters
-        options: [
-          name: 'my_argument', default: 'default value'
-        ]
+        options: 'my_argument':
+          default: 'default value'
       app.parse []
       .should.eql
         my_argument: 'default value'
@@ -19,12 +18,10 @@ describe 'options.default', ->
   describe 'with commands', ->
     
     it 'set value if not defined', ->
-      app = parameters commands: [
-        name: 'my_command'
-        options: [
-          name: 'my_argument', default: 'default value'
-        ]
-      ]
+      app = parameters
+        commands: 'my_command':
+          options: 'my_argument':
+            default: 'default value'
       app.parse [
         'my_command'
       ]
@@ -36,15 +33,11 @@ describe 'options.default', ->
           
     it 'preserve global option', ->
       app = parameters
-        options: [
-          name: 'global_argument', default: 'global value'
-        ]
-        commands: [
-          name: 'my_command'
-          options: [
-            name: 'command_argument', default: 'command value'
-          ]
-        ]
+        commands: 'my_command':
+          options: 'command_argument':
+            default: 'command value'
+        options: 'global_argument':
+          default: 'global value'
       app.parse(['my_command']).should.eql
         command: ['my_command']
         global_argument: 'global value'

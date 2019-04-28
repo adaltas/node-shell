@@ -19,7 +19,7 @@ How to use the `route` method to execute code associated with a particular comma
     Parameters::init = ( (parent) ->
       ->
         @register configure_app_set: ({config, command}, handler) ->
-          return handler unless config.root
+          return handler if command.length
           config.router ?= {}
           config.router.writer ?= 'stderr'
           config.router.end ?= false
@@ -44,7 +44,7 @@ How to use the `route` method to execute code associated with a particular comma
       ->
         config = parent.call @, arguments...
         return config if arguments.length is 0
-        config = @config
+        config = @confx().get()
         sanitize_route = (config) ->
           return config unless config.route
           throw error [

@@ -20,13 +20,13 @@ describe 'help.extended', ->
 
     COMMANDS
         start                   No description yet for the start command
-        help                    Display help information about myapp
+        help                    Display help information
     
     COMMAND "start"
         start                   No description yet for the start command
     
     COMMAND "help"
-        help                    Display help information about myapp
+        help                    Display help information
         help {name}             Help about a specific command
 
     EXAMPLES

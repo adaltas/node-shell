@@ -5,12 +5,8 @@ describe 'api.stringify.script', ->
 
   it 'should prefix with node path and executed script', ->
     parameters
-      commands: [
-        name: 'start'
-        options: [
-          name: 'myparam'
-        ]
-      ]
+      commands: 'start':
+        options: 'myparam': {}
     .stringify
       command: 'start'
       myparam: 'my value'

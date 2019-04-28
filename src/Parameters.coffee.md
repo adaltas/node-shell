@@ -7,9 +7,11 @@
 
     Parameters = (config) ->
       @registry = []
+      @config = {}
       @init()
+      @collision = {}
       @configure config
-      @configure().set @config
+      @confx().set @config
       @
     
     Parameters::init = (->)
@@ -39,104 +41,6 @@
       config = clone config
       @config = config
       # Sanitize options
-      @collision = {}
-      sanitize_options = (config) =>
-        config.options ?= {}
-        # Convert from object with keys as options name to an array
-        config.options = array_to_object config.options, 'name' if Array.isArray config.options
-        for name, option of config.options
-          # Prevent collision
-          unless @config.extended
-            unless config.root
-              # Compare the current command with the options previously registered
-              collide = @collision[name] and @collision[name].filter((cmd, i) ->
-                config.command[i] isnt cmd
-              ).length is 0
-              throw error [
-                'Invalid Option Configuration:'
-                "option #{JSON.stringify name}"
-                "in command #{JSON.stringify config.command.join ' '}"
-                "collide with the one in #{if @collision[name].length is 0 then 'application' else JSON.stringify @collision[name].join ' '},"
-                "change its name or use the extended property"
-              ] if collide
-            # Associate options with their declared command
-            @collision[name] = if config.root then [] else config.command
-          # Normalize option
-          option.name = name
-      sanitize_command = (command, parent) ->
-        command.strict ?= parent.strict
-        command.shortcuts = {}
-        throw error [
-          'Invalid Command Configuration:'
-          'extended property cannot be declared inside a command'
-        ] if command.extended?
-        sanitize_options command
-        sanitize_commands command
-        command
-      sanitize_commands = (config) ->
-        config.commands ?= {}
-        config.commands = array_to_object config.commands, 'name' if Array.isArray config.commands
-        for name, command of config.commands
-          throw error [
-            'Incoherent Command Name:'
-            "key #{JSON.stringify name} is not equal with name #{JSON.stringify command.name}"
-          ] if command.name and command.name isnt name
-          command.name = name
-          throw error [
-            'Invalid Command Configuration:'
-            'command property can only be declared at the application level,'
-            "got command #{JSON.stringify command.command}"
-          ] if command.command?
-          command.command = if config.root then [name] else [...config.command, name]
-          sanitize_command command, config
-      # An object where key are command and values are object map between shortcuts and names
-      config.name ?= 'myapp'
-      config.extended ?= false
-      throw error [
-        'Invalid Configuration:'
-        'extended must be a boolean,'
-        "got #{JSON.stringify config.extended}"
-      ] unless typeof config.extended is 'boolean'
-      config.root = true
-      config.description ?= 'No description yet'
-      config.shortcuts = {}
-      config.strict ?= false
-      sanitize_options config
-      sanitize_commands config
-      sanitize_help = (config) ->
-        if Object.keys(config.commands).length
-          config.command ?= 'command'
-          command = sanitize_command
-            name: 'help'
-            description: "Display help information about #{config.name}"
-            command: ['help']
-            main:
-              name: 'name'
-              description: 'Help about a specific command'
-            help: true
-            route: path.resolve __dirname, './routes/help' # config.help.route
-          , config
-          config.commands[command.name] = merge command, config.commands[command.name]
-      sanitize_help @config
-      # Second pass, add help options and set default
-      sanitize_options_enrich = (config) ->
-        # No "help" option for command "help"
-        if config.root or not config.help
-          config.options['help'] = merge config.options['help'],
-            name: 'help'
-            shortcut: 'h'
-            description: 'Display help information'
-            type: 'boolean'
-            help: true
-          config.shortcuts[config.options['help'].shortcut] = config.options['help'].name if config.options['help'].shortcut
-        for _, command of config.commands
-          sanitize_options_enrich command
-      sanitize_options_enrich @config
-      sanitize_commands_enrich = (config) ->
-        for name, command of config.commands
-          command.description ?= "No description yet for the #{command.name} command"
-          sanitize_commands_enrich command, config
-      sanitize_commands_enrich @config
       @config
 
 ## Method `parse([arguments])`
@@ -149,7 +53,8 @@ Convert an arguments list to a parameters object.
 * Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
 
     Parameters::parse = (argv = process, options={}) ->
-      options.extended ?= @config.extended
+      appconfig = @confx().get()
+      options.extended ?= appconfig.extended
       index = 0
       # Remove node and script argv elements
       if argv is process
@@ -165,10 +70,10 @@ Convert an arguments list to a parameters object.
         ]
       # Extracted parameters
       full_params = []
-      parse = (config, command) =>
+      parse = (config, command) ->
         full_params.push params = {}
         # Add command name provided by parent
-        params[@config.command] = command if command?
+        params[appconfig.command] = command if command?
         # Read options
         while true
           break if argv.length is index or argv[index][0] isnt '-'
@@ -183,8 +88,8 @@ Convert an arguments list to a parameters object.
               'Invalid Argument:'
               "the argument #{if shortcut then "-" else "--"}#{key} is not a valid option"
             ]
-            err.command = full_params.slice(1).map (params) =>
-              params[@config.command]
+            err.command = full_params.slice(1).map (params) ->
+              params[appconfig.command]
             throw err
           if shortcut and not option
             throw error [
@@ -265,7 +170,7 @@ Convert an arguments list to a parameters object.
         # Default to help is help property is set and no command is found in user args
         # Happens with global options without a command
         if Object.keys(config.commands).length and not command
-          params[@config.command] = 'help'
+          params[appconfig.command] = 'help'
         # Check against required main
         main = config.main
         if main and main.required
@@ -275,21 +180,21 @@ Convert an arguments list to a parameters object.
           ] unless params[main.name]?
         params
       # Start the parser
-      parse @config, null
+      parse appconfig, null
       unless options.extended
         params = {}
-        if Object.keys(@config.commands).length
-          params[@config.command] = []
+        if Object.keys(appconfig.commands).length
+          params[appconfig.command] = []
         for command_params in full_params
           for k, v of command_params
-            if k is @config.command
+            if k is appconfig.command
               params[k].push v
             else
               params[k] = v
       else
         params = full_params
       # Enrich params with default values
-      set_default @config, params
+      set_default appconfig, params
       params
 
 ## Method `stringify(command, [options])`
@@ -304,7 +209,8 @@ Convert a parameters object to an arguments array.
 
     Parameters::stringify = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
-      options.extended ?= @config.extended
+      appconfig = @confx().get()
+      options.extended ?= appconfig.extended
       throw error [
         'Invalid Stringify Arguments:'
         '2nd argument option must be an object,'
@@ -313,11 +219,11 @@ Convert a parameters object to an arguments array.
       keys = {}
       # In extended mode, the params array will be truncated
       # params = merge params unless extended
-      set_default @config, params
+      set_default appconfig, params
       # Convert command parameter to a 1 element array if provided as a string
-      params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
+      params[appconfig.command] = [params[appconfig.command]] if typeof params[appconfig.command] is 'string'
       # Stringify
-      stringify = (config, lparams) =>
+      stringify = (config, lparams) ->
         for _, option of config.options
           key = option.name
           keys[key] = true
@@ -363,7 +269,7 @@ Convert a parameters object to an arguments array.
         # Recursive
         has_child_commands = if options.extended then params.length else Object.keys(config.commands).length
         if has_child_commands
-          command = if options.extended then params[0][@config.command] else params[@config.command].shift()
+          command = if options.extended then params[0][appconfig.command] else params[appconfig.command].shift()
           throw error [
             'Invalid Command Parameter:'
             "command #{JSON.stringify command} is not registed,"
@@ -371,7 +277,7 @@ Convert a parameters object to an arguments array.
             "in command #{JSON.stringify config.command.join ' '}" if Array.isArray config.command
           ] unless config.commands[command]
           argv.push command
-          keys[@config.command] = command
+          keys[appconfig.command] = command
           # Stringify child configuration
           stringify config.commands[command], if options.extended then params.shift() else lparams
         if options.extended or not has_child_commands
@@ -382,7 +288,7 @@ Convert a parameters object to an arguments array.
             throw Error [
               'Invalid Parameter:'
               "the property --#{key} is not a registered argument"
-            ].join ' ' if @config.strict
+            ].join ' ' if appconfig.strict
             if typeof value is 'boolean'
               argv.push "--#{key}" if value
             else if typeof value is 'undefined' or value is null
@@ -390,7 +296,7 @@ Convert a parameters object to an arguments array.
             else
               argv.push "--#{key}"
               argv.push "#{value}"
-      stringify @config, if options.extended then params.shift() else params
+      stringify appconfig, if options.extended then params.shift() else params
       argv
 
 ## Method `helping(params)`
@@ -402,7 +308,8 @@ Determine if help was requested by returning zero to n commands if help is reque
 
     Parameters::helping = (params, options={}) ->
       params = clone params
-      options.extended ?= @config.extended
+      appconfig = @confx().get()
+      options.extended ?= appconfig.extended
       unless options.extended
         throw error [
           "Invalid Arguments:"
@@ -421,24 +328,22 @@ Determine if help was requested by returning zero to n commands if help is reque
       unless options.extended
         throw error [
           'Invalid Arguments:'
-          "parameter #{JSON.stringify @config.command} must be an array in flatten mode,"
-          "got #{JSON.stringify params[@config.command]}"
-        ] if params[@config.command] and not Array.isArray params[@config.command]
-        #unless Array.isArray params[@config.command]
-        # throw Error 'Invalid Argument' if typeof params[@config.command] is 'string'
-        # params[@config.command] = [params[@config.command]] if typeof params[@config.command] is 'string'
-        commands = params[@config.command] or []
+          "parameter #{JSON.stringify appconfig.command} must be an array in flatten mode,"
+          "got #{JSON.stringify params[appconfig.command]}"
+        ] if params[appconfig.command] and not Array.isArray params[appconfig.command]
+        # In flatten mode, extract the commands from params
+        commands = params[appconfig.command] or []
       else
-        commands = params.slice(1).map (cparams) =>
-          cparams[@config.command]
+        commands = params.slice(1).map (cparams) ->
+          cparams[appconfig.command]
       # Handle help command
       # if this is the help command, transform the leftover into a new command
-      if commands.length and @config.commands and @config.commands[commands[0]].help
+      if commands.length and appconfig.commands and appconfig.commands[commands[0]].help
         helping = true
         # Note, when argv equals ['help'], there is no leftover and main is null
         leftover = unless options.extended
-        then params[@config.commands[commands[0]].main.name]
-        else params[1][@config.commands[commands[0]].main.name]
+        then params[appconfig.commands[commands[0]].main.name]
+        else params[1][appconfig.commands[commands[0]].main.name]
         return if leftover then leftover else []
       # Handle help option:
       # search if the help option is provided and for which command it apply
@@ -461,7 +366,7 @@ Determine if help was requested by returning zero to n commands if help is reque
         return false if options.extended and params.length is 0
         config = config.commands[command]
         search config, commands, params
-      helping = search @config, clone(commands), params
+      helping = search appconfig, clone(commands), params
       if helping then commands else null
 
 ## Method `help(command)`
@@ -478,7 +383,7 @@ Format the configuration into a readable documentation string.
         'expect commands to be an array as first argument,'
         "got #{JSON.stringify commands}"
       ] unless Array.isArray commands
-      config = @config
+      config = appconfig = @confx().get()
       configs = [config]
       for command, i in commands
         config = config.commands[command]
@@ -508,7 +413,7 @@ Format the configuration into a readable documentation string.
         if i is configs.length - 1
           # There are more subcommand
           if Object.keys(config.commands).length
-            synopsis.push "<#{@config.command}>"
+            synopsis.push "<#{appconfig.command}>"
           else if config.main
             synopsis.push "{#{config.main.name}}"
       content.push '    ' + synopsis.join ' '
@@ -521,7 +426,8 @@ Format the configuration into a readable documentation string.
           else
             content.push "OPTIONS for #{config.name}"
         if Object.keys(config.options).length
-          for _, option of config.options
+          for name in Object.keys(config.options).sort()
+            option = config.options[name]
             shortcut = if option.shortcut then "-#{option.shortcut} " else ''
             line = '    '
             line += "#{shortcut}--#{option.name}"

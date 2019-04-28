@@ -8,12 +8,8 @@ describe 'configure.command', ->
     it 'only at application level', ->
       (->
         parameters
-          commands: [
-            name: 'server'
+          commands: 'server':
             command: 'invalid'
-            commands: [
-              name: 'start'
-            ]
-          ]
+            commands: 'start': {}
       ).should.throw 'Invalid Command Configuration: command property can only be declared at the application level, got command "invalid"'
       

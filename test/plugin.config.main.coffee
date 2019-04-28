@@ -9,14 +9,14 @@ describe 'plugin.config.main', ->
       parameters
         options: 'config': {}
         main: 'leftover'
-      .configure().main.get().should.eql
+      .confx().main.get().should.eql
         name: 'leftover'
 
     it 'for a command', ->
       parameters
         commands: 'app': commands: 'server':
           main: 'leftover'
-      .configure().commands(['app', 'server']).main.get()
+      .confx().commands(['app', 'server']).main.get()
       .should.eql
         name: 'leftover'
           
@@ -24,7 +24,7 @@ describe 'plugin.config.main', ->
 
     it 'for application', ->
       parameters {}
-      .configure().main
+      .confx().commands([]).main
       .set('leftover')
       .get().should.eql
         name: 'leftover'

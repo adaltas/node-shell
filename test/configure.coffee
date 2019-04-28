@@ -12,7 +12,8 @@ describe 'configure', ->
       config.should.eql {}
 
     it 'empty without command', ->
-      parameters({}).config.should.eql
+      parameters({})
+      .confx().get().should.eql
         name: 'myapp'
         description: 'No description yet'
         extended: false
@@ -27,6 +28,7 @@ describe 'configure', ->
         options:
           'help':
             name: 'help'
+            cascade: true
             help: true
             description: 'Display help information'
             shortcut: 'h'
@@ -37,7 +39,7 @@ describe 'configure', ->
       parameters
         commands:
           'my_cmd': {}
-      .config.should.eql
+      .confx().get().should.eql
         name: 'myapp'
         description: 'No description yet'
         extended: false
@@ -48,6 +50,7 @@ describe 'configure', ->
         root: true
         options:
           'help':
+            cascade: true
             name: 'help'
             shortcut: 'h'
             description: 'Display help information'
@@ -64,11 +67,13 @@ describe 'configure', ->
             command: ['my_cmd']
             options:
               'help':
+                cascade: true
+                description: 'Display help information'
+                help: true
                 name: 'help'
                 shortcut: 'h'
-                description: 'Display help information'
+                transient: true
                 type: 'boolean'
-                help: true
             commands: {}
             strict: false
             shortcuts:
@@ -76,7 +81,7 @@ describe 'configure', ->
           'help':
             name: 'help'
             help: true
-            description: 'Display help information about myapp'
+            description: 'Display help information'
             command: ['help']
             main:
               name: 'name'
@@ -89,11 +94,9 @@ describe 'configure', ->
           
     it 'nested empty commands', ->
       parameters
-        commands:
-          'parent_cmd':
-            commands:
-              'child_cmd': {}
-      .config.should.eql
+        commands: 'parent_cmd':
+          commands: 'child_cmd': {}
+      .confx().get().should.eql
         name: 'myapp'
         description: 'No description yet'
         extended: false
@@ -104,11 +107,12 @@ describe 'configure', ->
         root: true
         options:
           'help':
+            cascade: true
+            description: 'Display help information'
+            help: true
             name: 'help'
             shortcut: 'h'
-            description: 'Display help information'
             type: 'boolean'
-            help: true
         shortcuts:
           'h': 'help'
         strict: false
@@ -120,11 +124,13 @@ describe 'configure', ->
             command: ['parent_cmd']
             options:
               'help':
+                cascade: true
+                description: 'Display help information'
+                help: true
                 name: 'help'
                 shortcut: 'h'
-                description: 'Display help information'
+                transient: true
                 type: 'boolean'
-                help: true
             strict: false
             shortcuts:
               'h': 'help'
@@ -135,11 +141,13 @@ describe 'configure', ->
                 command: ['parent_cmd', 'child_cmd']
                 options:
                   'help':
+                    cascade: true
+                    description: 'Display help information'
+                    help: true
                     name: 'help'
                     shortcut: 'h'
-                    description: 'Display help information'
+                    transient: true
                     type: 'boolean'
-                    help: true
                 commands: {}
                 strict: false
                 shortcuts:
@@ -147,7 +155,7 @@ describe 'configure', ->
           'help':
             name: 'help'
             help: true
-            description: 'Display help information about myapp'
+            description: 'Display help information'
             command: ['help']
             main:
               name: 'name'
@@ -157,19 +165,3 @@ describe 'configure', ->
             options: {}
             commands: {}
             shortcuts: {}
-      
-    it 'define command and options as an array', ->
-      array = parameters
-        commands: [
-          name: 'start'
-          options: [
-            name: 'myparam'
-          ]
-        ]
-      object = parameters(
-        commands:
-          'start':
-            options:
-              'myparam': {}
-      )
-      array.config.should.eql object.config

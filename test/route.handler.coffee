@@ -16,9 +16,8 @@ describe 'route.handler', ->
   it 'propagate error', ->
     (->
       parameters
-        options: [
-          name: 'my_argument'
-        ]
+        options:
+          'my_argument': {}
         route: -> throw Error 'catch me'
       .route ['--my_argument', 'my value']
     ).should.throw 'catch me'
@@ -37,9 +36,8 @@ describe 'route.handler', ->
     
     it 'pass a single info argument by default', ->
       parameters
-        options: [
-          name: 'my_argument'
-        ]
+        options:
+          'my_argument': {}
         route: (info) ->
           Object.keys(info).should.eql ['argv', 'config', 'params', 'error']
           arguments.length.should.eql 1
@@ -47,9 +45,8 @@ describe 'route.handler', ->
 
     it 'pass user arguments', (next) ->
       parameters
-        options: [
-          name: 'my_argument'
-        ]
+        options:
+          'my_argument': {}
         route: ({params, argv}, my_param, callback) ->
           my_param.should.eql 'my value'
           callback.should.be.a.Function()
@@ -63,19 +60,16 @@ describe 'route.handler', ->
     it 'inside an application', ->
       parameters
         route: ({params}) -> params.my_argument
-        options: [
-          name: 'my_argument'
-        ]
+        options:
+          'my_argument': {}
       .route ['--my_argument', 'my value']
       .should.eql 'my value'
 
     it 'inside a command', ->
-      parameters commands: [
-        name: 'my_command'
-        route: ({params}) -> params.my_argument
-        options: [
-          name: 'my_argument'
-        ]
-      ]
+      parameters
+        commands: 'my_command':
+          route: ({params}) -> params.my_argument
+          options:
+            'my_argument': {}
       .route ['my_command', '--my_argument', 'my value']
       .should.eql 'my value'

@@ -3,7 +3,14 @@
 
 ## Trunk
 
+Backward incompatibilities
+* commands: only accept objects, no arrays
+* options: only accept objects, no arrays
+
 New functionality
+* options: new disabled property
+* help: new plugin
+* help: sort options
 * router: rename root property help to router
 * hook: configure_app_set hook
 * hook: configure_commands_set hook

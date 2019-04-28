@@ -26,15 +26,16 @@ describe 'configure.router', ->
   
     it 'auto generate the help options in application', ->
       parameters({})
-      .config.options.should.eql
+      .confx().get().options.should.eql
         'help':
-          name: 'help'
-          shortcut: 'h'
+          cascade: true
           description: 'Display help information'
-          type: 'boolean'
           help: true
+          name: 'help'
+          type: 'boolean'
+          shortcut: 'h'
       parameters({})
-      .config.shortcuts.should.eql
+      .confx().get().shortcuts.should.eql
         'h': 'help'
           
     it 'auto generate the help options in command with sub-command', ->
@@ -43,13 +44,15 @@ describe 'configure.router', ->
           'server':
             commands:
               'start': {}
-      .config.commands.server.options.should.eql
+      .confx(['server']).get().options.should.eql
         'help':
+          cascade: true
+          description: 'Display help information'
+          help: true
           name: 'help'
           shortcut: 'h'
-          description: 'Display help information'
+          transient: true
           type: 'boolean'
-          help: true
   
   describe 'commands', ->
   
@@ -62,7 +65,7 @@ describe 'configure.router', ->
             ]
           'help':
             description: 'Overwrite description'
-      .config.commands.help.should.eql
+      .confx().get().commands.help.should.eql
         name: 'help'
         help: true
         description: 'Overwrite description'
@@ -81,4 +84,4 @@ describe 'configure.router', ->
         commands:
           'start': {}
           'help': {}
-      .config.commands.help.description.should.eql 'Display help information about myapp'
+      .config.commands.help.description.should.eql 'Display help information'

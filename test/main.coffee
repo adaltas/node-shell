@@ -59,11 +59,10 @@ describe 'main', ->
   describe 'with command', ->
 
     it 'accept an optional main and no option', ->
-      app = parameters commands: [
-        name: 'start'
-        main:
-          name: 'leftover'
-      ]
+      app = parameters
+        commands: 'start':
+          main:
+            name: 'leftover'
       app.parse [
         'start', 'my', 'value true'
       ]
@@ -76,12 +75,11 @@ describe 'main', ->
       .should.eql ['start', 'my', 'value true']
 
     it 'may follow command without any option', ->
-      app = parameters commands: [
-        name: 'mycommand'
-        main:
-          name: 'leftover'
-          required: true
-      ]
+      app = parameters
+        commands: 'mycommand':
+          main:
+            name: 'leftover'
+            required: true
       app.parse [
         'mycommand', 'my value'
       ]

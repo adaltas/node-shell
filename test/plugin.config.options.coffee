@@ -9,7 +9,7 @@ describe 'plugin.config.options', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().options.list()
+      .confx().options.list()
       .should.eql ['config', 'help']
 
     it 'for a command', ->
@@ -18,8 +18,8 @@ describe 'plugin.config.options', ->
         commands: 'app': commands: 'server': options:
           'host': {}
           'port': {}
-      .configure().commands(['app', 'server']).options.list()
-      .should.eql ['host', 'port', 'help']
+      .confx().commands(['app', 'server']).options.list()
+      .should.eql ['help', 'host', 'port']
     
   describe 'get', ->
 
@@ -27,20 +27,20 @@ describe 'plugin.config.options', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().get().root.should.be.true()
+      .confx().get().root.should.be.true()
     
     it 'an option (2 styles)', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().options('config').get()
+      .confx().options('config').get()
       .name.should.eql 'config'
     
     it 'selected properties from option', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().options('config')
+      .confx().options('config')
       .set('description', 'hello')
       .set('required', true)
       .get(['description', 'required'])
@@ -54,8 +54,35 @@ describe 'plugin.config.options', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .configure().options('config')
+      .confx().options('config')
       .set('description', 'hello')
       .set('required', true)
       .get().name.should.eql 'config'
+        
+  describe 'get_cascaded', ->
+    
+    it 'return the cascaded options', ->
+      parameters
+        options: 'opt_app': cascade: true
+        commands: 'server':
+          options: 'opt_cmd': cascade: true
+          commands: 'start': {}
+      .confx().commands(['server', 'start']).options.get_cascaded()
+      .should.eql
+        'help':
+          cascade: true
+          description: 'Display help information'
+          help: true
+          name: 'help'
+          shortcut: 'h'
+          type: 'boolean'
+        'opt_app':
+          cascade: true
+          name: 'opt_app'
+          type: 'string'
+        'opt_cmd':
+          cascade: true
+          name: 'opt_cmd'
+          type: 'string'
+        
   

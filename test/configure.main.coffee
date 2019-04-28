@@ -10,9 +10,7 @@ describe 'configure.main', ->
 
   it 'accept main in a command as a string', ->
     parameters
-      commands: [
-        name: 'start'
+      commands: 'start':
         main: 'leftover'
-      ]
     .config.commands.start.main.should.eql
       name: 'leftover'

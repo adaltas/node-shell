@@ -49,21 +49,18 @@ describe 'help', ->
         main:
           name: 'command'
           description: 'Command in start'
-        options: [
-          name: 'string'
-          shortcut: 's'
-          description: 'String option in start'
-        ,
-          name: 'boolean'
-          shortcut: 'b'
-          type: 'boolean'
-          description: 'Boolean option in start'
-        ,
-          name: 'integer'
-          shortcut: 'i'
-          type: 'integer'
-          description: 'Integer option in start'
-        ]
+        options:
+          'string':
+            shortcut: 's'
+            description: 'String option in start'
+          'boolean':
+            shortcut: 'b'
+            type: 'boolean'
+            description: 'Boolean option in start'
+          'integer':
+            shortcut: 'i'
+            type: 'integer'
+            description: 'Integer option in start'
       .help().should.eql """
 
       NAME
@@ -73,10 +70,10 @@ describe 'help', ->
           myscript [myscript options] {command}
 
       OPTIONS
-          -s --string             String option in start
           -b --boolean            Boolean option in start
-          -i --integer            Integer option in start
           -h --help               Display help information
+          -i --integer            Integer option in start
+          -s --string             String option in start
           command                 Command in start
 
       EXAMPLES
@@ -88,11 +85,9 @@ describe 'help', ->
       app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        options: [
-          name: 'myarg'
+        options: 'myarg':
           description: 'MyArg'
           required: true
-        ]
       app
       .parse(['--help'])
       .help.should.be.True()
@@ -105,8 +100,8 @@ describe 'help', ->
           myscript [myscript options]
 
       OPTIONS
-          --myarg                 MyArg Required.
           -h --help               Display help information
+          --myarg                 MyArg Required.
 
       EXAMPLES
           myscript --help         Show this message
@@ -119,7 +114,7 @@ describe 'help', ->
       ( ->
         parameters
           name: 'myscript'
-          commands: []
+          commands: {}
         .help('invalid')
       ).should.throw 'Invalid Command: argument "invalid" is not a valid command'
         
@@ -141,7 +136,7 @@ describe 'help', ->
 
       COMMANDS
           start                   No description yet for the start command
-          help                    Display help information about myapp
+          help                    Display help information
 
       EXAMPLES
           myapp --help            Show this message
@@ -153,39 +148,32 @@ describe 'help', ->
       parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        commands: [
-          name: 'start'
-          description: 'Description for the start command'
-          main:
-            name: 'command'
-            description: 'Command in start'
-          options: [
-            name: 'string'
-            shortcut: 's'
-            description: 'String option in start'
-          ,
-            name: 'boolean'
-            shortcut: 'b'
-            type: 'boolean'
-            description: 'Boolean option in start'
-          ,
-            name: 'integer'
-            shortcut: 'i'
-            type: 'integer'
-            description: 'Integer option in start'
-          ]
-        ,
-          name: 'stop'
-          description: 'Description for the stop command'
-          main:
-            name: 'command'
-            description: 'Command in stop'
-          options: [
-            name: 'array'
-            shortcut: 'a'
-            description: 'Array option in stop'
-          ]
-        ]
+        commands:
+          'start':
+            description: 'Description for the start command'
+            main:
+              name: 'command'
+              description: 'Command in start'
+            options:
+              'string':
+                shortcut: 's'
+                description: 'String option in start'
+              'boolean':
+                shortcut: 'b'
+                type: 'boolean'
+                description: 'Boolean option in start'
+              'integer':
+                shortcut: 'i'
+                type: 'integer'
+                description: 'Integer option in start'
+          'stop':
+            description: 'Description for the stop command'
+            main:
+              name: 'command'
+              description: 'Command in stop'
+            options: 'array':
+              shortcut: 'a'
+              description: 'Array option in stop'
       .help().should.eql """
 
       NAME
@@ -200,7 +188,7 @@ describe 'help', ->
       COMMANDS
           start                   Description for the start command
           stop                    Description for the stop command
-          help                    Display help information about myscript
+          help                    Display help information
 
       EXAMPLES
           myscript --help         Show this message
@@ -213,18 +201,14 @@ describe 'help', ->
       app = parameters
         name: 'myscript'
         description: 'Some description for myscript'
-        commands:[
-          name: 'start'
+        commands: 'start':
           description: 'Description for the start command'
           main:
             name: 'command'
             description: 'Command in start'
-          options: [
-            name: 'string'
+          options: 'string':
             shortcut: 's'
             description: 'String option in start'
-          ]
-        ]
       expect = """
 
       NAME
@@ -234,8 +218,8 @@ describe 'help', ->
           myscript start [start options] {command}
 
       OPTIONS for start
-          -s --string             String option in start
           -h --help               Display help information
+          -s --string             String option in start
           command                 Command in start
       
       OPTIONS for myscript
@@ -254,9 +238,7 @@ describe 'help', ->
       ( ->
         parameters
           name: 'myscript'
-          commands: [
-            name: 'mycommand'
-          ]
+          commands: 'mycommand': {}
         .help(['mycommand', 'invalid'])
       ).should.throw 'Invalid Command: argument "mycommand invalid" is not a valid command'
   
