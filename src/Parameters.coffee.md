@@ -10,7 +10,8 @@
       @config = {}
       @init()
       @collision = {}
-      @configure config
+      config = clone config or {}
+      @config = config
       @confx().set @config
       @
     
@@ -34,14 +35,6 @@
         handler = plugin[name].call @, args..., handler if plugin[name]
       handler.call @, args...
       handler
-
-## `configure(config)`
-
-    Parameters::configure = (config = {}) ->
-      config = clone config
-      @config = config
-      # Sanitize options
-      @config
 
 ## Method `parse([arguments])`
 

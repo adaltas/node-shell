@@ -20,13 +20,13 @@ describe 'configure.route', ->
         commands: 'server':
           route: 'path/to/module'
     
-    it 'throw error if not valid', ->
-      # In application
+    it 'throw error if not valid in application', ->
       (->
         parameters
           route: {}
       ).should.throw 'Invalid Route Configuration: accept string or function in application, got {}'
-      # In command
+
+    it 'throw error if not valid in command', ->
       (->
         parameters
           commands: 'server':

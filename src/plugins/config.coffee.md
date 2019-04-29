@@ -193,7 +193,6 @@
               'extended property cannot be declared inside a command'
             ] if config.extended?
             config.name = command.slice(-1)[0]
-            # config.command ?= command if Object.keys(config.commands).length
             config.strict ?= ( (config) ->
               strict = config.strict or false
               for name in command

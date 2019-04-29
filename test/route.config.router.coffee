@@ -3,7 +3,7 @@ path = require 'path'
 parameters = require '../src'
 { Writable } = require('stream')
 
-describe 'configure.router', ->
+describe 'route.config.router', ->
   
   describe 'router', ->
     

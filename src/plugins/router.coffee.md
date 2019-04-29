@@ -39,29 +39,31 @@ How to use the `route` method to execute code associated with a particular comma
           handler
         parent.call @, arguments...
     )(Parameters::init)
-
-    Parameters::configure = ( (parent) ->
+    
+    Parameters::init = ( (parent) ->
       ->
-        config = parent.call @, arguments...
-        return config if arguments.length is 0
-        config = @confx().get()
-        sanitize_route = (config) ->
-          return config unless config.route
+        @register configure_app_set: ({config, command}, handler) ->
+          return handler unless config.route
           throw error [
             'Invalid Route Configuration:'
             "accept string or function"
-            "in application," unless Array.isArray config.command
-            "in command #{JSON.stringify config.command.join ' '}," if Array.isArray config.command
+            "in application," unless command.length
+            "in command #{JSON.stringify command.join ' '}," if command.length
             "got #{JSON.stringify config.route}"
           ] unless typeof config.route in ['function', 'string']
-        sanitize_commands = (config) ->
-          for _, command of config.commands
-            sanitize_route command
-            sanitize_commands command
-        sanitize_route config
-        sanitize_commands config
-        config
-    )(Parameters::configure)
+          handler
+        @register configure_commands_set: ({config, command}, handler) ->
+          return handler unless config.route
+          throw error [
+            'Invalid Route Configuration:'
+            "accept string or function"
+            "in application," unless command.length
+            "in command #{JSON.stringify command.join ' '}," if command.length
+            "got #{JSON.stringify config.route}"
+          ] unless typeof config.route in ['function', 'string']
+          handler
+        parent.call @, arguments...
+    )(Parameters::init)
     
     Parameters::route = (argv = process, args...) ->
       route_error = (err, commands) =>
