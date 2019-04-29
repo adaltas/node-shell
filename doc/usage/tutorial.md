@@ -1,29 +1,34 @@
 ---
 title: Tutorial
-description: How to build CLI application using parameters.
+description: How to build CLI application using Node.js Parameters.
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'tutorial', 'application', 'configuration']
 maturity: initial
 ---
 
-# Node.js Parameters tutorial
+# Building CLI applications using Node.js Parameters
 
 ## Introduction
 
-This tutorial covers the basics of using the Node.js Parameters package. It contains 4 sections:
+This tutorial covers the basics of using the Node.js Parameters package. Starting from scratch and go on to advanced usage of its APIs. It contains the sections:
 
-- What is Parameters?
+- What is Node.js Parameters?
 - Getting started
 - Parsing arguments
 - Argument topology
+- Configuring options
+- Configuring commands
+- Parsing and handling arguments (commands, options, main)
+- Getting help
+- Structuring the code with routing
 
-Starting from scratch and go on to advanced usage of its APIs.
+## What is Node.js Parameters?
 
-## What is Parameters?
+Parameters is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical unix command line arguments. 
 
-Parameters is a Node.js package published on NPM to build CLI application. At its core, it parses command line arguments. It also offers powerful features such as:
+It offers powerful features such as:
 - Reversibility: parse and stringify is bi-directional
 - Auto-discovery: extract unregistered options
-- Unlimited/multi level commands (eg `myapp server start ...`)
+- Unlimited multi-level commands (eg `myapp server start ...`)
 - Type conversion (`string`, `boolean`, `integer`, `array`)
 - Object literals: config and parsed results are serializable and human readable
 - Routing: run dedicated functions or modules based on user commands
@@ -194,7 +199,7 @@ The result of parsing will be the object like:
 
 We have considered using `options` without calling `commands`. Although, any option can be corresponded with a specific command.
 
-## Configuring an example application using commands
+## Configuring commands
 
 When you build an application with non-trivial functionality that provides more than one operation, you associate operations with commands. The Node.js Parameters allows you to flexibly configure `commands`, like building multiple levels of hierarchy or assigning own `options`.
 
@@ -307,7 +312,7 @@ the first string of the file mylog.txt
 
 ### Getting help
 
-In every CLI it is expected to be a few commands and options: `help`, `--help` and `-h`, which should obviously show help menus. We should also default to a main help menu if no command is specified. This can be easily implemented in our application by adding just a few strings of code:
+Parameters convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands. To integrate printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as a string:
 
 ```js
 // Getting help
@@ -320,7 +325,7 @@ if(commands = app.helping(args)){
 }
 ```
 
-Let's add this code into application and write descriptions for each of commands and options. Here is the complete code of application:
+Let's add this code into the application and write the description for each of the commands and options:
 
 ```js
 // Configuring application
@@ -345,7 +350,7 @@ const app = parameters({
       }
     },
     'read': {
-      description: 'Read log file',
+      description: 'Read a log file',
       options: {
         'recent': {
           type: 'boolean',
@@ -384,16 +389,20 @@ switch (args.command[0]) {
 }
 ```
 
-Now you can get help information with one these commands:
+From a user perspective, to print the help information of the overall application to the console you can use the command `help`, the option `--help` or its shortcut `-h`. 
 
 ```
-node log --help
 node log help
+node log --help
 node log -h
-node log
 ```
 
-It will print information like:
+It prints a human readable text divided into the following sections:
+- "NAME" - the short description of the application or the command
+- "SYNOPSIS" - the basic syntax for using the command and its options
+- "OPTIONS" - the description of each option
+- "COMMANDS" - the description of each command
+- "EXAMPLES" - the usage of the command and its options
 
 ```
 NAME
@@ -408,7 +417,7 @@ OPTIONS
 
 COMMANDS
     append                  Append strings to a log file
-    read                    Read log file
+    read                    Read a log file
     help                    Display help information about log
 
 EXAMPLES
@@ -416,17 +425,11 @@ EXAMPLES
     log help                Show this message
 ```
 
-You also can print a help for a specific command:
-
-```
-node log read -h
-```
-
-Displays: 
+To print the help information of the specific commands use a command name after the `help` command, for example, `node log help read`. It prints a list of options of the application and any parent command as well.
 
 ```
 NAME
-    log read - Read log file
+    log read - Read a log file
 
 SYNOPSIS
     log [log options] read [read options]
@@ -441,6 +444,13 @@ OPTIONS for log
 
 EXAMPLES
     log read --help         Show this message
+```
+
+The `help` option is automatically registered to the application as well as to every commands. So, the same result as the above can be achieved with these commands:
+
+```
+node log read --help
+node log read -h
 ```
 
 ## Structuring the code with routing
