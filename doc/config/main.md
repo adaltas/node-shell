@@ -57,7 +57,7 @@ Usage of the "main" parameter is now:
 `myapp server [leftover]`.
 
 
-### In a sub command
+### In multi-level commands
 
 ```js
 require("parameters")(

@@ -20,14 +20,16 @@ Commands define the arguments passed to a shell scripts.
 * `options` (object|array)   
   Defined the expected command parameters. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
-  an array, the "name" property is required.  
+  an array, the "name" property is required.
 * `main` (object|string)   
   What is left once the option and the commands have been extracted.
-  
+* `commands` (object|array)   
+  Support unlimited multi-level commands.
+
 ## Multi-level commands
 
 The package can handle simple argument definitions as well as complex command
-based definitions including one or multiple nested sub commands. Thus, large 
+based definitions including one or multiple nested commands. Thus, large 
 applications can group all its functionalities into one parent CLI entry point.
 
 ## Examples of configuration
@@ -75,22 +77,30 @@ with a new "commands" entry:
 Usage of the "server" command is now:
 `myapp [options] server [server options]`.
 
-### Subcommands
+### Multi-level commands
 
-We now want to defined subcommand to control our server such as "start" and 
+We now want to define commands to control our server such as "start" and 
 "stop". The "start" command will require an option "port". Inside the object 
 defining the "server" command, we add a new "commands" entry:
 
 ```
 {
   "commands": [{
-    "name": "start",
-    "options": {
-      "name": "port",
-      "required": true
-    }
+    "name": "info"
   },{
-    "name": "stop"
+    "name": "server",
+    "options": {
+      "name": "pid"
+    },
+    "commands": [{
+      "name": "start",
+      "options": {
+        "name": "port",
+        "required": true
+      }
+    },{
+      "name": "stop"
+    }]
   }]
 }
 ```

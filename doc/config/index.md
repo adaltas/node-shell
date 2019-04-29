@@ -17,7 +17,7 @@ app = parameters(config)
 
 ## The root properties
 
-* [`commands`](./commands/) (object)   
+* [`commands`](./commands/) (object|array)   
   Group the parameters into a specific command. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
@@ -29,8 +29,8 @@ app = parameters(config)
   `process.cwd()` and use `require.main.require`.
 * [`main`](./main/) (object)   
   Anything left which is not a parameter at the end of the arguments.
-* [`options`](./options/) (object)
-  Defined the expected main parameters.
+* [`options`](./options/) (object|array)
+  Define the expected main parameters.
 * `strict` (boolean)   
   Disable auto-discovery.
 * `description` (string)
