@@ -25,6 +25,9 @@ Commands define the arguments passed to a shell scripts.
   What is left once the option and the commands have been extracted.
 * `commands` (object|array)   
   Support unlimited multi-level commands.
+* `route` (function|string)   
+  Execute a function or the function exported by a module if defined as a 
+  string, provide the params object, see the [routing documentation](/api/route/).
 
 ## Multi-level commands
 
