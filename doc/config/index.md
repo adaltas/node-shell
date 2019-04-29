@@ -33,8 +33,13 @@ app = parameters(config)
   Define the expected main parameters.
 * `strict` (boolean)   
   Disable auto-discovery.
+* `name` (string)
+  The name of the application.
 * `description` (string)
   The description of the application.
+* `route` (function|string)   
+  Execute a function or the function exported by a module if defined as a 
+  string, provide the params object, see the [routing documentation](/api/route/).
 
 ## The properties for `help`
 
