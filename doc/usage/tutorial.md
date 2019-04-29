@@ -5,11 +5,9 @@ keywords: ['parameters', 'node.js', 'cli', 'usage', 'tutorial', 'application', '
 maturity: initial
 ---
 
-# Building CLI applications using Node.js Parameters
+# Node.js Parameters tutorial
 
-## Introduction
-
-This tutorial covers the basics of using the Node.js Parameters package. Starting from scratch and go on to advanced usage of its APIs. It contains the sections:
+Welcome to Node.js Parameters! The goal of this tutorial is to guide you through configuring and build your first CLI application using Parameters. Starting from scratch and go on to advanced usage of its APIs. The tutorial contains following sections:
 
 - What is Node.js Parameters?
 - Getting started
@@ -56,7 +54,7 @@ echo 'console.log("hello")' > app.js
 node app
 ```
 
-The parameters dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "app.js" file.
+The Parameters dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "app.js" file.
 
 ## Parsing arguments
 
@@ -366,27 +364,7 @@ if(commands = app.helping(args)){
   // Terminate the process
   process.exit()
 }
-// Use file system module
-var fs = require("fs")
-// Handling commands and options
-switch (args.command[0]) {
-  case 'append':
-    // Appending the string to the file
-    fs.appendFile(args.source, args.data + "\n", (err) => {
-      if(err) throw err
-    })
-    break
-  case 'read':
-    // Reading the file
-    fs.readFile(args.source, function(err, buf) {
-      if(err) throw err
-      if(args.recent)
-        console.log('Reverse mode') // TODO reverse mode
-      else
-        process.stdout.write(buf.toString())
-    })
-    break
-}
+/* ... */
 ```
 
 From a user perspective, to print the help information of the overall application to the console you can use the command `help`, the option `--help` or its shortcut `-h`. 
@@ -455,9 +433,117 @@ node log read -h
 
 ## Structuring the code with routing
 
-We can build very simple CLI application using only one file like we did above with app.js and log.js. When the application is getting complex, the best practice is to load and configure the router in a separate, top-level module that is dedicated to routing. The `route` method dispatch the commands of the CLI into a function based on the `route` configuration property of the application or of the command.
+We can build very simple CLI application using only one file like we made above. When the application is getting complex, the best practice is to load and configure the router in a separate top-level module that is dedicated to routing. 
 
-The route function receive as first argument a context object with the following properties:
+Considering the "log" application containing the "append" and the "read" commands, each commands will define a `route` function. We will refactor it according to this project structure:
+
+```
+/
+|-- /node-modules
+|-- /routes
+    |-- append.js
+    |-- read.js
+|-- log.js
+|-- package.json
+|-- package-lock.json
+```
+
+To configure routing you need to define the `route` property for the `commands`. The value of this property should be as a function or the function exported by a module if defined as a string:
+
+```js
+const parameters = require('parameters')
+const app = parameters({
+  /* ... */
+  commands: {
+    'append': {
+      /* ... */
+      route: './routes/append.js'
+    },
+    'read': {
+      /* ... */
+      route: './routes/read.js'
+    }
+  }
+})
+```
+
+To execute routing you need to call the `route` method, which dispatch the commands of the CLI application into a function based on the `route` configuration property of the commands:
+
+```js
+app.route()
+```
+
+The `route` method receives as first argument a context object with the following properties:
 - `argv` - the CLI arguments, either passed to the `route` method or obtained from `process.argv`
 - `params` - the parameters object derived from `argv`
 - `config` - the configuration object used to initialise the parameters instance
+
+Let's create the files with modules which will export functions "append" and "read".
+The content of the file `./routes/append.js`:
+
+```js
+module.exports = function ({argv, params, config}) {
+  // Use file system module
+  var fs = require("fs")
+  // Appending the string to the file
+  fs.appendFile(params.source, params.data + "\n", (err) => {
+    if(err) throw err
+  })
+}
+```
+
+The content of the file `./routes/read.js`:
+
+```js
+module.exports = function ({argv, params, config}) {
+  // Use file system module
+  var fs = require("fs")
+  // Reading the file
+  fs.readFile(params.source, function(err, buf) {
+    if(err) throw err
+    if(params.recent)
+      console.log('Reverse mode') // TODO reverse mode
+    else
+      process.stdout.write(buf.toString())
+  })
+}
+```
+
+Notice, when using routing we don't need to take care about the parsing and calling the help, it is implemented inside the `route` method. The top-level module of the CLI application, which is the "log.js" file, will look like:
+
+```js
+const parameters = require('parameters')
+const app = parameters({
+  name: 'log',
+  description: 'Log information',
+  options: {
+    'source': {
+      shortcut: 's',
+      default: 'log.txt',
+      description: 'The path to a file in which the logged information are stored'
+    }
+  },
+  commands: {
+    'append': {
+      description: 'Append strings to a log file',
+      main: {
+        name: 'data',
+        required: true,
+        description: 'Logged data'
+      },
+      route: './routes/append.js'
+    },
+    'read': {
+      description: 'Read log file',
+      options: {
+        'recent': {
+          type: 'boolean',
+          description: 'Reading in reverse mode'
+        }
+      },
+      route: './routes/read.js'
+    }
+  }
+})
+app.route()
+```
