@@ -203,7 +203,7 @@ When you build an application with non-trivial functionality that provides more 
 
 Let's consider the power of the Parameters capability on an example of configuring an application for logging strings into a file. We define our application performs the following operations:
 - appending strings of information into the end of the file
-- reading the log file in direct and reverse mode
+- viewing the log file
 And as well, we must specify in which file the logged information should be stored.
 
 Create the javascript file with the name "log.js" and paste following:
@@ -224,7 +224,7 @@ const app = parameters({
         required: true
       }
     },
-    'read': {
+    'view': {
       options: {
         'recent': {
           type: 'boolean'
@@ -232,9 +232,9 @@ const app = parameters({
 ```
 
 This configuration object consists:
-- `source` - the option which assigns the file where to read or write a logged data, if it is not passed the default value `log.txt` will be used.
+- `source` - the option which assigns the file where the data will be stored, if it is not passed the default value `log.txt` will be used.
 - `append` - the command for writing `data` into a log file. The `data` is the required main argument that passes strings.
-- `read` - the command for reading from a log file. The option `recent` passes a boolean flag which sets the mode of reading.
+- `view` - the command for viewing a log file. The option `recent` passes a boolean flag which sets two modes of viewing: view the full file or last few records.
 
 ## Parsing and handling arguments (commands, options, main)
 
@@ -248,7 +248,7 @@ switch(args.command[0]){
   case 'append':
     // Do something...
     break
-  case 'read':
+  case 'view':
     // Do something...
     break
 }
@@ -267,15 +267,23 @@ switch (args.command[0]) {
     // Appending the string to the file
     fs.appendFile(args.source, args.data + "\n", (err) => { if(err) throw err })
     break
-  case 'read':
-    // Reading the file
-    fs.readFile(args.source, function(err, buf) {
-      if(err) throw err
-      if(args.recent)
-        console.log('Reverse mode') // TODO reverse mode
-      else
+  case 'view':
+    // Check the viewing mode
+    if(args.recent) {
+      // Execute the bash command 'tail' for viewing strings from the ending of the file
+      // Prints only last 10 strings, because it is the default value of the 'tail' command
+      require('child_process').exec('tail ' + args.source,
+        (error, stdout, stderr) => {
+          process.stdout.write(stdout)
+          process.stderr.write(stderr)
+        })
+    } else {
+      // View the full file using the file system module
+      fs.readFile(params.source, function(err, buf) {
+        if(err) throw err
         process.stdout.write(buf.toString())
-    })
+      })
+    }
     break
 }
 ```
@@ -285,7 +293,7 @@ Now you can execute the application:
 ```
 node log append "this is a random string"
 node log append "this is a second random string"
-node log read
+node log view
 ```
 
 The file with a name "log.txt" in you current directory will be created. The output of these commands is going to be like this:
@@ -295,17 +303,23 @@ this is a random string
 this is a second random string
 ```
 
-Another usage with the `source` option. We define the name of the file like `mylog.txt`:
+Another example shows the usage of the `source` option. We define the name of the file like `mylog.txt`:
 
 ```
 node log -s mylog.txt append "the first string of the file mylog.txt"
-node log -s mylog.txt read
+node log -s mylog.txt view
 ```
 
 The output is:
 
 ```
 the first string of the file mylog.txt
+```
+
+To view 10 recent records of a log file we will use the command like this:
+
+```
+node log view --recent
 ```
 
 ### Getting help
@@ -347,12 +361,12 @@ const app = parameters({
         description: 'Logged data'
       }
     },
-    'read': {
-      description: 'Read a log file',
+    'view': {
+      description: 'Viewing a log file',
       options: {
         'recent': {
           type: 'boolean',
-          description: 'Reading in reverse mode'
+          description: 'Viewing 10 recent records in a log file'
 } } } } } )
 // Parsing arguments
 const args = app.parse()
@@ -395,7 +409,7 @@ OPTIONS
 
 COMMANDS
     append                  Append strings to a log file
-    read                    Read a log file
+    view                    Viewing a log file
     help                    Display help information about log
 
 EXAMPLES
@@ -403,17 +417,17 @@ EXAMPLES
     log help                Show this message
 ```
 
-To print the help information of the specific commands use a command name after the `help` command, for example, `node log help read`. It prints a list of options of the application and any parent command as well.
+To print the help information of the specific commands use a command name after the `help` command, for example, `node log help view`. It prints a list of options of the application and any parent command as well.
 
 ```
 NAME
-    log read - Read a log file
+    log view - Viewing a log file
 
 SYNOPSIS
-    log [log options] read [read options]
+    log [log options] view [view options]
 
-OPTIONS for read
-    --recent                Reading in reverse mode
+OPTIONS for view
+    --recent                Viewing 10 recent records in a log file
     -h --help               Display help information
 
 OPTIONS for log
@@ -421,28 +435,28 @@ OPTIONS for log
     -h --help               Display help information
 
 EXAMPLES
-    log read --help         Show this message
+    log view --help         Show this message
 ```
 
 The `help` option is automatically registered to the application as well as to every commands. So, the same result as the above can be achieved with these commands:
 
 ```
-node log read --help
-node log read -h
+node log view --help
+node log view -h
 ```
 
 ## Structuring the code with routing
 
 We can build very simple CLI application using only one file like we made above. When the application is getting complex, the best practice is to load and configure the router in a separate top-level module that is dedicated to routing. 
 
-Considering the "log" application containing the "append" and the "read" commands, each commands will define a `route` function. We will refactor it according to this project structure:
+Considering the "log" application containing the "append" and the "view" commands, each commands will define a `route` function. We will refactor it according to this project structure:
 
 ```
 /
 |-- /node-modules
 |-- /routes
     |-- append.js
-    |-- read.js
+    |-- view.js
 |-- log.js
 |-- package.json
 |-- package-lock.json
@@ -459,9 +473,9 @@ const app = parameters({
       /* ... */
       route: './routes/append.js'
     },
-    'read': {
+    'view': {
       /* ... */
-      route: './routes/read.js'
+      route: './routes/view.js'
     }
   }
 })
@@ -478,7 +492,7 @@ The `route` method receives as first argument a context object with the followin
 - `params` - the parameters object derived from `argv`
 - `config` - the configuration object used to initialise the parameters instance
 
-Let's create the files with modules which will export functions "append" and "read".
+Let's create the files with modules which will export functions "append" and "view".
 The content of the file `./routes/append.js`:
 
 ```js
@@ -492,20 +506,25 @@ module.exports = function ({argv, params, config}) {
 }
 ```
 
-The content of the file `./routes/read.js`:
+The content of the file `./routes/view.js`:
 
 ```js
 module.exports = function ({argv, params, config}) {
-  // Use file system module
-  var fs = require("fs")
-  // Reading the file
-  fs.readFile(params.source, function(err, buf) {
-    if(err) throw err
-    if(params.recent)
-      console.log('Reverse mode') // TODO reverse mode
-    else
+  // Check the viewing mode
+  if(params.recent) {
+    // Execute the bash command 'tail' for viewing strings from the ending of the file
+    require('child_process').exec('tail ' + params.source,
+      (error, stdout, stderr) => {
+        process.stdout.write(stdout)
+        process.stderr.write(stderr)
+      })
+  } else {
+    // View the full file using the file system module
+    require("fs").readFile(params.source, function(err, buf) {
+      if(err) throw err
       process.stdout.write(buf.toString())
-  })
+    })
+  }
 }
 ```
 
@@ -533,15 +552,15 @@ const app = parameters({
       },
       route: './routes/append.js'
     },
-    'read': {
-      description: 'Read log file',
+    'view': {
+      description: 'Viewing a log file',
       options: {
         'recent': {
           type: 'boolean',
-          description: 'Reading in reverse mode'
+          description: 'Viewing 10 recent records in a log file'
         }
       },
-      route: './routes/read.js'
+      route: './routes/view.js'
     }
   }
 })
