@@ -14,7 +14,7 @@ Format the configuration into a readable documentation string.
 
 ## Description
 
-Without any argument, the `help` method return the application help without the specific documentation of each sub commands. With the command name, it returned the help of the requested command as well as the options of the application and any parent commands.
+Without any argument, the `help` method returns the application help without the specific documentation of each commands. With the command name, it returns the help of the requested command as well as the options of the application and any parent commands.
 
 Calling `help` will always return a string, it does not detect if help was requested by the user for display. To achieve this behaviour, it is expected to be used conjointly with [`helping`](/api/helping/), see the [the help usage documentation](/usage/help/) for additional information.
 
@@ -46,7 +46,7 @@ process.stdout.write( app.help() )
 process.stdout.write( app.help( [] ) )
 ```
 
-Pass the name of the command as an array to print the help of any sub command. It behaves the same as defining the command as a string.
+Pass the name of the command as an array to print the help of any nested command. It behaves the same as defining the command as a string.
 
 ```js
 process.stdout.write( app.help( ['start'] ) );

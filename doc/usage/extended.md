@@ -7,7 +7,7 @@ maturity: review
 
 # Flatten versus extended mode
 
-For the sake of simplicity, the module operates by default in flatten mode. When parsing application arguments without sub commands, it doesn't make much a difference. However, when the application grew and more commands with deepest levels are created, there is a risk of collision between multiple options registering the same properties. While being a little more verbose, the extended ensure that multi levels of options and main arguments can be defined with the same property name.
+For the sake of simplicity, the module operates by default in flatten mode. When parsing application arguments without multi-level commands, it doesn't make much a difference. However, when the application grew and more commands with deepest levels are created, there is a risk of collision between multiple options registering the same properties. While being a little more verbose, the extended ensure that multi levels of options and main arguments can be defined with the same property name.
 
 ## Examples
 

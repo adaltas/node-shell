@@ -9,21 +9,21 @@ maturity: review
 
 ## Description
 
-Help prints detailed information about how to use a command or one of its sub commands.
+Help prints detailed information about how to use the CLI application or one of its commands.
 
 ## How to display the help
 
 From a user perspective, there are multiple ways to print the help to the console:
-* by passing the `--help` argument in the command or after a sub command, for example `./app print --help`.
-* by calling the `help` command, eventually followed by a sub command, if other commands are registered, for example `./app help print`.
+* by passing the `--help` option in the command, for example `./app print --help`.
+* by calling the `help` command, eventually followed by any command, if it is registered, for example `./app help print`.
 * when the command is invalid or incomplete, for example `./app print`, assuming the `print` command has a required `message` option.
-* when calling a non-leaf command, for example `./app plugin`, assuming `plugin` is not a command in itself but a group of sub commands such as `./app plugin print -m 'hello'`.
+* when calling a non-leaf command, for example `./app plugin`, assuming `plugin` is not a command in itself but a group of multi-level commands such as `./app plugin print -m 'hello'`.
 
 Use `./myapp --help` to print the help usage of the overall application. The `help` option is automatically registered to the application as well as to every commands.
 
 If at least one command is registered, use `./myapp help` to print the usage of the application or `myapp help <command...>` to print the usage of specific commands.
 
-For example, an application `myapp` which has a command `secrets` with a sub command `set` could print the usage of the subcommand `secrets set` with the arguments `./myapp help secrets set`.
+For example, an application `myapp` which has a command `secrets` with a command `set` could print the usage of the group of multi-level command `secrets set` with the arguments `./myapp help secrets set`.
 
 In the end, using the `help` option of the "secrets set" command or using `help` command with "secret set" as arguments are are equivalent and work by default:
 
@@ -38,8 +38,7 @@ In the end, using the `help` option of the "secrets set" command or using `help`
 
 ### Using `helping`
 
-For the developer, printing help uses a combination of the `helping` and 
-`help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as string.
+For the developer, printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as string.
 
 Here's how to display help with `helping` and `help`:
 
