@@ -14,6 +14,8 @@
       ->
         @register configure_app_set: ({config, command}, handler) ->
           config.commands ?= {}
+          if not command.length
+            config.description ?= 'No description yet'
           # No "help" option for command "help"
           if not command.length or not config.help
             config.options ?= {}

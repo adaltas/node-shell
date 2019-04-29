@@ -26,10 +26,10 @@
             source.commands[name] ?= {}
             source = source.commands[name]
           config = clone source
-          config.command = command
+          if command.length
+            config.command = command
           for name, _ of config.commands
             config.commands[name] = @commands(name).get()
-          # config.commands = @commands.get()
           config.options = @options.show()
           config.shortcuts = {}
           for name, option of config.options
@@ -52,25 +52,39 @@
             # lconfig.commands[name] ?= {}
             lconfig = lconfig.commands[name]
           mutate lconfig, values
-          ctx.hook 'configure_commands_set',
+          hook = unless command.length
+          then 'configure_app_set'
+          else 'configure_commands_set'
+          ctx.hook hook,
             config: lconfig
             command: command
             values: values
           , ({config, command, values}) =>
-            throw error [
-              'Incoherent Command Name:'
-              "key #{JSON.stringify name} is not equal with name #{JSON.stringify config.name}"
-            ] if config.name and config.name isnt command.slice(-1)[0]
-            throw error [
-              'Invalid Command Configuration:'
-              'command property can only be declared at the application level,'
-              "got command #{JSON.stringify config.command}"
-            ] if config.command?
-            # config.command = command
-            throw error [
-              'Invalid Command Configuration:'
-              'extended property cannot be declared inside a command'
-            ] if config.extended?
+            unless command.length
+              config.extended ?= false
+              throw error [
+                'Invalid Configuration:'
+                'extended must be a boolean,'
+                "got #{JSON.stringify config.extended}"
+              ] unless typeof config.extended is 'boolean'
+              config.root = true
+              config.name ?= 'myapp'
+              config.command ?= 'command' if Object.keys(config.commands).length
+            else
+              throw error [
+                'Incoherent Command Name:'
+                "key #{JSON.stringify name} is not equal with name #{JSON.stringify config.name}"
+              ] if config.name and config.name isnt command.slice(-1)[0]
+              throw error [
+                'Invalid Command Configuration:'
+                'command property can only be declared at the application level,'
+                "got command #{JSON.stringify config.command}"
+              ] if config.command?
+              # config.command = command
+              throw error [
+                'Invalid Command Configuration:'
+                'extended property cannot be declared inside a command'
+              ] if config.extended?
             config.name = name
             config.commands ?= {}
             config.options ?= {}
@@ -297,7 +311,6 @@
               'extended property cannot be declared inside a command'
             ] if config.extended?
             # config.command ?= command if Object.keys(config.commands).length
-          config.description ?= 'No description yet' # Shall be moved to the help plugin
           config.commands ?= {}
           config.options ?= {}
           config.shortcuts ?= {}
