@@ -4,124 +4,6 @@
     Parameters = require '../Parameters'
     error = require '../utils/error'
     {clone, is_object_literal, merge, mutate} = require 'mixme'
-    
-    commands_builder = (pcommand) ->
-      ctx = @
-      builder = (command) =>
-        command = [command] if typeof command is 'string'
-        command = [...pcommand, ...command]
-        lconfig = @config
-        for name in command
-          # A new command doesn't have a config registered yet
-          lconfig.commands[name] ?= {}
-          lconfig = lconfig.commands[name]
-        commands: commands_builder.call @, command
-        main: builder_main.call @, command
-        options: options_builder.call @, command
-        get: ->
-          source = ctx.config
-          for name in command
-            throw Error 'Invalid Command' unless source.commands[name]
-            # A new command doesn't have a config registered yet
-            source.commands[name] ?= {}
-            source = source.commands[name]
-          config = clone source
-          if command.length
-            config.command = command
-          for name, _ of config.commands
-            config.commands[name] = @commands(name).get()
-          config.options = @options.show()
-          config.shortcuts = {}
-          for name, option of config.options
-            config.shortcuts[option.shortcut] = option.name if option.shortcut
-          config.main = @main.get() if config.main?
-          config
-        set: ->
-          values = null
-          if arguments.length is 2
-            values = [arguments[0]]: arguments[1]
-          else if arguments.length is 1
-            values = arguments[0]
-          else throw error [
-            'Invalid Commands Set Arguments:'
-            'expect 1 or 2 arguments, got 0'
-          ]
-          lconfig = ctx.config
-          for name in command
-            # A new command doesn't have a config registered yet
-            # lconfig.commands[name] ?= {}
-            lconfig = lconfig.commands[name]
-          mutate lconfig, values
-          hook = unless command.length
-          then 'configure_app_set'
-          else 'configure_commands_set'
-          ctx.hook hook,
-            config: lconfig
-            command: command
-            values: values
-          , ({config, command, values}) =>
-            unless command.length
-              config.extended ?= false
-              throw error [
-                'Invalid Configuration:'
-                'extended must be a boolean,'
-                "got #{JSON.stringify config.extended}"
-              ] unless typeof config.extended is 'boolean'
-              config.root = true
-              config.name ?= 'myapp'
-              config.command ?= 'command' if Object.keys(config.commands).length
-            else
-              throw error [
-                'Incoherent Command Name:'
-                "key #{JSON.stringify name} is not equal with name #{JSON.stringify config.name}"
-              ] if config.name and config.name isnt command.slice(-1)[0]
-              throw error [
-                'Invalid Command Configuration:'
-                'command property can only be declared at the application level,'
-                "got command #{JSON.stringify config.command}"
-              ] if config.command?
-              # config.command = command
-              throw error [
-                'Invalid Command Configuration:'
-                'extended property cannot be declared inside a command'
-              ] if config.extended?
-            config.name = name
-            config.commands ?= {}
-            config.options ?= {}
-            config.shortcuts ?= {}
-            config.strict ?= ( (config) ->
-              strict = config.strict or false
-              for name in command
-                config = config.commands[name]
-                strict = config.strict if config.strict?
-              strict
-            )(ctx.confx().raw())
-            # config.options ?= {}
-            for k, v of config.options
-              @options(k).set v
-            for k, v of config.commands
-              @commands(k).set v
-            @main.set config.main
-          @
-        remove: ->
-          delete lconfig.options[command]
-        show: (properties) ->
-          config = clone lconfig
-          properties = [properties] if typeof properties is 'string'
-          return config unless Array.isArray properties
-          filtered_config = {}
-          for property in properties
-            continue unless config[property]?
-            filtered_config[property] = config[property]
-          filtered_config
-      # builder.get = ->
-      #   source = ctx.confx(pcommand).raw()
-      #   config = {}
-      #   for name, _ of source.commands
-      #     config[name] = builder(name).get()
-      #   config
-      builder
-  
   
     builder_main = (commands) ->
       ctx = @
@@ -142,7 +24,7 @@
           builder
       builder
     
-    options_builder = (commands) ->
+    builder_options = (commands) ->
       ctx = @
       builder = (name) ->
         get: (properties) ->
@@ -240,9 +122,8 @@
         # A new command doesn't have a config registered yet
         lconfig.commands[name] ?= {}
         lconfig = lconfig.commands[name]
-      commands: commands_builder.call @, command
       main: builder_main.call @, command
-      options: options_builder.call @, command
+      options: builder_options.call @, command
       get: ->
         source = ctx.config
         for name in command
@@ -254,7 +135,7 @@
         if command.length
           config.command = command
         for name, _ of config.commands
-          config.commands[name] = @commands(name).get()
+          config.commands[name] = ctx.confx([...command, name]).get()
         config.options = @options.show()
         config.shortcuts = {}
         for name, option of config.options
@@ -296,6 +177,7 @@
             config.root = true
             config.name ?= 'myapp'
             config.command ?= 'command' if Object.keys(config.commands).length
+            config.strict ?= false
           else
             throw error [
               'Incoherent Command Name:'
@@ -310,15 +192,22 @@
               'Invalid Command Configuration:'
               'extended property cannot be declared inside a command'
             ] if config.extended?
+            config.name = command.slice(-1)[0]
             # config.command ?= command if Object.keys(config.commands).length
+            config.strict ?= ( (config) ->
+              strict = config.strict or false
+              for name in command
+                config = config.commands[name]
+                strict = config.strict if config.strict?
+              strict
+            )(ctx.confx().raw())
           config.commands ?= {}
           config.options ?= {}
           config.shortcuts ?= {}
-          config.strict ?= false
           for k, v of config.options
             @options(k).set v
           for k, v of config.commands
-            @commands(k).set v
+            ctx.confx([...command, k]).set v
           @main.set config.main
         @
       # remove: ->

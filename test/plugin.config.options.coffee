@@ -18,16 +18,10 @@ describe 'plugin.config.options', ->
         commands: 'app': commands: 'server': options:
           'host': {}
           'port': {}
-      .confx().commands(['app', 'server']).options.list()
+      .confx(['app', 'server']).options.list()
       .should.eql ['help', 'host', 'port']
     
   describe 'get', ->
-
-    it 'all configuration', ->
-      parameters
-        options: 'config': {}
-        commands: 'server': commands: 'start': {}
-      .confx().get().root.should.be.true()
     
     it 'an option (2 styles)', ->
       parameters
@@ -67,7 +61,7 @@ describe 'plugin.config.options', ->
         commands: 'server':
           options: 'opt_cmd': cascade: true
           commands: 'start': {}
-      .confx().commands(['server', 'start']).options.get_cascaded()
+      .confx(['server', 'start']).options.get_cascaded()
       .should.eql
         'help':
           cascade: true

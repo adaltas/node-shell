@@ -16,7 +16,7 @@ describe 'plugin.config.main', ->
       parameters
         commands: 'app': commands: 'server':
           main: 'leftover'
-      .confx().commands(['app', 'server']).main.get()
+      .confx(['app', 'server']).main.get()
       .should.eql
         name: 'leftover'
           
@@ -24,7 +24,7 @@ describe 'plugin.config.main', ->
 
     it 'for application', ->
       parameters {}
-      .confx().commands([]).main
+      .confx().main
       .set('leftover')
       .get().should.eql
         name: 'leftover'

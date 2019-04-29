@@ -30,7 +30,7 @@ describe 'options.cascade', ->
         options:
           'opt': cascade: true
         commands: 'start': {}
-    app.confx().commands(['server', 'start']).options('opt').get()
+    app.confx(['server', 'start']).options('opt').get()
     .should.eql
       cascade: true
       name: 'opt'
@@ -42,11 +42,11 @@ describe 'options.cascade', ->
       options:
         'opt': cascade: 2
       commands: 'server': commands: 'start': commands: 'sth': {}
-    app.confx().commands(['server']).options.list()
+    app.confx(['server']).options.list()
     .should.eql ['help', 'opt']
-    app.confx().commands(['server', 'start']).options.list()
+    app.confx(['server', 'start']).options.list()
     .should.eql ['help', 'opt']
-    app.confx().commands(['server', 'start', 'sth']).options.list()
+    app.confx(['server', 'start', 'sth']).options.list()
     .should.eql ['help']
         
   it 'from command with limited level', ->
@@ -55,11 +55,11 @@ describe 'options.cascade', ->
         options:
           'opt': cascade: 2
         commands: 'start': commands: 'sth': commands: 'else': {}
-    app.confx().commands([]).options.list()
+    app.confx().options.list()
     .should.eql ['help']
-    app.confx().commands(['server', 'start']).options.list()
+    app.confx(['server', 'start']).options.list()
     .should.eql ['help', 'opt']
-    app.confx().commands(['server', 'start', 'sth']).options.list()
+    app.confx(['server', 'start', 'sth']).options.list()
     .should.eql ['help', 'opt']
-    app.confx().commands(['server', 'start', 'sth', 'else']).options.list()
+    app.confx(['server', 'start', 'sth', 'else']).options.list()
     .should.eql ['help']
