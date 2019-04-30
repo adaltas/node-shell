@@ -13,11 +13,11 @@ writer = (callback) ->
   .on 'finish', ->
     callback chunks.join ''
 
-describe 'route.help', ->
+describe 'router.help', ->
 
   it 'Unhandled leftover', (next) ->
     parameters
-      help:
+      router:
         writer: writer (output) ->
           output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
           output.should.match /^\s+myapp - No description yet/m
@@ -27,7 +27,7 @@ describe 'route.help', ->
       
   it 'Undeclared options in stric mode', (next) ->
     parameters
-      help:
+      router:
         writer: writer (output) ->
           output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp - No description yet/m
@@ -40,7 +40,7 @@ describe 'route.help', ->
     parameters
       commands:
         'server': {}
-      help:
+      router:
         writer: writer (output) ->
           output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp server - No description yet for the server command/m

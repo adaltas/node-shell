@@ -1,5 +1,5 @@
 
-{Parameters} = require './Parameters'
+## Plugin "config"
 
     Parameters = require '../Parameters'
     error = require '../utils/error'

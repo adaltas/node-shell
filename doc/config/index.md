@@ -17,43 +17,50 @@ app = parameters(config)
 
 ## The root properties
 
-* [`commands`](./commands/) (object|array)   
+* [`commands`](./commands/) (object|array, optional)   
   Group the parameters into a specific command. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
-* [`extended`](/usage/extended/) (boolean)   
+* `description` (string, optional)
+  The description of the application.
+* [`extended`](/usage/extended/) (boolean, optional, false)   
   Switch the format of the parameters between the simple flatten mode and the more verbose and flexible extended mode.
-* [`load`](./load/) (function|string)   
+* [`router`](./router) (object, optional)   
+  An object configuring the router plugin with low level properties.
+* [`load`](./load/) (function|string, optional)   
   Function or a module referencing the function to load modules, the default
   implementation ensure modules starting with './' are relative to 
   `process.cwd()` and use `require.main.require`.
-* [`main`](./main/) (object)   
+* [`main`](./main/) (object, optional)   
   Anything left which is not a parameter at the end of the arguments.
-* [`options`](./options/) (object|array)
+* `name` (string, optional)
+  The name of the application, used by the help plugin to display information.
+* [`options`](./options/) (object|array, optional)
   Define the expected main parameters.
-* `strict` (boolean)   
-  Disable auto-discovery.
-* `name` (string)
-  The name of the application.
-* `description` (string)
-  The description of the application.
-* `route` (function|string)   
+* `route` (function|string, optional)   
   Execute a function or the function exported by a module if defined as a 
   string, provide the params object, see the [routing documentation](/api/route/).
+* `strict` (boolean, optional, false)   
+  Disable auto-discovery.
 
-## The properties for `help`
+## Initialisation
 
-* `writer` (string|StreamWriter)   
-  Where to print the help output. Possible string values include "stdout" and "stderr" and default to "stderr". The property is used internally by the help route.
-* `route` (function|string)   
-  The function or module name of the route which responsible for printing help information.
+The configuration is commonly passed as the main argument when initialising `parameters`:
 
-## JSON configuration
-
-Place the configuration inside "config.json", and create a file "index.js" at 
-the root of your project which looks like:
-
+```js
+const parameters = require('parameters')
+const app = parameters({
+  name: 'my_new_app'
+  main: 'some_param'
+})
+console.log(app.parse())
 ```
-config = require('./config')
-require('parameters').route(config)
+
+It is however easy to externalize the configuration into an external file stored on the file system. JSON being natively handled by Node.js, here is how an application could rely on a configuration file stored in "/etc/my_new_app.json":
+
+```js
+const config = require('/etc/my_new_app')
+const parameters = require('parameters')
+const app = parameters(config)
+console.log(app.parse())
 ```

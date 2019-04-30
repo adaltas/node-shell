@@ -19,7 +19,7 @@ describe 'route.error', ->
 
     it 'application help', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /myapp - No description yet/
             next()
@@ -28,7 +28,7 @@ describe 'route.error', ->
 
     it 'command help', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
             next()
@@ -43,7 +43,7 @@ describe 'route.error', ->
 
     it 'application help', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /^\s+Missing Application Route: a "route" definition is required when no commands are defined/
             output.should.match /^\s+myapp - No description yet/m
@@ -53,7 +53,7 @@ describe 'route.error', ->
 
     it 'command help', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
             next()
@@ -68,7 +68,7 @@ describe 'route.error', ->
     
     it 'command without route and with orphan print help', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.not.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child commands are defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
@@ -84,7 +84,7 @@ describe 'route.error', ->
     
     it 'print error message if leaf', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child commands are defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
@@ -100,7 +100,7 @@ describe 'route.error', ->
     
     it 'Unhandled leftover', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
             output.should.match /^\s+myapp - No description yet/m
@@ -110,7 +110,7 @@ describe 'route.error', ->
         
     it 'Undeclared options in stric mode', (next) ->
       parameters
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp - No description yet/m
@@ -123,7 +123,7 @@ describe 'route.error', ->
       parameters
         commands:
           'server': {}
-        help:
+        router:
           writer: writer (output) ->
             output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp server - No description yet for the server command/m
