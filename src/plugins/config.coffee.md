@@ -126,12 +126,15 @@
       options: builder_options.call @, command
       get: ->
         source = ctx.config
+        strict = source.strict
         for name in command
           throw Error 'Invalid Command' unless source.commands[name]
           # A new command doesn't have a config registered yet
           source.commands[name] ?= {}
           source = source.commands[name]
+          strict = source.strict if source.strict
         config = clone source
+        config.strict = strict
         if command.length
           config.command = command
         for name, _ of config.commands
@@ -190,13 +193,6 @@
               'extended property cannot be declared inside a command'
             ] if config.extended?
             config.name = command.slice(-1)[0]
-            config.strict ?= ( (config) ->
-              strict = config.strict or false
-              for name in command
-                config = config.commands[name]
-                strict = config.strict if config.strict?
-              strict
-            )(ctx.confx().raw())
           config.commands ?= {}
           config.options ?= {}
           config.shortcuts ?= {}
