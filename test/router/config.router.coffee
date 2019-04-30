@@ -1,9 +1,9 @@
 
 path = require 'path'
-parameters = require '../src'
+parameters = require '../../src'
 { Writable } = require('stream')
 
-describe 'route.config.router', ->
+describe 'router.config.router', ->
   
   describe 'router', ->
     
@@ -12,7 +12,7 @@ describe 'route.config.router', ->
       .config.router.should.eql
         end: false
         writer: 'stderr'
-        route: path.resolve __dirname, '../src/routes/help'
+        route: path.resolve __dirname, '../../src/routes/help'
           
     it "stream.Writable", ->
       parameters
@@ -20,7 +20,7 @@ describe 'route.config.router', ->
       .config.router.should.eql
         end: false
         writer: new Writable()
-        route: path.resolve __dirname, '../src/routes/help'
+        route: path.resolve __dirname, '../../src/routes/help'
 
   describe 'options', ->
   
@@ -73,7 +73,7 @@ describe 'route.config.router', ->
         main:
           name: 'name'
           description: 'Help about a specific command'
-        route: path.resolve __dirname, '../src/routes/help'
+        route: path.resolve __dirname, '../../src/routes/help'
         strict: false
         shortcuts: {}
         options: {}

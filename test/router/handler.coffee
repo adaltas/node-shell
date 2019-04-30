@@ -1,9 +1,9 @@
 
 fs = require 'fs'
 os = require 'os'
-parameters = require '../src'
+parameters = require '../../src'
   
-describe 'route.handler', ->
+describe 'router.handler', ->
     
   it 'context is parameter instance', ->
     parameters

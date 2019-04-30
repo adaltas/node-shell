@@ -2,7 +2,7 @@
 fs = require 'fs'
 os = require 'os'
 { Writable } = require 'stream'
-parameters = require '../src'
+parameters = require '../../src'
 
 writer = (callback) ->
   chunks = []
@@ -13,7 +13,7 @@ writer = (callback) ->
   .on 'finish', ->
     callback chunks.join ''
 
-describe 'route.error', ->
+describe 'router.error', ->
   
   describe 'option', ->
 

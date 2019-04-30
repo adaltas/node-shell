@@ -1,9 +1,9 @@
 
 fs = require 'fs'
 os = require 'os'
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'route.load', ->
+describe 'router.load', ->
 
   it 'application route', ->
     mod = "#{os.tmpdir()}/node_params"
