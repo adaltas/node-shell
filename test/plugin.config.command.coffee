@@ -12,4 +12,3 @@ describe 'configure.command', ->
             command: 'invalid'
             commands: 'start': {}
       ).should.throw 'Invalid Command Configuration: command property can only be declared at the application level, got command "invalid"'
-      

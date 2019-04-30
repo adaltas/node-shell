@@ -2,30 +2,16 @@
 parameters = require '../src'
 
 describe 'plugin.config.main', ->
-  
-  describe 'get', ->
 
-    it 'for application', ->
-      parameters
-        options: 'config': {}
+  it 'accept main as a string', ->
+    parameters
+      main: 'leftover'
+    .config.main.should.eql
+      name: 'leftover'
+
+  it 'accept main in a command as a string', ->
+    parameters
+      commands: 'start':
         main: 'leftover'
-      .confx().main.get().should.eql
-        name: 'leftover'
-
-    it 'for a command', ->
-      parameters
-        commands: 'app': commands: 'server':
-          main: 'leftover'
-      .confx(['app', 'server']).main.get()
-      .should.eql
-        name: 'leftover'
-          
-  describe 'set', ->
-
-    it 'for application', ->
-      parameters {}
-      .confx().main
-      .set('leftover')
-      .get().should.eql
-        name: 'leftover'
-  
+    .config.commands.start.main.should.eql
+      name: 'leftover'
