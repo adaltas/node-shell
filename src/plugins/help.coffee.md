@@ -12,7 +12,8 @@
 
     Parameters::init = ( (parent) ->
       ->
-        @register configure_app_set: ({config, command}, handler) ->
+        @register configure_set: ({config, command}, handler) ->
+          return handler if command.length
           config.commands ?= {}
           if not command.length
             config.description ?= 'No description yet'
@@ -41,7 +42,8 @@
           ->
             handler.call @, arguments...
             config.description ?= "No description yet for the #{config.name} command"
-        @register configure_commands_set: ({config, command}, handler) ->
+        @register configure_set: ({config, command}, handler) ->
+          return handler unless command.length
           ->
             handler.call @, arguments...
             config.description ?= "No description yet for the #{config.name} command"

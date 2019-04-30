@@ -158,10 +158,7 @@
           # lconfig.commands[name] ?= {}
           lconfig = lconfig.commands[name]
         mutate lconfig, values
-        hook = unless command.length
-        then 'configure_app_set'
-        else 'configure_commands_set'
-        ctx.hook hook,
+        ctx.hook 'configure_set',
           config: lconfig
           command: command
           values: values

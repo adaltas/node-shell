@@ -65,7 +65,7 @@ describe 'plugin.config.commands', ->
     it 'call the hook', ->
       parameters {}
       .register
-        'configure_commands_set': ({config, command, values}, handler) ->
+        'configure_set': ({config, command, values}, handler) ->
           config.test = 'was here'
           handler
       .confx('start').set

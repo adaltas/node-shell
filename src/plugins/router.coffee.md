@@ -18,7 +18,7 @@ How to use the `route` method to execute code associated with a particular comma
 
     Parameters::init = ( (parent) ->
       ->
-        @register configure_app_set: ({config, command}, handler) ->
+        @register configure_set: ({config, command}, handler) ->
           return handler if command.length
           config.router ?= {}
           config.router.writer ?= 'stderr'
@@ -42,17 +42,7 @@ How to use the `route` method to execute code associated with a particular comma
     
     Parameters::init = ( (parent) ->
       ->
-        @register configure_app_set: ({config, command}, handler) ->
-          return handler unless config.route
-          throw error [
-            'Invalid Route Configuration:'
-            "accept string or function"
-            "in application," unless command.length
-            "in command #{JSON.stringify command.join ' '}," if command.length
-            "got #{JSON.stringify config.route}"
-          ] unless typeof config.route in ['function', 'string']
-          handler
-        @register configure_commands_set: ({config, command}, handler) ->
+        @register configure_set: ({config, command}, handler) ->
           return handler unless config.route
           throw error [
             'Invalid Route Configuration:'
