@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'configure.command', ->
+describe 'config.command', ->
   
   describe 'validation', ->
     

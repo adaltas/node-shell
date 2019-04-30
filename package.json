@@ -65,6 +65,6 @@
     "major": "npm version major -m 'Bump to version %s'",
     "build": "coffee -b -o lib src",
     "pretest": "npm run build",
-    "test": "mocha test/**/*.coffee"
+    "test": "mocha test/{.,*}/*.coffee"
   }
 }

@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'plugin.config.options.api', ->
+describe 'config.options.api', ->
   
   describe 'list', ->
 

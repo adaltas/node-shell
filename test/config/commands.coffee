@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'plugin.config.commands', ->
+describe 'config.commands', ->
   
   describe 'get', ->
 

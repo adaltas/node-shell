@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'plugin.config.main', ->
+describe 'config.main', ->
 
   it 'accept main as a string', ->
     parameters
