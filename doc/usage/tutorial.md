@@ -7,7 +7,7 @@ maturity: initial
 
 # Node.js Parameters tutorial
 
-Welcome to Node.js Parameters! The goal of this tutorial is to guide you through configuring and build your first CLI application using Parameters. Starting from scratch and go on to advanced usage of its APIs. The tutorial contains following sections:
+Welcome to Node.js Parameters! The goal of this tutorial is to guide you through configuring and build your first CLI application using Parameters. Starting from scratch and go on to advanced usage of its APIs. The tutorial contains the following sections:
 
 - What is Node.js Parameters?
 - Getting started
@@ -21,10 +21,10 @@ Welcome to Node.js Parameters! The goal of this tutorial is to guide you through
 
 ## What is Node.js Parameters?
 
-Parameters is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical unix command line arguments. 
+Parameters is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical Unix command line arguments. 
 
 It offers powerful features such as:
-- Reversibility: parse and stringify is bi-directional
+- Reversibility: read and write arguments is bi-directional
 - Auto-discovery: extract unregistered options
 - Unlimited multi-level commands (eg `myapp server start ...`)
 - Type conversion (`string`, `boolean`, `integer`, `array`)
@@ -34,9 +34,9 @@ It offers powerful features such as:
 
 ## Getting started
 
-For users not familiar with the Node.js environment, you can follow the [official installation instructions](https://nodejs.org/en/download/) to get started and have the `node`, `npm` and `npx` command available on your system.
+For users not familiar with the Node.js environment, you can follow the [official installation instructions](https://nodejs.org/en/download/) to get started and have the `node`, `npm` and `npx` commands available on your system.
 
-The `node` command execute JavaScript scripts. The `npm` command expose the NPM package manager for JavaScript. The `npx` is intended to help round out the experience of using packages from the npm registry 
+The `node` command execute JavaScript scripts. The `npm` command expose the NPM package manager for JavaScript. The `npx` is intended to help round out the experience of using packages from the npm registry. 
 
 Once you have installed Node, create a basic Node.js project which is called a package:
 
@@ -58,7 +58,7 @@ The Parameters dependency is now downloaded and available inside the "./node_mod
 
 ## Parsing arguments
 
-Let's consider a simple application by modifying the "app.js" file as follow
+Let's consider a simple application by modifying the "app.js" file as follow:
 
 ```js
 // Import the "parameter" package
@@ -74,9 +74,9 @@ console.log(args)
 
 The "parameters" package export a function which expect to a configuration object describing your commands.
 
-Consider the configuration as the schema or the model of your application arguments. The `main` property retrieve all the arguments which are not mapped otherwise of an application in the form of an array.
+Consider the configuration as the schema or the model of your application arguments. The `main` property retrieve all the arguments of an application which are not mapped otherwise in the form of an array. We will cover other types for arguments later such as options and commands.
 
-The `parse` method convert the arguments into a parameter object. You can provide your own arguments or let `parse` discover them automatically if no argument is provided like above. Node.js expose the CLI arguments with `process.argv` as an array. The first 2 arguments are the path to the node binary and the script being executed. Parameters will strip those arguments and only parse whats left.
+The `parse` method convert the arguments into a parameter object. You can provide your own arguments or let `parse` discover them automatically if no argument is provided like above. Node.js expose the CLI arguments with `process.argv` as an array. The first 2 arguments are the path to the node binary and the script being executed. Parameters will strip those arguments and only parse what is left.
 
 You can now execute `node app world` and it shall print:
 
@@ -98,7 +98,7 @@ This CLI command is made of multiple sections.
 * `options`: both "config" and "start" are options. The "config" option is associated with a value and the "force" option is boolean indicating the presence of the option.
 * `main`: whichever arguments not recognized by the parser is pushed into the "main" property.
 
-For the sake of curiosity, configuring Parameters as:
+For the sake of curiosity, Parameters could be configured and initialized as:
 
 ```js
 const parameters = require("parameters")
@@ -116,7 +116,7 @@ parameters({
 .parse()
 ```
 
-leads to:
+Running the command above shall lead to:
 
 ```js
 { command: [ 'start' ],
@@ -130,11 +130,13 @@ Let's now deep dive on options and commands.
 ## Configuring options
 
 Command-line `options` are commands used to pass parameters to a program. These entries, also called command-line switches, can pass along cues for changing various settings. They follow the command name on the command line or right after the application call. `options` can be passed it two ways when prefixed with:
+
 - `--` followed by their name.
 - `-` followed by their shortcut alternative.
+
 It is recommended using shortcuts only for the most frequently used `options`, to avoid difficulty in understanding the commands of third-party developers. 
 
-For example, configuration with a shortcut name:
+For example, let's expose a `config` option with a shortcut named `c`:
 
 ```js
 const parameters = require("parameters")
@@ -153,13 +155,14 @@ node app --config ./my/repo
 node app -c ./my/repo
 ```
 
-In place of `./my/repo` can be any value, but if you don't provide it, the CLI will run into an error. And what if you need to take a control over the values, which could be passed, or to use an option as a boolean switcher without providing with any value? To do this, options have the properties:
+In place of `./my/repo` can be any value, but if you don't provide it, the CLI will run into an error. And what if you need to take a control over the values, which could be passed, or to use an option as a boolean switcher without providing with any value? To do this, options accept [multiple properties](/config/options/) including:
+
 - `default` (anything) - a default value if none is provided.
 - `one_of` (array) - a list of possible and accepted values.
 - `required` (boolean) - whether or not this option must always be present (false by default).
 - `type` (string) - the type used to cast between a string argument and a JS value (accepted values are 'boolean', 'string', 'integer' and 'array').
 
-To illustrate the behaviour of each let's make a basic example, but these can be used together within one `option` as well:
+To illustrate the behaviour of each, let's make a basic example, but these can be used together within one `option` as well:
 
 ```js
 const parameters = require("parameters")
@@ -195,15 +198,19 @@ The result of parsing will be the object like:
   'default-opt': 42 }
 ```
 
-We have considered using `options` without calling `commands`. Although, any option can be corresponded with a specific command.
+We have considered using `options` without defining a `commands`. In such case, they apply to the overall application. Although, any option can be corresponded with a specific command.
 
 ## Configuring commands
 
-When you build an application with non-trivial functionality that provides more than one operation, you associate operations with commands. The Node.js Parameters allows you to flexibly configure `commands`, like building multiple levels of hierarchy or assigning own `options`.
+When you build an application with non-trivial functionaliies that provides more than one operation, you associate operations with commands. The Node.js Parameters allows you to flexibly configure `commands`, like building multiple levels of hierarchy and assigning their own `options` and `main` properties.
 
 Let's consider the power of the Parameters capability on an example of configuring an application for logging strings into a file. We define our application performs the following operations:
-- appending strings of information into the end of the file
-- viewing the log file
+
+- `append`
+  Add strings of information into the end of a log file
+- `view`
+  Display the content of the log file
+
 And as well, we must specify in which file the logged information should be stored.
 
 Create the javascript file with the name "log.js" and paste following:
@@ -232,9 +239,13 @@ const app = parameters({
 ```
 
 This configuration object consists:
-- `source` - the option which assigns the file where the data will be stored, if it is not passed the default value `log.txt` will be used.
-- `append` - the command for writing `data` into a log file. The `data` is the required main argument that passes strings.
-- `view` - the command for viewing a log file. The option `recent` passes a boolean flag which sets two modes of viewing: view the full file or last few records.
+
+- `source`
+  The file where the data will be stored, if it is not passed the default value `log.txt` will be used.
+- `append`
+  The command for writing `data` into a log file. The `data` is the required main argument that passes strings.
+- `view`
+  The command for viewing a log file. The option `recent` passes a boolean flag which sets two modes of viewing: view the full file or last few records.
 
 ## Parsing and handling arguments (commands, options, main)
 

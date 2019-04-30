@@ -5,7 +5,7 @@
 Node.js Parameters is sugar for parsing typical unix command line options. 
 
 * Standard and commands-based command lines (eg `git-pull ...` or `git pull ...`)
-* Reversibility: parse and stringify is bi-directional
+* Reversibility: read and write arguments is bi-directional
 * Auto-discovery: extract unregistered options
 * Unlimited/multi level commands (eg `myapp server start ...`)
 * Type conversion ('string', 'boolean', 'integer', 'array')
