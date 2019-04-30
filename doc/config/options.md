@@ -16,6 +16,8 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
 * `default` (anything)   
   Default value if none is provided; always part of the object return by parse,
   part of the arguments returned by [`stringify`](/api/stringify/) unless the "no_default" option is set.
+* `disabled` (boolean, optional, false)   
+  Disabled an option.
 * `name` (string)   
   The name of the option, required.
 * `one_of` (array)   
