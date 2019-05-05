@@ -5,8 +5,9 @@ Print the help to stderr.
 
 ## Source code
 
-    module.exports = ({argv, params, config, error}) ->
+    module.exports = ({argv, params, error}) ->
       command = @helping params
+      config = @confx().get()
       writer = config.router.writer
       if typeof writer is 'string' then switch writer
         when 'stdout' then writer = process.stdout

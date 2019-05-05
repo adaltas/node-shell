@@ -1,6 +1,4 @@
 
-fs = require 'fs'
-os = require 'os'
 { Writable } = require 'stream'
 parameters = require '../../src'
 
