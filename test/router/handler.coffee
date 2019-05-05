@@ -39,7 +39,7 @@ describe 'router.handler', ->
         options:
           'my_argument': {}
         route: (info) ->
-          Object.keys(info).should.eql ['argv', 'config', 'params', 'error']
+          Object.keys(info).should.eql ['argv', 'command', 'error', 'params', 'args']
           arguments.length.should.eql 1
       .route ['--my_argument', 'my value']
 

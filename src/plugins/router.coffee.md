@@ -98,7 +98,14 @@ How to use the `route` method to execute code associated with a particular comma
           route = @load @config.router.route
         else
           route = @load route if typeof route is 'string'
-        return route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
+        return @hook 'router_call',
+          argv: argv
+          command: commands
+          error: err
+          params: params
+          args: args
+        , (context) =>
+          return route.call @, context, ...args
       # Print help
       if commands = @helping params
         route = @load @config.router.route
