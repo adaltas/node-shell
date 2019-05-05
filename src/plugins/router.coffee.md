@@ -7,7 +7,7 @@
 
 How to use the `route` method to execute code associated with a particular command.
 
-    # Dependecies
+    # Dependencies
     path = require 'path'
     stream = require 'stream'
     error = require '../utils/error'

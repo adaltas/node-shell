@@ -1,7 +1,7 @@
 
 ## Plugin "help"
 
-    # Dependecies
+    # Dependencies
     path = require 'path'
     pad = require 'pad'
     error = require '../utils/error'

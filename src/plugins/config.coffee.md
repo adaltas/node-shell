@@ -1,9 +1,11 @@
 
 ## Plugin "config"
 
-    Parameters = require '../Parameters'
+    # Dependencies
     error = require '../utils/error'
     {clone, is_object_literal, merge, mutate} = require 'mixme'
+    # Parameters & plugins
+    Parameters = require '../Parameters'
   
     builder_main = (commands) ->
       ctx = @
