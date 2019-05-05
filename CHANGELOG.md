@@ -12,6 +12,7 @@ New functionality
 * help: new plugin
 * help: sort options
 * router: rename root property help to router
+* hook: return value from handler
 * hook: configure_app_set hook
 * hook: configure_commands_set hook
 * hook: new plugin/hook system

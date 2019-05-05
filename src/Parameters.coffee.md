@@ -34,7 +34,6 @@
       for plugin in @registry
         handler = plugin[name].call @, args..., handler if plugin[name]
       handler.call @, args...
-      handler
 
 ## Method `parse([arguments])`
 
