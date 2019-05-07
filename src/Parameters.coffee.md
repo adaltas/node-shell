@@ -129,7 +129,7 @@ Convert an arguments list to a parameters object.
             throw error [
               'Required Option Argument:'
               "the \"#{option.name}\" option must be provided"
-            ] unless helping or params[option.name]?
+            ] unless params[option.name]?
           if option.one_of
             values = params[option.name]
             if not option.required and values isnt undefined
