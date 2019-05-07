@@ -58,27 +58,34 @@
 How to use the `route` method to execute code associated with a particular command.
 
     Parameters::route = (argv = process, args...) ->
+      # Normalize arguments
+      # Remove node and script argv elements
+      if argv is process
+        index = 2
+        argv = argv.argv
+      else unless Array.isArray argv
+        throw error [
+          'Invalid Router Arguments:'
+          'first argument must be an argv array or the process object,'
+          "got #{JSON.stringify process}"
+        ]
+      route_call = (route, commands, params, err, args) =>
+        @hook 'router_call',
+          argv: argv
+          command: commands
+          error: err
+          params: params
+          args: args
+        , (context) =>
+          route.call @, context, ...args
       route_error = (err, commands) =>
         argv = if commands.length
         then ['help', ...commands]
         else ['--help']
         params = @parse argv
         route = @load @config.router.route
-        route.call @, {argv: argv, config: @config, params: params, error: err}, ...args
-      # Normalize arguments
-      if Array.isArray(argv)
-        try params = @parse argv
-        catch err then return route_error err, err.command or []
-      else if argv is process
-        try params = @parse argv
-        catch err then return route_error err, err.command or []
-      else
-        throw error [
-          'Invalid Arguments:'
-          'first argument must be an argv array or the process object,'
-          "got #{JSON.stringify argv}"
-        ]
-      route = (config, commands) =>
+        route_call route, commands, params, err, args
+      route_from_config = (config, commands, params) =>
         route = config.route
         unless route
           # Provide an error message if leaf command does not define any route
@@ -100,19 +107,14 @@ How to use the `route` method to execute code associated with a particular comma
           route = @load @config.router.route
         else
           route = @load route if typeof route is 'string'
-        return @hook 'router_call',
-          argv: argv
-          command: commands
-          error: err
-          params: params
-          args: args
-        , (context) =>
-          return route.call @, context, ...args
+        route_call route, commands, params, err, args
+      # Read parameters
+      try params = @parse argv
+      catch err then return route_error err, err.command or []
       # Print help
       if commands = @helping params
         route = @load @config.router.route
-        route.call @, {argv: argv, config: @config, params: params}, ...args
-        return
+        return route_call route, commands, params, err, args
       # Load a command route
       else if commands = params[@config.command]
         # TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
@@ -123,7 +125,7 @@ How to use the `route` method to execute code associated with a particular comma
           then configure config, commands
           else config
         )(@config, clone commands)
-        route config, commands
+        route_from_config config, commands, params
       # Load an application route
       else
-        route @config, []
+        route_from_config @config, [], params

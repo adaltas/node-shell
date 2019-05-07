@@ -52,8 +52,6 @@ Convert an arguments list to a parameters object.
       if argv is process
         index = 2
         argv = argv.argv
-      # else if typeof argv is 'string'
-      #   argv = argv.split ' '
       else unless Array.isArray argv
         throw error [
           'Invalid Arguments:'
