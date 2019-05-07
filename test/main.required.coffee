@@ -41,7 +41,7 @@ describe 'main.required', ->
           name: 'my_argument'
           required: true
     (->
-      app.parse 'mycommand'
+      app.parse ['mycommand']
     ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'
     (->
       app.stringify
