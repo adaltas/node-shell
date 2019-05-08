@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'help.arguments', ->
+describe 'help/help.api', ->
 
   it 'is empty', ->
     parameters

@@ -1,7 +1,7 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
-describe 'help.parse', ->
+describe 'help/help.parse', ->
   
   describe 'dont interfere with command', ->
     # NOTE: the tests in this group used to inject an help command
