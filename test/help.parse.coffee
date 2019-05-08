@@ -2,42 +2,34 @@
 parameters = require '../src'
 
 describe 'help.parse', ->
+  
+  describe 'dont interfere with command', ->
+    # NOTE: the tests in this group used to inject an help command
+    # when parsing arguments which doesnt hit a sub command
+    # TODO: in the future, either remove entirely those tests
+    # or introduce an help config option such as 'print_help_unless_leaf_command'
 
-  it 'handle an empty command as help', ->
-    parameters
-      commands: 'help': {}
-    .parse []
-    .should.eql
-      command: ['help']
+    it 'handle an empty command as help', ->
+      parameters
+        commands: 'help': {}
+      .parse []
+      .should.eql
+        command: [] # Old behaviour was `['help']`
 
-  it 'handle an empty command as even if help is not defined', ->
-    parameters
-      commands: 'fake': {}
-    .parse []
-    .should.eql
-      command: ['help']
+    it 'handle an empty command as even if help is not defined', ->
+      parameters
+        commands: 'fake': {}
+      .parse []
+      .should.eql
+        command: [] # Old behaviour was `['help']`
 
-  it 'global options without a command', ->
-    parameters
-      commands: 'fake': {}
-    .parse ['--param', 'value']
-    .should.eql
-      param: 'value'
-      command: ['help']
-
-  it.skip 'global options without a sub command', ->
-    # Note, this test illustrate a bug where parse reference @config instead of config:
-    # if Object.keys(@config.commands).length and not params[@config.command]
-    #   params[@config.command] = 'help'
-    # The assertion is what we expect in current version but in a future version,
-    # it shall only work if a new `help` config is declared
-    parameters
-      commands: 'level1':
-        commands: 'level2': {}
-    .parse ['--param', 'value', 'level1']
-    .should.eql
-      param: 'value'
-      command: ['value1', 'help']
+    it 'global options without a command', ->
+      parameters
+        commands: 'fake': {}
+      .parse ['--param', 'value']
+      .should.eql
+        param: 'value'
+        command: [] # Old behaviour was `['help']`
 
   it 'handle help command', ->
     app = parameters

@@ -156,11 +156,12 @@ Convert an arguments list to a parameters object.
             ] unless config.commands[command]
             # Parse child configuration
             parse config.commands[command], command
-        # Command mode but no command are found, default to help
-        # Default to help is help property is set and no command is found in user args
+        # NOTE: legacy versions used to inject an help command
+        # when parsing arguments which doesnt hit a sub command
+        # See the associated tests in "help/parse.coffee"
         # Happens with global options without a command
-        if Object.keys(config.commands).length and not command
-          params[appconfig.command] = 'help'
+        # if Object.keys(config.commands).length and not command
+        #   params[appconfig.command] = 'help'
         # Check against required main
         main = config.main
         if main and main.required

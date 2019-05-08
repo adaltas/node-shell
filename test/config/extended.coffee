@@ -48,7 +48,6 @@ describe 'config.extended', ->
         commands:
           subcommand: {}
       app.parse(['my --command']).should.eql [
-        command: "help" # TODO, SHALL BE REMOVED
         leftover: ['my --command']
       ]
       app.stringify [
