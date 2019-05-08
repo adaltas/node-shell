@@ -2,8 +2,8 @@
 # Parameters
 
     registry = []
-    register = (plugin) ->
-      registry.push plugin
+    register = (hook) ->
+      registry.push hook
 
     Parameters = (config) ->
       @registry = []
@@ -17,23 +17,35 @@
     
     Parameters::init = (->)
   
-    Parameters::register = (plugin) ->
+    Parameters::register = (hook) ->
       throw error [
-        'Invalid Plugin Registration:'
-        'plugin must consist of keys representing the hook names'
+        'Invalid Hook Registration:'
+        'hooks must consist of keys representing the hook names'
         'associated with function implementing the hook,'
-        "got #{plugin}"
-      ] unless is_object_literal plugin
-      @registry.push plugin
+        "got #{hook}"
+      ] unless is_object_literal hook
+      @registry.push hook
       @
   
-    Parameters::hook = (name, args..., handler) ->
+    Parameters::hook = ->
+      switch arguments.length
+        when 3 then [name, args, handler] = arguments
+        when 4 then [name, args, hooks, handler] = arguments
+        else throw error [
+          'Invalid Hook Argument:'
+          'function hook expect 3 or 4 arguments'
+          'name, args, hooks? and handler,'
+          "got #{arguments.length} arguments"
+        ]
+      hooks = [hooks] if typeof hooks is 'function'
       res = null
-      for plugin in registry
-        handler = plugin.call @, args..., handler if plugin[name]
-      for plugin in @registry
-        handler = plugin[name].call @, args..., handler if plugin[name]
-      handler.call @, args...
+      for hook in registry
+        handler = hook.call @, args, handler if hook[name]
+      for hook in @registry
+        handler = hook[name].call @, args, handler if hook[name]
+      if hooks then for hook in hooks
+        handler = hook.call @, args, handler
+      handler.call @, args
 
 ## Method `parse([arguments])`
 
