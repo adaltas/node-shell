@@ -69,23 +69,24 @@ How to use the `route` method to execute code associated with a particular comma
           'first argument must be an argv array or the process object,'
           "got #{JSON.stringify process}"
         ]
-      route_call = (route, commands, params, err, args) =>
+      appconfig = @confx().get()
+      route_call = (route, command, params, err, args) =>
         @hook 'router_call',
           argv: argv
-          command: commands
+          command: command
           error: err
           params: params
           args: args
         , (context) =>
           route.call @, context, ...args
-      route_error = (err, commands) =>
-        argv = if commands.length
-        then ['help', ...commands]
+      route_error = (err, command) =>
+        argv = if command.length
+        then ['help', ...command]
         else ['--help']
         params = @parse argv
-        route = @load @config.router.route
-        route_call route, commands, params, err, args
-      route_from_config = (config, commands, params) =>
+        route = @load appconfig.router.route
+        route_call route, command, params, err, args
+      route_from_config = (config, command, params) =>
         route = config.route
         unless route
           # Provide an error message if leaf command does not define any route
@@ -93,39 +94,33 @@ How to use the `route` method to execute code associated with a particular comma
             err = if config.root
             then error [
               'Missing Application Route:'
-              'a \"route\" definition is required when no commands are defined'
+              'a \"route\" definition is required when no command is defined'
             ]
             else error [
               'Missing Command Route:'
-              "a \"route\" definition #{JSON.stringify params[@config.command]} is required when no child commands are defined"
+              "a \"route\" definition #{JSON.stringify params[appconfig.command]} is required when no child command is defined"
             ]
           # Convert argument to an help command
-          argv = if commands.length
-          then ['help', ...commands]
+          argv = if command.length
+          then ['help', ...command]
           else ['--help']
           params = @parse argv
-          route = @load @config.router.route
+          route = @load appconfig.router.route
         else
           route = @load route if typeof route is 'string'
-        route_call route, commands, params, err, args
+        route_call route, command, params, err, args
       # Read parameters
       try params = @parse argv
       catch err then return route_error err, err.command or []
       # Print help
-      if commands = @helping params
-        route = @load @config.router.route
-        return route_call route, commands, params, err, args
+      if command = @helping params
+        route = @load appconfig.router.route
+        return route_call route, command, params, err, args
       # Load a command route
-      else if commands = params[@config.command]
-        # TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
-        commands = (for i in [0...params.length] then params[i][@config.command]) if @config.extended
-        config = (configure = (config, commands) ->
-          config = config.commands[commands.shift()]
-          if commands.length
-          then configure config, commands
-          else config
-        )(@config, clone commands)
-        route_from_config config, commands, params
-      # Load an application route
       else
-        route_from_config @config, [], params
+        # Return undefined if not parsing command based arguments
+        command = params[appconfig.command]
+        # TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
+        command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
+        config = @confx(command).get()
+        route_from_config config, command or [], params
