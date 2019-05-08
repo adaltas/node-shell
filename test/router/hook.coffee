@@ -10,7 +10,7 @@ writer = (callback) ->
       callback()
   .on 'finish', ->
     callback chunks.join ''
-  
+
 describe 'router.hook', ->
     
   it 'router_call can modify inject parameters into the route', (next) ->
