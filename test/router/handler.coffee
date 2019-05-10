@@ -2,6 +2,7 @@
 fs = require 'fs'
 os = require 'os'
 parameters = require '../../src'
+promise = require('promise')
   
 describe 'router.handler', ->
     
@@ -23,14 +24,14 @@ describe 'router.handler', ->
     ).should.throw 'catch me'
     
   it 'load with custom function handler', ->
-    fs.writeFileSync "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> "Hello"'
+    await promise.denodeify(fs.writeFile) "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> "Hello"'
     parameters
       route: './something'
       load: (module) ->
         require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
     .route []
     .should.eql 'Hello'
-    fs.unlinkSync "#{os.tmpdir()}/renamed_module.coffee"
+    await promise.denodeify(fs.unlink) "#{os.tmpdir()}/renamed_module.coffee"
   
   describe 'arguments', ->
     

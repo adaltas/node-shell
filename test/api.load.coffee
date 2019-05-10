@@ -2,13 +2,14 @@
 fs = require 'fs'
 os = require 'os'
 parameters = require '../src'
+promise = require('promise')
   
 describe 'api.load', ->
 
   it 'load relative to require.main', ->
     cwd = process.cwd()
     process.chdir os.tmpdir()
-    fs.writeFileSync "#{os.tmpdir()}/relative_module.coffee", 'module.exports = ({params}) -> params.my_argument'
+    await promise.denodeify(fs.writeFile)  "#{os.tmpdir()}/relative_module.coffee", 'module.exports = ({params}) -> params.my_argument'
     parameters
       route: './relative_module'
       options: [
@@ -17,7 +18,7 @@ describe 'api.load', ->
     .route ['--my_argument', 'my value']
     .should.eql 'my value'
     process.chdir cwd
-    fs.unlinkSync "#{os.tmpdir()}/relative_module.coffee"
+    await promise.denodeify(fs.unlink) "#{os.tmpdir()}/relative_module.coffee"
 
   it 'load is not a string', ->
     (->
