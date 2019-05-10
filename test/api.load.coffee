@@ -6,7 +6,7 @@ promise = require('promise')
   
 describe 'api.load', ->
 
-  it.only 'load relative to require.main', ->
+  it 'load relative to require.main', ->
     cwd = process.cwd()
     process.chdir os.tmpdir()
     await promise.denodeify(fs.writeFile)  "#{os.tmpdir()}/relative_module.coffee", 'module.exports = (params) -> params'
