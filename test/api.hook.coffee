@@ -23,7 +23,7 @@ describe 'api.hook', ->
     , ({pass}) ->
       pass.should.eql 'sth'
         
-  it.only 'provide user register', ->
+  it 'provide user register', ->
     app = parameters()
     app.hook 'hook_sth',
       pass: 'sth'
