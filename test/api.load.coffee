@@ -6,16 +6,13 @@ promise = require('promise')
   
 describe 'api.load', ->
 
-  it 'load relative to require.main', ->
+  it.only 'load relative to require.main', ->
     cwd = process.cwd()
     process.chdir os.tmpdir()
-    await promise.denodeify(fs.writeFile)  "#{os.tmpdir()}/relative_module.coffee", 'module.exports = ({params}) -> params.my_argument'
+    await promise.denodeify(fs.writeFile)  "#{os.tmpdir()}/relative_module.coffee", 'module.exports = (params) -> params'
     parameters
-      route: './relative_module'
-      options: [
-        name: 'my_argument'
-      ]
-    .route ['--my_argument', 'my value']
+      name: 'start'
+    .load("#{os.tmpdir()}/relative_module.coffee") "my value"
     .should.eql 'my value'
     process.chdir cwd
     await promise.denodeify(fs.unlink) "#{os.tmpdir()}/relative_module.coffee"
