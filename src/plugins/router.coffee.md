@@ -70,13 +70,28 @@ How to use the `route` method to execute code associated with a particular comma
           "got #{JSON.stringify process}"
         ]
       appconfig = @confx().get()
+      route_load = (route) =>
+        if typeof route is 'string'
+          @load route
+        else if typeof route is 'function'
+          route
+        else
+          throw Error "Invalid Route: expect a string or a function, got #{route}"
       route_call = (route, command, params, err, args) =>
+        config = @confx().get()
+        if config.router.writer is 'stdout'
+          writer = process.stdout
+        else if config.router.writer is 'stderr'
+          writer = process.stderr
+        else if config.router.writer instanceof stream.Writable
+          writer = config.router.writer
         @hook 'router_call',
           argv: argv
           command: command
           error: err
           params: params
           args: args
+          writer: writer
         , (context) =>
           route.call @, context, ...args
       route_error = (err, command) =>
@@ -84,17 +99,17 @@ How to use the `route` method to execute code associated with a particular comma
         then ['help', ...command]
         else ['--help']
         params = @parse argv
-        route = @load appconfig.router.route
+        route = route_load @config.router.route
         route_call route, command, params, err, args
       route_from_config = (config, command, params) =>
         route = config.route
         unless route
-          # Provide an error message if leaf command does not define any route
-          unless Object.keys(config.commands).length or route
+          # Provide an error message if leaf command without a route
+          unless Object.keys(config.commands).length  # Object.keys(config.commands).length or
             err = if config.root
             then error [
               'Missing Application Route:'
-              'a \"route\" definition is required when no command is defined'
+              'a \"route\" definition is required when no child command is defined'
             ]
             else error [
               'Missing Command Route:'
@@ -105,9 +120,9 @@ How to use the `route` method to execute code associated with a particular comma
           then ['help', ...command]
           else ['--help']
           params = @parse argv
-          route = @load appconfig.router.route
+          route = route_load @config.router.route
         else
-          route = @load route if typeof route is 'string'
+          route = route_load route
         route_call route, command, params, err, args
       # Read parameters
       try params = @parse argv

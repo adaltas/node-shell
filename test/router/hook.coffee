@@ -13,14 +13,25 @@ writer = (callback) ->
 
 describe 'router.hook', ->
     
-  it 'router_call can modify inject parameters into the route', (next) ->
+  it 'router_call validate context', ->
+    parameters
+      route: (->)
+    .register
+      router_call: (context, handler) ->
+        Object.keys(context).sort().should.eql [
+          "args", "argv", "command", "error", "params", "writer"
+        ]
+        handler
+    .route []
+        
+  it 'router_call modify parameters', (next) ->
     parameters
       route: ({writer}) ->
         writer.write 'gotit'
         writer.end()
     .register
-      router_call: ({}, handler) ->
-        arguments[0].writer = writer (data) ->
+      router_call: (context, handler) ->
+        context.writer = writer (data) ->
           data.should.eql 'gotit'
           next()
         handler

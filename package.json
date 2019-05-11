@@ -47,8 +47,12 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^0.3.6",
+    "@grpc/proto-loader": "^0.5.0",
+    "grpc": "^1.20.2",
     "mixme": "^0.3.1",
-    "pad": "^2.3.0"
+    "pad": "^2.3.0",
+    "protobufjs": "^6.8.8"
   },
   "devDependencies": {
     "coffeescript": "^2.4.1",

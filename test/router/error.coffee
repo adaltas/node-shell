@@ -45,10 +45,9 @@ describe 'router.error', ->
       parameters
         router:
           writer: writer (output) ->
-            output.should.match /^\s+Missing Application Route: a "route" definition is required when no command is defined/
+            output.should.match /^\s+Missing Application Route: a "route" definition is required when no child command is defined/
             output.should.match /^\s+myapp - No description yet/m
             next()
-          end: true
       .route []
 
     it 'command help', (next) ->

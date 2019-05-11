@@ -24,6 +24,7 @@ Parameters are defined with the following properties:
     require './plugins/router'
     require './plugins/config'
     require './plugins/help'
+    require './plugins/grpc_server'
 
     module.exports = (config) ->
       new Parameters config
