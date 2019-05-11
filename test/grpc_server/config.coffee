@@ -1,6 +1,5 @@
 
 parameters = require '../../src'
-client = require '../../src/plugins/grpc_client'
 
 describe 'grpc.config', ->
   
