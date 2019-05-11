@@ -61,8 +61,7 @@ How to use the `route` method to execute code associated with a particular comma
       # Normalize arguments
       # Remove node and script argv elements
       if argv is process
-        index = 2
-        argv = argv.argv
+        argv = argv.argv.slice 2
       else unless Array.isArray argv
         throw error [
           'Invalid Router Arguments:'
