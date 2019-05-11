@@ -94,15 +94,16 @@
       promise
 
     Parameters::grpc_stop = ->
-      server = @_server
-      new Promise (resolve, reject) ->
-        server.tryShutdown (err) ->
+      # server = @_server
+      new Promise (resolve, reject) =>
+        return resolve false unless @grpc_started()
+        @_server.tryShutdown (err) =>
           # Note, as of june 2019,
           # grpc marks the server as started but not as stopped
-          server.started = false
+          @_server.started = false
           if err
           then reject err
-          else resolve()
+          else resolve true
 
     Parameters::grpc_started = ->
       !!@_server?.started
