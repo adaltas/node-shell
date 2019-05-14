@@ -23,6 +23,7 @@ Parameters are defined with the following properties:
     Parameters = require './Parameters'
     require './plugins/router'
     require './plugins/config'
+    require './plugins/args'
     require './plugins/help'
     require './plugins/grpc_server'
 
