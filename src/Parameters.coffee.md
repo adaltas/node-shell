@@ -52,7 +52,7 @@
 Convert an arguments list to a parameters object.
 
 * `arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional.
-* `options`: `object` Options used to alter the behavior of the `stringify` method.
+* `options`: `object` Options used to alter the behavior of the `compile` method.
   * `extended`: `boolean` The value `true` indicates that the parameters are returned in extended format, default to the configuration `extended` value which is `false` by default.
 * Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
 
@@ -200,22 +200,22 @@ Convert an arguments list to a parameters object.
       set_default appconfig, params
       params
 
-## Method `stringify(command, [options])`
+## Method `compile(command, [options])`
 
 Convert a parameters object to an arguments array.
 
 * `params`: `object` The parameter object to be converted into an array of arguments, optional.
-* `options`: `object` Options used to alter the behavior of the `stringify` method.
+* `options`: `object` Options used to alter the behavior of the `compile` method.
   * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
-    Parameters::stringify = (params, options={}) ->
+    Parameters::compile = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
       throw error [
-        'Invalid Stringify Arguments:'
+        'Invalid Compile Arguments:'
         '2nd argument option must be an object,'
         "got #{JSON.stringify options}"
       ] unless is_object_literal options
@@ -225,8 +225,8 @@ Convert a parameters object to an arguments array.
       set_default appconfig, params
       # Convert command parameter to a 1 element array if provided as a string
       params[appconfig.command] = [params[appconfig.command]] if typeof params[appconfig.command] is 'string'
-      # Stringify
-      stringify = (config, lparams) ->
+      # Compile
+      compile = (config, lparams) ->
         for _, option of config.options
           key = option.name
           keys[key] = true
@@ -281,8 +281,8 @@ Convert a parameters object to an arguments array.
           ] unless config.commands[command]
           argv.push command
           keys[appconfig.command] = command
-          # Stringify child configuration
-          stringify config.commands[command], if options.extended then params.shift() else lparams
+          # Compile child configuration
+          compile config.commands[command], if options.extended then params.shift() else lparams
         if options.extended or not has_child_commands
           # Handle params not defined in the configuration
           # Note, they are always pushed to the end and associated with the deepest child
@@ -299,7 +299,7 @@ Convert a parameters object to an arguments array.
             else
               argv.push "--#{key}"
               argv.push "#{value}"
-      stringify appconfig, if options.extended then params.shift() else params
+      compile appconfig, if options.extended then params.shift() else params
       argv
 
 ## `load(module)`

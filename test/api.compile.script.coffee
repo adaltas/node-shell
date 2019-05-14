@@ -1,13 +1,13 @@
 
 parameters = require '../src'
 
-describe 'api.stringify.script', ->
+describe 'api.compile.script', ->
 
   it 'should prefix with node path and executed script', ->
     parameters
       commands: 'start':
         options: 'myparam': {}
-    .stringify
+    .compile
       command: 'start'
       myparam: 'my value'
     ,

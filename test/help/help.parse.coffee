@@ -37,7 +37,7 @@ describe 'help/help.parse', ->
     app.parse ['help']
     .should.eql
       command: ['help']
-    app.stringify
+    app.compile
       command: ['help']
     .should.eql ['help']
 
@@ -48,7 +48,7 @@ describe 'help/help.parse', ->
     .should.eql
       command: ['help']
       name: ['start']
-    app.stringify
+    app.compile
       command: ['help']
       name: ['start']
     .should.eql ['help', 'start']

@@ -8,6 +8,7 @@ Backward incompatibilities
 * parse: dont accept string command, only [string] and process
 * commands: only accept objects, no arrays
 * options: only accept objects, no arrays
+* compile: rename stringify method to compile
 
 New functionality
 * options: new disabled property

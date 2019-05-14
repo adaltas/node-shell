@@ -34,11 +34,11 @@ describe 'config.extended', ->
         leftover: ['my value']
       ]
       app.parse([]).should.eql [{}]
-      app.stringify [
+      app.compile [
         leftover: ['my value']
       ]
       .should.eql ['my value']
-      app.stringify([{}]).should.eql []
+      app.compile([{}]).should.eql []
     
     it 'application with configured commands get leftover', ->
       app = parameters
@@ -50,7 +50,7 @@ describe 'config.extended', ->
       app.parse(['my --command']).should.eql [
         leftover: ['my --command']
       ]
-      app.stringify [
+      app.compile [
         leftover: ['my --command']
       ]
       .should.eql ['my --command']

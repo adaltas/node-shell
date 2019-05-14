@@ -31,7 +31,7 @@ describe 'options', ->
       ]
       .should.eql
         myparam: 'my value'
-      app.stringify
+      app.compile
         myparam: 'my value'
       .should.eql ['--myparam', 'my value']
 
@@ -55,7 +55,7 @@ describe 'options', ->
         watch: __dirname
         strict: true
         my_argument: ['my', '--value']
-      app.stringify
+      app.compile
         command: ['start']
         watch: __dirname
         strict: true

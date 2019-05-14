@@ -12,7 +12,7 @@ describe 'options.required', ->
       app.parse ['mycommand']
       .should.eql
         command: ['mycommand']
-      app.stringify
+      app.compile
         command: ['mycommand']
       .should.eql ['mycommand']
 
@@ -24,7 +24,7 @@ describe 'options.required', ->
       app.parse ['mycommand']
       .should.eql
         command: ['mycommand']
-      app.stringify
+      app.compile
         command: ['mycommand']
       .should.eql ['mycommand']
 
@@ -39,7 +39,7 @@ describe 'options.required', ->
       .should.eql
         command: ['mycommand']
         my_argument: 'my --value'
-      app.stringify
+      app.compile
         command: ['mycommand']
         my_argument: 'my --value'
       .should.eql ['mycommand', '--my_argument', 'my --value']
@@ -53,7 +53,7 @@ describe 'options.required', ->
         app.parse ['mycommand']
       ).should.throw 'Required Option Argument: the "my_argument" option must be provided'
       (->
-        app.stringify
+        app.compile
           command: ['mycommand']
       ).should.throw 'Required Option Parameter: the "my_argument" option must be provided'
   

@@ -12,7 +12,7 @@ describe 'options.default', ->
       app.parse []
       .should.eql
         my_argument: 'default value'
-      app.stringify {}
+      app.compile {}
       .should.eql ['--my_argument', 'default value']
 
   describe 'with commands', ->
@@ -28,7 +28,7 @@ describe 'options.default', ->
       .should.eql
         command: ['my_command']
         my_argument: 'default value'
-      app.stringify command: ['my_command']
+      app.compile command: ['my_command']
       .should.eql ['my_command', '--my_argument', 'default value']
           
     it 'preserve global option', ->
@@ -42,5 +42,5 @@ describe 'options.default', ->
         command: ['my_command']
         global_argument: 'global value'
         command_argument: 'command value'
-      app.stringify command: ['my_command']
+      app.compile command: ['my_command']
       .should.eql ['--global_argument', 'global value', 'my_command', '--command_argument', 'command value']

@@ -20,7 +20,7 @@ Node.js Parameters is sugar for parsing typical unix command line options.
   * [Method `help`](https://github.com/adaltas/node-parameters/blob/master/doc/api/help.md)
   * [Method `helping`](https://github.com/adaltas/node-parameters/blob/master/doc/api/helping.md)
   * [Method `parse`](https://github.com/adaltas/node-parameters/blob/master/doc/api/parse.md)
-  * [Method `stringify`](https://github.com/adaltas/node-parameters/blob/master/doc/api/stringify.md)
+  * [Method `compile`](https://github.com/adaltas/node-parameters/blob/master/doc/api/compile.md)
   * [Method `route`](https://github.com/adaltas/node-parameters/blob/master/doc/api/route.md)
 * Usage and configuration
   * [Config](https://github.com/adaltas/node-parameters/blob/master/doc/config)

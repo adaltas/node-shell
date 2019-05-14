@@ -10,7 +10,7 @@ describe 'router.handler', ->
       route: ({params}) ->
         @should.have.property('help').which.is.a.Function()
         @should.have.property('parse').which.is.a.Function()
-        @should.have.property('stringify').which.is.a.Function()
+        @should.have.property('compile').which.is.a.Function()
     .route []
 
   it 'propagate error', ->
