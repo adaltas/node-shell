@@ -1,5 +1,5 @@
 
-parameters = require '../src'
+parameters = require '../../src'
 
 describe 'api.compile', ->
 
