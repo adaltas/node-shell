@@ -1,25 +1,25 @@
 
 parameters = require '../src'
 
-describe 'api.stringify', ->
+describe 'api.compile', ->
 
   it 'validate', ->
     (->
       parameters()
-      .stringify {}, 'invalid'
-    ).should.throw 'Invalid Stringify Arguments: 2nd argument option must be an object, got "invalid"'
+      .compile {}, 'invalid'
+    ).should.throw 'Invalid Compile Arguments: 2nd argument option must be an object, got "invalid"'
   
   it 'command string is converted to a 1 element array internally', ->
     parameters
       commands: 'start': {}
-    .stringify command: 'start'
+    .compile command: 'start'
     .should.eql ['start']
     
   it 'catch main argument with type of string', ->
     (->
       parameters
         main: 'leftover'
-      .stringify
+      .compile
         leftover: 'my value'
     ).should.throw 'Invalid Parameter Type: expect main to be an array, got "my value"'
   
@@ -29,7 +29,7 @@ describe 'api.stringify', ->
         commands:
           'start': {}
           'stop': {}
-      .stringify
+      .compile
         command: ['status']
     ).should.throw 'Invalid Command Parameter: command "status" is not registed, expect one of ["help","start","stop"]'
     (->
@@ -37,6 +37,6 @@ describe 'api.stringify', ->
         commands: 'server': commands:
           'start': {}
           'stop': {}
-      .stringify
+      .compile
         command: ['server', 'status']
     ).should.throw 'Invalid Command Parameter: command "status" is not registed, expect one of ["start","stop"] in command "server"'

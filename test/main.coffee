@@ -28,7 +28,7 @@ describe 'main', ->
         main:
           name: 'leftover'
       app.parse([]).should.eql {}
-      app.stringify({}).should.eql []
+      app.compile({}).should.eql []
 
     it 'preserve space in main arguments', ->
       app = parameters
@@ -39,7 +39,7 @@ describe 'main', ->
       ]
       .should.eql
         leftover: ['my value']
-      app.stringify
+      app.compile
         leftover: ['my value']
       .should.eql ['my value']
 
@@ -52,7 +52,7 @@ describe 'main', ->
       ]
       .should.eql
         leftover: ['my', 'value']
-      app.stringify
+      app.compile
         leftover: ['my', 'value']
       .should.eql ['my', 'value']
   
@@ -69,7 +69,7 @@ describe 'main', ->
       .should.eql
         command: ['start']
         leftover: ['my', 'value true']
-      app.stringify
+      app.compile
         command: ['start']
         leftover: ['my', 'value true']
       .should.eql ['start', 'my', 'value true']
@@ -86,7 +86,7 @@ describe 'main', ->
       .should.eql
         command: ['mycommand']
         leftover: ['my value']
-      app.stringify
+      app.compile
         command: ['mycommand']
         leftover: ['my value']
       .should.eql ['mycommand', 'my value']

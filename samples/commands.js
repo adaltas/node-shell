@@ -48,7 +48,7 @@ command.parse(
   port: 80
 });
 // Create a command
-command.stringify({
+command.compile({
   command: ['start'],
   host: '127.0.0.1',
   port: 80

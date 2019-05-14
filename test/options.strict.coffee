@@ -9,7 +9,7 @@ describe 'options.strict', ->
       app.parse ['--myoption', 'my', '--command']
     ).should.throw 'Invalid Argument: the argument --myoption is not a valid option'
     (->
-      app.stringify
+      app.compile
         myoption: true
     ).should.throw 'Invalid Parameter: the property --myoption is not a registered argument'
 
@@ -19,7 +19,7 @@ describe 'options.strict', ->
       app.parse ['mycommand', '--myoption', 'my', '--command']
     ).should.throw 'Invalid Argument: the argument --myoption is not a valid option'
     (->
-      app.stringify
+      app.compile
         command: 'mycommand'
         myoption: true
     ).should.throw 'Invalid Parameter: the property --myoption is not a registered argument'

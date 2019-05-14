@@ -1,7 +1,7 @@
 ---
 title: API
 description: API methods supported.
-keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'parse', 'load', 'route', 'stringify']
+keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'parse', 'load', 'route', 'compile']
 maturity: review
 ---
 
@@ -27,5 +27,5 @@ expecting a configuration object and returning the following functions:
   first argument. If the option "extended" is activated, it also receives the
   original arguments and configuration as second and third arguments. Any user
   provided arguments are transmitted as is as additional arguments.
-* [`stringify`](./stringify/) (command, [options])   
+* [`compile`](./compile/) (command, [options])   
   Convert a parameters object to an arguments array.

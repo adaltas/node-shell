@@ -9,7 +9,7 @@ describe 'commands', ->
     app.parse ['start']
     .should.eql
       command: ['start']
-    app.stringify
+    app.compile
       command: ['start']
     .should.eql ['start']
 
@@ -25,7 +25,7 @@ describe 'commands', ->
     .should.eql
       command: ['start']
       myparam: 'my value'
-    app.stringify
+    app.compile
       command: ['start']
       myparam: 'my value'
     .should.eql ['start', '--myparam', 'my value']
@@ -37,7 +37,7 @@ describe 'commands', ->
     app.parse ['start']
     .should.eql
       mycommand: ['start']
-    app.stringify
+    app.compile
       mycommand: ['start']
     .should.eql ['start']
 
@@ -53,7 +53,7 @@ describe 'commands', ->
       gopt: 'toto'
       command: ['start']
       aopt: 'lulu'
-    app.stringify
+    app.compile
       gopt: 'toto'
       command: ['start']
       aopt: 'lulu'
@@ -76,7 +76,7 @@ describe 'commands', ->
         opt_root: 'val 0'
         opt_parent: 'val 1'
         opt_child: 'val 2'
-      app.stringify
+      app.compile
         command: ['parent', 'child']
         opt_root: 'val 0'
         opt_parent: 'val 1'

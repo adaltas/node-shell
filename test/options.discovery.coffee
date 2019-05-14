@@ -10,7 +10,7 @@ describe 'options.discovery', ->
     ]
     .should.eql
       myoption: 'my value'
-    app.stringify
+    app.compile
       myoption: 'my value'
     .should.eql ['--myoption', 'my value']
 
@@ -19,7 +19,7 @@ describe 'options.discovery', ->
     app.parse(['mycommand', '--myoption', 'my value']).should.eql
       command: ['mycommand']
       myoption: 'my value'
-    app.stringify
+    app.compile
       command: ['mycommand']
       myoption: 'my value'
     .should.eql ['mycommand', '--myoption', 'my value']
@@ -28,6 +28,6 @@ describe 'options.discovery', ->
     app = parameters()
     app.parse(['--myoption']).should.eql
       myoption: true
-    app.stringify
+    app.compile
       myoption: true
     .should.eql ['--myoption']

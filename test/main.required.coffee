@@ -13,7 +13,7 @@ describe 'main.required', ->
     ]
     .should.eql
       command: ['mycommand']
-    app.stringify
+    app.compile
       command: ['mycommand']
     .should.eql ['mycommand']
 
@@ -29,7 +29,7 @@ describe 'main.required', ->
     .should.eql
       command: ['mycommand']
       my_argument: ['my --value']
-    app.stringify
+    app.compile
       command: ['mycommand']
       my_argument: ['my --value']
     .should.eql ['mycommand', 'my --value']
@@ -44,6 +44,6 @@ describe 'main.required', ->
       app.parse ['mycommand']
     ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'
     (->
-      app.stringify
+      app.compile
         command: ['mycommand']
     ).should.throw 'Required Main Parameter: no suitable arguments for "my_argument"'

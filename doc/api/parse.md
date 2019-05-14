@@ -10,7 +10,7 @@ maturity: review
 Convert an arguments list to a parameters object.
 
 * `arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional, default to `process`.
-* `options`: `object` Options used to alter the behavior of the `stringify` method.
+* `options`: `object` Options used to alter the behavior of the `compile` method.
   * `extended`: `boolean` The value `true` indicates that the parameters are returned in extended format, default to the configuration `extended` value which is `false` by default.
 * Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
 

@@ -1,25 +1,25 @@
 ---
-title: API method `stringify`
-description: How to use the `stringify` method to convert a parameters object to an arguments array.
-keywords: ["parameters", "node.js", "cli", "api", "stringify", "arguments", "argv", "array"]
+title: API method `compile`
+description: How to use the `compile` method to convert a parameters object to an arguments array.
+keywords: ["parameters", "node.js", "cli", "api", "compile", "arguments", "argv", "array"]
 maturity: review
 ---
 
-# Method `stringify(command, [options])`
+# Method `compile(command, [options])`
 
 Convert a parameters object to an arguments array.
 
 * `params`: `object` The parameter object to be converted into an array of arguments, optional.
-* `options`: `object` Options used to alter the behavior of the `stringify` method.
+* `options`: `object` Options used to alter the behavior of the `compile` method.
   * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
 ## Description
 
-To stringify parameters is the reverse process of processing an array of arguments. In that sense, this module is bi-directional, it can both convert arguments to objects and back from objects to arguments.
+To compile parameters is the reverse process of processing an array of arguments. In that sense, this module is bi-directional, it can both convert arguments to objects and back from objects to arguments.
 
-It supports both the default flatten mode and the extended mode. The `extended` property can be defined in the configuration or as an option of `stringify`. In flatten mode, the `command` argument is an object while in `extended` mode it is an array of object.
+It supports both the default flatten mode and the extended mode. The `extended` property can be defined in the configuration or as an option of `compile`. In flatten mode, the `command` argument is an object while in `extended` mode it is an array of object.
 
 ## Examples
 
@@ -46,10 +46,10 @@ const app = parameters(
           description: "Web server listen port" } } } } })
 ```
 
-Called with only the `config` option, the `stringify` method convert a literal object into a shell command:
+Called with only the `config` option, the `compile` method convert a literal object into a shell command:
 
 ```javascript
-app.stringify({
+app.compile({
   config: "app.yaml"
 })
 .should.eql( [ "--config", "app.yaml" ] )
@@ -58,7 +58,7 @@ app.stringify({
 In extended mode, the parameters input will be an array instead of an object:
 
 ```js
-app.stringify([{
+app.compile([{
   config: "app.yaml"
 }], {
   extended: true
@@ -69,7 +69,7 @@ app.stringify([{
 Working with commands is quite similar:
 
 ```js
-app.stringify({
+app.compile({
   config: "app.yml",
   command: ["start"],
   host: "127.0.0.1",
@@ -82,7 +82,7 @@ app.stringify({
 In extended mode, the parameters input will be an array with 2 elements instead of an object:
 
 ```js
-app.stringify([{
+app.compile([{
   config: "app.yml"
 },{
   command: "start",
