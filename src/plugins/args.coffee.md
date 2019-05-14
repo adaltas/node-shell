@@ -261,6 +261,25 @@ Convert a parameters object to an arguments array.
               argv.push "#{value}"
       compile appconfig, if options.extended then params.shift() else params
       argv
+      
+## Method `stringify(command, [options])`
+
+Convert a parameters object to an arguments string.
+
+* `params`: `object` The parameter object to be converted into an array of arguments, optional.
+* `options`: `object` Options used to alter the behavior of the `compile` method.
+  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
+  * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
+* Returns: `string` The command line arguments.
+
+    Parameters::stringify = (params, options={}) ->
+      argv = ""
+      for arg, i in @compile params, options
+        if " " in arg
+        then argv += '"' + arg + '"'
+        else argv += arg
+        argv += ' '
+      argv.trim()
 
 ## Utils
 
