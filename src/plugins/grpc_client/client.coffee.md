@@ -20,7 +20,6 @@
       shell_proto = grpc.loadPackageDefinition(packageDefinition).shell
       # Instantiate the client
       endpoint = "#{config.address}:#{config.port}"
-      console.log 'endpoint', endpoint
       client = new shell_proto.Shell(endpoint, grpc.credentials.createInsecure())
       for k, service of shell_proto.Shell.service
         # Response stream return a readable stream

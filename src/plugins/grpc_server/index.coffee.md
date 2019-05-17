@@ -37,21 +37,6 @@
                 route: path.resolve __dirname, './route_shell_protobuf'
           handler
         parent.call @, arguments...
-        # Register the "shell protobuf" command
-        @register router_call: (context, handler) ->
-          return handler unless @grpc_started()
-          [call] = context.args
-          if call.is_grpc
-            if call.readable
-              context.reader = call
-            if call.writable
-              context.writer = call
-              context.writer.write = ((write) ->
-                (chunk, ...args) ->
-                  chunk = data: chunk
-                  write.call @, chunk, ...args
-              )(context.writer.write)
-          handler
     )(Parameters::init)
     
     get_handlers = (definition) ->
@@ -62,8 +47,19 @@
         config = @confx(call.request.command).get()
         callback null, config: config
       run: (call) ->
-        call.is_grpc = true
-        @route call.request.argv, call
+        context =
+          argv: call.request.argv
+          is_grpc: true
+        if call.readable
+          context.reader = call
+        if call.writable
+          context.writer = call
+          context.writer.write = ((write) ->
+            (chunk, ...args) ->
+              chunk = data: chunk
+              write.call @, chunk, ...args
+          )(context.writer.write)
+        @route context
 
     Parameters::grpc_start = (callback) ->
       if @_server?.started
