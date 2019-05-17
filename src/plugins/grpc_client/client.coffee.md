@@ -5,7 +5,10 @@
     grpc = require 'grpc'
     protoLoader = require '@grpc/proto-loader'
     
-    module.exports = (config) ->
+    module.exports = (config={}) ->
+      config.address ?= '127.0.0.1'
+      config.port ?= 50051
+      
       # Load the definition
       proto_path = path.resolve __dirname, '../grpc_server/shell.proto'
       packageDefinition = protoLoader.loadSync proto_path,
@@ -17,6 +20,7 @@
       shell_proto = grpc.loadPackageDefinition(packageDefinition).shell
       # Instantiate the client
       endpoint = "#{config.address}:#{config.port}"
+      console.log 'endpoint', endpoint
       client = new shell_proto.Shell(endpoint, grpc.credentials.createInsecure())
       for k, service of shell_proto.Shell.service
         # Response stream return a readable stream

@@ -2,7 +2,7 @@
 parameters = require '../../src'
 client = require '../../src/plugins/grpc_client/client'
 
-describe 'grpc.run', ->
+describe 'grpc_client.run', ->
   
   it 'get application configuration', ->
     app = parameters

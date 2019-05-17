@@ -2,7 +2,7 @@
 parameters = require '../../src'
 client = require '../../src/plugins/grpc_client/client'
 
-describe 'grpc.ping', ->
+describe 'grpc_client.ping', ->
   
   it 'send and receive a message', ->
     app = parameters
