@@ -5,7 +5,7 @@
     path = require 'path'
     stream = require 'stream'
     error = require '../utils/error'
-    {clone, merge, is_object_literal} = require 'mixme'
+    {clone, merge, is_object} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
     require '../plugins/config'
@@ -49,24 +49,27 @@
         parent.call @, arguments...
     )(Parameters::init)
     
-## `route(argv)` or `route(params)` or `route(process)`
+## Method `route([cli_arguments], ...users_arguments)`
 
-* `cli_arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings, optional, default to `process`.
+* `cli_arguments`: `[string] | object | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
 * Returns: `any` Whatever the route function returns.
 
 How to use the `route` method to execute code associated with a particular command.
 
-    Parameters::route = (argv = process, args...) ->
+    Parameters::route = (context = process, args...) ->
       # Normalize arguments
       # Remove node and script argv elements
-      if argv is process
-        argv = argv.argv.slice 2
-      else unless Array.isArray argv
+      if context is process
+        context = argv: context.argv.slice 2
+      else if Array.isArray context
+        context = argv: context
+      else unless is_object context
+        context.argv = context
         throw error [
           'Invalid Router Arguments:'
-          'first argument must be an argv array or the process object,'
-          "got #{JSON.stringify process}"
+          'first argument must be a context object, the argv array or the process object,'
+          "got #{JSON.stringify context}"
         ]
       appconfig = @confx().get()
       route_load = (route) =>
@@ -84,20 +87,19 @@ How to use the `route` method to execute code associated with a particular comma
           writer = process.stderr
         else if config.router.writer instanceof stream.Writable
           writer = config.router.writer
-        @hook 'router_call',
-          argv: argv
-          command: command
-          error: err
-          params: params
-          args: args
-          writer: writer
-        , (context) =>
+        context = { context...,
+        command: command
+        error: err
+        params: params
+        args: args
+        writer: writer }
+        @hook 'router_call', context, (context) =>
           route.call @, context, ...args
       route_error = (err, command) =>
-        argv = if command.length
+        context.argv = if command.length
         then ['help', ...command]
         else ['--help']
-        params = @parse argv
+        params = @parse context.argv
         route = route_load @config.router.route
         route_call route, command, params, err, args
       route_from_config = (config, command, params) =>
@@ -115,16 +117,16 @@ How to use the `route` method to execute code associated with a particular comma
               "a \"route\" definition #{JSON.stringify params[appconfig.command]} is required when no child command is defined"
             ]
           # Convert argument to an help command
-          argv = if command.length
+          context.argv = if command.length
           then ['help', ...command]
           else ['--help']
-          params = @parse argv
+          params = @parse context.argv
           route = route_load @config.router.route
         else
           route = route_load route
         route_call route, command, params, err, args
       # Read parameters
-      try params = @parse argv
+      try params = @parse context.argv
       catch err then return route_error err, err.command or []
       # Print help
       if command = @helping params

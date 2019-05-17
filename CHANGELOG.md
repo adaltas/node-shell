@@ -14,6 +14,7 @@ New functionality
 * options: new disabled property
 * help: new plugin
 * help: sort options
+* router: accept a context object
 * router: rename root property help to router
 * router: new router_call hook
 * hook: return value from handler
