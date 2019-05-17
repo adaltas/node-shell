@@ -87,12 +87,13 @@ How to use the `route` method to execute code associated with a particular comma
           writer = process.stderr
         else if config.router.writer instanceof stream.Writable
           writer = config.router.writer
-        context = { context...,
-        command: command
-        error: err
-        params: params
-        args: args
-        writer: writer }
+        context = {
+          command: command
+          error: err
+          params: params
+          args: args
+          writer: writer
+        , context...}
         @hook 'router_call', context, (context) =>
           route.call @, context, ...args
       route_error = (err, command) =>
