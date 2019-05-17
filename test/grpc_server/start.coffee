@@ -1,7 +1,7 @@
 
 parameters = require '../../src'
 
-describe 'grpc.start', ->
+describe 'grpc_server.start', ->
   
   it 'get application configuration', ->
     app = parameters

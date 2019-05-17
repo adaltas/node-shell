@@ -21,7 +21,7 @@
         @register configure_set: ({config, command}, handler) ->
           return handler if command.length
           config.grpc ?= {}
-          config.grpc.address ?= '0.0.0.0'
+          config.grpc.address ?= '127.0.0.1'
           config.grpc.port ?= 50051
           config.grpc.command_protobuf ?= false
           handler

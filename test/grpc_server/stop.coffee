@@ -1,7 +1,7 @@
 
 parameters = require '../../src'
 
-describe 'grpc.stop', ->
+describe 'grpc_server.stop', ->
   
   it 'return false unless started', ->
     app = parameters

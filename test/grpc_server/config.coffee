@@ -1,13 +1,13 @@
 
 parameters = require '../../src'
 
-describe 'grpc.config', ->
+describe 'grpc_server.config', ->
   
   it 'default', ->
     app = parameters
       grpc: {}
     app.confx().get().grpc
     .should.eql
-      'address': '0.0.0.0'
+      'address': '127.0.0.1'
       'command_protobuf': false
       'port': 50051
