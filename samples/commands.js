@@ -21,17 +21,21 @@ require('should');
 const command = parameters({
   name: 'server',
   description: 'Manage a web server',
-  commands: [{
-    name: 'start',
-    description: 'Start a web server',
-    options: [{
-      name: 'host', shortcut: 'h', 
-      description: 'Web server listen host'
-    },{
-      name: 'port', shortcut: 'p', type: 'integer', 
-      description: 'Web server listen port'
-    }]
-  }]
+  commands: {
+    'start': {
+      description: 'Start a web server',
+      options: {
+        'host': {
+          shortcut: 'h', 
+          description: 'Web server listen host'
+        },
+        'port': {
+          shortcut: 'p', type: 'integer', 
+          description: 'Web server listen port'
+        }
+      }
+    }
+  }
 });
 // Print help
 console.log( command.help() );
@@ -54,4 +58,12 @@ command.compile({
   port: 80
 }).should.eql(
   ['start', '--host', '127.0.0.1', '--port', '80']
+);
+// Make an argument string
+command.stringify({
+  command: ['start'],
+  host: '127.0.0.1',
+  port: 80
+}).should.eql(
+  'start --host 127.0.0.1 --port 80'
 );
