@@ -22,7 +22,7 @@
           return handler if command.length
           config.grpc ?= {}
           config.grpc.address ?= '127.0.0.1'
-          config.grpc.port ?= 50051
+          config.grpc.port ?= 61234
           config.grpc.command_protobuf ?= false
           handler
         # Register the "shell protobuf" command

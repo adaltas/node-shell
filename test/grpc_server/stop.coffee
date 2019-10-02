@@ -7,6 +7,6 @@ describe 'grpc_server.stop', ->
     app = parameters
       grpc:
         address: '0.0.0.0'
-        port: 50051
+        port: 61234
     status = await app.grpc_stop()
     status.should.be.false()

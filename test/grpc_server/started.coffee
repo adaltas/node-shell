@@ -7,7 +7,7 @@ describe 'grpc_server.started', ->
     app = parameters
       grpc:
         address: '0.0.0.0'
-        port: 50051
+        port: 61234
     await app.grpc_start()
     app.grpc_started().should.be.true()
     await app.grpc_stop()

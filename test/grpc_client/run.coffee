@@ -8,14 +8,14 @@ describe 'grpc_client.run', ->
     app = parameters
       grpc:
         address: '0.0.0.0'
-        port: 50051
+        port: 61234
       commands: 'ping': commands: 'pong':
         options: 'message': {}
         route: ({config, params, writer}) ->
           writer.write 'hello'
           writer.end()
     await app.grpc_start()
-    conn = client address: '127.0.0.1', port: 50051
+    conn = client address: '127.0.0.1', port: 61234
     call = conn.run argv: ['ping', 'pong', '--message', 'hello']
     new Promise (resolve, reject) ->
       result = []

@@ -10,4 +10,4 @@ describe 'grpc_server.config', ->
     .should.eql
       'address': '127.0.0.1'
       'command_protobuf': false
-      'port': 50051
+      'port': 61234
