@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.7.0
 
 Backward incompatibilities
 * help: remove help command inject in non leaf commands
