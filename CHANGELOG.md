@@ -1,7 +1,7 @@
 
 # Changelog
 
-## Trunk
+## Version 0.7.1
 
 * options: enforce literal object
 
