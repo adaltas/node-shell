@@ -53,6 +53,10 @@
             'Invalid Commands Set Arguments:'
             'expect 1 or 2 arguments, got 0'
           ]
+          throw error [
+            'Invalid Options:'
+            "expect an object, got #{JSON.stringify config.options}"
+          ] if config.options and not is_object_literal config.options
           option = config.options[name] = merge config.options[name], values
           unless ctx.config.extended
             if not option.disabled and commands.length

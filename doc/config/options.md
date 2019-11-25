@@ -40,18 +40,8 @@ When option is defined as an object, the keys are mapped to the option name. For
 ```js
 require("parameters")(
 { options:
-  { message:
+  { "message":
     { shortcut: "m" } } }
-)
-```
-
-The above is the equivalent of declaring options as an array like:
-
-```js
-require("parameters")(
-{ options: [
-  { name: "message",
-    shortcut: "m" } ] }
 )
 ```
 
@@ -62,7 +52,7 @@ require("parameters")(
 { commands:
   { print:
     { options: 
-      { name: "message",
-        shortcut: "m" } } } }
+      { "message":
+        { shortcut: "m" } } } } }
 )
 ```

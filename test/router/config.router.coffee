@@ -60,9 +60,7 @@ describe 'router.config.router', ->
       parameters
         commands:
           'start':
-            options: [
-              name: 'myparam'
-            ]
+            options: 'myopt': {}
           'help':
             description: 'Overwrite description'
       .confx().get().commands.help.should.eql

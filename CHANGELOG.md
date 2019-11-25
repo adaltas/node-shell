@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* options: enforce literal object
+
 ## Version 0.7.0
 
 Backward incompatibilities

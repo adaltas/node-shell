@@ -3,6 +3,14 @@ parameters = require '../src'
   
 describe 'options', ->
   
+  describe 'validation', ->
+    
+    it 'value types', ->
+      (->
+        parameters
+          options: []
+      ).should.throw 'Invalid Options: expect an object, got []'
+  
   describe 'normalisation', ->
         
     it 'accept object', ->

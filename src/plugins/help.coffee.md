@@ -21,7 +21,6 @@
           if not command.length or not config.help
             config.options ?= {}
             config.options['help'] = merge config.options['help'],
-              name: 'help'
               cascade: true
               shortcut: 'h'
               description: 'Display help information'

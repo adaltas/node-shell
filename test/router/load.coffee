@@ -10,9 +10,7 @@ describe 'router.load', ->
     await fs.writeFile "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
     parameters
       route: mod
-      options: [
-        name: 'my_argument'
-      ]
+      options: 'my_argument': {}
     .route ['--my_argument', 'my value']
     .should.eql 'my value'
     await fs.unlink "#{mod}.coffee"
@@ -24,9 +22,7 @@ describe 'router.load', ->
       commands:
         'my_command':
           route: mod
-          options: [
-            name: 'my_argument'
-          ]
+          options: 'my_argument': {}
     .route ['my_command', '--my_argument', 'my value']
     .should.eql 'my value'
     await fs.unlink "#{mod}.coffee"
