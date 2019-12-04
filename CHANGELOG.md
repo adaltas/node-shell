@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* package: update author url
+
 ## Version 0.7.1
 
 * options: enforce literal object
