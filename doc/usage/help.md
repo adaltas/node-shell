@@ -25,7 +25,7 @@ If at least one command is registered, use `./myapp help` to print the usage of 
 
 For example, an application `myapp` which has a command `secrets` with a command `set` could print the usage of the group of multi-level command `secrets set` with the arguments `./myapp help secrets set`.
 
-In the end, using the `help` option of the "secrets set" command or using `help` command with "secret set" as arguments are are equivalent and work by default:
+In the end, using the `help` option of the "secrets set" command or using `help` command with "secret set" as arguments are equivalent and work by default:
 
 ```
 # Option
