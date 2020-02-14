@@ -7,7 +7,7 @@ maturity: initial
 
 # Router
 
-The `router` property is object which provide low level access to modify the behaviour of the router plugin.
+The `router` property is an object which provide low level access to modify the behaviour of the router plugin.
 
 * `writer` (string|StreamWriter)   
   Where to print the help output. Possible string values include "stdout" and "stderr" and default to "stderr". The property is used internally by the help route.
