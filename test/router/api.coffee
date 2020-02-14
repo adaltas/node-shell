@@ -15,10 +15,10 @@ describe 'router.api', ->
     ].join ' '
       
   it "accept an object", ->
-    app = parameters
+    parameters
       route: ({user_param, params}) ->
         return "got: #{user_param} and #{params.opt}"
-    app.route
+    .route
       argv: ['--opt', 'param value']
       user_param: 'user value'
     .should.eql 'got: user value and param value'
