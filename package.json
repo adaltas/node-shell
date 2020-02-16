@@ -66,6 +66,6 @@
     "major": "npm version major -m 'Bump to version %s'",
     "build": "coffee -b -o lib src && cp -rp src/plugins/grpc_server/shell.proto lib/plugins/grpc_server",
     "pretest": "npm run build",
-    "test": "mocha test/{.,*}/*.coffee"
+    "test": "mocha test"
   }
 }
