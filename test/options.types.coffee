@@ -59,6 +59,16 @@ describe 'options.type', ->
         integer: 5
       .should.eql ['start', '--integer', '5']
 
+    it 'validate', ->
+      app = parameters
+        commands: 'start':
+          options:
+            'an_int':
+              type: 'integer'
+      ( ->
+        app.parse(['start', '--an_int', 'invalid'])
+      ).should.throw 'Invalid Option: value of "an_int" is not an integer, got "invalid"'
+
   describe 'array', ->
 
     it 'handle shortcut', ->

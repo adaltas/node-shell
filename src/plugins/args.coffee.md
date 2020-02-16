@@ -80,6 +80,11 @@ Convert an arguments list to a parameters object.
                 "no value found for option #{JSON.stringify key}"
               ] unless value? and value[0] isnt '-'
               params[key] = parseInt value, 10
+              throw error [
+               'Invalid Option:'
+               "value of #{JSON.stringify key} is not an integer,"
+               "got #{JSON.stringify value}"
+              ] if isNaN params[key]
             when 'array'
               value = argv[index++]
               throw error [

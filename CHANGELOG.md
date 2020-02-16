@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* types: validate integer option is not NaN
 * router: route no longer accept process
 * router: remove end property
 
