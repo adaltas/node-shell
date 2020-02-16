@@ -31,7 +31,6 @@ The route function receive as first argument a context object with the following
 Considering a "server" application containing a "start" and a "stop" commands, each commands define a `route` function:
 
 ```js
-require("should")
 const parameters = require("parameters")
 const app = parameters(
 { name: "server",

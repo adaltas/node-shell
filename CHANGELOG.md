@@ -1,6 +1,10 @@
 
 # Changelog
 
+## Trunk
+
+* docs: typos
+
 ## Version 0.7.2
 
 * package: update author url
