@@ -5,7 +5,7 @@
     path = require 'path'
     stream = require 'stream'
     error = require '../utils/error'
-    {clone, merge, is_object} = require 'mixme'
+    {clone, merge, is_object_literal} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
     require '../plugins/config'
@@ -16,7 +16,6 @@
           return handler if command.length
           config.router ?= {}
           config.router.writer ?= 'stderr'
-          config.router.end ?= false
           config.router.route ?= path.resolve __dirname, '../routes/help'
           if typeof config.router.writer is 'string'
             throw error [
@@ -49,7 +48,7 @@
         parent.call @, arguments...
     )(Parameters::init)
     
-## Method `route([cli_arguments], ...users_arguments)`
+## Method `route(context, ...users_arguments)`
 
 * `cli_arguments`: `[string] | object | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
@@ -57,18 +56,14 @@
 
 How to use the `route` method to execute code associated with a particular command.
 
-    Parameters::route = (context = process, args...) ->
+    Parameters::route = (context = {}, args...) ->
       # Normalize arguments
-      # Remove node and script argv elements
-      if context is process
-        context = argv: context.argv.slice 2
-      else if Array.isArray context
+      if Array.isArray context
         context = argv: context
-      else unless is_object context
-        context.argv = context
+      else unless is_object_literal context
         throw error [
           'Invalid Router Arguments:'
-          'first argument must be a context object, the argv array or the process object,'
+          'first argument must be a context object or the argv array,'
           "got #{JSON.stringify context}"
         ]
       appconfig = @confx().get()
@@ -88,6 +83,7 @@ How to use the `route` method to execute code associated with a particular comma
         else if config.router.writer instanceof stream.Writable
           writer = config.router.writer
         context = {
+          argv: process.argv.slice 2
           command: command
           error: err
           params: params

@@ -10,7 +10,6 @@ describe 'router.config.router', ->
     it "accept string (eg stderr)", ->
       parameters({})
       .config.router.should.eql
-        end: false
         writer: 'stderr'
         route: path.resolve __dirname, '../../src/routes/help'
           
@@ -18,7 +17,6 @@ describe 'router.config.router', ->
       parameters
         router: writer: new Writable()
       .config.router.should.eql
-        end: false
         writer: new Writable()
         route: path.resolve __dirname, '../../src/routes/help'
 

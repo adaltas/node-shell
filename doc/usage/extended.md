@@ -3,6 +3,7 @@ title: Extended mode usage
 description: How to use the extended mode.
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'extended', 'mode']
 maturity: review
+sort: 3
 ---
 
 # Flatten versus extended mode

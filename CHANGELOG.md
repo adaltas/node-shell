@@ -1,6 +1,11 @@
 
 # Changelog
 
+## Trunk
+
+* router: route no longer accept process
+* router: remove end property
+
 ## Version 0.7.3
 
 * docs: typos

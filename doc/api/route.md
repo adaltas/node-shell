@@ -5,17 +5,17 @@ keywords: ["parameters", "node.js", "cli", "api", "router", "command", "route"]
 maturity: initial
 ---
 
-# Method `route([cli_arguments], ...users_arguments)`
+# Method `route(context, ...users_arguments)`
 
-* `cli_arguments`: `[string] | object | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
+The `route` method dispatch command into handler function. Learn more about [routing](/usage/routing/) in the usage documentation.
+
+* `context`: `[string] | object` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
 * Returns: `any` Whatever the route function returns.
 
 How to use the `route` method to execute code associated with a particular command.
 
 ## Description
-
-The method dispatch the commands of the CLI application into function based on the `route` configuration property of the application or of a command. If the value is a string, it is interpreted as a module which will be loaded and which must export a function.
 
 The route function receive as first argument a context object with the following properties:
 

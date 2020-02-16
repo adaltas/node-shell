@@ -10,7 +10,7 @@ describe 'router.api', ->
       parameters().route 'oh no'
     ).should.throw [
       'Invalid Router Arguments:'
-      'first argument must be a context object, the argv array or the process object,'
+      'first argument must be a context object or the argv array,'
       'got "oh no"'
     ].join ' '
       

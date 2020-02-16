@@ -17,7 +17,7 @@ describe 'grpc.command.protobuf', ->
   it 'format json', ->
     app = parameters
       router:
-        writer: writer (output) ->
+        stdout: writer (output) ->
           proto = JSON.parse output
           is_object_literal(proto).should.be.true()
       grpc:

@@ -3,6 +3,7 @@ title: Displaying the help
 description: How to use the help.
 keywords: ['parameters', 'node.js', 'cli', 'usage', 'help', 'print']
 maturity: review
+sort: 2
 ---
 
 # Displaying the help
