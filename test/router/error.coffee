@@ -20,19 +20,19 @@ describe 'router.error', ->
     it 'application help', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /myapp - No description yet/
             next()
-          end: true
+          stderr_end: true
       .route ['--help']
 
     it 'command help', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
             next()
-          end: true
+          stderr_end: true
         commands:
           'server':
             commands:
@@ -44,19 +44,20 @@ describe 'router.error', ->
     it 'application help', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /^\s+Missing Application Route: a "route" definition is required when no child command is defined/
             output.should.match /^\s+myapp - No description yet/m
             next()
+          stderr_end: true
       .route []
 
     it 'command help', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
             next()
-          end: true
+          stderr_end: true
         commands:
           'server':
             commands:
@@ -68,11 +69,11 @@ describe 'router.error', ->
     it 'command without route and with orphan print help', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.not.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child command is defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
-          end: true
+          stderr_end: true
         commands:
           'server':
             commands:
@@ -84,11 +85,11 @@ describe 'router.error', ->
     it 'print error message if leaf', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child command is defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
-          end: true
+          stderr_end: true
         commands:
           'server':
             commands:
@@ -100,21 +101,21 @@ describe 'router.error', ->
     it 'Unhandled leftover', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
             output.should.match /^\s+myapp - No description yet/m
             next()
-          end: true
+          stderr_end: true
       .route ['invalid', 'leftover']
         
     it 'Undeclared options in stric mode', (next) ->
       parameters
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp - No description yet/m
             next()
-          end: true
+          stderr_end: true
         strict: true
       .route ['--opt', 'val']
         
@@ -123,10 +124,10 @@ describe 'router.error', ->
         commands:
           'server': {}
         router:
-          writer: writer (output) ->
+          stderr: writer (output) ->
             output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
             output.should.match /^\s+myapp server - No description yet for the server command/m
             next()
-          end: true
+          stderr_end: true
         strict: true
       .route ['server', '--opt', 'val']

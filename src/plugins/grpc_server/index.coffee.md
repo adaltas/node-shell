@@ -38,6 +38,13 @@
           handler
         parent.call @, arguments...
     )(Parameters::init)
+
+    passthrough = ->
+      new Transform
+        objectMode: true
+        transform: (chunk, encoding, callback) ->
+          chunk = data: chunk
+          callback null, chunk
     
     get_handlers = (definition) ->
       ping: (call, callback) ->
@@ -53,12 +60,10 @@
         if call.readable
           context.reader = call
         if call.writable
-          context.writer = call
-          context.writer.write = ((write) ->
-            (chunk, ...args) ->
-              chunk = data: chunk
-              write.call @, chunk, ...args
-          )(context.writer.write)
+          context.stdout = passthrough()
+          context.stdout.pipe call
+          context.stderr = passthrough()
+          context.stderr.pipe call
         @route context
 
     Parameters::grpc_start = (callback) ->

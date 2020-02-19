@@ -19,19 +19,19 @@ describe 'router.hook', ->
     .register
       router_call: (context, handler) ->
         Object.keys(context).sort().should.eql [
-          "args", "argv", "command", "error", "params", "writer"
+          "args", "argv", "command", "error", "params", "stderr", "stderr_end", "stdout", "stdout_end"
         ]
         handler
     .route []
         
   it 'router_call modify parameters', (next) ->
     parameters
-      route: ({writer}) ->
-        writer.write 'gotit'
-        writer.end()
+      route: ({stdout}) ->
+        stdout.write 'gotit'
+        stdout.end()
     .register
       router_call: (context, handler) ->
-        context.writer = writer (data) ->
+        context.stdout = writer (data) ->
           data.should.eql 'gotit'
           next()
         handler

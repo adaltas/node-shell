@@ -24,7 +24,7 @@ If the `route` property is a string, it is interpreted as the module name export
 const parameters = require('parameters')
 parameters({
   router: './my/module'
-})
+} )
 ```
 
 Is equivalent to:

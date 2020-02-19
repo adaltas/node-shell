@@ -27,7 +27,7 @@ describe 'grpc.command.protobuf', ->
   it 'format proto', ->
     app = parameters
       router:
-        writer: writer (output) ->
+        stdout: writer (output) ->
           output.should.match /^package shell;$/m
       grpc:
         command_protobuf: true

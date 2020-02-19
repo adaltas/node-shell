@@ -10,14 +10,20 @@ describe 'router.config.router', ->
     it "accept string (eg stderr)", ->
       parameters({})
       .config.router.should.eql
-        writer: 'stderr'
+        stderr: process.stderr
+        stderr_end: false
+        stdout: process.stdout
+        stdout_end: false
         route: path.resolve __dirname, '../../src/routes/help'
           
     it "stream.Writable", ->
       parameters
-        router: writer: new Writable()
+        router: stdout: new Writable()
       .config.router.should.eql
-        writer: new Writable()
+        stderr: process.stderr
+        stderr_end: false
+        stdout: new Writable()
+        stdout_end: false
         route: path.resolve __dirname, '../../src/routes/help'
 
   describe 'options', ->

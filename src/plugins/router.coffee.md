@@ -15,20 +15,23 @@
         @register configure_set: ({config, command}, handler) ->
           return handler if command.length
           config.router ?= {}
-          config.router.writer ?= 'stderr'
           config.router.route ?= path.resolve __dirname, '../routes/help'
-          if typeof config.router.writer is 'string'
+          config.router.stdout ?= process.stdout
+          config.router.stdout_end ?= false
+          config.router.stderr ?= process.stderr
+          config.router.stderr_end ?= false
+          unless config.router.stdout instanceof stream.Writable
             throw error [
-              'Invalid Help Configuration:'
-              'accepted values are ["stdout", "stderr"] when writer is a string,'
-              "got #{JSON.stringify config.router.writer}"
-            ] unless config.router.writer in ['stdout', 'stderr']
-          else unless config.router.writer instanceof stream.Writable
+              "Invalid Configuration Property:"
+              "router.stdout must be an instance of stream.Writer,"
+              "got #{JSON.stringify config.router.stdout}"
+            ]
+          unless config.router.stderr instanceof stream.Writable
             throw error [
-              "Invalid Help Configuration:"
-              "writer must be a string or an instance of stream.Writer,"
-              "got #{JSON.stringify config.router.writer}"
-            ] unless config.router.writer in ['stdout', 'stderr']
+              "Invalid Configuration Property:"
+              "router.stderr must be an instance of stream.Writer,"
+              "got #{JSON.stringify config.router.stderr}"
+            ]
           handler
         parent.call @, arguments...
     )(Parameters::init)
@@ -76,19 +79,16 @@ How to use the `route` method to execute code associated with a particular comma
           throw Error "Invalid Route: expect a string or a function, got #{route}"
       route_call = (route, command, params, err, args) =>
         config = @confx().get()
-        if config.router.writer is 'stdout'
-          writer = process.stdout
-        else if config.router.writer is 'stderr'
-          writer = process.stderr
-        else if config.router.writer instanceof stream.Writable
-          writer = config.router.writer
         context = {
           argv: process.argv.slice 2
           command: command
           error: err
           params: params
           args: args
-          writer: writer
+          stdout: config.router.stdout
+          stdout_end: config.router.stdout_end
+          stderr: config.router.stderr
+          stderr_end: config.router.stderr_end
         , context...}
         @hook 'router_call', context, (context) =>
           route.call @, context, ...args

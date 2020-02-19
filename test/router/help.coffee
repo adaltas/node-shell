@@ -16,21 +16,21 @@ describe 'router.help', ->
   it 'Unhandled leftover', (next) ->
     parameters
       router:
-        writer: writer (output) ->
+        stderr: writer (output) ->
           output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
           output.should.match /^\s+myapp - No description yet/m
           next()
-        end: true
+        stderr_end: true
     .route ['invalid', 'leftover']
       
   it 'Undeclared options in stric mode', (next) ->
     parameters
       router:
-        writer: writer (output) ->
+        stderr: writer (output) ->
           output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp - No description yet/m
           next()
-        end: true
+        stderr_end: true
       strict: true
     .route ['--opt', 'val']
       
@@ -39,10 +39,10 @@ describe 'router.help', ->
       commands:
         'server': {}
       router:
-        writer: writer (output) ->
+        stderr: writer (output) ->
           output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
           output.should.match /^\s+myapp server - No description yet for the server command/m
           next()
-        end: true
+        stderr_end: true
       strict: true
     .route ['server', '--opt', 'val']

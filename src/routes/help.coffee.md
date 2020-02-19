@@ -5,9 +5,9 @@ Print the help to stderr.
 
 ## Source code
 
-    module.exports = ({argv, params, error, writer}) ->
+    module.exports = ({argv, params, error, stderr, stderr_end}) ->
       command = @helping params
-      writer.write "\n#{error.message}\n" if error
-      writer.write @help command
-      writer.end()
+      stderr.write "\n#{error.message}\n" if error
+      stderr.write @help command
+      stderr.end() if stderr_end
       null
