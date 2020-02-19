@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* router: promise example
 * router: split writer to stdout and stderr
 * types: validate integer option is not NaN
 * router: route no longer accept process

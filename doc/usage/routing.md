@@ -40,7 +40,9 @@ Arguments are transparently parsed and the handler function associated to the ap
   The StreamWriter where to redirect standard data.
 * `stdout_end`   
 
-## Example
+## Examples
+
+### Interacting with `stdout` and `stdin`
 
 [The router example](https://github.com/adaltas/node-parameters/blob/master/samples/router.js) defines a `list` command which print the files of a directory:
 
@@ -51,14 +53,7 @@ const { spawn } = require('child_process')
 parameters({
   commands: {
     'list': {
-      main: {
-        name: 'input', required: true
-      },
-      options: {
-        port: {
-          type: 'integer'
-        }
-      },
+      main: 'input',
       route: async function({params, stderr, stdout}){
         const ls = spawn('ls', ['-lh', ...params.input])
         ls.stderr.pipe(stderr)
@@ -71,11 +66,47 @@ parameters({
 
 You can test the behavior of this command with `node samples/router.js list {a_directory}`. For example, if you are inside the root folder of this project repository, executing `node samples/router.js list ./src` prints the files of the ["src" directory](https://github.com/adaltas/node-parameters/blob/master/src/).
 
-You can verify that `stdout` and `stderr` are honored:
+You can verify that `stdout` and `stderr` are honored by redirecting their content to a file:
 
 ```
 # stdout is redirected to a file named "stdout.log"
 node samples/router.js list src > ./stdout.log
 # stderr is redirected to a file named "stderr.log"
 node samples/router.js list invalid > ./stderr.log
+```
+
+### Working with promises
+
+The routing function can return any value. There is no restriction imposed to the developer. Thus, it is [compatible with promise](https://github.com/adaltas/node-parameters/blob/master/samples/router_promise.js):
+
+```js
+const parameters = require('..')
+const { spawn } = require('child_process')
+
+(async function(){
+  try{
+    const result = await parameters({
+      commands: {
+        'list': {
+          main: 'input',
+          route: async function({params, error, stderr, stdout}){
+            return new Promise(function(resolve, reject){
+              const ls = spawn('ls', ['-lh', ...params.input])
+              ls.stderr.pipe(stderr)
+              ls.stdout.pipe(stdout)
+              ls.on('close', (code) => {
+                code === 0
+                ? resolve('Command succeed!')
+                : reject(new Error(`Command failed with code: ${code}`))
+              });
+            })
+          }
+        }
+      }
+    }).route()
+    console.log(`=== ${result} ===`)
+  }catch(err){
+    console.error(`=== ${err.message} ===`)
+  }
+})()
 ```

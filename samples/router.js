@@ -5,15 +5,7 @@ const util = require('util');
 parameters({
   commands: {
     'list': {
-      main: {
-        name: 'input',
-        required: true
-      },
-      options: {
-        port: {
-          type: 'integer'
-        }
-      },
+      main: 'input',
       route: async function({params, stderr, stdout}){
         const ls = spawn('ls', ['-lh', ...params.input])
         ls.stderr.pipe(stderr)
