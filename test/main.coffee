@@ -27,8 +27,12 @@ describe 'main', ->
       app = parameters
         main:
           name: 'leftover'
-      app.parse([]).should.eql {}
+      app.parse([]).should.eql
+        leftover: []
       app.compile({}).should.eql []
+      app.compile(
+        leftover: []
+      ).should.eql []
 
     it 'preserve space in main arguments', ->
       app = parameters

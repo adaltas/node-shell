@@ -1,6 +1,5 @@
 const parameters = require('..')
 const { spawn } = require('child_process')
-const util = require('util');
 
 parameters({
   commands: {

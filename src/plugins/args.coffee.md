@@ -133,6 +133,8 @@ Convert an arguments list to a parameters object.
             ] unless config.commands[command]
             # Parse child configuration
             parse config.commands[command], command
+        else if config.main
+          params[config.main.name] = []
         # NOTE: legacy versions used to inject an help command
         # when parsing arguments which doesnt hit a sub command
         # See the associated tests in "help/parse.coffee"
@@ -145,7 +147,7 @@ Convert an arguments list to a parameters object.
           throw error [
             'Required Main Argument:'
             "no suitable arguments for #{JSON.stringify main.name}"
-          ] unless params[main.name]?
+          ] if params[main.name].length is 0
         params
       # Start the parser
       parse appconfig, null

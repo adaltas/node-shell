@@ -9,12 +9,11 @@ maturity: initial
 
 ## Description
 
-Main is what is left once the option and the commands have been extracted. 
-Like options, "main" is defined at the "config" level or for each command.
+Main is what is left once the option and the commands have been extracted. Like with `options`, the `main` property is defined at the application level or for each command.
 
 ## Definition
 
-The `main` parameter is defined at the application and at the command level. It is an object with the following properties:
+The `main` property is declared as an object with the following properties:
 
 * `name` (string)   
   The name of the main property.
@@ -23,9 +22,38 @@ The `main` parameter is defined at the application and at the command level. It 
 * `description` (string)   
   The description of the main argument.
 
-As an alternative, a "string" can also be provided which will be converted to an object with the name property set to the original string value.
-  
-## Example definition at the application level
+As an alternative, a "string" can also be provided which will be converted to an object with the name property set to the original string value. Thus, the following declarations are equivalent:
+
+```js
+parameters({
+  main: 'input'  
+})
+// equals
+parameters({
+  main: {
+    name: 'input' 
+  } 
+})
+```
+
+The extracted value is an array.
+
+If [no main arguments](https://github.com/adaltas/node-parameters/blob/master/samples/main_empty.js) is defined in the CLI commands, then the array is empty.
+
+```js
+require('should')
+require('parameters')({
+  main: 'input' 
+})
+.parse([])
+.should.eql({
+  input: []
+})
+```
+
+## Examples
+
+## Application level definition
 
 ```js
 require("parameters")({
@@ -44,7 +72,7 @@ require("parameters")({
 
 Usage of the "main" parameter is now: `myapp [leftover]`.
 
-## Example definition at the command level
+## Command level definition
 
 ```js
 require("parameters")({

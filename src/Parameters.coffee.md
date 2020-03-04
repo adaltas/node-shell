@@ -38,7 +38,6 @@
           "got #{arguments.length} arguments"
         ]
       hooks = [hooks] if typeof hooks is 'function'
-      res = null
       for hook in registry
         handler = hook.call @, args, handler if hook[name]
       for hook in @registry

@@ -3,6 +3,7 @@
 
 ## Trunk
 
+* main: default to empty array
 * router: promise example
 * router: split writer to stdout and stderr
 * types: validate integer option is not NaN

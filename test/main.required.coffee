@@ -3,7 +3,7 @@ parameters = require '../src'
 
 describe 'main.required', ->
 
-  it 'may be optional', ->
+  it 'optional by default', ->
     app = parameters
       commands: 'mycommand':
         main:
@@ -13,6 +13,7 @@ describe 'main.required', ->
     ]
     .should.eql
       command: ['mycommand']
+      my_argument: []
     app.compile
       command: ['mycommand']
     .should.eql ['mycommand']

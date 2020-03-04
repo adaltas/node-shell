@@ -33,7 +33,9 @@ describe 'config.extended', ->
       app.parse(['my value']).should.eql [
         leftover: ['my value']
       ]
-      app.parse([]).should.eql [{}]
+      app.parse([]).should.eql [{
+        leftover: []
+      }]
       app.compile [
         leftover: ['my value']
       ]
