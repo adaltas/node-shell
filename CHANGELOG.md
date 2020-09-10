@@ -1,6 +1,11 @@
 
 # Changelog
 
+## TODO
+
+* rename commands into actions
+* describe the anatomy of a command
+
 ## Trunk
 
 * main: default to empty array
