@@ -44,17 +44,28 @@
     "url": "git://github.com/adaltas/node-parameters.git"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^0.3.6",
-    "@grpc/proto-loader": "^0.5.0",
-    "grpc": "^1.20.2",
-    "mixme": "^0.3.1",
-    "pad": "^2.3.0",
-    "protobufjs": "^6.8.8"
+    "@grpc/grpc-js": "^1.1.6",
+    "@grpc/proto-loader": "^0.5.5",
+    "grpc": "^1.24.3",
+    "mixme": "^0.3.5",
+    "pad": "^3.2.0",
+    "protobufjs": "^6.10.1"
   },
   "devDependencies": {
-    "coffeescript": "^2.4.1",
-    "mocha": "^6.1.3",
+    "coffeescript": "^2.5.1",
+    "mocha": "^8.1.3",
     "should": "^13.2.3"
+  },
+  "mocha": {
+    "throw-deprecation": true,
+    "require": [
+      "should",
+      "coffeescript/register"
+    ],
+    "inline-diffs": true,
+    "timeout": 40000,
+    "reporter": "spec",
+    "recursive": true
   },
   "optionalDependencies": {},
   "scripts": {
@@ -66,6 +77,6 @@
     "major": "npm version major -m 'Bump to version %s'",
     "build": "coffee -b -o lib src && cp -rp src/plugins/grpc_server/shell.proto lib/plugins/grpc_server",
     "pretest": "npm run build",
-    "test": "mocha test"
+    "test": "mocha 'test/**/*.coffee'"
   }
 }
