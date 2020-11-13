@@ -6,7 +6,7 @@
 * rename commands into actions
 * describe the anatomy of a command
 
-## Trunk
+## Version 0.7.4
 
 * main: default to empty array
 * router: promise example
