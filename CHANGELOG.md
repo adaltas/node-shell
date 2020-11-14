@@ -6,6 +6,10 @@
 * rename commands into actions
 * describe the anatomy of a command
 
+## Trunk
+
+* router: rename route property to handler
+
 ## Version 0.7.4
 
 * main: default to empty array

@@ -7,7 +7,7 @@ describe 'router.handler', ->
     
   it 'context is parameter instance', ->
     parameters
-      route: ({params}) ->
+      handler: ({params}) ->
         @should.have.property('help').which.is.a.Function()
         @should.have.property('parse').which.is.a.Function()
         @should.have.property('compile').which.is.a.Function()
@@ -18,14 +18,14 @@ describe 'router.handler', ->
       parameters
         options:
           'my_argument': {}
-        route: -> throw Error 'catch me'
+        handler: -> throw Error 'catch me'
       .route ['--my_argument', 'my value']
     ).should.throw 'catch me'
     
   it 'load with custom function handler', ->
     await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> "Hello"'
     parameters
-      route: './something'
+      handler: './something'
       load: (module) ->
         require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
     .route []
@@ -38,7 +38,7 @@ describe 'router.handler', ->
       parameters
         options:
           'my_argument': {}
-        route: (context) ->
+        handler: (context) ->
           Object.keys(context).sort().should.eql ['args', 'argv', 'command', 'error', 'params', 'stderr', 'stderr_end', 'stdout', 'stdout_end']
           arguments.length.should.eql 1
       .route ['--my_argument', 'my value']
@@ -47,7 +47,7 @@ describe 'router.handler', ->
       parameters
         options:
           'my_argument': {}
-        route: ({params, argv}, my_param, callback) ->
+        handler: ({params, argv}, my_param, callback) ->
           my_param.should.eql 'my value'
           callback.should.be.a.Function()
           callback null, 'something'
@@ -59,7 +59,7 @@ describe 'router.handler', ->
 
     it 'inside an application', ->
       parameters
-        route: ({params}) -> params.my_argument
+        handler: ({params}) -> params.my_argument
         options:
           'my_argument': {}
       .route ['--my_argument', 'my value']
@@ -68,7 +68,7 @@ describe 'router.handler', ->
     it 'inside a command', ->
       parameters
         commands: 'my_command':
-          route: ({params}) -> params.my_argument
+          handler: ({params}) -> params.my_argument
           options:
             'my_argument': {}
       .route ['my_command', '--my_argument', 'my value']

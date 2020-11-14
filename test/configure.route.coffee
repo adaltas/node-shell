@@ -7,29 +7,29 @@ describe 'configure.route', ->
     
     it 'accept function', ->
       parameters
-        route: (->)
+        handler: (->)
       parameters
         commands: 'server':
-          route: (->)
+          handler: (->)
           
     it 'accept string', ->
       # In application
       parameters
-        route: 'path/to/module'
+        handler: 'path/to/module'
       parameters
         commands: 'server':
-          route: 'path/to/module'
+          handler: 'path/to/module'
     
     it 'throw error if not valid in application', ->
       (->
         parameters
-          route: {}
+          handler: {}
       ).should.throw 'Invalid Route Configuration: accept string or function in application, got {}'
 
     it 'throw error if not valid in command', ->
       (->
         parameters
           commands: 'server':
-            route: {}
+            handler: {}
       ).should.throw 'Invalid Route Configuration: accept string or function in command "server", got {}'
       

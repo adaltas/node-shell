@@ -15,7 +15,7 @@
         @register configure_set: ({config, command}, handler) ->
           return handler if command.length
           config.router ?= {}
-          config.router.route ?= path.resolve __dirname, '../routes/help'
+          config.router.handler ?= path.resolve __dirname, '../routes/help'
           config.router.stdout ?= process.stdout
           config.router.stdout_end ?= false
           config.router.stderr ?= process.stderr
@@ -39,14 +39,14 @@
     Parameters::init = ( (parent) ->
       ->
         @register configure_set: ({config, command}, handler) ->
-          return handler unless config.route
+          return handler unless config.handler
           throw error [
             'Invalid Route Configuration:'
             "accept string or function"
             "in application," unless command.length
             "in command #{JSON.stringify command.join ' '}," if command.length
-            "got #{JSON.stringify config.route}"
-          ] unless typeof config.route in ['function', 'string']
+            "got #{JSON.stringify config.handler}"
+          ] unless typeof config.handler in ['function', 'string']
           handler
         parent.call @, arguments...
     )(Parameters::init)
@@ -70,14 +70,14 @@ How to use the `route` method to execute code associated with a particular comma
           "got #{JSON.stringify context}"
         ]
       appconfig = @confx().get()
-      route_load = (route) =>
-        if typeof route is 'string'
-          @load route
-        else if typeof route is 'function'
-          route
+      route_load = (handler) =>
+        if typeof handler is 'string'
+          @load handler
+        else if typeof handler is 'function'
+          handler
         else
-          throw Error "Invalid Route: expect a string or a function, got #{route}"
-      route_call = (route, command, params, err, args) =>
+          throw Error "Invalid Handler: expect a string or a function, got #{handler}"
+      route_call = (handler, command, params, err, args) =>
         config = @confx().get()
         context = {
           argv: process.argv.slice 2
@@ -89,46 +89,46 @@ How to use the `route` method to execute code associated with a particular comma
           stdout_end: config.router.stdout_end
           stderr: config.router.stderr
           stderr_end: config.router.stderr_end
-        , context...}
+        , ...context}
         @hook 'router_call', context, (context) =>
-          route.call @, context, ...args
+          handler.call @, context, ...args
       route_error = (err, command) =>
         context.argv = if command.length
         then ['help', ...command]
         else ['--help']
         params = @parse context.argv
-        route = route_load @config.router.route
-        route_call route, command, params, err, args
+        handler = route_load @config.router.handler
+        route_call handler, command, params, err, args
       route_from_config = (config, command, params) =>
-        route = config.route
-        unless route
-          # Provide an error message if leaf command without a route
+        handler = config.handler
+        unless handler
+          # Provide an error message if leaf command without a handler
           unless Object.keys(config.commands).length  # Object.keys(config.commands).length or
             err = if config.root
             then error [
-              'Missing Application Route:'
-              'a \"route\" definition is required when no child command is defined'
+              'Missing Application Handler:'
+              'a \"handler\" definition is required when no child command is defined'
             ]
             else error [
-              'Missing Command Route:'
-              "a \"route\" definition #{JSON.stringify params[appconfig.command]} is required when no child command is defined"
+              'Missing Command Handler:'
+              "a \"handler\" definition #{JSON.stringify params[appconfig.command]} is required when no child command is defined"
             ]
           # Convert argument to an help command
           context.argv = if command.length
           then ['help', ...command]
           else ['--help']
           params = @parse context.argv
-          route = route_load @config.router.route
+          handler = route_load @config.router.handler
         else
-          route = route_load route
-        route_call route, command, params, err, args
+          handler = route_load handler
+        route_call handler, command, params, err, args
       # Read parameters
       try params = @parse context.argv
       catch err then return route_error err, err.command or []
       # Print help
       if command = @helping params
-        route = @load appconfig.router.route
-        return route_call route, command, params, err, args
+        handler = @load appconfig.router.handler
+        return route_call handler, command, params, err, args
       # Load a command route
       else
         # Return undefined if not parsing command based arguments

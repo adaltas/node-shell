@@ -16,7 +16,7 @@ describe 'router.api', ->
       
   it "accept an object", ->
     parameters
-      route: ({user_param, params}) ->
+      handler: ({user_param, params}) ->
         return "got: #{user_param} and #{params.opt}"
     .route
       argv: ['--opt', 'param value']

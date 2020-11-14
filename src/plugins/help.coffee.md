@@ -34,7 +34,7 @@
                 name: 'name'
                 description: 'Help about a specific command'
               help: true
-              route: path.resolve __dirname, '../routes/help' # config.help.route
+              handler: path.resolve __dirname, '../routes/help'
               options:
                 'help': disabled: true
             config.commands[command.name] = merge command, config.commands[command.name]

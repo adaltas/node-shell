@@ -68,7 +68,7 @@ describe 'configure', ->
           main:
             name: 'name'
             description: 'Help about a specific command'
-          route: path.resolve __dirname, '../src/routes/help'
+          handler: path.resolve __dirname, '../src/routes/help'
           strict: false
           options: {}
           commands: {}

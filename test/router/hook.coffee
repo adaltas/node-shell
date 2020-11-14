@@ -15,7 +15,7 @@ describe 'router.hook', ->
     
   it 'router_call validate context', ->
     parameters
-      route: (->)
+      handler: (->)
     .register
       router_call: (context, handler) ->
         Object.keys(context).sort().should.eql [
@@ -26,7 +26,7 @@ describe 'router.hook', ->
         
   it 'router_call modify parameters', (next) ->
     parameters
-      route: ({stdout}) ->
+      handler: ({stdout}) ->
         stdout.write 'gotit'
         stdout.end()
     .register

@@ -11,7 +11,7 @@ describe 'grpc_client.run', ->
         port: 61234
       commands: 'ping': commands: 'pong':
         options: 'message': {}
-        route: ({config, params, stdout}) ->
+        handler: ({config, params, stdout}) ->
           stdout.write 'hello'
           stdout.end()
     await app.grpc_start()

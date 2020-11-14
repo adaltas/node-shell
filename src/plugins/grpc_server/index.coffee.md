@@ -34,7 +34,7 @@
               'shell': commands: 'protobuf':
                 options:
                   format: one_of: ['json', 'proto'], default: 'proto'
-                route: path.resolve __dirname, './route_shell_protobuf'
+                handler: path.resolve __dirname, './route_shell_protobuf'
           handler
         parent.call @, arguments...
     )(Parameters::init)

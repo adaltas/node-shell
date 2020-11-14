@@ -45,7 +45,7 @@ describe 'router.error', ->
       parameters
         router:
           stderr: writer (output) ->
-            output.should.match /^\s+Missing Application Route: a "route" definition is required when no child command is defined/
+            output.should.match /^\s+Missing Application Handler: a "handler" definition is required when no child command is defined/
             output.should.match /^\s+myapp - No description yet/m
             next()
           stderr_end: true
@@ -70,7 +70,7 @@ describe 'router.error', ->
       parameters
         router:
           stderr: writer (output) ->
-            output.should.not.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child command is defined/
+            output.should.not.match /^\s+Missing Command Handler: a "handler" definition \["server","start"\] is required when no child command is defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
           stderr_end: true
@@ -86,7 +86,7 @@ describe 'router.error', ->
       parameters
         router:
           stderr: writer (output) ->
-            output.should.match /^\s+Missing Command Route: a "route" definition \["server","start"\] is required when no child command is defined/
+            output.should.match /^\s+Missing Command Handler: a "handler" definition \["server","start"\] is required when no child command is defined/
             output.should.match /^\s+myapp server start - No description yet for the start command/m
             next()
           stderr_end: true

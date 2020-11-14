@@ -14,7 +14,7 @@ describe 'router.config.router', ->
         stderr_end: false
         stdout: process.stdout
         stdout_end: false
-        route: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../src/routes/help'
           
     it "stream.Writable", ->
       parameters
@@ -24,7 +24,7 @@ describe 'router.config.router', ->
         stderr_end: false
         stdout: new Writable()
         stdout_end: false
-        route: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../src/routes/help'
 
   describe 'options', ->
   
@@ -75,7 +75,7 @@ describe 'router.config.router', ->
         main:
           name: 'name'
           description: 'Help about a specific command'
-        route: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../src/routes/help'
         strict: false
         shortcuts: {}
         options: {}
