@@ -38,21 +38,21 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
 When option is defined as an object, the keys are mapped to the option name. For example, an option `message` with a shortcut `m` is defined as:
 
 ```js
-require("parameters")(
-{ options:
-  { "message":
-    { shortcut: "m" } } }
-)
+require("parameters")({
+  options: {
+    "message": {
+      shortcut: "m"
+}}})
 ```
 
 Options may apply to the [application](./) like in the above or to the [command](./commands/) like below:
 
 ```js
-require("parameters")(
-{ commands:
-  { print:
-    { options: 
-      { "message":
-        { shortcut: "m" } } } } }
-)
+require("parameters")({
+  commands: {
+    print: {
+      options: {
+        "message": {
+          shortcut: "m"
+}}}}})
 ```

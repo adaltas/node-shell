@@ -54,7 +54,7 @@ parameters({
   commands: {
     'list': {
       main: 'input',
-      route: async function({params, stderr, stdout}){
+      handler: async function({params, stderr, stdout}){
         const ls = spawn('ls', ['-lh', ...params.input])
         ls.stderr.pipe(stderr)
         ls.stdout.pipe(stdout)
@@ -89,7 +89,7 @@ const { spawn } = require('child_process')
       commands: {
         'list': {
           main: 'input',
-          route: async function({params, error, stderr, stdout}){
+          handler: async function({params, error, stderr, stdout}){
             return new Promise(function(resolve, reject){
               const ls = spawn('ls', ['-lh', ...params.input])
               ls.stderr.pipe(stderr)

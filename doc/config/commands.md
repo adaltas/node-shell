@@ -25,7 +25,7 @@ Commands define the arguments passed to a shell scripts.
   What is left once the option and the commands have been extracted.
 * `commands` (object|array)   
   Support unlimited multi-level commands.
-* `route` (function|string)   
+* `handler` (function|string)   
   Execute a function or the function exported by a module if defined as a 
   string, provide the params object, see the [routing documentation](/api/route/).
 
@@ -113,7 +113,7 @@ Usage of the "start" command is now:
 
 ### With routing
 
-The final definition, enriched with "route" definition to route the command to
+The final definition, enriched with "handler" definition to route the command to
 our own modules, looks like:
 
 ```
@@ -126,7 +126,7 @@ our own modules, looks like:
   }],
   "commands": [{
     "name": "info",
-    "route": "./lib/config"
+    "handler": "./lib/config"
   },{
     "name": "server",
     "options": {
@@ -134,14 +134,14 @@ our own modules, looks like:
     },
     "commands": [{
       "name": "start",
-      "route": "./lib/server/start"
+      "handler": "./lib/server/start"
       "options": {
         "name": "port",
         "required": true
       }
     }, {
       "name": "stop",
-      "route": "./lib/server/stop"
+      "handler": "./lib/server/stop"
     }]
   }]
 }

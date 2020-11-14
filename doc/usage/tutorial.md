@@ -483,11 +483,11 @@ const app = parameters({
   commands: {
     'append': {
       /* ... */
-      route: './routes/append.js'
+      handler: './routes/append.js'
     },
     'view': {
       /* ... */
-      route: './routes/view.js'
+      handler: './routes/view.js'
     }
   }
 })
@@ -562,7 +562,7 @@ const app = parameters({
         required: true,
         description: 'Logged data'
       },
-      route: './routes/append.js'
+      handler: './routes/append.js'
     },
     'view': {
       description: 'Viewing a log file',
@@ -572,7 +572,7 @@ const app = parameters({
           description: 'Viewing 10 recent records in a log file'
         }
       },
-      route: './routes/view.js'
+      handler: './routes/view.js'
     }
   }
 })

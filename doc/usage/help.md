@@ -61,7 +61,7 @@ Here's how to display help with routing:
 ```js
 // Routing to help required `help.route` to be set
 require('parameters')({
-  route: './some/module'
+  handler: './some/module'
 }).route(/*...optional user arguments...*/)
 ```
 

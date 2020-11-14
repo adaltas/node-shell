@@ -28,7 +28,7 @@ As an alternative, a "string" can also be provided which will be converted to an
 parameters({
   main: 'input'  
 })
-// equals
+// is equivalent to
 parameters({
   main: {
     name: 'input' 
