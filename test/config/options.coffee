@@ -27,12 +27,12 @@ describe 'config.options', ->
         'got "invalid" for option "key" in command "server start"'
       ].join ' '
     
-    it 'enforce one_of', ->
+    it 'enforce enum', ->
       (->
         parameters
           options:
-            key: one_of: true
-      ).should.throw 'Invalid Option Configuration: option property "one_of" must be a string or an array, got true'
+            key: enum: true
+      ).should.throw 'Invalid Option Configuration: option property "enum" must be a string or an array, got true'
   
   describe 'collision', ->
     

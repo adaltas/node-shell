@@ -84,12 +84,12 @@
             "in command #{JSON.stringify commands.join ' '}" if commands.length
           ] unless option.type in types
           # config.shortcuts[option.shortcut] = option.name if option.shortcut and not option.disabled
-          option.one_of = [option.one_of] if typeof option.one_of is 'string'
+          option.enum = [option.enum] if typeof option.enum is 'string'
           throw utils.error [
             'Invalid Option Configuration:'
-            'option property "one_of" must be a string or an array,'
-            "got #{option.one_of}"
-          ] if option.one_of and not Array.isArray option.one_of
+            'option property "enum" must be a string or an array,'
+            "got #{option.enum}"
+          ] if option.enum and not Array.isArray option.enum
           @
       builder.__proto__ =
         get_cascaded: ->

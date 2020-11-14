@@ -33,7 +33,7 @@
             commands:
               'shell': commands: 'protobuf':
                 options:
-                  format: one_of: ['json', 'proto'], default: 'proto'
+                  format: enum: ['json', 'proto'], default: 'proto'
                 handler: path.resolve __dirname, './route_shell_protobuf'
           handler
         parent.call @, arguments...

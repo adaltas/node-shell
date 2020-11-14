@@ -1,7 +1,7 @@
 
 parameters = require '../../src'
   
-describe 'options.one_of', ->
+describe 'options.enum', ->
   
   it 'match elements in an array', ->
     app = parameters
@@ -9,7 +9,7 @@ describe 'options.one_of', ->
         options: 'array':
           shortcut: 'a'
           type: 'array'
-          one_of: ['1', '2']
+          enum: ['1', '2']
     app.parse(['start', '-a', '1', '-a', '2'])
     .should.eql
       command: ['start']
@@ -24,7 +24,7 @@ describe 'options.one_of', ->
       options: 'array':
         shortcut: 'a'
         type: 'array'
-        one_of: ['1', '3']
+        enum: ['1', '3']
     (->
       app.parse(['start', '-a', '1', '-a', '2'])
     ).should.throw 'Invalid Argument Value: the value of option "array" must be one of ["1","3"], got "2"'
@@ -38,6 +38,6 @@ describe 'options.one_of', ->
         options: 'array':
           shortcut: 'a'
           type: 'array'
-          one_of: ['1', '3']
+          enum: ['1', '3']
     .parse(['start'])
     

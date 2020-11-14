@@ -159,7 +159,7 @@ node app -c ./my/repo
 In place of `./my/repo` can be any value, but if you don't provide it, the CLI will run into an error. And what if you need to take a control over the values, which could be passed, or to use an option as a boolean switcher without providing with any value? To do this, options accept [multiple properties](/config/options/) including:
 
 - `default` (anything) - a default value if none is provided.
-- `one_of` (array) - a list of possible and accepted values.
+- `enum` (array) - a list of possible and accepted values.
 - `required` (boolean) - whether or not this option must always be present (false by default).
 - `type` (string) - the type used to cast between a string argument and a JS value (accepted values are 'boolean', 'string', 'integer' and 'array').
 
@@ -173,7 +173,7 @@ parameters({
       default: 42
     },
     'select-opt': {
-      one_of: [1, 2, 3, "let's go"]
+      enum: [1, 2, 3, "let's go"]
     },
     'required-opt': {
       required: true

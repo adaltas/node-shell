@@ -20,7 +20,7 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
   Disabled an option.
 * `name` (string)   
   The name of the option, required.
-* `one_of` (array)   
+* `enum` (array)   
   A list of possible and accepted values.
 * `required` (boolean || function)   
   Whether or not this option must always be present.

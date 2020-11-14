@@ -8,6 +8,7 @@
 
 ## Trunk
 
+* enum: renamed from one_of
 * options: required as a function
 * main: required as a function
 * utils: isolate all utils

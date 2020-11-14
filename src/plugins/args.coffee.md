@@ -112,8 +112,8 @@ Convert an arguments list to a parameters object.
             'Required Option:'
             "the \"#{option.name}\" option must be provided"
           ] if required and not params[option.name]?
-          # Handle one_of
-          if option.one_of
+          # Handle enum
+          if option.enum
             values = params[option.name]
             if not required and values isnt undefined
               values = [values] unless Array.isArray values
@@ -121,9 +121,9 @@ Convert an arguments list to a parameters object.
                 throw utils.error [
                   'Invalid Argument Value:'
                   "the value of option \"#{option.name}\""
-                  "must be one of #{JSON.stringify option.one_of},"
+                  "must be one of #{JSON.stringify option.enum},"
                   "got #{JSON.stringify value}"
-                ] unless value in option.one_of
+                ] unless value in option.enum
         # We still have some argument to parse
         if argv.length isnt index
           # Store the full command in the return array
@@ -219,16 +219,16 @@ Convert a parameters object to an arguments array.
             'Required Option:'
             "the \"#{key}\" option must be provided"
           ] if required and not value?
-          # Validate value against option "one_of"
-          if value? and option.one_of
+          # Validate value against option "enum"
+          if value? and option.enum
             value = [value] unless Array.isArray value
             for val in value
               throw utils.error [
                 'Invalid Parameter Value:'
                 "the value of option \"#{option.name}\""
-                "must be one of #{JSON.stringify option.one_of},"
+                "must be one of #{JSON.stringify option.enum},"
                 "got #{JSON.stringify val}"
-              ] unless val in option.one_of
+              ] unless val in option.enum
           # Serialize
           if value then switch option.type
             when 'boolean'
