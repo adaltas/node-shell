@@ -129,11 +129,26 @@ Format the configuration into a readable documentation string.
   Print the child command descriptions, default is `false`.
 * `options.indent` (string)   
   Indentation used with output help, default to 2 spaces.
+* `options.columns` (integer|[integer])   
+  The with of a column expressed as the number of characters. The value must
+  equal or exceed 10. If the total column width exists (`process.stdout.columns`
+  with TTY environments), the option one_column is automatically activated if
+  the total width is less than twice this value.
 
 It returns the formatted help to be printed as a string.
 
     Parameters::help = (commands=[], options={}) ->
       options.indent ?= '  '
+      options.columns ?= 28
+      # options.columns = [options.columns] unless Array.isArray options.columns
+      # options.columns[1] ?= process.stdout.columns - options.columns[0] if process.stdout.columns
+      throw utils.error [
+        'Invalid Help Column Option:'
+        'must exceed a size of 10 columns,'
+        "got #{JSON.stringify options.columns}"
+      ] if options.columns < 10
+      options.one_column = true unless process.stdout.columns?
+      options.one_column ?= process.stdout.columns - options.columns < options.columns
       commands = commands.split ' ' if typeof commands is 'string'
       throw utils.error [
         'Invalid Help Arguments:'
@@ -156,7 +171,13 @@ It returns the formatted help to be printed as a string.
       content.push 'NAME'
       name = configs.map((config) -> config.name).join ' '
       description = configs[configs.length-1].description
-      content.push "#{options.indent}#{name} - #{description}"
+      if options.one_column
+        content.push ...[
+          "#{name}"
+          "#{description}"
+        ].map( (l) -> "#{options.indent}#{l}")
+      else
+        content.push "#{options.indent}#{name} - #{description}"
       # Synopsis
       content.push ''
       content.push 'SYNOPSIS'
@@ -185,23 +206,38 @@ It returns the formatted help to be printed as a string.
         if Object.keys(config.options).length
           for name in Object.keys(config.options).sort()
             option = config.options[name]
-            shortcut = if option.shortcut then "-#{option.shortcut} " else '   '
-            line = "#{options.indent}#{shortcut}--#{option.name}"
-            line = pad line, 28
-            if line.length > 28
+            description = option.description or "No description yet for the #{option.name} option."
+            description += ' Required.' if option.required
+            if options.one_column
+              content.push ...[
+                "-#{option.shortcut}" if option.shortcut
+                "--#{option.name}"
+                "#{description}"
+              ].filter((l) -> l).map( (l) -> "#{options.indent}#{l}")
+            else
+              shortcut = if option.shortcut then "-#{option.shortcut} " else '   '
+              line = "#{options.indent}#{shortcut}--#{option.name}"
+              line = pad line, options.columns
+              if line.length > options.columns
+                content.push line
+                line = ' '.repeat options.columns
+              line += description
               content.push line
-              line = ' '.repeat 28
-            line += option.description or "No description yet for the #{option.name} option."
-            line += ' Required.' if option.required
-            content.push line
         if config.main
-          line = "#{options.indent}#{config.main.name}"
-          line = pad line, 28
-          if line.length > 28
+          description = config.main.description or "No description yet for the #{config.main.name} option."
+          if options.one_column
+            content.push ...[
+              "#{config.main.name}"
+              "#{description}"
+            ].map( (l) -> "#{options.indent}#{l}")
+          else
+            line = "#{options.indent}#{config.main.name}"
+            line = pad line, options.columns
+            if line.length > options.columns
+              content.push line
+              line = ' '.repeat options.columns
+            line += description
             content.push line
-            line = ' '.repeat 28
-          line += config.main.description or "No description yet for the #{config.main.name} option."
-          content.push line
       # Command
       config = configs[configs.length - 1]
       if Object.keys(config.commands).length
@@ -209,10 +245,10 @@ It returns the formatted help to be printed as a string.
         content.push 'COMMANDS'
         for _, command of config.commands
           line = 
-          line = pad "#{options.indent}#{[command.name].join ' '}", 28
-          if line.length > 28
+          line = pad "#{options.indent}#{[command.name].join ' '}", options.columns
+          if line.length > options.columns
             content.push line
-            line = ' '.repeat 28
+            line = ' '.repeat options.columns
           line += command.description or "No description yet for the #{command.name} command."
           content.push line
         # Detailed command information
@@ -222,19 +258,19 @@ It returns the formatted help to be printed as a string.
           # Raw command, no main, no child commands
           if not Object.keys(command.commands).length and not command.main?.required
             line = "#{command.name}"
-            line = pad "#{options.indent}#{line}", 28
-            if line.length > 28
+            line = pad "#{options.indent}#{line}", options.columns
+            if line.length > options.columns
               content.push line
-              line = ' '.repeat 28
+              line = ' '.repeat options.columns
             line += command.description or "No description yet for the #{command.name} command."
             content.push line
           # Command with main
           if command.main
             line = "#{command.name} {#{command.main.name}}"
-            line = pad "#{options.indent}#{line}", 28
-            if line.length > 28
+            line = pad "#{options.indent}#{line}", options.columns
+            if line.length > options.columns
               content.push line
-              line = ' '.repeat 28
+              line = ' '.repeat options.columns
             line += command.main.description or "No description yet for the #{command.main.name} option."
             content.push line
           # Command with child commands
@@ -251,25 +287,37 @@ It returns the formatted help to be printed as a string.
               content.push "#{options.indent}Where command is one of #{Object.keys(command.commands).join ', '}."
       # Add examples
       config = configs[configs.length - 1]
-      has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
+      # has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
       has_help_command = Object.values(config.commands).some (command) -> command.name is 'help'
       has_help_option = true
       content.push ''
       content.push 'EXAMPLES'
       cmd = configs.map((config) -> config.name).join  ' '
       if has_help_option
-        line = pad "#{options.indent}#{cmd} --help", 28
-        if line.length > 28
+        if options.one_column
+          content.push ...[
+            "#{cmd} --help"
+            "Show this message"
+          ].map( (l) -> "#{options.indent}#{l}")
+        else
+          line = pad "#{options.indent}#{cmd} --help", options.columns
+          if line.length > options.columns
+            content.push line
+            line = ' '.repeat options.columns
+          line += 'Show this message'
           content.push line
-          line = ' '.repeat 28
-        line += 'Show this message'
-        content.push line
       if has_help_command
-        line = pad "#{options.indent}#{cmd} help", 28
-        if line.length > 28
+        if options.one_column
+          content.push ...[
+            "#{cmd} help"
+            "Show this message"
+          ].map( (l) -> "#{options.indent}#{l}")
+        else
+          line = pad "#{options.indent}#{cmd} help", options.columns
+          if line.length > options.columns
+            content.push line
+            line = ' '.repeat options.columns
+          line += 'Show this message'
           content.push line
-          line = ' '.repeat 28
-        line += 'Show this message'
-        content.push line
       content.push ''
       content.join '\n'

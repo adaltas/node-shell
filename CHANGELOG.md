@@ -8,6 +8,7 @@
 
 ## Trunk
 
+* help: new columns and one_column options
 * help: new indent option, default to 2 spaces
 * enum: renamed from one_of
 * options: required as a function
