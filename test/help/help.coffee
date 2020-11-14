@@ -10,16 +10,16 @@ describe 'help/help', ->
       .help().should.eql """
       
       NAME
-          myapp - No description yet
+        myapp - No description yet
       
       SYNOPSIS
-          myapp
+        myapp
       
       OPTIONS
-          -h --help               Display help information
+        -h --help                 Display help information
       
       EXAMPLES
-          myapp --help            Show this message
+        myapp --help              Show this message
       
       """
 
@@ -29,16 +29,16 @@ describe 'help/help', ->
       .help().should.eql """
 
       NAME
-          myapp - No description yet
+        myapp - No description yet
 
       SYNOPSIS
-          myapp
+        myapp
 
       OPTIONS
-          -h --help               Display help information
+        -h --help                 Display help information
 
       EXAMPLES
-          myapp --help            Show this message
+        myapp --help              Show this message
 
       """
 
@@ -64,29 +64,29 @@ describe 'help/help', ->
       .help().should.eql """
 
       NAME
-          myscript - Some description for myscript
+        myscript - Some description for myscript
 
       SYNOPSIS
-          myscript [myscript options] {command}
+        myscript [myscript options] {command}
 
       OPTIONS
-          -b --boolean            Boolean option in start
-          -h --help               Display help information
-          -i --integer            Integer option in start
-          -s --string             String option in start
-          command                 Command in start
+        -b --boolean              Boolean option in start
+        -h --help                 Display help information
+        -i --integer              Integer option in start
+        -s --string               String option in start
+        command                   Command in start
 
       EXAMPLES
-          myscript --help         Show this message
+        myscript --help           Show this message
 
       """
 
     it 'bypass required', ->
       app = parameters
         name: 'myscript'
-        description: 'Some description for myscript'
+        description: 'Some description for myscript.'
         options: 'myarg':
-          description: 'MyArg'
+          description: 'My argument.'
           required: true
       app
       .parse(['--help'])
@@ -94,17 +94,17 @@ describe 'help/help', ->
       app.help().should.eql """
 
       NAME
-          myscript - Some description for myscript
+        myscript - Some description for myscript.
 
       SYNOPSIS
-          myscript [myscript options]
+        myscript [myscript options]
 
       OPTIONS
-          -h --help               Display help information
-          --myarg                 MyArg Required.
+        -h --help                 Display help information
+           --myarg                My argument. Required.
 
       EXAMPLES
-          myscript --help         Show this message
+        myscript --help           Show this message
 
       """
 
@@ -126,21 +126,21 @@ describe 'help/help', ->
       .should.eql """
 
       NAME
-          myapp - No description yet
+        myapp - No description yet
 
       SYNOPSIS
-          myapp <command>
+        myapp <command>
 
       OPTIONS
-          -h --help               Display help information
+        -h --help                 Display help information
 
       COMMANDS
-          start                   No description yet for the start command
-          help                    Display help information
+        start                     No description yet for the start command
+        help                      Display help information
 
       EXAMPLES
-          myapp --help            Show this message
-          myapp help              Show this message
+        myapp --help              Show this message
+        myapp help                Show this message
 
       """
 
@@ -177,22 +177,22 @@ describe 'help/help', ->
       .help().should.eql """
 
       NAME
-          myscript - Some description for myscript
+        myscript - Some description for myscript
 
       SYNOPSIS
-          myscript <command>
+        myscript <command>
 
       OPTIONS
-          -h --help               Display help information
+        -h --help                 Display help information
 
       COMMANDS
-          start                   Description for the start command
-          stop                    Description for the stop command
-          help                    Display help information
+        start                     Description for the start command
+        stop                      Description for the stop command
+        help                      Display help information
 
       EXAMPLES
-          myscript --help         Show this message
-          myscript help           Show this message
+        myscript --help           Show this message
+        myscript help             Show this message
 
       """
       # app.help().should.eql app.help 'help'
@@ -212,21 +212,21 @@ describe 'help/help', ->
       expect = """
 
       NAME
-          myscript start - Description for the start command
+        myscript start - Description for the start command
 
       SYNOPSIS
-          myscript start [start options] {command}
+        myscript start [start options] {command}
 
       OPTIONS for start
-          -h --help               Display help information
-          -s --string             String option in start
-          command                 Command in start
+        -h --help                 Display help information
+        -s --string               String option in start
+        command                   Command in start
       
       OPTIONS for myscript
-          -h --help               Display help information
+        -h --help                 Display help information
 
       EXAMPLES
-          myscript start --help   Show this message
+        myscript start --help     Show this message
 
       """
       app.help('start').should.eql expect

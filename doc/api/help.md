@@ -5,12 +5,20 @@ keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'print']
 maturity: review
 ---
 
-# Method `help(command)`
+# Method `help(commands, options)`
 
 Format the configuration into a readable documentation string.
 
-* `command`: `[string] | string` The string or array containing the command name if any, optional.
-* Returns: `string` The formatted help to be printed.
+* `commands` ([string] | string)   
+  The string or array containing the command name if any, optional.
+* `options.extended` (boolean)   
+  Print the child command descriptions, default is `false`.
+* `options.indent` (string)   
+  Indentation used with output help, default to 2 spaces.
+
+All options are optional.
+
+It returns the formatted help to be printed as a string.
 
 ## Description
 

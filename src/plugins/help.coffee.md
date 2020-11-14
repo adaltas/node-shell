@@ -53,8 +53,8 @@
 
 Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
 
-* `params`: `[object] | object` The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
-* Returns: `array | null` The formatted help to be printed.
+* `params` ([object] | object)   
+  The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
 
     Parameters::helping = (params, options={}) ->
       params = clone params
@@ -119,14 +119,21 @@ Determine if help was requested by returning zero to n commands if help is reque
       helping = search appconfig, clone(commands), params
       if helping then commands else null
 
-## Method `help(command)`
+## Method `help(commands, options)`
 
 Format the configuration into a readable documentation string.
 
-* `command`: `[string] | string` The string or array containing the command name if any, optional.
-* Returns: `string` The formatted help to be printed.
-    
+* `commands` ([string] | string)   
+  The string or array containing the command name if any, optional.
+* `options.extended` (boolean)   
+  Print the child command descriptions, default is `false`.
+* `options.indent` (string)   
+  Indentation used with output help, default to 2 spaces.
+
+It returns the formatted help to be printed as a string.
+
     Parameters::help = (commands=[], options={}) ->
+      options.indent ?= '  '
       commands = commands.split ' ' if typeof commands is 'string'
       throw utils.error [
         'Invalid Help Arguments:'
@@ -149,7 +156,7 @@ Format the configuration into a readable documentation string.
       content.push 'NAME'
       name = configs.map((config) -> config.name).join ' '
       description = configs[configs.length-1].description
-      content.push "    #{name} - #{description}"
+      content.push "#{options.indent}#{name} - #{description}"
       # Synopsis
       content.push ''
       content.push 'SYNOPSIS'
@@ -166,7 +173,7 @@ Format the configuration into a readable documentation string.
             synopsis.push "<#{appconfig.command}>"
           else if config.main
             synopsis.push "{#{config.main.name}}"
-      content.push '    ' + synopsis.join ' '
+      content.push "#{options.indent}#{synopsis.join ' '}"
       # Options
       for config in configs.slice(0).reverse()
         if Object.keys(config.options).length or config.main
@@ -178,9 +185,8 @@ Format the configuration into a readable documentation string.
         if Object.keys(config.options).length
           for name in Object.keys(config.options).sort()
             option = config.options[name]
-            shortcut = if option.shortcut then "-#{option.shortcut} " else ''
-            line = '    '
-            line += "#{shortcut}--#{option.name}"
+            shortcut = if option.shortcut then "-#{option.shortcut} " else '   '
+            line = "#{options.indent}#{shortcut}--#{option.name}"
             line = pad line, 28
             if line.length > 28
               content.push line
@@ -189,8 +195,7 @@ Format the configuration into a readable documentation string.
             line += ' Required.' if option.required
             content.push line
         if config.main
-          line = '    '
-          line += "#{config.main.name}"
+          line = "#{options.indent}#{config.main.name}"
           line = pad line, 28
           if line.length > 28
             content.push line
@@ -203,8 +208,8 @@ Format the configuration into a readable documentation string.
         content.push ''
         content.push 'COMMANDS'
         for _, command of config.commands
-          line = ["#{command.name}"]
-          line = pad "    #{line.join ' '}", 28
+          line = 
+          line = pad "#{options.indent}#{[command.name].join ' '}", 28
           if line.length > 28
             content.push line
             line = ' '.repeat 28
@@ -217,7 +222,7 @@ Format the configuration into a readable documentation string.
           # Raw command, no main, no child commands
           if not Object.keys(command.commands).length and not command.main?.required
             line = "#{command.name}"
-            line = pad "    #{line}", 28
+            line = pad "#{options.indent}#{line}", 28
             if line.length > 28
               content.push line
               line = ' '.repeat 28
@@ -226,7 +231,7 @@ Format the configuration into a readable documentation string.
           # Command with main
           if command.main
             line = "#{command.name} {#{command.main.name}}"
-            line = pad "    #{line}", 28
+            line = pad "#{options.indent}#{line}", 28
             if line.length > 28
               content.push line
               line = ' '.repeat 28
@@ -238,12 +243,12 @@ Format the configuration into a readable documentation string.
             if Object.keys(command.options).length
               line.push "[#{command.name} options]"
             line.push "<#{command.command}>"
-            content.push '    ' + line.join ' '
+            content.push "#{options.indent}#{line.join ' '}"
             commands = Object.keys command.commands
             if commands.length is 1
-              content.push "    Where command is #{Object.keys command.commands}."
+              content.push "#{options.indent}Where command is #{Object.keys command.commands}."
             else if commands.length > 1
-              content.push "    Where command is one of #{Object.keys(command.commands).join ', '}."
+              content.push "#{options.indent}Where command is one of #{Object.keys(command.commands).join ', '}."
       # Add examples
       config = configs[configs.length - 1]
       has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
@@ -253,14 +258,14 @@ Format the configuration into a readable documentation string.
       content.push 'EXAMPLES'
       cmd = configs.map((config) -> config.name).join  ' '
       if has_help_option
-        line = pad "    #{cmd} --help", 28
+        line = pad "#{options.indent}#{cmd} --help", 28
         if line.length > 28
           content.push line
           line = ' '.repeat 28
         line += 'Show this message'
         content.push line
       if has_help_command
-        line = pad "    #{cmd} help", 28
+        line = pad "#{options.indent}#{cmd} help", 28
         if line.length > 28
           content.push line
           line = ' '.repeat 28

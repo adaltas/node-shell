@@ -15,17 +15,17 @@ describe 'help/help.shortcut', ->
       .should.eql """
       
       NAME
-          myscript - Some description for myscript
+        myscript - Some description for myscript
 
       SYNOPSIS
-          myscript [myscript options]
+        myscript [myscript options]
 
       OPTIONS
-          -h --help               Display help information
-          --myarg                 MyArg
+        -h --help                 Display help information
+           --myarg                MyArg
 
       EXAMPLES
-          myscript --help         Show this message
+        myscript --help           Show this message
 
       """
 
@@ -44,20 +44,20 @@ describe 'help/help.shortcut', ->
       .should.eql """
 
       NAME
-          myscript - Some description for myscript
+        myscript - Some description for myscript
 
       SYNOPSIS
-          myscript <command>
+        myscript <command>
 
       OPTIONS
-          -h --help               Display help information
+        -h --help                 Display help information
 
       COMMANDS
-          status                  Description for the status command
-          help                    Display help information
+        status                    Description for the status command
+        help                      Display help information
 
       EXAMPLES
-          myscript --help         Show this message
-          myscript help           Show this message
+        myscript --help           Show this message
+        myscript help             Show this message
 
       """
