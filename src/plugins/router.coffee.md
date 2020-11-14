@@ -4,7 +4,7 @@
     # Dependencies
     path = require 'path'
     stream = require 'stream'
-    error = require '../utils/error'
+    utils = require '../utils'
     {clone, merge, is_object_literal} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
@@ -21,13 +21,13 @@
           config.router.stderr ?= process.stderr
           config.router.stderr_end ?= false
           unless config.router.stdout instanceof stream.Writable
-            throw error [
+            throw utils.error [
               "Invalid Configuration Property:"
               "router.stdout must be an instance of stream.Writer,"
               "got #{JSON.stringify config.router.stdout}"
             ]
           unless config.router.stderr instanceof stream.Writable
-            throw error [
+            throw utils.error [
               "Invalid Configuration Property:"
               "router.stderr must be an instance of stream.Writer,"
               "got #{JSON.stringify config.router.stderr}"
@@ -40,7 +40,7 @@
       ->
         @register configure_set: ({config, command}, handler) ->
           return handler unless config.handler
-          throw error [
+          throw utils.error [
             'Invalid Route Configuration:'
             "accept string or function"
             "in application," unless command.length
@@ -64,7 +64,7 @@ How to use the `route` method to execute code associated with a particular comma
       if Array.isArray context
         context = argv: context
       else unless is_object_literal context
-        throw error [
+        throw utils.error [
           'Invalid Router Arguments:'
           'first argument must be a context object or the argv array,'
           "got #{JSON.stringify context}"
@@ -76,7 +76,7 @@ How to use the `route` method to execute code associated with a particular comma
         else if typeof handler is 'function'
           handler
         else
-          throw Error "Invalid Handler: expect a string or a function, got #{handler}"
+          throw utils.error "Invalid Handler: expect a string or a function, got #{handler}"
       route_call = (handler, command, params, err, args) =>
         config = @confx().get()
         context = {
@@ -105,11 +105,11 @@ How to use the `route` method to execute code associated with a particular comma
           # Provide an error message if leaf command without a handler
           unless Object.keys(config.commands).length  # Object.keys(config.commands).length or
             err = if config.root
-            then error [
+            then utils.error [
               'Missing Application Handler:'
               'a \"handler\" definition is required when no child command is defined'
             ]
-            else error [
+            else utils.error [
               'Missing Command Handler:'
               "a \"handler\" definition #{JSON.stringify params[appconfig.command]} is required when no child command is defined"
             ]

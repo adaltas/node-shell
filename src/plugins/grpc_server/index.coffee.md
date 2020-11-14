@@ -4,7 +4,7 @@
     # Dependencies
     path = require 'path'
     # pad = require 'pad'
-    error = require '../../utils/error'
+    utils = require '../../utils'
     {mutate} = require 'mixme'
     # grpc = require '@grpc/grpc-js'
     grpc = require 'grpc'
@@ -68,7 +68,7 @@
 
     Parameters::grpc_start = (callback) ->
       if @_server?.started
-        throw error 'GRPC Server Already Started'
+        throw utils.error 'GRPC Server Already Started'
       appconfig = @confx().get()
       # Load the definition
       proto_path = path.resolve __dirname, './shell.proto'

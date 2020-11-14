@@ -4,7 +4,7 @@
     # Dependencies
     path = require 'path'
     pad = require 'pad'
-    error = require '../utils/error'
+    utils = require '../utils'
     {clone, is_object_literal, merge} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
@@ -61,14 +61,14 @@ Determine if help was requested by returning zero to n commands if help is reque
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
       unless options.extended
-        throw error [
+        throw utils.error [
           "Invalid Arguments:"
           "`helping` expect a params object as first argument"
           "in flatten mode,"
           "got #{JSON.stringify params}"
         ] unless is_object_literal params
       else
-        throw error [
+        throw utils.error [
           "Invalid Arguments:"
           "`helping` expect a params array with literal objects as first argument"
           "in extended mode,"
@@ -76,7 +76,7 @@ Determine if help was requested by returning zero to n commands if help is reque
         ] unless Array.isArray(params) and not params.some (cparams) -> not is_object_literal cparams
       # Extract the current commands from the parameters arguments
       unless options.extended
-        throw error [
+        throw utils.error [
           'Invalid Arguments:'
           "parameter #{JSON.stringify appconfig.command} must be an array in flatten mode,"
           "got #{JSON.stringify params[appconfig.command]}"
@@ -105,7 +105,7 @@ Determine if help was requested by returning zero to n commands if help is reque
         # Check if it is present in the parsed parameters
         .some (options) -> cparams[options.name]?
         if helping
-          throw error [
+          throw utils.error [
             'Invalid Argument:'
             '`help` must be associated with a leaf command'
           ] if options.extended and commands.length
@@ -128,7 +128,7 @@ Format the configuration into a readable documentation string.
     
     Parameters::help = (commands=[], options={}) ->
       commands = commands.split ' ' if typeof commands is 'string'
-      throw error [
+      throw utils.error [
         'Invalid Help Arguments:'
         'expect commands to be an array as first argument,'
         "got #{JSON.stringify commands}"
@@ -137,7 +137,7 @@ Format the configuration into a readable documentation string.
       configs = [config]
       for command, i in commands
         config = config.commands[command]
-        throw error [
+        throw utils.error [
           'Invalid Command:'
           "argument \"#{commands.slice(0, i+1).join ' '}\" is not a valid command"
         ] unless config

@@ -8,6 +8,7 @@
 
 ## Trunk
 
+* utils: isolate all utils
 * router: rename route property to handler
 
 ## Version 0.7.4

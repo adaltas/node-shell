@@ -18,7 +18,7 @@
     Parameters::init = (->)
   
     Parameters::register = (hook) ->
-      throw error [
+      throw utils.error [
         'Invalid Hook Registration:'
         'hooks must consist of keys representing the hook names'
         'associated with function implementing the hook,'
@@ -31,7 +31,7 @@
       switch arguments.length
         when 3 then [name, args, handler] = arguments
         when 4 then [name, args, hooks, handler] = arguments
-        else throw error [
+        else throw utils.error [
           'Invalid Hook Argument:'
           'function hook expect 3 or 4 arguments'
           'name, args, hooks? and handler,'
@@ -55,7 +55,7 @@ Load and return a module, use `require.main.require` by default but can be
 overwritten by the `load` options passed in the configuration.
 
     Parameters::load = (module) ->
-      throw Error [
+      throw utils.error [
         'Invalid Load Argument:'
         'load is expecting string,'
         "got #{JSON.stringify module}"
@@ -77,7 +77,7 @@ overwritten by the `load` options passed in the configuration.
     path = require 'path'
     stream = require 'stream'
     load = require './utils/load'
-    error = require './utils/error'
+    utils = require './utils'
     {clone, merge, is_object_literal} = require 'mixme'
 
 ## Internal types

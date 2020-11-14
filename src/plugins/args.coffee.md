@@ -2,7 +2,7 @@
 ## Plugin "args"
 
     # Dependencies
-    error = require '../utils/error'
+    utils = require '../utils'
     {clone, is_object_literal, merge} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
@@ -25,7 +25,7 @@ Convert an arguments list to a parameters object.
         index = 2
         argv = argv.argv
       else unless Array.isArray argv
-        throw error [
+        throw utils.error [
           'Invalid Arguments:'
           'parse require arguments or process as first argument,'
           "got #{JSON.stringify process}"
@@ -46,7 +46,7 @@ Convert an arguments list to a parameters object.
           key = config.shortcuts[shortcut] if shortcut
           option = config.options?[key]
           if not shortcut and config.strict and not option
-            err = error [
+            err = utils.error [
               'Invalid Argument:'
               "the argument #{if shortcut then "-" else "--"}#{key} is not a valid option"
             ]
@@ -54,7 +54,7 @@ Convert an arguments list to a parameters object.
               params[appconfig.command]
             throw err
           if shortcut and not option
-            throw error [
+            throw utils.error [
               'Invalid Shortcut Argument:'
               "the \"-#{shortcut}\" argument is not a valid option"
               "in command \"#{config.command.join ' '}\"" if Array.isArray config.command
@@ -68,26 +68,26 @@ Convert an arguments list to a parameters object.
               params[key] = true
             when 'string'
               value = argv[index++]
-              throw error [
+              throw utils.error [
                 'Invalid Option:'
                 "no value found for option #{JSON.stringify key}"
               ] unless value? and value[0] isnt '-'
               params[key] = value
             when 'integer'
               value = argv[index++]
-              throw error [
+              throw utils.error [
                 'Invalid Option:'
                 "no value found for option #{JSON.stringify key}"
               ] unless value? and value[0] isnt '-'
               params[key] = parseInt value, 10
-              throw error [
+              throw utils.error [
                'Invalid Option:'
                "value of #{JSON.stringify key} is not an integer,"
                "got #{JSON.stringify value}"
               ] if isNaN params[key]
             when 'array'
               value = argv[index++]
-              throw error [
+              throw utils.error [
                 'Invalid Option:'
                 "no value found for option #{JSON.stringify key}"
               ] unless value? and value[0] isnt '-'
@@ -103,7 +103,7 @@ Convert an arguments list to a parameters object.
         # Check against required options
         for _, option of config.options
           if option.required
-            throw error [
+            throw utils.error [
               'Required Option Argument:'
               "the \"#{option.name}\" option must be provided"
             ] unless params[option.name]?
@@ -112,7 +112,7 @@ Convert an arguments list to a parameters object.
             if not option.required and values isnt undefined
               values = [values] unless Array.isArray values
               for value in values
-                throw error [
+                throw utils.error [
                   'Invalid Argument Value:'
                   "the value of option \"#{option.name}\""
                   "must be one of #{JSON.stringify option.one_of},"
@@ -127,7 +127,7 @@ Convert an arguments list to a parameters object.
           else
             command = argv[index++]
             # Validate the command
-            throw error [
+            throw utils.error [
               'Invalid Argument:'
               "fail to interpret all arguments \"#{leftover.join ' '}\""
             ] unless config.commands[command]
@@ -144,7 +144,7 @@ Convert an arguments list to a parameters object.
         # Check against required main
         main = config.main
         if main and main.required
-          throw error [
+          throw utils.error [
             'Required Main Argument:'
             "no suitable arguments for #{JSON.stringify main.name}"
           ] if params[main.name].length is 0
@@ -181,7 +181,7 @@ Convert a parameters object to an arguments array.
       argv = if options.script then [process.execPath, options.script] else []
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
-      throw error [
+      throw utils.error [
         'Invalid Compile Arguments:'
         '2nd argument option must be an object,'
         "got #{JSON.stringify options}"
@@ -199,7 +199,7 @@ Convert a parameters object to an arguments array.
           keys[key] = true
           value = lparams[key]
           # Validate required value
-          throw error [
+          throw utils.error [
             'Required Option Parameter:'
             "the \"#{key}\" option must be provided"
           ] if option.required and not value?
@@ -207,7 +207,7 @@ Convert a parameters object to an arguments array.
           if value? and option.one_of
             value = [value] unless Array.isArray value
             for val in value
-              throw error [
+              throw utils.error [
                 'Invalid Parameter Value:'
                 "the value of option \"#{option.name}\""
                 "must be one of #{JSON.stringify option.one_of},"
@@ -225,12 +225,12 @@ Convert a parameters object to an arguments array.
               argv.push "#{value.join ','}"
         if config.main
           value = lparams[config.main.name]
-          throw error [
+          throw utils.error [
             'Required Main Parameter:'
             "no suitable arguments for #{JSON.stringify config.main.name}"
           ] if config.main.required and not value?
           if value?
-            throw error [
+            throw utils.error [
               'Invalid Parameter Type:'
               "expect main to be an array, got #{JSON.stringify value}"
             ] unless Array.isArray value
@@ -240,7 +240,7 @@ Convert a parameters object to an arguments array.
         has_child_commands = if options.extended then params.length else Object.keys(config.commands).length
         if has_child_commands
           command = if options.extended then params[0][appconfig.command] else params[appconfig.command].shift()
-          throw error [
+          throw utils.error [
             'Invalid Command Parameter:'
             "command #{JSON.stringify command} is not registed,"
             "expect one of #{JSON.stringify Object.keys(config.commands).sort()}"
@@ -255,7 +255,7 @@ Convert a parameters object to an arguments array.
           # Note, they are always pushed to the end and associated with the deepest child
           for key, value of lparams
             continue if keys[key]
-            throw Error [
+            throw utils.error [
               'Invalid Parameter:'
               "the property --#{key} is not a registered argument"
             ].join ' ' if appconfig.strict

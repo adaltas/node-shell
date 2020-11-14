@@ -8,6 +8,7 @@ Print the Protocol Buffer definition.
     protobuf = require 'protobufjs'
     path = require 'path'
     fs = require 'fs'
+    utils = require '../../utils'
 
 ## Source code
 
@@ -25,5 +26,6 @@ Print the Protocol Buffer definition.
             stdout.write data
             stdout.end() if stdout_end
         else
-          throw Error "Invalid Format"
+          # TODO: more explicit error message
+          throw error ["Invalid Format"]
       

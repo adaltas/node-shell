@@ -2,7 +2,7 @@
 ## Plugin "config"
 
     # Dependencies
-    error = require '../utils/error'
+    utils = require '../utils'
     {clone, is_object_literal, merge, mutate} = require 'mixme'
     # Parameters & plugins
     Parameters = require '../Parameters'
@@ -49,11 +49,11 @@
             values = [arguments[0]]: arguments[1]
           else if arguments.length is 1
             values = arguments[0]
-          else throw error [
+          else throw utils.error [
             'Invalid Commands Set Arguments:'
             'expect 1 or 2 arguments, got 0'
           ]
-          throw error [
+          throw utils.error [
             'Invalid Options:'
             "expect an object, got #{JSON.stringify config.options}"
           ] if config.options and not is_object_literal config.options
@@ -64,7 +64,7 @@
               collide = ctx.collision[name] and ctx.collision[name].filter((cmd, i) ->
                 commands[i] isnt cmd
               ).length is 0
-              throw error [
+              throw utils.error [
                 'Invalid Option Configuration:'
                 "option #{JSON.stringify name}"
                 "in command #{JSON.stringify commands.join ' '}"
@@ -76,7 +76,7 @@
           # Normalize option
           option.name = name
           option.type ?= 'string'
-          throw error [
+          throw utils.error [
             'Invalid Option Configuration:'
             "supported options types are #{JSON.stringify types},"
             "got #{JSON.stringify option.type}"
@@ -85,7 +85,7 @@
           ] unless option.type in types
           # config.shortcuts[option.shortcut] = option.name if option.shortcut and not option.disabled
           option.one_of = [option.one_of] if typeof option.one_of is 'string'
-          throw error [
+          throw utils.error [
             'Invalid Option Configuration:'
             'option property "one_of" must be a string or an array,'
             "got #{option.one_of}"
@@ -134,7 +134,10 @@
         source = ctx.config
         strict = source.strict
         for name in command
-          throw Error 'Invalid Command' unless source.commands[name]
+          # TODO: create a more explicit message,
+          # including somehting like "command #{name} is not registered",
+          # also ensure it is tested
+          throw utils.error ['Invalid Command'] unless source.commands[name]
           # A new command doesn't have a config registered yet
           source.commands[name] ?= {}
           source = source.commands[name]
@@ -157,7 +160,7 @@
           values = [arguments[0]]: arguments[1]
         else if arguments.length is 1
           values = arguments[0]
-        else throw error [
+        else throw utils.error [
           'Invalid Commands Set Arguments:'
           'expect 1 or 2 arguments, got 0'
         ]
@@ -175,7 +178,7 @@
           # config.name = name
           unless command.length
             config.extended ?= false
-            throw error [
+            throw utils.error [
               'Invalid Configuration:'
               'extended must be a boolean,'
               "got #{JSON.stringify config.extended}"
@@ -185,16 +188,16 @@
             config.command ?= 'command' if Object.keys(config.commands).length
             config.strict ?= false
           else
-            throw error [
+            throw utils.error [
               'Incoherent Command Name:'
               "key #{JSON.stringify name} is not equal with name #{JSON.stringify config.name}"
             ] if config.name and config.name isnt command.slice(-1)[0]
-            throw error [
+            throw utils.error [
               'Invalid Command Configuration:'
               'command property can only be declared at the application level,'
               "got command #{JSON.stringify config.command}"
             ] if config.command?
-            throw error [
+            throw utils.error [
               'Invalid Command Configuration:'
               'extended property cannot be declared inside a command'
             ] if config.extended?
