@@ -203,6 +203,21 @@ It returns the formatted help to be printed as a string.
             content.push "OPTIONS"
           else
             content.push "OPTIONS for #{config.name}"
+        if config.main
+          description = config.main.description or "No description yet for the #{config.main.name} option."
+          if options.one_column
+            content.push ...[
+              "#{config.main.name}"
+              "#{description}"
+            ].map( (l) -> "#{options.indent}#{l}")
+          else
+            line = "#{options.indent}   #{config.main.name}"
+            line = pad line, options.columns
+            if line.length > options.columns
+              content.push line
+              line = ' '.repeat options.columns
+            line += description
+            content.push line
         if Object.keys(config.options).length
           for name in Object.keys(config.options).sort()
             option = config.options[name]
@@ -223,21 +238,6 @@ It returns the formatted help to be printed as a string.
                 line = ' '.repeat options.columns
               line += description
               content.push line
-        if config.main
-          description = config.main.description or "No description yet for the #{config.main.name} option."
-          if options.one_column
-            content.push ...[
-              "#{config.main.name}"
-              "#{description}"
-            ].map( (l) -> "#{options.indent}#{l}")
-          else
-            line = "#{options.indent}#{config.main.name}"
-            line = pad line, options.columns
-            if line.length > options.columns
-              content.push line
-              line = ' '.repeat options.columns
-            line += description
-            content.push line
       # Command
       config = configs[configs.length - 1]
       if Object.keys(config.commands).length

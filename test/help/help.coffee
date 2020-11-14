@@ -70,11 +70,11 @@ describe 'help/help', ->
         myscript [myscript options] {command}
 
       OPTIONS
+           command                Command in start
         -b --boolean              Boolean option in start
         -h --help                 Display help information
         -i --integer              Integer option in start
         -s --string               String option in start
-        command                   Command in start
 
       EXAMPLES
         myscript --help           Show this message
@@ -218,9 +218,9 @@ describe 'help/help', ->
         myscript start [start options] {command}
 
       OPTIONS for start
+           command                Command in start
         -h --help                 Display help information
         -s --string               String option in start
-        command                   Command in start
       
       OPTIONS for myscript
         -h --help                 Display help information

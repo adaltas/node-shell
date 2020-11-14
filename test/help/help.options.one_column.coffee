@@ -19,13 +19,13 @@ describe 'help/help.options.one_column', ->
       myapp [myapp options] {a_main}
 
     OPTIONS
+      a_main
+      No description yet for the a_main option.
       --debug
       No description yet for the debug option.
       -h
       --help
       Display help information
-      a_main
-      No description yet for the a_main option.
     
     EXAMPLES
       myapp --help

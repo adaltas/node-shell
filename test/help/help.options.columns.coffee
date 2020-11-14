@@ -27,9 +27,9 @@ describe 'help/help.options.columns', ->
       myapp [myapp options] {a_main}
 
     OPTIONS
+         a_main         No description yet for the a_main option.
          --an_option    No description yet for the an_option option.
       -h --help         Display help information
-      a_main            No description yet for the a_main option.
     
     EXAMPLES
       myapp --help      Show this message
