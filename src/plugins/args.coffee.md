@@ -144,10 +144,15 @@ Convert an arguments list to a parameters object.
         # Check against required main
         main = config.main
         if main and main.required
+          required = if typeof main.required is 'function'
+            main.required.call null,
+              config: config
+              command: command
+          else main.required
           throw utils.error [
             'Required Main Argument:'
             "no suitable arguments for #{JSON.stringify main.name}"
-          ] if params[main.name].length is 0
+          ] if required and params[main.name].length is 0
         params
       # Start the parser
       parse appconfig, null

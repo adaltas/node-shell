@@ -5,46 +5,75 @@ describe 'main.required', ->
 
   it 'optional by default', ->
     app = parameters
-      commands: 'mycommand':
+      commands: 'my_command':
         main:
           name: 'my_argument'
     app.parse [
-      'mycommand'
+      'my_command'
     ]
     .should.eql
-      command: ['mycommand']
+      command: ['my_command']
       my_argument: []
     app.compile
-      command: ['mycommand']
-    .should.eql ['mycommand']
+      command: ['my_command']
+    .should.eql ['my_command']
 
   it 'honors required true if value is provided', ->
     app = parameters
-      commands: 'mycommand':
+      commands: 'my_command':
         main:
           name: 'my_argument'
           required: true
     app.parse [
-      'mycommand', 'my --value'
+      'my_command', 'my --value'
     ]
     .should.eql
-      command: ['mycommand']
+      command: ['my_command']
       my_argument: ['my --value']
     app.compile
-      command: ['mycommand']
+      command: ['my_command']
       my_argument: ['my --value']
-    .should.eql ['mycommand', 'my --value']
+    .should.eql ['my_command', 'my --value']
 
   it 'honors required true if no value provided', ->
     app = parameters
-      commands: 'mycommand':
+      commands: 'my_command':
         main:
           name: 'my_argument'
           required: true
     (->
-      app.parse ['mycommand']
+      app.parse ['my_command']
     ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'
     (->
       app.compile
-        command: ['mycommand']
+        command: ['my_command']
     ).should.throw 'Required Main Parameter: no suitable arguments for "my_argument"'
+
+  describe 'function', ->
+
+    it 'receive config and command', ->
+      app = parameters
+        commands: 'my_command':
+          main:
+            name: 'my_argument'
+            required: ({config, command}) ->
+              config.name.should.eql 'my_command'
+              config.command.should.eql ['my_command']
+              command.should.eql 'my_command'
+              false
+      app.parse ['my_command']
+
+    it 'return `true`', ->
+      app = parameters
+        commands: 'my_command':
+          main:
+            name: 'my_argument'
+            required: -> true
+      # Invalid, no argument is provided
+      (->
+        app.parse ['my_command']
+      ).should.throw 'Required Main Argument: no suitable arguments for "my_argument"'
+      (->
+        app.compile
+          command: ['my_command']
+      ).should.throw 'Required Main Parameter: no suitable arguments for "my_argument"'

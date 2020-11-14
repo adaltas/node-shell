@@ -17,7 +17,7 @@ The `main` property is declared as an object with the following properties:
 
 * `name` (string)   
   The name of the main property.
-* `required` (boolean)   
+* `required` (boolean || function)   
   Whether or not the value must always be present.
 * `description` (string)   
   The description of the main argument.
