@@ -102,14 +102,20 @@ Convert an arguments list to a parameters object.
         return params if helping
         # Check against required options
         for _, option of config.options
-          if option.required
-            throw utils.error [
-              'Required Option Argument:'
-              "the \"#{option.name}\" option must be provided"
-            ] unless params[option.name]?
+          # Handler required
+          required = if typeof option.required is 'function'
+            !!option.required.call null,
+              config: config
+              command: command
+          else !!option.required
+          throw utils.error [
+            'Required Option:'
+            "the \"#{option.name}\" option must be provided"
+          ] if required and not params[option.name]?
+          # Handle one_of
           if option.one_of
             values = params[option.name]
-            if not option.required and values isnt undefined
+            if not required and values isnt undefined
               values = [values] unless Array.isArray values
               for value in values
                 throw utils.error [
@@ -143,12 +149,12 @@ Convert an arguments list to a parameters object.
         #   params[appconfig.command] = 'help'
         # Check against required main
         main = config.main
-        if main and main.required
+        if main
           required = if typeof main.required is 'function'
-            main.required.call null,
+            !!main.required.call null,
               config: config
               command: command
-          else main.required
+          else !!main.required
           throw utils.error [
             'Required Main Argument:'
             "no suitable arguments for #{JSON.stringify main.name}"
@@ -203,11 +209,16 @@ Convert a parameters object to an arguments array.
           key = option.name
           keys[key] = true
           value = lparams[key]
-          # Validate required value
+          # Handle required
+          required = if typeof option.required is 'function'
+            !!option.required.call null,
+              config: config
+              command: command
+          else !!option.required
           throw utils.error [
-            'Required Option Parameter:'
+            'Required Option:'
             "the \"#{key}\" option must be provided"
-          ] if option.required and not value?
+          ] if required and not value?
           # Validate value against option "one_of"
           if value? and option.one_of
             value = [value] unless Array.isArray value
@@ -230,10 +241,16 @@ Convert a parameters object to an arguments array.
               argv.push "#{value.join ','}"
         if config.main
           value = lparams[config.main.name]
+          # Handle required
+          required = if typeof config.main.required is 'function'
+            !!config.main.required.call null,
+              config: config
+              command: command
+          else !!config.main.required
           throw utils.error [
             'Required Main Parameter:'
             "no suitable arguments for #{JSON.stringify config.main.name}"
-          ] if config.main.required and not value?
+          ] if required and not value?
           if value?
             throw utils.error [
               'Invalid Parameter Type:'

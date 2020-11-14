@@ -51,6 +51,15 @@ require('parameters')({
 })
 ```
 
+## Using `required` as a function
+
+When `required` is a function, the first argument is an object with the following properties:
+
+* `config`   
+  The configuration associated with the command or the full configuration is no command is used.
+* `command`
+  The current command name, use `config.command` to acess the full command as an array.
+
 ## Examples
 
 ## Application level definition

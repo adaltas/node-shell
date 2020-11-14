@@ -22,7 +22,7 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
   The name of the option, required.
 * `one_of` (array)   
   A list of possible and accepted values.
-* `required` (boolean)   
+* `required` (boolean || function)   
   Whether or not this option must always be present.
 * `shortcut` (char)   
   Single character alias for the option name. Shortcuts must always be declared in the configuration and will not be automatically be extracted like options are when the "strict" property is not enabled.
@@ -31,7 +31,16 @@ Options define the arguments passed to a shell scripts when prefixed with `--` f
   share the same behaviour. Accepted values are 'boolean', 'string', 'integer'
   and 'array'.
 * `description` (string)   
-  The description of the option. 
+  The description of the option.
+
+## Using `required` as a function
+
+When `required` is a function, the first argument is an object with the following properties:
+
+* `config`   
+  The configuration associated with the command or the full configuration is no command is used.
+* `command`
+  The current command name, use `config.command` to acess the full command as an array.
 
 ## Examples of configuration
 

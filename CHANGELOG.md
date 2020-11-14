@@ -8,6 +8,7 @@
 
 ## Trunk
 
+* options: required as a function
 * main: required as a function
 * utils: isolate all utils
 * router: rename route property to handler

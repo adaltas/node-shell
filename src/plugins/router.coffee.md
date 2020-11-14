@@ -127,6 +127,7 @@ How to use the `route` method to execute code associated with a particular comma
       catch err then return route_error err, err.command or []
       # Print help
       if command = @helping params
+        # this seems wrong, must be the handler of the command
         handler = @load appconfig.router.handler
         return route_call handler, command, params, err, args
       # Load a command route

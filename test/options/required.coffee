@@ -51,12 +51,43 @@ describe 'options.required', ->
             required: true
       (->
         app.parse ['mycommand']
-      ).should.throw 'Required Option Argument: the "my_argument" option must be provided'
+      ).should.throw 'Required Option: the "my_argument" option must be provided'
       (->
         app.compile
           command: ['mycommand']
-      ).should.throw 'Required Option Parameter: the "my_argument" option must be provided'
+      ).should.throw 'Required Option: the "my_argument" option must be provided'
   
+  describe 'function', ->
+  
+      it 'receive config and command', ->
+        app = parameters
+          commands: 'my_command':
+            options:
+              'my_option':
+                type: 'boolean'
+                required: ({config, command}) ->
+                  config.name.should.eql 'my_command'
+                  config.command.should.eql ['my_command']
+                  command.should.eql 'my_command'
+                  false
+        app.parse ['my_command', '--my_option']
+
+      it 'return `true`', ->
+        app = parameters
+          commands: 'my_command':
+            options:
+              'my_option':
+                type: 'boolean'
+                required: -> true
+        # Invalid, no argument is provided
+        (->
+          app.parse ['my_command']
+        ).should.throw 'Required Option: the "my_option" option must be provided'
+        (->
+          app.compile
+            command: ['my_command']
+        ).should.throw 'Required Option: the "my_option" option must be provided'
+
   describe 'compatible with help', ->
     
     it 'without command', ->
