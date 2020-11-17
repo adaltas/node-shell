@@ -6,7 +6,7 @@
 * rename commands into actions
 * describe the anatomy of a command
 
-## Trunk
+## Version 0.8.0
 
 * help: print main before options
 * help: new columns and one_column options
