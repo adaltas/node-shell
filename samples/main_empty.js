@@ -1,3 +1,4 @@
+
 require('should')
 require('..')({
   main: 'input' 

@@ -1,5 +1,5 @@
 
-var parameters = require('..');
+const parameters = require('./packages/parameters');
 require('should');
 
 // NAME
@@ -32,11 +32,7 @@ const command = parameters({
         'port': {
           shortcut: 'p', type: 'integer', 
           description: 'Web server listen port'
-        }
-      }
-    }
-  }
-});
+} } } } });
 // Print help
 console.log( command.help() );
 // Extract command arguments

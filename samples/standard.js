@@ -1,5 +1,5 @@
 
-const parameters = require('..');
+const parameters = require('./packages/parameters');
 require('should');
 
 // NAME

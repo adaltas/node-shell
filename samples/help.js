@@ -1,5 +1,5 @@
 
-const parameters = require('..');
+const parameters = require('./packages/parameters');
 
 // NAME
 //     precious - Manage your precious
@@ -37,13 +37,7 @@ const params = parameters({
             },
             value: {
               shortcut: "v"
-            }
-          }
-        }
-      }
-    }
-  }
-});
+} } } } } } });
 
 const args = params.parse()
 if(commands = params.helping(args)){

@@ -1,7 +1,8 @@
 .*
-/package-lock.json
-/yarn.lock
-/node_modules
+lerna-debug.log
+package-lock.json
+yarn.lock
+node_modules
 !.gitignore
 !.npmignore
 !.travis.yml

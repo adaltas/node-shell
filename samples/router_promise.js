@@ -1,4 +1,5 @@
-const parameters = require('..')
+
+const parameters = require('./packages/parameters');
 const { spawn } = require('child_process')
 
 (async function(){
