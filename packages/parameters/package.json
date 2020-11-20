@@ -72,7 +72,7 @@
     "directory": "packages/parameters"
   },
   "scripts": {
-    "preversion": "grep '## Trunk' CHANGELOG.md && npm test",
+    "preversion": "npm test",
     "version": "version=`grep '^  \"version\": ' package.json | sed 's/.*\"\\([0-9\\.]*\\)\".*/\\1/'` && sed -i \"s/## Trunk/## Version $version/\" CHANGELOG.md && git add CHANGELOG.md",
     "postversion": "git push origin master && git push origin master --tags && npm publish",
     "patch": "npm version patch -m 'Bump to version %s'",
