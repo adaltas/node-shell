@@ -6,6 +6,10 @@
 * rename commands into actions
 * describe the anatomy of a command
 
+## Trunk
+
+* monorepos
+
 ## Version 0.8.0
 
 * help: print main before options
