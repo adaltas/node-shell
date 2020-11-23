@@ -1,6 +1,6 @@
 {
   "name": "@parametersjs/grpc_server",
-  "version": "0.8.1-alpha.0",
+  "version": "0.8.1-alpha.1",
   "description": "GRPC server plugin for the parameters package.",
   "keywords": [
     "argument",
