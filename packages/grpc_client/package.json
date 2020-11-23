@@ -44,7 +44,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.1.6",
     "@grpc/proto-loader": "^0.5.5",
     "grpc": "^1.24.3",
     "protobufjs": "^6.10.1"
