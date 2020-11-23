@@ -62,7 +62,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "parameters": "^0.8.0"
+    "parameters": "^0.8.1-alpha.0"
   },
   "repository": {
     "type": "git",
