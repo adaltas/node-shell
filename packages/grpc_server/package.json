@@ -1,6 +1,6 @@
 {
   "name": "@parametersjs/grpc_server",
-  "version": "0.8.1-alpha.1",
+  "version": "0.8.1-alpha.2",
   "description": "GRPC server plugin for the parameters package.",
   "keywords": [
     "argument",
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.1.6",
-    "@parametersjs/grpc_proto": "^0.8.1-alpha.0",
+    "@parametersjs/grpc_proto": "^0.8.1-alpha.2",
     "grpc": "^1.24.3",
     "mixme": "^0.3.5",
     "protobufjs": "^6.10.1"
