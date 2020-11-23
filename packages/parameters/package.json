@@ -43,7 +43,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@parametersjs/grpc_server": "^0.8.0",
     "mixme": "^0.3.5",
     "pad": "^3.2.0",
     "protobufjs": "^6.10.1"
