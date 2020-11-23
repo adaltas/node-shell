@@ -44,9 +44,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@grpc/proto-loader": "^0.5.5",
+    "@parametersjs/grpc_proto": "^0.8.0",
     "grpc": "^1.24.3",
     "protobufjs": "^6.10.1"
+  },
+  "devDependencies": {
+    "@parametersjs/grpc_server": "^0.8.0"
   },
   "mocha": {
     "throw-deprecation": true,
@@ -74,7 +77,7 @@
     "patch": "npm version patch -m 'Bump to version %s'",
     "minor": "npm version minor -m 'Bump to version %s'",
     "major": "npm version major -m 'Bump to version %s'",
-    "build": "coffee -b -o lib src && cp -rp src/shell.proto lib",
+    "build": "coffee -b -o lib src",
     "pretest": "npm run build",
     "test": "mocha 'test/**/*.coffee'"
   }

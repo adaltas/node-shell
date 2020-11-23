@@ -1,6 +1,6 @@
 
 parameters = require 'parameters'
-require '@parameters/grpc_server'
+require '@parametersjs/grpc_server'
 client = require '../src/client'
 
 describe 'grpc_client.ping', ->

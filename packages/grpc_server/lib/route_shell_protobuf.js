@@ -4,16 +4,18 @@
 // Print the Protocol Buffer definition.
 
 // ## Dependencies
-var fs, protobuf;
+var fs, proto, protobuf;
 
 protobuf = require('protobufjs');
+
+proto = require('@parametersjs/grpc_proto');
 
 fs = require('fs');
 
 // ## Source code
 module.exports = function({argv, params, config, error, stdout, stdout_end}) {
   var proto_path;
-  proto_path = require.resolve('@parameters/grpc_client/lib/shell.proto');
+  proto_path = proto.resolve();
   switch (params.format) {
     case 'json':
       return protobuf.load(proto_path, function(err, root) {

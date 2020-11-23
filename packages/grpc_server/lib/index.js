@@ -2,7 +2,7 @@
 // ## Plugin "grpc"
 
 // Dependencies
-var Parameters, Transform, get_handlers, grpc, mutate, passthrough, path, protoLoader, utils;
+var Parameters, Transform, get_handlers, grpc, mutate, passthrough, path, proto, utils;
 
 path = require('path');
 
@@ -12,7 +12,7 @@ utils = require('parameters/lib/utils');
 
 grpc = require('grpc');
 
-protoLoader = require('@grpc/proto-loader');
+proto = require('@parametersjs/grpc_proto');
 
 // Parameters & plugins
 Parameters = require('parameters/lib/Parameters');
@@ -127,20 +127,13 @@ get_handlers = function(definition) {
 };
 
 Parameters.prototype.grpc_start = function(callback) {
-  var appconfig, endpoint, handler, handlers, name, packageDefinition, promise, proto_path, ref, server, shell_definition;
+  var appconfig, endpoint, handler, handlers, name, packageDefinition, promise, ref, server, shell_definition;
   if ((ref = this._server) != null ? ref.started : void 0) {
     throw utils.error('GRPC Server Already Started');
   }
   appconfig = this.confx().get();
   // Load the definition
-  proto_path = require.resolve('@parameters/grpc_client/lib/shell.proto');
-  packageDefinition = protoLoader.loadSync(proto_path, {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true
-  });
+  packageDefinition = proto.loadSync();
   shell_definition = grpc.loadPackageDefinition(packageDefinition).shell;
   // Instantiate the server
   server = new grpc.Server();

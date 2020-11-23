@@ -6,12 +6,13 @@ Print the Protocol Buffer definition.
 ## Dependencies
 
     protobuf = require 'protobufjs'
+    proto = require '@parametersjs/grpc_proto'
     fs = require 'fs'
 
 ## Source code
 
     module.exports = ({argv, params, config, error, stdout, stdout_end}) ->
-      proto_path = require.resolve '@parameters/grpc_client/lib/shell.proto'
+      proto_path = proto.resolve()
       switch params.format
         when 'json'
           protobuf.load proto_path, (err, root) ->

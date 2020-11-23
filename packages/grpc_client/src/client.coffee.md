@@ -3,20 +3,13 @@
     path = require 'path'
     # grpc = require '@grpc/grpc-js'
     grpc = require 'grpc'
-    protoLoader = require '@grpc/proto-loader'
+    proto = require '@parametersjs/grpc_proto'
     
     module.exports = (config={}) ->
       config.address ?= '127.0.0.1'
       config.port ?= 50051
-      
       # Load the definition
-      proto_path = require.resolve './shell.proto'
-      packageDefinition = protoLoader.loadSync proto_path,
-        keepCase: true
-        longs: String
-        enums: String
-        defaults: true
-        oneofs: true
+      packageDefinition = proto.loadSync()
       shell_proto = grpc.loadPackageDefinition(packageDefinition).shell
       # Instantiate the client
       endpoint = "#{config.address}:#{config.port}"

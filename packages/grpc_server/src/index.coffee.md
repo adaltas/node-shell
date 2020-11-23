@@ -6,7 +6,7 @@
     utils = require 'parameters/lib/utils'
     {mutate} = require 'mixme'
     grpc = require 'grpc'
-    protoLoader = require '@grpc/proto-loader'
+    proto = require '@parametersjs/grpc_proto'
     # Parameters & plugins
     Parameters = require 'parameters/lib/Parameters'
     require 'parameters/lib/plugins/config'
@@ -69,13 +69,7 @@
         throw utils.error 'GRPC Server Already Started'
       appconfig = @confx().get()
       # Load the definition
-      proto_path = require.resolve '@parameters/grpc_client/lib/shell.proto'
-      packageDefinition = protoLoader.loadSync proto_path,
-        keepCase: true
-        longs: String
-        enums: String
-        defaults: true
-        oneofs: true
+      packageDefinition = proto.loadSync()
       shell_definition = grpc.loadPackageDefinition(packageDefinition).shell
       # Instantiate the server
       server = new grpc.Server()
