@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1-alpha.5](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.4...v0.8.1-alpha.5) (2020-11-23)
+
+
+### Bug Fixes
+
+* setup Husky ([2a56ee2](https://github.com/adaltas/node-parameters/commit/2a56ee2b4104564bccb094452f2d63af21d9554c))
+
+
+
+
+
 ## [0.8.1-alpha.4](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.3...v0.8.1-alpha.4) (2020-11-23)
 
 
