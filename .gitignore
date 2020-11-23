@@ -3,6 +3,7 @@ lerna-debug.log
 package-lock.json
 yarn.lock
 node_modules
+!.eslintrc
 !.gitignore
 !.husky
 !.npmignore

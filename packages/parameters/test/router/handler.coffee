@@ -7,7 +7,7 @@ describe 'router.handler', ->
     
   it 'context is parameter instance', ->
     parameters
-      handler: ({params}) ->
+      handler: ->
         @should.have.property('help').which.is.a.Function()
         @should.have.property('parse').which.is.a.Function()
         @should.have.property('compile').which.is.a.Function()
@@ -23,7 +23,7 @@ describe 'router.handler', ->
     ).should.throw 'catch me'
     
   it 'load with custom function handler', ->
-    await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = ({params}) -> "Hello"'
+    await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = -> "Hello"'
     parameters
       handler: './something'
       load: (module) ->
@@ -47,7 +47,7 @@ describe 'router.handler', ->
       parameters
         options:
           'my_argument': {}
-        handler: ({params, argv}, my_param, callback) ->
+        handler: (context, my_param, callback) ->
           my_param.should.eql 'my value'
           callback.should.be.a.Function()
           callback null, 'something'
