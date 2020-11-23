@@ -27,7 +27,7 @@
     "compile": "lerna run compile",
     "clean": "lerna run clean",
     "postinstall": "husky install",
-    "lint": "lerna run lint",
+    "lint": "eslint '**/test/**/*.coffee'",
     "test": "lerna run test",
     "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
     "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",

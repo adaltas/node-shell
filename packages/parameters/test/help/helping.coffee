@@ -1,4 +1,5 @@
 
+should = require 'should'
 parameters = require '../../src'
 
 describe 'help/helping', ->

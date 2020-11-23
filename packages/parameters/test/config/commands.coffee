@@ -10,14 +10,14 @@ describe 'config.commands', ->
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().get().root.should.be.true()
-        
+    
     it 'get a child command', ->
       parameters
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx(['server']).get()
       .command.should.eql ['server']
-      
+    
     it 'get a deep child command', ->
       parameters
         options: 'config': {}
@@ -65,7 +65,7 @@ describe 'config.commands', ->
     it 'call the hook', ->
       parameters {}
       .register
-        'configure_set': ({config, command, values}, handler) ->
+        'configure_set': ({config}, handler) ->
           config.test = 'was here'
           handler
       .confx('start').set

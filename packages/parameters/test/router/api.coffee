@@ -1,7 +1,5 @@
 
-path = require 'path'
 parameters = require '../../src'
-{ Writable } = require('stream')
 
 describe 'router.api', ->
     

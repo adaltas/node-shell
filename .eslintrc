@@ -1,7 +1,8 @@
 {
   "env": {
-    "node": true,
-    "mocha": true
+    "es6": true,
+    "mocha": true,
+    "node": true
   },
   "extends": [
     "plugin:coffee/eslint-recommended"
