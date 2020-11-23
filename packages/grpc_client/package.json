@@ -1,6 +1,6 @@
 {
   "name": "@parametersjs/grpc_client",
-  "version": "0.8.0",
+  "version": "0.8.1-alpha.0",
   "description": "GRPC client plugin for the parameters package.",
   "keywords": [
     "argument",
@@ -44,12 +44,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@parametersjs/grpc_proto": "^0.8.0",
+    "@parametersjs/grpc_proto": "^0.8.1-alpha.0",
     "grpc": "^1.24.3",
     "protobufjs": "^6.10.1"
   },
   "devDependencies": {
-    "@parametersjs/grpc_server": "^0.8.0"
+    "@parametersjs/grpc_server": "^0.8.1-alpha.0"
   },
   "mocha": {
     "throw-deprecation": true,
