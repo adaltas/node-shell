@@ -23,13 +23,13 @@
           unless config.router.stdout instanceof stream.Writable
             throw utils.error [
               "Invalid Configuration Property:"
-              "router.stdout must be an instance of stream.Writer,"
+              "router.stdout must be an instance of stream.Writable,"
               "got #{JSON.stringify config.router.stdout}"
             ]
           unless config.router.stderr instanceof stream.Writable
             throw utils.error [
               "Invalid Configuration Property:"
-              "router.stderr must be an instance of stream.Writer,"
+              "router.stderr must be an instance of stream.Writable,"
               "got #{JSON.stringify config.router.stderr}"
             ]
           handler
