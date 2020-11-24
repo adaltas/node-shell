@@ -44,9 +44,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@parametersjs/grpc_proto": "^0.8.1-alpha.4",
-    "grpc": "^1.24.3",
-    "protobufjs": "^6.10.1"
+    "@grpc/grpc-js": "^1.2.1"
+  },
+  "optionalDependencies": {
+    "grpc": "^1.24.3"
   },
   "devDependencies": {
     "@parametersjs/grpc_server": "^0.8.1-alpha.4"

@@ -1,9 +1,10 @@
 
     # Dependencies
-    path = require 'path'
-    # grpc = require '@grpc/grpc-js'
-    grpc = require 'grpc'
     proto = require '@parametersjs/grpc_proto'
+    try
+      grpc = require 'grpc'
+    catch
+      grpc = require '@grpc/grpc-js'
     
     module.exports = (config={}) ->
       config.address ?= '127.0.0.1'
@@ -13,7 +14,7 @@
       shell_proto = grpc.loadPackageDefinition(packageDefinition).shell
       # Instantiate the client
       endpoint = "#{config.address}:#{config.port}"
-      client = new shell_proto.Shell(endpoint, grpc.credentials.createInsecure())
+      client = new shell_proto.Shell endpoint, grpc.credentials.createInsecure()
       for k, service of shell_proto.Shell.service
         # Response stream return a readable stream
         # Otherwise, convert the callback approach to a promise
