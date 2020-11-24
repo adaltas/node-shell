@@ -10,7 +10,11 @@ utils = require('parameters/lib/utils');
 
 ({mutate} = require('mixme'));
 
-grpc = require('grpc');
+try {
+  grpc = require('grpc');
+} catch (error) {
+  grpc = require('@grpc/grpc-js');
+}
 
 proto = require('@parametersjs/grpc_proto');
 
@@ -146,6 +150,7 @@ Parameters.prototype.grpc_start = function(callback) {
   endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
   promise = new Promise(function(resolve, reject) {
     return server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
+      server.start();
       if (err) {
         return reject(err);
       } else {
@@ -153,7 +158,6 @@ Parameters.prototype.grpc_start = function(callback) {
       }
     });
   });
-  server.start();
   this._server = server;
   return promise;
 };

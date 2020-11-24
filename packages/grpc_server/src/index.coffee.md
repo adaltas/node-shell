@@ -5,7 +5,10 @@
     path = require 'path'
     utils = require 'parameters/lib/utils'
     {mutate} = require 'mixme'
-    grpc = require 'grpc'
+    try
+      grpc = require 'grpc'
+    catch
+      grpc = require '@grpc/grpc-js'
     proto = require '@parametersjs/grpc_proto'
     # Parameters & plugins
     Parameters = require 'parameters/lib/Parameters'
@@ -79,10 +82,10 @@
       endpoint = "#{appconfig.grpc.address}:#{appconfig.grpc.port}"
       promise = new Promise (resolve, reject) ->
         server.bindAsync endpoint, grpc.ServerCredentials.createInsecure(), (err, port) ->
+          server.start()
           if err
           then reject err
           else resolve port
-      server.start()
       @_server = server
       promise
 
