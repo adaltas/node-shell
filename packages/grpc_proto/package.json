@@ -1,7 +1,21 @@
 {
   "name": "@parametersjs/grpc_proto",
   "version": "0.8.1",
+  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
+  "contributors": [
+    "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
+  ],
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.5"
+  },
   "description": "GRPC Protocol Buffer definition.",
+  "engines": {
+    "node": ">= 0.10.x"
+  },
+  "files": [
+    "/lib"
+  ],
+  "homepage": "https://github.com/adaltas/node-parameters",
   "keywords": [
     "argument",
     "parameter",
@@ -14,21 +28,7 @@
     "protocol",
     "interface"
   ],
-  "files": [
-    "/lib"
-  ],
-  "homepage": "https://github.com/adaltas/node-parameters",
-  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "license": "MIT",
-  "contributors": [
-    "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
-  ],
-  "engines": {
-    "node": ">= 0.10.x"
-  },
-  "dependencies": {
-    "@grpc/proto-loader": "^0.5.5"
-  },
   "main": "./lib/index",
   "mocha": {
     "throw-deprecation": true,
