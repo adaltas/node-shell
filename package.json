@@ -19,7 +19,7 @@
   },
   "scripts": {
     "compile": "lerna run compile",
-    "clean": "lerna run clean",
+    "clean": "git clean -fdx",
     "postinstall": "husky install",
     "lint": "eslint '**/test/**/*.coffee'",
     "test": "lerna run test",
