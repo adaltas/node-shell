@@ -9,6 +9,11 @@
     "@grpc/proto-loader": "^0.5.5"
   },
   "description": "GRPC Protocol Buffer definition.",
+  "devDependencies": {
+    "coffeescript": "^2.5.1",
+    "mocha": "^8.2.1",
+    "should": "^13.2.3"
+  },
   "engines": {
     "node": ">= 0.10.x"
   },
