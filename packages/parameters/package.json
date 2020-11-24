@@ -1,18 +1,7 @@
 {
   "name": "parameters",
   "version": "0.8.1",
-  "description": "Command line arguments parser and stringifier",
-  "keywords": [
-    "argument",
-    "arg",
-    "parameter",
-    "param",
-    "option",
-    "command",
-    "cli",
-    "getopt",
-    "parser"
-  ],
+  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {
       "level": "error",
@@ -26,27 +15,35 @@
       "level": "ignore"
     }
   },
-  "files": [
-    "/lib"
-  ],
-  "homepage": "https://github.com/adaltas/node-parameters",
-  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
-  "license": "MIT",
   "contributors": [
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
-  "engines": {
-    "node": ">= 0.10.x"
-  },
-  "main": "./lib/index",
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "mixme": "^0.3.5",
     "pad": "^3.2.0",
     "protobufjs": "^6.10.1"
   },
+  "description": "Command line arguments parser and stringifier",
+  "engines": {
+    "node": ">= 0.10.x"
+  },
+  "files": [
+    "/lib"
+  ],
+  "homepage": "https://github.com/adaltas/node-parameters",
+  "keywords": [
+    "argument",
+    "arg",
+    "parameter",
+    "param",
+    "option",
+    "command",
+    "cli",
+    "getopt",
+    "parser"
+  ],
+  "license": "MIT",
+  "main": "./lib/index",
   "mocha": {
     "throw-deprecation": true,
     "require": [
@@ -57,6 +54,9 @@
     "timeout": 40000,
     "reporter": "spec",
     "recursive": true
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "repository": {
     "type": "git",
