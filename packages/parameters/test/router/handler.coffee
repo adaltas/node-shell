@@ -39,7 +39,7 @@ describe 'router.handler', ->
         options:
           'my_argument': {}
         handler: (context) ->
-          Object.keys(context).sort().should.eql ['args', 'argv', 'command', 'error', 'params', 'stderr', 'stderr_end', 'stdout', 'stdout_end']
+          Object.keys(context).sort().should.eql ['args', 'argv', 'command', 'error', 'params', 'stderr', 'stderr_end', 'stdin', 'stdout', 'stdout_end']
           arguments.length.should.eql 1
       .route ['--my_argument', 'my value']
 

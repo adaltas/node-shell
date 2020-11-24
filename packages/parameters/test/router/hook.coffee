@@ -19,7 +19,7 @@ describe 'router.hook', ->
     .register
       router_call: (context, handler) ->
         Object.keys(context).sort().should.eql [
-          "args", "argv", "command", "error", "params", "stderr", "stderr_end", "stdout", "stdout_end"
+          "args", "argv", "command", "error", "params", "stderr", "stderr_end", "stdin", "stdout", "stdout_end"
         ]
         handler
     .route []

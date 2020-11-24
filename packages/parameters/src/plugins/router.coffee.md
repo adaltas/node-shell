@@ -16,10 +16,17 @@
           return handler if command.length
           config.router ?= {}
           config.router.handler ?= path.resolve __dirname, '../routes/help'
+          config.router.stdin ?= process.stdin
           config.router.stdout ?= process.stdout
           config.router.stdout_end ?= false
           config.router.stderr ?= process.stderr
           config.router.stderr_end ?= false
+          unless config.router.stdin instanceof stream.Readable
+            throw utils.error [
+              "Invalid Configuration Property:"
+              "router.stdin must be an instance of stream.Readable,"
+              "got #{JSON.stringify config.router.stdin}"
+            ]
           unless config.router.stdout instanceof stream.Writable
             throw utils.error [
               "Invalid Configuration Property:"
@@ -85,6 +92,7 @@ How to use the `route` method to execute code associated with a particular comma
           error: err
           params: params
           args: args
+          stdin: config.router.stdin
           stdout: config.router.stdout
           stdout_end: config.router.stdout_end
           stderr: config.router.stderr

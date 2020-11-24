@@ -21,7 +21,7 @@ Parameters.prototype.init = (function(parent) {
   return function() {
     this.register({
       configure_set: function({config, command}, handler) {
-        var base, base1, base2, base3, base4;
+        var base, base1, base2, base3, base4, base5;
         if (command.length) {
           return handler;
         }
@@ -31,23 +31,29 @@ Parameters.prototype.init = (function(parent) {
         if ((base = config.router).handler == null) {
           base.handler = path.resolve(__dirname, '../routes/help');
         }
-        if ((base1 = config.router).stdout == null) {
-          base1.stdout = process.stdout;
+        if ((base1 = config.router).stdin == null) {
+          base1.stdin = process.stdin;
         }
-        if ((base2 = config.router).stdout_end == null) {
-          base2.stdout_end = false;
+        if ((base2 = config.router).stdout == null) {
+          base2.stdout = process.stdout;
         }
-        if ((base3 = config.router).stderr == null) {
-          base3.stderr = process.stderr;
+        if ((base3 = config.router).stdout_end == null) {
+          base3.stdout_end = false;
         }
-        if ((base4 = config.router).stderr_end == null) {
-          base4.stderr_end = false;
+        if ((base4 = config.router).stderr == null) {
+          base4.stderr = process.stderr;
+        }
+        if ((base5 = config.router).stderr_end == null) {
+          base5.stderr_end = false;
+        }
+        if (!(config.router.stdin instanceof stream.Readable)) {
+          throw utils.error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
         }
         if (!(config.router.stdout instanceof stream.Writable)) {
-          throw utils.error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writer,", `got ${JSON.stringify(config.router.stdout)}`]);
+          throw utils.error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
         }
         if (!(config.router.stderr instanceof stream.Writable)) {
-          throw utils.error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writer,", `got ${JSON.stringify(config.router.stderr)}`]);
+          throw utils.error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
         }
         return handler;
       }
@@ -111,6 +117,7 @@ Parameters.prototype.route = function(context = {}, ...args) {
       error: err,
       params: params,
       args: args,
+      stdin: config.router.stdin,
       stdout: config.router.stdout,
       stdout_end: config.router.stdout_end,
       stderr: config.router.stderr,

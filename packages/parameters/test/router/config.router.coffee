@@ -1,7 +1,7 @@
 
 path = require 'path'
 parameters = require '../../src'
-{ Writable } = require('stream')
+{ Readable, Writable } = require('stream')
 
 describe 'router.config.router', ->
   
@@ -12,16 +12,21 @@ describe 'router.config.router', ->
       .config.router.should.eql
         stderr: process.stderr
         stderr_end: false
+        stdin: process.stdin
         stdout: process.stdout
         stdout_end: false
         handler: path.resolve __dirname, '../../src/routes/help'
           
-    it "stream.Writable", ->
+    it "pass custom readable and writable stream", ->
       parameters
-        router: stdout: new Writable()
+        router:
+          stderr: new Writable()
+          stdin: new Readable()
+          stdout: new Writable()
       .config.router.should.eql
-        stderr: process.stderr
+        stderr: new Writable()
         stderr_end: false
+        stdin: new Readable()
         stdout: new Writable()
         stdout_end: false
         handler: path.resolve __dirname, '../../src/routes/help'
