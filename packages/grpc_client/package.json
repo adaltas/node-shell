@@ -1,19 +1,7 @@
 {
   "name": "@parametersjs/grpc_client",
   "version": "0.8.1",
-  "description": "GRPC client plugin for the parameters package.",
-  "keywords": [
-    "argument",
-    "parameter",
-    "cli",
-    "grpc",
-    "client",
-    "rpc",
-    "remove",
-    "server",
-    "protocol",
-    "interface"
-  ],
+  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {
       "level": "error",
@@ -27,30 +15,42 @@
       "level": "ignore"
     }
   },
+  "contributors": [
+    "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
+  ],
+  "dependencies": {
+    "@grpc/grpc-js": "^1.2.1"
+  },
+  "description": "GRPC client plugin for the parameters package.",
+  "devDependencies": {
+    "@parametersjs/grpc_server": "^0.8.1"
+  },
+  "engines": {
+    "node": ">= 0.10.x"
+  },
   "files": [
     "/lib"
   ],
   "homepage": "https://github.com/adaltas/node-parameters",
-  "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
-  "license": "MIT",
-  "contributors": [
-    "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
+  "keywords": [
+    "argument",
+    "parameter",
+    "cli",
+    "grpc",
+    "client",
+    "rpc",
+    "remove",
+    "server",
+    "protocol",
+    "interface"
   ],
-  "engines": {
-    "node": ">= 0.10.x"
-  },
+  "license": "MIT",
   "main": "./lib/index",
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@grpc/grpc-js": "^1.2.1"
-  },
   "optionalDependencies": {
     "grpc": "^1.24.3"
-  },
-  "devDependencies": {
-    "@parametersjs/grpc_server": "^0.8.1"
   },
   "mocha": {
     "throw-deprecation": true,
