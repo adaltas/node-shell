@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.5...v0.8.1) (2020-11-24)
+
+
+### Bug Fixes
+
+* **grpc_client:** c++ version now optional ([28b4f32](https://github.com/adaltas/node-parameters/commit/28b4f322423a66c51681b55d75c9b96cf80d3a29))
+* **grpc_server:** c++ version now optional ([0584565](https://github.com/adaltas/node-parameters/commit/058456518619fc71af001891935a02a518da6096))
+
+
+
+
+
 ## [0.8.1-alpha.5](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.4...v0.8.1-alpha.5) (2020-11-23)
 
 

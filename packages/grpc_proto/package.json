@@ -1,6 +1,6 @@
 {
   "name": "@parametersjs/grpc_proto",
-  "version": "0.8.1-alpha.4",
+  "version": "0.8.1",
   "description": "GRPC Protocol Buffer definition.",
   "keywords": [
     "argument",
