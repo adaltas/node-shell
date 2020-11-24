@@ -11,3 +11,7 @@ Additionnal, the package provide some functions to facilitate its usage:
   Load .proto files for use with gRPC.
 * `loadSync`   
   Synchronous version of `load`.
+
+## Note
+
+The Protocol Buffer definition is stored in a file. We could probably make it dynamic with [grpc-tools](https://www.npmjs.com/package/grpc-tools).
