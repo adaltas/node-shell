@@ -6,7 +6,7 @@ Print the Protocol Buffer definition.
 ## Dependencies
 
     protobuf = require 'protobufjs'
-    proto = require '@parametersjs/grpc_proto'
+    proto = require '@shell-js/grpc_proto'
     fs = require 'fs'
 
 ## Source code

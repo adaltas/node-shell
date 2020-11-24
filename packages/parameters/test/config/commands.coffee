@@ -1,25 +1,25 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.commands', ->
   
   describe 'get', ->
 
     it 'application configuration', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().get().root.should.be.true()
     
     it 'get a child command', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx(['server']).get()
       .command.should.eql ['server']
     
     it 'get a deep child command', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx(['server', 'start']).get()
@@ -29,13 +29,13 @@ describe 'config.commands', ->
       
     it 'exepect 1 or 2 arguments', ->
       (->
-        parameters
+        shell
           options: 'config': {}
         .confx().set()
       ).should.throw 'Invalid Commands Set Arguments: expect 1 or 2 arguments, got 0'
       
     it 'an object', ->
-      config = parameters
+      config = shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx(['server', 'stop'])
@@ -50,7 +50,7 @@ describe 'config.commands', ->
         type: 'string'
             
     it 'key values', ->
-      config = parameters
+      config = shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx(['server', 'stop'])
@@ -63,7 +63,7 @@ describe 'config.commands', ->
         type: 'string'
       
     it 'call the hook', ->
-      parameters {}
+      shell {}
       .register
         'configure_set': ({config}, handler) ->
           config.test = 'was here'

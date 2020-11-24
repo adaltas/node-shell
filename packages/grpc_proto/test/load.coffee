@@ -1,5 +1,4 @@
 
-# require '@parametersjs/grpc_server'
 protobuf = require '../src'
 
 describe 'grpc_protobuf.load', ->

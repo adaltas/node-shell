@@ -1,12 +1,12 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'options.required', ->
   
   describe 'optional', ->
 
     it 'may be optional with string', ->
-      app = parameters
+      app = shell
         commands: 'mycommand':
           options: 'my_argument': {}
       app.parse ['mycommand']
@@ -17,7 +17,7 @@ describe 'options.required', ->
       .should.eql ['mycommand']
 
     it 'may be optional with array', ->
-      app = parameters
+      app = shell
         commands: 'mycommand':
           options: 'my_argument':
             type: 'array'
@@ -31,7 +31,7 @@ describe 'options.required', ->
   describe 'enforce', ->
 
     it 'honors required true if value is provided', ->
-      app = parameters
+      app = shell
         commands: 'mycommand':
           options: 'my_argument':
             required: true
@@ -45,7 +45,7 @@ describe 'options.required', ->
       .should.eql ['mycommand', '--my_argument', 'my --value']
 
     it 'honors required true if no value provided', ->
-      app = parameters
+      app = shell
         commands: 'mycommand':
           options: 'my_argument':
             required: true
@@ -60,7 +60,7 @@ describe 'options.required', ->
   describe 'function', ->
   
       it 'receive config and command', ->
-        app = parameters
+        app = shell
           commands: 'my_command':
             options:
               'my_option':
@@ -73,7 +73,7 @@ describe 'options.required', ->
         app.parse ['my_command', '--my_option']
 
       it 'return `true`', ->
-        app = parameters
+        app = shell
           commands: 'my_command':
             options:
               'my_option':
@@ -91,12 +91,12 @@ describe 'options.required', ->
   describe 'compatible with help', ->
     
     it 'without command', ->
-      parameters()
+      shell()
       .parse(['--help']).should.eql
         help: true
     
     it 'with command', ->
-      parameters
+      shell
         commands: 'parent':
           commands: 'child':
             options:  'my_argument':
@@ -106,7 +106,7 @@ describe 'options.required', ->
         help: true
     
     it 'stop command nested discovery', ->
-      parameters
+      shell
         commands: 'parent':
           commands: 'child':
             options:  'my_argument':

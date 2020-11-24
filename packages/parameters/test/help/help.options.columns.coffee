@@ -1,11 +1,11 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help.options.columns', ->
 
   it 'first columns must exceed 10', ->
     (->
-      parameters().help([], columns: 8)
+      shell().help([], columns: 8)
     ).should.throw [
       'Invalid Help Column Option:'
       'must exceed a size of 10 columns,'
@@ -13,7 +13,7 @@ describe 'help/help.options.columns', ->
     ].join ' '
 
   it 'an integer map to the first columns', ->
-    parameters
+    shell
       main: 'a_main'
       options:
         'an_option':

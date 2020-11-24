@@ -1,11 +1,11 @@
 
-parameters = require 'parameters/lib'
+shell = require 'shell/lib'
 require '../src'
 
 describe 'grpc_server.stop', ->
   
   it 'return false unless started', ->
-    app = parameters
+    app = shell
       grpc:
         address: '0.0.0.0'
         port: 61234

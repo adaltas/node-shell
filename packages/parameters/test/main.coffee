@@ -1,5 +1,5 @@
 
-parameters = require '../src'
+shell = require '../src'
 
 describe 'main', ->
   
@@ -8,14 +8,14 @@ describe 'main', ->
     it 'command extra arguments without main', ->
       # Command with no option
       (->
-        parameters
+        shell
           commands:
             'mycommand': {}
         .parse ['mycommand', 'mymain']
       ).should.throw 'Invalid Argument: fail to interpret all arguments "mymain"'
       # Command with one option
       (->
-        parameters
+        shell
           commands:
             'mycommand': options: 'arg': {}
         .parse ['mycommand', '--arg', 'myarg', 'mymain']
@@ -24,7 +24,7 @@ describe 'main', ->
   describe 'without command', ->
 
     it 'workout any main arguments', ->
-      app = parameters
+      app = shell
         main:
           name: 'leftover'
       app.parse([]).should.eql
@@ -35,7 +35,7 @@ describe 'main', ->
       ).should.eql []
 
     it 'preserve space in main arguments', ->
-      app = parameters
+      app = shell
         main:
           name: 'leftover'
       app.parse [
@@ -48,7 +48,7 @@ describe 'main', ->
       .should.eql ['my value']
 
     it 'handle multiple main arguments', ->
-      app = parameters
+      app = shell
         main:
           name: 'leftover'
       app.parse [
@@ -63,7 +63,7 @@ describe 'main', ->
   describe 'with command', ->
 
     it 'accept an optional main and no option', ->
-      app = parameters
+      app = shell
         commands: 'start':
           main:
             name: 'leftover'
@@ -79,7 +79,7 @@ describe 'main', ->
       .should.eql ['start', 'my', 'value true']
 
     it 'may follow command without any option', ->
-      app = parameters
+      app = shell
         commands: 'mycommand':
           main:
             name: 'leftover'

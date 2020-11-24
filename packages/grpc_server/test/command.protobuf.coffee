@@ -1,5 +1,5 @@
 
-parameters = require 'parameters'
+shell = require 'shell'
 require '../src'
 { Writable } = require 'stream'
 { is_object_literal } = require 'mixme'
@@ -16,7 +16,7 @@ writer = (callback) ->
 describe 'grpc.command.protobuf', ->
   
   it 'format json', ->
-    app = parameters
+    app = shell
       router:
         stdout: writer (output) ->
           proto = JSON.parse output
@@ -26,7 +26,7 @@ describe 'grpc.command.protobuf', ->
     app.route ['shell', 'protobuf', '--format', 'json']
   
   it 'format proto', ->
-    app = parameters
+    app = shell
       router:
         stdout: writer (output) ->
           output.should.match /^package shell;$/m

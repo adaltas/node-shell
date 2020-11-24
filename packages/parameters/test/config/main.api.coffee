@@ -1,19 +1,19 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.main.api', ->
   
   describe 'get', ->
 
     it 'for application', ->
-      parameters
+      shell
         options: 'config': {}
         main: 'leftover'
       .confx().main.get().should.eql
         name: 'leftover'
 
     it 'for a command', ->
-      parameters
+      shell
         commands: 'app': commands: 'server':
           main: 'leftover'
       .confx(['app', 'server']).main.get()
@@ -23,7 +23,7 @@ describe 'config.main.api', ->
   describe 'set', ->
 
     it 'for application', ->
-      parameters {}
+      shell {}
       .confx().main
       .set('leftover')
       .get().should.eql

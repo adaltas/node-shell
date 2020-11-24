@@ -1,5 +1,5 @@
 {
-  "name": "@parametersjs/grpc_proto",
+  "name": "@shell-js/grpc_proto",
   "version": "0.8.1",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "contributors": [
@@ -20,7 +20,7 @@
   "files": [
     "/lib"
   ],
-  "homepage": "https://github.com/adaltas/node-parameters",
+  "homepage": "https://github.com/adaltas/node-shell",
   "keywords": [
     "argument",
     "parameter",
@@ -51,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/adaltas/node-parameters.git",
+    "url": "git://github.com/adaltas/node-shell.git",
     "directory": "packages/grpc_protobuf"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 
 { Writable } = require 'stream'
-parameters = require '../../src'
+shell = require '../../src'
 
 writer = (callback) ->
   chunks = []
@@ -14,7 +14,7 @@ writer = (callback) ->
 describe 'router.help', ->
 
   it 'Unhandled leftover', (next) ->
-    parameters
+    shell
       router:
         stderr: writer (output) ->
           output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
@@ -24,7 +24,7 @@ describe 'router.help', ->
     .route ['invalid', 'leftover']
       
   it 'Undeclared options in stric mode', (next) ->
-    parameters
+    shell
       router:
         stderr: writer (output) ->
           output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
@@ -35,7 +35,7 @@ describe 'router.help', ->
     .route ['--opt', 'val']
       
   it 'Undeclared options inside a command in stric mode', (next) ->
-    parameters
+    shell
       commands:
         'server': {}
       router:

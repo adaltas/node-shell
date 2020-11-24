@@ -1,6 +1,8 @@
 
 require('should')
-require('..')({
+const shell = require('./packages/shell')
+
+shell({
   main: 'input' 
 })
 .parse([])

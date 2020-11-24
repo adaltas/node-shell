@@ -1,12 +1,12 @@
 
 fs = require('fs').promises
 os = require 'os'
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'router.handler', ->
     
   it 'context is parameter instance', ->
-    parameters
+    shell
       handler: ->
         @should.have.property('help').which.is.a.Function()
         @should.have.property('parse').which.is.a.Function()
@@ -15,7 +15,7 @@ describe 'router.handler', ->
 
   it 'propagate error', ->
     (->
-      parameters
+      shell
         options:
           'my_argument': {}
         handler: -> throw Error 'catch me'
@@ -24,7 +24,7 @@ describe 'router.handler', ->
     
   it 'load with custom function handler', ->
     await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = -> "Hello"'
-    parameters
+    shell
       handler: './something'
       load: (module) ->
         require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
@@ -35,7 +35,7 @@ describe 'router.handler', ->
   describe 'arguments', ->
     
     it 'pass a single info argument by default', ->
-      parameters
+      shell
         options:
           'my_argument': {}
         handler: (context) ->
@@ -44,7 +44,7 @@ describe 'router.handler', ->
       .route ['--my_argument', 'my value']
 
     it 'pass user arguments', (next) ->
-      parameters
+      shell
         options:
           'my_argument': {}
         handler: (context, my_param, callback) ->
@@ -58,7 +58,7 @@ describe 'router.handler', ->
   describe 'returned value', ->
 
     it 'inside an application', ->
-      parameters
+      shell
         handler: ({params}) -> params.my_argument
         options:
           'my_argument': {}
@@ -66,7 +66,7 @@ describe 'router.handler', ->
       .should.eql 'my value'
 
     it 'inside a command', ->
-      parameters
+      shell
         commands: 'my_command':
           handler: ({params}) -> params.my_argument
           options:

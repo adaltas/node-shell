@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'options.enum', ->
   
   it 'match elements in an array', ->
-    app = parameters
+    app = shell
       commands: 'start':
         options: 'array':
           shortcut: 'a'
@@ -20,7 +20,7 @@ describe 'options.enum', ->
     .should.eql ['start', '--array', '1,2']
       
   it 'dont match elements in an array', ->
-    app = parameters commands: 'start':
+    app = shell commands: 'start':
       options: 'array':
         shortcut: 'a'
         type: 'array'
@@ -33,7 +33,7 @@ describe 'options.enum', ->
     ).should.throw 'Invalid Parameter Value: the value of option "array" must be one of ["1","3"], got "2"'
   
   it 'ensure optional argument are optional', ->
-    parameters
+    shell
       commands: 'start':
         options: 'array':
           shortcut: 'a'

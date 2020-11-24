@@ -1,16 +1,16 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help.api', ->
 
   it 'is empty', ->
-    parameters
+    shell
       commands:
         'start': {}
     .help().should.match /myapp - No description yet/
 
   it 'command string', ->
-    parameters
+    shell
       commands:
         'server':
           commands:
@@ -18,14 +18,14 @@ describe 'help/help.api', ->
     .help('server start').should.match /myapp server start - No description yet/
 
   it 'command array', ->
-    parameters
+    shell
       commands:
         'start': {}
     .help(['start']).should.match /myapp start - No description yet/
 
-  it 'throw error if parameters match an undefined command', ->
+  it 'throw error if shell match an undefined command', ->
     (->
-      parameters
+      shell
         commands: 'start': {}
       .help ['start', 'sth']
     ).should.throw 'Invalid Command: argument "start sth" is not a valid command'

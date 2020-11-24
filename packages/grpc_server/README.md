@@ -1,11 +1,11 @@
 
-# `@parametersjs/grpc_server`
+# Package `@shell-js/grpc_server`
 
-Parameters plugin to create a GRPC server and expose registered routes.
+Shell.js plugin to create a GRPC server and expose registered routes.
 
 ## API
 
-The Parameters instance is enriched with the following functions:
+The Shell.js instance is enriched with the following functions:
 
 * `start`   
   Start the GRPC server

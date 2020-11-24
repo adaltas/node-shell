@@ -1,10 +1,10 @@
 
-const parameters = require('./packages/parameters');
+const shell = require('./packages/shell');
 const { spawn } = require('child_process')
 
 (async function(){
   try{
-    const result = await parameters({
+    const result = await shell({
       commands: {
         'list': {
           main: 'input',

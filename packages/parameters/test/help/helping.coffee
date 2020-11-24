@@ -1,13 +1,13 @@
 
 should = require 'should'
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/helping', ->
 
   describe 'help is not requested', ->
 
     it 'help command only in extended mode', ->
-      helping = parameters
+      helping = shell
         commands: 'start': {}
         extended: true
       .helping [{}]
@@ -16,14 +16,14 @@ describe 'help/helping', ->
   describe 'command help not followed by a command', ->
     
     it 'in flatten mode', ->
-      parameters
+      shell
         commands: 'start': {}
       .helping
         command: ['help']
       .should.eql []
     
     it 'in extended mode', ->
-      parameters
+      shell
         commands: 'start': {}
         extended: true
       .helping [{},
@@ -34,7 +34,7 @@ describe 'help/helping', ->
   describe 'command help followed by a command name', ->
 
     it 'in flatten mode', ->
-      parameters
+      shell
         commands: 'start': commands: 'server': {}
       .helping
         command: ['help']
@@ -42,7 +42,7 @@ describe 'help/helping', ->
       .should.eql ['start']
 
     it 'in extended mode', ->
-      parameters
+      shell
         commands: 'start': commands: 'server': {}
         extended: true
       .helping [ {},
@@ -55,27 +55,27 @@ describe 'help/helping', ->
 
     it 'no help option in flatten mode', ->
       should.not.exist(
-        parameters {}
+        shell {}
         .helping
           my_opt: true
       )
 
     it 'no help option in extended mode', ->
       should.not.exist(
-        parameters extended: true
+        shell extended: true
         .helping [
           my_opt: true
         ]
       )
 
     it 'in flatten mode', ->
-      parameters {}
+      shell {}
       .helping
         help: true
       .should.eql []
 
     it 'in extended mode', ->
-      parameters extended: true
+      shell extended: true
       .helping [
         help: true
       ]
@@ -85,7 +85,7 @@ describe 'help/helping', ->
 
     it 'no help option in flatten mode', ->
       should.not.exist(
-        parameters
+        shell
           commands: 'server':
             options: 'my_opt_1': {}
             commands: 'start':
@@ -99,7 +99,7 @@ describe 'help/helping', ->
 
     it 'no help option in extended mode', ->
       should.not.exist(
-        parameters
+        shell
           commands: 'server':
             options: 'my_opt_1': {}
             commands: 'start':
@@ -117,7 +117,7 @@ describe 'help/helping', ->
 
     it 'with help options in the middle of subcommand in flatten mode', ->
       # Flatten mode
-      parameters
+      shell
         commands: 'server': commands: 'start': {}
       .helping
         command: ['server']
@@ -125,7 +125,7 @@ describe 'help/helping', ->
       .should.eql ['server']
 
     it 'with help options in the middle of subcommand in extended mode', ->
-      parameters
+      shell
         commands: 'server': commands: 'start': {}
         extended: true
       .helping [ {},
@@ -136,7 +136,7 @@ describe 'help/helping', ->
 
     it 'throw Error if help in not associated with the last command in extended mode', ->
       (->
-        parameters
+        shell
           commands: 'server': commands: 'start': {}
           extended: true
         .helping [ {},
@@ -148,7 +148,7 @@ describe 'help/helping', ->
       ).should.throw 'Invalid Argument: `help` must be associated with a leaf command'
 
     it 'with help options at the end of subcommand in flatten mode', ->
-      parameters
+      shell
         commands: 'server': commands: 'start': {}
       .helping
         command: ['server', 'start']
@@ -156,7 +156,7 @@ describe 'help/helping', ->
       .should.eql ['server', 'start']
 
     it 'with help options at the end of subcommand in extended mode', ->
-      parameters
+      shell
         commands: 'server': commands: 'start': {}
         extended: true
       .helping [ {},

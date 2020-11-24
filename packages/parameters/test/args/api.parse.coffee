@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'api.parse', ->
 
   it 'does not alter input arguments', ->
-    app = parameters
+    app = shell
       commands: 'start':
         options: 'watch':
           shortcut: 'w'
@@ -13,7 +13,7 @@ describe 'api.parse', ->
     argv.should.eql ['start', '--watch', __dirname]
 
   it 'catch argument without a value because end of argv', ->
-    app = parameters
+    app = shell
       commands: 'start':
         options:
           'an_int':
@@ -33,7 +33,7 @@ describe 'api.parse', ->
     ).should.throw 'Invalid Option: no value found for option "an_array"'
 
   it 'catch argument without a value because next argv is a shortcut', ->
-    app = parameters
+    app = shell
       commands: 'start':
         options:
           'an_int':

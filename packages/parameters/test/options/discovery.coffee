@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'options.discovery', ->
 
   it 'discover unregistered options', ->
-    app = parameters()
+    app = shell()
     app.parse [
       '--myoption', 'my value'
     ]
@@ -15,7 +15,7 @@ describe 'options.discovery', ->
     .should.eql ['--myoption', 'my value']
 
   it 'discover unregistered options in command', ->
-    app = parameters commands: 'mycommand': {}
+    app = shell commands: 'mycommand': {}
     app.parse(['mycommand', '--myoption', 'my value']).should.eql
       command: ['mycommand']
       myoption: 'my value'
@@ -25,7 +25,7 @@ describe 'options.discovery', ->
     .should.eql ['mycommand', '--myoption', 'my value']
 
   it 'deal with boolean', ->
-    app = parameters()
+    app = shell()
     app.parse(['--myoption']).should.eql
       myoption: true
     app.compile

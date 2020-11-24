@@ -1,5 +1,5 @@
 
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'options', ->
   
@@ -7,14 +7,14 @@ describe 'options', ->
     
     it 'value types', ->
       (->
-        parameters
+        shell
           options: []
       ).should.throw 'Invalid Options: expect an object, got []'
   
   describe 'normalisation', ->
         
     it 'accept object', ->
-      parameters
+      shell
         options:
           myparam:
             shortcut: 'm'
@@ -26,7 +26,7 @@ describe 'options', ->
   describe 'usage', ->
 
     it 'run without main', ->
-      app = parameters
+      app = shell
         options: 'myparam':
           shortcut: 'm'
       app.parse [
@@ -44,7 +44,7 @@ describe 'options', ->
       .should.eql ['--myparam', 'my value']
 
     it 'commands with multiple options', ->
-      app = parameters
+      app = shell
         commands: 'start':
           main:
             name: 'my_argument'

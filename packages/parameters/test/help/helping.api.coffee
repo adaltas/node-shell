@@ -1,23 +1,23 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/helping.api', ->
   
   it 'flatten expect an object', ->
     (->
-      parameters()
+      shell()
       .helping 'invalid'
     ).should.throw 'Invalid Arguments: `helping` expect a params object as first argument in flatten mode, got "invalid"'
   
   it 'extended expect an array of objects', ->
     (->
-      parameters extended: true
+      shell extended: true
       .helping ['invalid']
     ).should.throw 'Invalid Arguments: `helping` expect a params array with literal objects as first argument in extended mode, got ["invalid"]'
 
   it 'ensure command is an array in flatten mode', ->
     (->
-      parameters
+      shell
         commands: 'start': commands: 'server': {}
       .helping
         command: 'help'

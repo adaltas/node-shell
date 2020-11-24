@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'api.compile.script', ->
 
   it 'should prefix with node path and executed script', ->
-    parameters
+    shell
       commands: 'start':
         options: 'myparam': {}
     .compile

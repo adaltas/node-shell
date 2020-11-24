@@ -4,8 +4,8 @@
     # Dependencies
     utils = require '../utils'
     {clone, is_object_literal, merge, mutate} = require 'mixme'
-    # Parameters & plugins
-    Parameters = require '../Parameters'
+    # Shell.js & plugins
+    Shell = require '../Shell'
   
     builder_main = (commands) ->
       ctx = @
@@ -119,7 +119,7 @@
           Object.keys(builder.show()).sort()
       builder
     
-    Parameters::confx = (command=[]) ->
+    Shell::confx = (command=[]) ->
       ctx = @
       command = [command] if typeof command is 'string'
       # command = [...pcommand, ...command]

@@ -1,12 +1,12 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help.shortcut', ->
 
   describe 'without command', ->
 
     it 'should print without shortcut', ->
-      parameters
+      shell
         name: 'myscript'
         description: 'Some description for myscript'
         options: 'myarg':
@@ -32,7 +32,7 @@ describe 'help/help.shortcut', ->
   describe 'with command', ->
 
     it 'should not print alias if not defined', ->
-      parameters
+      shell
         name: 'myscript'
         description: 'Some description for myscript'
         commands: 'status':

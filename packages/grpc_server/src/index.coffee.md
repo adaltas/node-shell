@@ -3,20 +3,20 @@
 
     # Dependencies
     path = require 'path'
-    utils = require 'parameters/lib/utils'
+    utils = require 'shell/lib/utils'
     {mutate} = require 'mixme'
     try
       grpc = require 'grpc'
     catch
       grpc = require '@grpc/grpc-js'
-    proto = require '@parametersjs/grpc_proto'
-    # Parameters & plugins
-    Parameters = require 'parameters/lib/Parameters'
-    require 'parameters/lib/plugins/config'
-    require 'parameters/lib/plugins/router'
+    proto = require '@shell-js/grpc_proto'
+    # Shell & plugins
+    Shell = require 'shell/lib/Shell'
+    require 'shell/lib/plugins/config'
+    require 'shell/lib/plugins/router'
     { Transform } = require 'stream'
 
-    Parameters::init = ( (parent) ->
+    Shell::init = ( (parent) ->
       ->
         # Plugin configuration
         @register configure_set: ({config, command}, handler) ->
@@ -38,7 +38,7 @@
                 handler: path.resolve __dirname, './route_shell_protobuf'
           handler
         parent.call @, arguments...
-    )(Parameters::init)
+    )(Shell::init)
 
     passthrough = ->
       new Transform
@@ -67,7 +67,7 @@
           context.stderr.pipe call
         @route context
 
-    Parameters::grpc_start = (callback) ->
+    Shell::grpc_start = (callback) ->
       if @_server?.started
         throw utils.error 'GRPC Server Already Started'
       appconfig = @confx().get()
@@ -89,7 +89,7 @@
       @_server = server
       promise
 
-    Parameters::grpc_stop = ->
+    Shell::grpc_stop = ->
       # server = @_server
       new Promise (resolve, reject) =>
         return resolve false unless @grpc_started()
@@ -101,5 +101,5 @@
           then reject err
           else resolve true
 
-    Parameters::grpc_started = ->
+    Shell::grpc_started = ->
       !!@_server?.started

@@ -1,4 +1,4 @@
 
-# `@parametersjs/grpc_client`
+# Package `@shell-js/grpc_client`
 
-Client application connecting to a GRPC server exposed by Parameters.
+Client application connecting to a GRPC server exposed by Shell.js.

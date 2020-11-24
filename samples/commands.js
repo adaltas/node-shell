@@ -1,5 +1,5 @@
 
-const parameters = require('./packages/parameters');
+const shell = require('./packages/shell');
 require('should');
 
 // NAME
@@ -18,7 +18,7 @@ require('should');
 // EXAMPLES
 //     server help       Show this message
 
-const command = parameters({
+const command = shell({
   name: 'server',
   description: 'Manage a web server',
   commands: {

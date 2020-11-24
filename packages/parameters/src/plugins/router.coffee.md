@@ -6,11 +6,11 @@
     stream = require 'stream'
     utils = require '../utils'
     {clone, merge, is_object_literal} = require 'mixme'
-    # Parameters & plugins
-    Parameters = require '../Parameters'
+    # Shell.js & plugins
+    Shell = require '../Shell'
     require '../plugins/config'
 
-    Parameters::init = ( (parent) ->
+    Shell::init = ( (parent) ->
       ->
         @register configure_set: ({config, command}, handler) ->
           return handler if command.length
@@ -41,9 +41,9 @@
             ]
           handler
         parent.call @, arguments...
-    )(Parameters::init)
+    )(Shell::init)
     
-    Parameters::init = ( (parent) ->
+    Shell::init = ( (parent) ->
       ->
         @register configure_set: ({config, command}, handler) ->
           return handler unless config.handler
@@ -56,17 +56,17 @@
           ] unless typeof config.handler in ['function', 'string']
           handler
         parent.call @, arguments...
-    )(Parameters::init)
+    )(Shell::init)
     
 ## Method `route(context, ...users_arguments)`
 
-* `cli_arguments`: `[string] | object | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
+* `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
 * Returns: `any` Whatever the route function returns.
 
 How to use the `route` method to execute code associated with a particular command.
 
-    Parameters::route = (context = {}, args...) ->
+    Shell::route = (context = {}, args...) ->
       # Normalize arguments
       if Array.isArray context
         context = argv: context
@@ -130,7 +130,7 @@ How to use the `route` method to execute code associated with a particular comma
         else
           handler = route_load handler
         route_call handler, command, params, err, args
-      # Read parameters
+      # Read arguments
       try params = @parse context.argv
       catch err then return route_error err, err.command or []
       # Print help

@@ -2,15 +2,15 @@
   // ## Plugin "config"
 
 // Dependencies
-var Parameters, builder_main, builder_options, clone, is_object_literal, merge, mutate, types, utils,
+var Shell, builder_main, builder_options, clone, is_object_literal, merge, mutate, types, utils,
   indexOf = [].indexOf;
 
 utils = require('../utils');
 
 ({clone, is_object_literal, merge, mutate} = require('mixme'));
 
-// Parameters & plugins
-Parameters = require('../Parameters');
+// Shell.js & plugins
+Shell = require('../Shell');
 
 builder_main = function(commands) {
   var builder, ctx;
@@ -172,7 +172,7 @@ builder_options = function(commands) {
   return builder;
 };
 
-Parameters.prototype.confx = function(command = []) {
+Shell.prototype.confx = function(command = []) {
   var base, ctx, j, lconfig, len, name;
   ctx = this;
   if (typeof command === 'string') {

@@ -1,8 +1,8 @@
 
-const parameters = require('./packages/parameters');
+const shell = require('./packages/shell');
 const { spawn } = require('child_process')
 
-parameters({
+shell({
   commands: {
     'list': {
       main: 'input',

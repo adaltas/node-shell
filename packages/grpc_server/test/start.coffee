@@ -1,11 +1,11 @@
 
-parameters = require 'parameters'
+shell = require 'shell'
 require '../src'
 
 describe 'grpc_server.start', ->
   
   it 'get application configuration', ->
-    app = parameters
+    app = shell
       grpc:
         address: '0.0.0.0'
         port: 61234

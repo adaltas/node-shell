@@ -1,11 +1,11 @@
 
-parameters = require 'parameters'
+shell = require 'shell'
 require '../src'
 
 describe 'grpc_server.config', ->
   
   it 'default', ->
-    app = parameters
+    app = shell
       grpc: {}
     app.confx().get().grpc
     .should.eql

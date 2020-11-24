@@ -1,5 +1,5 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.extended', ->
   
@@ -7,18 +7,18 @@ describe 'config.extended', ->
 
     it 'must be a boolean', ->
       # Command with no option
-      parameters extended: true
-      parameters extended: false
+      shell extended: true
+      shell extended: false
       (->
-        parameters extended: 'sth'
+        shell extended: 'sth'
       ).should.throw 'Invalid Configuration: extended must be a boolean, got "sth"'
       (->
-        parameters extended: {}
+        shell extended: {}
       ).should.throw 'Invalid Configuration: extended must be a boolean, got {}'
 
     it 'cannot be declared inside a command', ->
       (->
-        parameters commands:
+        shell commands:
           mycmd:
             extended: true
       ).should.throw 'Invalid Command Configuration: extended property cannot be declared inside a command'
@@ -26,7 +26,7 @@ describe 'config.extended', ->
   describe 'main', ->
     
     it 'application get leftover', ->
-      app = parameters
+      app = shell
         extended: true
         main:
           name: 'leftover'
@@ -43,7 +43,7 @@ describe 'config.extended', ->
       app.compile([{}]).should.eql []
     
     it 'application with configured commands get leftover', ->
-      app = parameters
+      app = shell
         extended: true
         main:
           name: 'leftover'

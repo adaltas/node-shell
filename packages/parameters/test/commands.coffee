@@ -1,10 +1,10 @@
 
-parameters = require '../src'
+shell = require '../src'
 
 describe 'commands', ->
 
   it 'no property is required', ->
-    app = parameters
+    app = shell
       commands: 'start': {}
     app.parse ['start']
     .should.eql
@@ -14,7 +14,7 @@ describe 'commands', ->
     .should.eql ['start']
 
   it 'options is of type object', ->
-    app = parameters
+    app = shell
       commands:
         'start':
           options:
@@ -31,7 +31,7 @@ describe 'commands', ->
     .should.eql ['start', '--myparam', 'my value']
 
   it 'customize command name', ->
-    app = parameters
+    app = shell
       command: 'mycommand'
       commands: 'start': {}
     app.parse ['start']
@@ -42,7 +42,7 @@ describe 'commands', ->
     .should.eql ['start']
 
   it 'mix with general options', ->
-    app = parameters
+    app = shell
       options: 'gopt': {}
       commands: 'start':
         options: 'aopt': {}
@@ -62,7 +62,7 @@ describe 'commands', ->
   describe 'nested', ->
 
     it 'with the same command name', ->
-      app = parameters
+      app = shell
         options: 'opt_root': {}
         commands: 'parent':
           options: 'opt_parent': {}

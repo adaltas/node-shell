@@ -1,4 +1,4 @@
 
-# `parameters`
+# Package `shell`
 
-Core engine available as the `parameters` package.
+Core engine available as the `shell` package.

@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help.options.extended', ->
 
   it 'print command related information', ->
-    parameters
+    shell
       commands:
         'start': {}
     .help([], extended: true).should.eql """
@@ -36,7 +36,7 @@ describe 'help/help.options.extended', ->
     """
 
   it 'print sub command related information', ->
-    parameters
+    shell
       commands:
         'server':
           commands:

@@ -1,5 +1,5 @@
 
-const parameters = require('./packages/parameters');
+const shell = require('./packages/shell');
 
 // NAME
 //     precious - Manage your precious
@@ -18,7 +18,7 @@ const parameters = require('./packages/parameters');
 //     precious --help         Show this message
 //     precious help           Show this message
 
-const params = parameters({
+const params = shell({
   name: 'precious',
   description: 'Manage your precious',
   commands: {

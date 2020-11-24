@@ -2,7 +2,7 @@
 // ## Plugin "help"
 
 // Dependencies
-var Parameters, clone, is_object_literal, merge, pad, path, utils;
+var Shell, clone, is_object_literal, merge, pad, path, utils;
 
 path = require('path');
 
@@ -12,12 +12,12 @@ utils = require('../utils');
 
 ({clone, is_object_literal, merge} = require('mixme'));
 
-// Parameters & plugins
-Parameters = require('../Parameters');
+// Shell.js & plugins
+Shell = require('../Shell');
 
 require('../plugins/config');
 
-Parameters.prototype.init = (function(parent) {
+Shell.prototype.init = (function(parent) {
   return function() {
     this.register({
       configure_set: function({config, command}, handler) {
@@ -82,7 +82,7 @@ Parameters.prototype.init = (function(parent) {
     });
     return parent.call(this, ...arguments);
   };
-})(Parameters.prototype.init);
+})(Shell.prototype.init);
 
 // ## Method `helping(params)`
 
@@ -90,7 +90,7 @@ Parameters.prototype.init = (function(parent) {
 
 // * `params` ([object] | object)   
 //   The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
-Parameters.prototype.helping = function(params, options = {}) {
+Shell.prototype.helping = function(params, options = {}) {
   var appconfig, commands, helping, leftover, search;
   params = clone(params);
   appconfig = this.confx().get();
@@ -108,7 +108,7 @@ Parameters.prototype.helping = function(params, options = {}) {
       throw utils.error(["Invalid Arguments:", "`helping` expect a params array with literal objects as first argument", "in extended mode,", `got ${JSON.stringify(params)}`]);
     }
   }
-  // Extract the current commands from the parameters arguments
+  // Extract the current commands from the arguments
   if (!options.extended) {
     if (params[appconfig.command] && !Array.isArray(params[appconfig.command])) {
       throw utils.error(['Invalid Arguments:', `parameter ${JSON.stringify(appconfig.command)} must be an array in flatten mode,`, `got ${JSON.stringify(params[appconfig.command])}`]);
@@ -140,7 +140,7 @@ Parameters.prototype.helping = function(params, options = {}) {
     // Search the help option
     helping = Object.values(config.options).filter(function(options) {
       return options.help;
-    // Check if it is present in the parsed parameters
+    // Check if it is present in the extracted arguments
     }).some(function(options) {
       return cparams[options.name] != null;
     });
@@ -186,7 +186,7 @@ Parameters.prototype.helping = function(params, options = {}) {
 //   the total width is less than twice this value.
 
 // It returns the formatted help to be printed as a string.
-Parameters.prototype.help = function(commands = [], options = {}) {
+Shell.prototype.help = function(commands = [], options = {}) {
   var _, appconfig, cmd, command, config, configs, content, description, has_help_command, has_help_option, i, j, k, len, len1, len2, len3, line, m, n, name, option, ref, ref1, ref2, ref3, ref4, shortcut, synopsis;
   if (options.indent == null) {
     options.indent = '  ';

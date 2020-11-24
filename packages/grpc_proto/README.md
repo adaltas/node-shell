@@ -1,5 +1,5 @@
 
-# `@parametersjs/grpc_proto`
+# Package `@shell-js/grpc_proto`
 
 Store the Protocol Buffer definition file used by the GRPC server and client packages.
 

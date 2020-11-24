@@ -1,6 +1,6 @@
 
 path = require 'path'
-parameters = require '../../src'
+shell = require '../../src'
 { Readable, Writable } = require('stream')
 
 describe 'router.config.router', ->
@@ -8,7 +8,7 @@ describe 'router.config.router', ->
   describe 'router', ->
     
     it "accept string (eg stderr)", ->
-      parameters({})
+      shell({})
       .config.router.should.eql
         stderr: process.stderr
         stderr_end: false
@@ -18,7 +18,7 @@ describe 'router.config.router', ->
         handler: path.resolve __dirname, '../../src/routes/help'
           
     it "pass custom readable and writable stream", ->
-      parameters
+      shell
         router:
           stderr: new Writable()
           stdin: new Readable()
@@ -34,7 +34,7 @@ describe 'router.config.router', ->
   describe 'options', ->
   
     it 'auto generate the help options in application', ->
-      parameters({})
+      shell({})
       .confx().get().options.should.eql
         'help':
           cascade: true
@@ -43,12 +43,12 @@ describe 'router.config.router', ->
           name: 'help'
           type: 'boolean'
           shortcut: 'h'
-      parameters({})
+      shell({})
       .confx().get().shortcuts.should.eql
         'h': 'help'
           
     it 'auto generate the help options in command with sub-command', ->
-      parameters
+      shell
         commands:
           'server':
             commands:
@@ -66,7 +66,7 @@ describe 'router.config.router', ->
   describe 'commands', ->
   
     it 'overwrite command description', ->
-      parameters
+      shell
         commands:
           'start':
             options: 'myopt': {}
@@ -87,7 +87,7 @@ describe 'router.config.router', ->
         commands: {}
 
     it 'does not conflict with default description', ->
-      parameters
+      shell
         commands:
           'start': {}
           'help': {}

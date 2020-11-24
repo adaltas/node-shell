@@ -1,7 +1,7 @@
 
 fs = require('fs').promises
 os = require 'os'
-parameters = require '../src'
+shell = require '../src'
   
 describe 'api.load', ->
 
@@ -9,7 +9,7 @@ describe 'api.load', ->
     cwd = process.cwd()
     process.chdir os.tmpdir()
     await fs.writeFile "#{os.tmpdir()}/relative_module.coffee", 'module.exports = (params) -> params'
-    parameters
+    shell
       name: 'start'
     .load("#{os.tmpdir()}/relative_module.coffee") "my value"
     .should.eql 'my value'
@@ -18,7 +18,7 @@ describe 'api.load', ->
 
   it 'load is not a string', ->
     (->
-      parameters
+      shell
         name: 'start'
       .load {name: 'something'}
     )

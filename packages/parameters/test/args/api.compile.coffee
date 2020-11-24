@@ -1,23 +1,23 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'api.compile', ->
 
   it 'validate', ->
     (->
-      parameters()
+      shell()
       .compile {}, 'invalid'
     ).should.throw 'Invalid Compile Arguments: 2nd argument option must be an object, got "invalid"'
   
   it 'command string is converted to a 1 element array internally', ->
-    parameters
+    shell
       commands: 'start': {}
     .compile command: 'start'
     .should.eql ['start']
     
   it 'catch main argument with type of string', ->
     (->
-      parameters
+      shell
         main: 'leftover'
       .compile
         leftover: 'my value'
@@ -25,7 +25,7 @@ describe 'api.compile', ->
   
   it 'check a command is registered', ->
     (->
-      parameters
+      shell
         commands:
           'start': {}
           'stop': {}
@@ -33,7 +33,7 @@ describe 'api.compile', ->
         command: ['status']
     ).should.throw 'Invalid Command Parameter: command "status" is not registed, expect one of ["help","start","stop"]'
     (->
-      parameters
+      shell
         commands: 'server': commands:
           'start': {}
           'stop': {}

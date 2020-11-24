@@ -1,12 +1,12 @@
 
-parameters = require 'parameters'
-require '@parametersjs/grpc_server'
+shell = require 'shell'
+require '@shell-js/grpc_server'
 client = require '../src/client'
 
 describe 'grpc_client.ping', ->
   
   it 'send and receive a message', ->
-    app = parameters
+    app = shell
       grpc:
         address: '0.0.0.0'
         port: 61234

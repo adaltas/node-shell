@@ -6,11 +6,11 @@
     pad = require 'pad'
     utils = require '../utils'
     {clone, is_object_literal, merge} = require 'mixme'
-    # Parameters & plugins
-    Parameters = require '../Parameters'
+    # Shell.js & plugins
+    Shell = require '../Shell'
     require '../plugins/config'
 
-    Parameters::init = ( (parent) ->
+    Shell::init = ( (parent) ->
       ->
         @register configure_set: ({config, command}, handler) ->
           return handler if command.length
@@ -47,7 +47,7 @@
             handler.call @, arguments...
             config.description ?= "No description yet for the #{config.name} command"
         parent.call @, arguments...
-    )(Parameters::init)
+    )(Shell::init)
 
 ## Method `helping(params)`
 
@@ -56,7 +56,7 @@ Determine if help was requested by returning zero to n commands if help is reque
 * `params` ([object] | object)   
   The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
 
-    Parameters::helping = (params, options={}) ->
+    Shell::helping = (params, options={}) ->
       params = clone params
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
@@ -74,7 +74,7 @@ Determine if help was requested by returning zero to n commands if help is reque
           "in extended mode,"
           "got #{JSON.stringify params}"
         ] unless Array.isArray(params) and not params.some (cparams) -> not is_object_literal cparams
-      # Extract the current commands from the parameters arguments
+      # Extract the current commands from the arguments
       unless options.extended
         throw utils.error [
           'Invalid Arguments:'
@@ -102,7 +102,7 @@ Determine if help was requested by returning zero to n commands if help is reque
         helping = Object.values(config.options)
         # Search the help option
         .filter (options) -> options.help
-        # Check if it is present in the parsed parameters
+        # Check if it is present in the extracted arguments
         .some (options) -> cparams[options.name]?
         if helping
           throw utils.error [
@@ -137,7 +137,7 @@ Format the configuration into a readable documentation string.
 
 It returns the formatted help to be printed as a string.
 
-    Parameters::help = (commands=[], options={}) ->
+    Shell::help = (commands=[], options={}) ->
       options.indent ?= '  '
       options.columns ?= 28
       # options.columns = [options.columns] unless Array.isArray options.columns

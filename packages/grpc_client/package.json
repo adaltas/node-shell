@@ -1,5 +1,5 @@
 {
-  "name": "@parametersjs/grpc_client",
+  "name": "@shell-js/grpc_client",
   "version": "0.8.1",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
@@ -21,9 +21,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.2.1"
   },
-  "description": "GRPC client plugin for the parameters package.",
+  "description": "GRPC client plugin for the Shell.js package.",
   "devDependencies": {
-    "@parametersjs/grpc_server": "^0.8.1"
+    "@shell-js/grpc_server": "^0.8.1"
   },
   "engines": {
     "node": ">= 0.10.x"
@@ -31,7 +31,7 @@
   "files": [
     "/lib"
   ],
-  "homepage": "https://github.com/adaltas/node-parameters",
+  "homepage": "https://github.com/adaltas/node-shell",
   "keywords": [
     "argument",
     "parameter",
@@ -64,11 +64,11 @@
     "recursive": true
   },
   "peerDependencies": {
-    "parameters": "^0.8.1-alpha.0"
+    "shell": "^0.8.1-alpha.0"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/adaltas/node-parameters.git",
+    "url": "git://github.com/adaltas/node-shell.git",
     "directory": "packages/grpc_client"
   },
   "scripts": {

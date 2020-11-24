@@ -4,19 +4,19 @@
     # Dependencies
     utils = require '../utils'
     {clone, is_object_literal, merge} = require 'mixme'
-    # Parameters & plugins
-    Parameters = require '../Parameters'
+    # Shell & plugins
+    Shell = require '../Shell'
 
 ## Method `parse([arguments])`
 
-Convert an arguments list to a parameters object.
+Convert an arguments list to an object literal.
 
-* `arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional.
+* `arguments`: `[string] | process` The arguments to parse, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional.
 * `options`: `object` Options used to alter the behavior of the `compile` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are returned in extended format, default to the configuration `extended` value which is `false` by default.
-* Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
+  * `extended`: `boolean` The value `true` indicates that the extracted argument are returned in extended format, default to the configuration `extended` value which is `false` by default.
+* Returns: `object | [object]` The extracted arguments, a literal object in default flatten mode or an array in extended mode.
 
-    Parameters::parse = (argv = process, options={}) ->
+    Shell::parse = (argv = process, options={}) ->
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
       index = 0
@@ -30,7 +30,7 @@ Convert an arguments list to a parameters object.
           'parse require arguments or process as first argument,'
           "got #{JSON.stringify process}"
         ]
-      # Extracted parameters
+      # Extracted arguments
       full_params = []
       parse = (config, command) ->
         full_params.push params = {}
@@ -180,15 +180,15 @@ Convert an arguments list to a parameters object.
 
 ## Method `compile(command, [options])`
 
-Convert a parameters object to an arguments array.
+Convert an object literal to an arguments array.
 
 * `params`: `object` The parameter object to be converted into an array of arguments, optional.
 * `options`: `object` Options used to alter the behavior of the `compile` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
+  * `extended`: `boolean` The value `true` indicates that the object literal are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
-    Parameters::compile = (params, options={}) ->
+    Shell::compile = (params, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
@@ -293,7 +293,7 @@ Convert a parameters object to an arguments array.
 
 ## Utils
 
-Given a configuration, apply default values to the parameters
+Given a configuration, apply default values to an object.
 
     set_default = (config, params, tempparams = null) ->
       tempparams = merge params unless tempparams?

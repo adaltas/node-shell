@@ -1,10 +1,10 @@
 
-parameters = require '../src'
+shell = require '../src'
 
 describe 'main.required', ->
 
   it 'optional by default', ->
-    app = parameters
+    app = shell
       commands: 'my_command':
         main:
           name: 'my_argument'
@@ -19,7 +19,7 @@ describe 'main.required', ->
     .should.eql ['my_command']
 
   it 'honors required true if value is provided', ->
-    app = parameters
+    app = shell
       commands: 'my_command':
         main:
           name: 'my_argument'
@@ -36,7 +36,7 @@ describe 'main.required', ->
     .should.eql ['my_command', 'my --value']
 
   it 'honors required true if no value provided', ->
-    app = parameters
+    app = shell
       commands: 'my_command':
         main:
           name: 'my_argument'
@@ -52,7 +52,7 @@ describe 'main.required', ->
   describe 'function', ->
 
     it 'receive config and command', ->
-      app = parameters
+      app = shell
         commands: 'my_command':
           main:
             name: 'my_argument'
@@ -64,7 +64,7 @@ describe 'main.required', ->
       app.parse ['my_command']
 
     it 'return `true`', ->
-      app = parameters
+      app = shell
         commands: 'my_command':
           main:
             name: 'my_argument'

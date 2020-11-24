@@ -1,5 +1,5 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.command', ->
   
@@ -7,7 +7,7 @@ describe 'config.command', ->
     
     it 'only at application level', ->
       (->
-        parameters
+        shell
           commands: 'server':
             command: 'invalid'
             commands: 'start': {}

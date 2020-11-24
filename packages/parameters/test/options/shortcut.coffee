@@ -1,11 +1,11 @@
 
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'options.shortcut', ->
 
   it 'throw error for an undeclared shortcut', ->
     # Test a boolean (no value) argument
-    app = parameters()
+    app = shell()
     (->
       app.parse ['-c']
     ).should.throw 'Invalid Shortcut Argument: the "-c" argument is not a valid option'
@@ -15,7 +15,7 @@ describe 'options.shortcut', ->
 
   it 'throw error for an undeclared shortcut in command', ->
     # Test a boolean (no value) argument
-    app = parameters
+    app = shell
       commands: 'server': commands: 'start': {}
     (->
       app.parse ['server', 'start', '-c']
@@ -26,6 +26,6 @@ describe 'options.shortcut', ->
 
   it 'handle help shortcut', ->
     # Test a boolean (no value) argument
-    parameters()
+    shell()
     .parse ['-h']
     .help.should.be.True()

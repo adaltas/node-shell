@@ -2,11 +2,11 @@
 // ## Plugin "grpc"
 
 // Dependencies
-var Parameters, Transform, get_handlers, grpc, mutate, passthrough, path, proto, utils;
+var Shell, Transform, get_handlers, grpc, mutate, passthrough, path, proto, utils;
 
 path = require('path');
 
-utils = require('parameters/lib/utils');
+utils = require('shell/lib/utils');
 
 ({mutate} = require('mixme'));
 
@@ -16,18 +16,18 @@ try {
   grpc = require('@grpc/grpc-js');
 }
 
-proto = require('@parametersjs/grpc_proto');
+proto = require('@shell-js/grpc_proto');
 
-// Parameters & plugins
-Parameters = require('parameters/lib/Parameters');
+// Shell & plugins
+Shell = require('shell/lib/Shell');
 
-require('parameters/lib/plugins/config');
+require('shell/lib/plugins/config');
 
-require('parameters/lib/plugins/router');
+require('shell/lib/plugins/router');
 
 ({Transform} = require('stream'));
 
-Parameters.prototype.init = (function(parent) {
+Shell.prototype.init = (function(parent) {
   return function() {
     // Plugin configuration
     this.register({
@@ -82,7 +82,7 @@ Parameters.prototype.init = (function(parent) {
     });
     return parent.call(this, ...arguments);
   };
-})(Parameters.prototype.init);
+})(Shell.prototype.init);
 
 passthrough = function() {
   return new Transform({
@@ -130,7 +130,7 @@ get_handlers = function(definition) {
   };
 };
 
-Parameters.prototype.grpc_start = function(callback) {
+Shell.prototype.grpc_start = function(callback) {
   var appconfig, endpoint, handler, handlers, name, packageDefinition, promise, ref, server, shell_definition;
   if ((ref = this._server) != null ? ref.started : void 0) {
     throw utils.error('GRPC Server Already Started');
@@ -162,7 +162,7 @@ Parameters.prototype.grpc_start = function(callback) {
   return promise;
 };
 
-Parameters.prototype.grpc_stop = function() {
+Shell.prototype.grpc_stop = function() {
   // server = @_server
   return new Promise((resolve, reject) => {
     if (!this.grpc_started()) {
@@ -181,7 +181,7 @@ Parameters.prototype.grpc_stop = function() {
   });
 };
 
-Parameters.prototype.grpc_started = function() {
+Shell.prototype.grpc_started = function() {
   var ref;
   return !!((ref = this._server) != null ? ref.started : void 0);
 };

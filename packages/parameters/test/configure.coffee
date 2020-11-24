@@ -1,6 +1,6 @@
 
 path = require 'path'
-parameters = require '../src'
+shell = require '../src'
 
 describe 'configure', ->
 
@@ -8,20 +8,20 @@ describe 'configure', ->
     
     it 'is immutable', ->
       config = {}
-      parameters config
+      shell config
       config.should.eql {}
 
     it 'empty without command does not throw errors', ->
-      parameters({}).confx().get()
+      shell({}).confx().get()
           
     it 'set default command name as "command" if commands available', ->
-      parameters
+      shell
         commands:
           'my_cmd': {}
       .confx().get().command.should.eql 'command'
           
     it 'nested empty commands', ->
-      parameters
+      shell
         commands: 'parent_cmd':
           commands: 'child_cmd': {}
       .confx().get().commands

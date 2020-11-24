@@ -1,11 +1,11 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'router.api', ->
     
   it "throw error", ->
     (->
-      parameters().route 'oh no'
+      shell().route 'oh no'
     ).should.throw [
       'Invalid Router Arguments:'
       'first argument must be a context object or the argv array,'
@@ -13,7 +13,7 @@ describe 'router.api', ->
     ].join ' '
       
   it "accept an object", ->
-    parameters
+    shell
       handler: ({user_param, params}) ->
         return "got: #{user_param} and #{params.opt}"
     .route

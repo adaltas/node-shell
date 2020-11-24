@@ -1,6 +1,6 @@
 
 { Writable } = require 'stream'
-parameters = require '../../src'
+shell = require '../../src'
 
 writer = (callback) ->
   chunks = []
@@ -16,7 +16,7 @@ describe 'router.error', ->
   describe 'option', ->
 
     it 'application help', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /myapp - No description yet/
@@ -25,7 +25,7 @@ describe 'router.error', ->
       .route ['--help']
 
     it 'command help', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
@@ -40,7 +40,7 @@ describe 'router.error', ->
   describe 'help command', ->
 
     it 'application help', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /^\s+Missing Application Handler: a "handler" definition is required when no child command is defined/
@@ -50,7 +50,7 @@ describe 'router.error', ->
       .route []
 
     it 'command help', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /myapp server - No description yet for the server command/
@@ -65,7 +65,7 @@ describe 'router.error', ->
   describe 'command', ->
     
     it 'command without route and with orphan print help', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.not.match /^\s+Missing Command Handler: a "handler" definition \["server","start"\] is required when no child command is defined/
@@ -81,7 +81,7 @@ describe 'router.error', ->
       .route ['server', 'start']
     
     it 'print error message if leaf', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /^\s+Missing Command Handler: a "handler" definition \["server","start"\] is required when no child command is defined/
@@ -97,7 +97,7 @@ describe 'router.error', ->
   describe 'error', ->
     
     it 'Unhandled leftover', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/
@@ -107,7 +107,7 @@ describe 'router.error', ->
       .route ['invalid', 'leftover']
         
     it 'Undeclared options in stric mode', (next) ->
-      parameters
+      shell
         router:
           stderr: writer (output) ->
             output.should.match /^\s+Invalid Argument: the argument --opt is not a valid option/
@@ -118,7 +118,7 @@ describe 'router.error', ->
       .route ['--opt', 'val']
         
     it 'Undeclared options inside a command in stric mode', (next) ->
-      parameters
+      shell
         commands:
           'server': {}
         router:

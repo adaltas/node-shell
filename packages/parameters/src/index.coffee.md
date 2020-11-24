@@ -1,13 +1,13 @@
 
-# Parameters
+# Shell.js
 
-Usage: `parameters(config)`
+Usage: `shell(config)`
 
-    Parameters = require './Parameters'
+    Shell = require './Shell'
     require './plugins/router'
     require './plugins/config'
     require './plugins/args'
     require './plugins/help'
 
     module.exports = (config) ->
-      new Parameters config
+      new Shell config

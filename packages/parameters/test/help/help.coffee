@@ -1,12 +1,12 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help', ->
 
   describe 'without command', ->
     
     it 'minimalist, no name, no description, no options, no main', ->
-      parameters {}
+      shell {}
       .help().should.eql """
       
       NAME
@@ -25,7 +25,7 @@ describe 'help/help', ->
 
     
     it 'print without a name and a description', ->
-      parameters()
+      shell()
       .help().should.eql """
 
       NAME
@@ -43,7 +43,7 @@ describe 'help/help', ->
       """
 
     it 'print multiple options', ->
-      parameters
+      shell
         name: 'myscript'
         description: 'Some description for myscript'
         main:
@@ -82,7 +82,7 @@ describe 'help/help', ->
       """
 
     it 'bypass required', ->
-      app = parameters
+      app = shell
         name: 'myscript'
         description: 'Some description for myscript.'
         options: 'myarg':
@@ -112,14 +112,14 @@ describe 'help/help', ->
 
     it 'error if command isnt defined', ->
       ( ->
-        parameters
+        shell
           name: 'myscript'
           commands: {}
         .help('invalid')
       ).should.throw 'Invalid Command: argument "invalid" is not a valid command'
         
     it 'minimalist, no name, no description, no options, no main', ->
-      parameters
+      shell
         commands:
           'start': {}
       .help()
@@ -145,7 +145,7 @@ describe 'help/help', ->
       """
 
     it 'print all commands with multiple options', ->
-      parameters
+      shell
         name: 'myscript'
         description: 'Some description for myscript'
         commands:
@@ -198,7 +198,7 @@ describe 'help/help', ->
       # app.help().should.eql app.help 'help'
 
     it 'describe a specific command', ->
-      app = parameters
+      app = shell
         name: 'myscript'
         description: 'Some description for myscript'
         commands: 'start':
@@ -236,7 +236,7 @@ describe 'help/help', ->
 
     it 'error if command isnt defined', ->
       ( ->
-        parameters
+        shell
           name: 'myscript'
           commands: 'mycommand': {}
         .help(['mycommand', 'invalid'])
@@ -246,13 +246,13 @@ describe 'help/help', ->
 
     it 'display help of the app', ->
       # With an options
-      parameters()
+      shell()
       .help()
       .should.match /myapp - No description yet/
 
     it 'display help of a command with --help option', ->
       # With an options
-      parameters
+      shell
         commands: 'start': {}
       .help ['start']
       .should.match /myapp start - No description yet/

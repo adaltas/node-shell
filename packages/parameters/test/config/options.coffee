@@ -1,5 +1,5 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.options', ->
   
@@ -7,7 +7,7 @@ describe 'config.options', ->
     
     it 'enforce types at application level', ->
       (->
-        parameters
+        shell
           options:
             key: type: 'invalid'
       ).should.throw [
@@ -18,7 +18,7 @@ describe 'config.options', ->
     
     it 'enforce types at command level', ->
       (->
-        parameters
+        shell
           commands: 'server': commands: 'start': options:
             key: type: 'invalid'
       ).should.throw [
@@ -29,7 +29,7 @@ describe 'config.options', ->
     
     it 'enforce enum', ->
       (->
-        parameters
+        shell
           options:
             key: enum: true
       ).should.throw 'Invalid Option Configuration: option property "enum" must be a string or an array, got true'
@@ -37,7 +37,7 @@ describe 'config.options', ->
   describe 'collision', ->
     
     it 'dont detect collision in extended mode', ->
-      parameters
+      shell
         extended: true
         options:
           collide: {}
@@ -46,7 +46,7 @@ describe 'config.options', ->
             options: collide: {}
     
     it 'dont detect collision on a same command level', ->
-      parameters
+      shell
         # options: collide: {}
         commands:
           server:
@@ -58,7 +58,7 @@ describe 'config.options', ->
 
     it 'detect collision between application and command options', ->
       (->
-        parameters
+        shell
           options:
             collide: {}
           commands:
@@ -67,7 +67,7 @@ describe 'config.options', ->
       ).should.throw 'Invalid Option Configuration: option "collide" in command "start" collide with the one in application, change its name or use the extended property'
     
     it 'detect collision between 2 command options', ->
-      parameters
+      shell
         extended: true
         commands:
           server:
@@ -78,7 +78,7 @@ describe 'config.options', ->
                 options: v: {}
       # Not OK in flatten mode
       (->
-        parameters
+        shell
           commands:
             server:
               options:

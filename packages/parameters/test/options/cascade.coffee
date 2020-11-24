@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'options.cascade', ->
     
   it 'from root with unlimited level', ->
-    app = parameters
+    app = shell
       options:
         'opt': cascade: true
       commands: 'server': commands: 'start': {}
@@ -16,7 +16,7 @@ describe 'options.cascade', ->
       transient: true
           
   it 'from root with unlimited level', ->
-    app = parameters
+    app = shell
       options:
         'opt': cascade: true
       commands: 'server': commands: 'start': {}
@@ -25,7 +25,7 @@ describe 'options.cascade', ->
     .should.eql true
   
   it 'from command with unlimited level', ->
-    app = parameters
+    app = shell
       commands: 'server':
         options:
           'opt': cascade: true
@@ -38,7 +38,7 @@ describe 'options.cascade', ->
       transient: true
           
   it 'from root with limited level', ->
-    app = parameters
+    app = shell
       options:
         'opt': cascade: 2
       commands: 'server': commands: 'start': commands: 'sth': {}
@@ -50,7 +50,7 @@ describe 'options.cascade', ->
     .should.eql ['help']
         
   it 'from command with limited level', ->
-    app = parameters
+    app = shell
       commands: 'server':
         options:
           'opt': cascade: 2

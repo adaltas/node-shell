@@ -1,12 +1,12 @@
 
-parameters = require '../../src'
+shell = require '../../src'
   
 describe 'options.type', ->
 
   describe 'string', ->
 
     it 'is default type', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'watch':
             shortcut: 'w'
@@ -21,7 +21,7 @@ describe 'options.type', ->
   describe 'boolean', ->
 
     it 'handle boolean option', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'strict':
             shortcut: 's'
@@ -35,7 +35,7 @@ describe 'options.type', ->
       .should.eql ['start', '--strict']
 
     it 'bypass a boolean option set to null', ->
-      app = parameters
+      app = shell
         options: 'detached':
           shortcut: 'd'
           type: 'boolean'
@@ -46,7 +46,7 @@ describe 'options.type', ->
   describe 'integer', ->
 
     it 'handle shortcut', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'integer':
             shortcut: 'i'
@@ -60,7 +60,7 @@ describe 'options.type', ->
       .should.eql ['start', '--integer', '5']
 
     it 'validate', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options:
             'an_int':
@@ -72,7 +72,7 @@ describe 'options.type', ->
   describe 'array', ->
 
     it 'handle shortcut', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'array':
             shortcut: 'a'
@@ -87,7 +87,7 @@ describe 'options.type', ->
       .should.eql ['start', '--array', '3,2,1']
 
     it 'handle multiple properties', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'array':
             shortcut: 'a'
@@ -101,7 +101,7 @@ describe 'options.type', ->
       .should.eql ['start', '--array', '3,2,1']
 
     it 'handle empty values', ->
-      app = parameters
+      app = shell
         commands: 'start':
           options: 'my_array':
             type: 'array'

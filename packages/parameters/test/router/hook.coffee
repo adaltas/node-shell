@@ -1,6 +1,6 @@
 
 { Writable } = require 'stream'
-parameters = require '../../src'
+shell = require '../../src'
 
 writer = (callback) ->
   chunks = []
@@ -14,7 +14,7 @@ writer = (callback) ->
 describe 'router.hook', ->
     
   it 'router_call validate context', ->
-    parameters
+    shell
       handler: (->)
     .register
       router_call: (context, handler) ->
@@ -24,8 +24,8 @@ describe 'router.hook', ->
         handler
     .route []
         
-  it 'router_call modify parameters', (next) ->
-    parameters
+  it 'router_call modify shell', (next) ->
+    shell
       handler: ({stdout}) ->
         stdout.write 'gotit'
         stdout.end()

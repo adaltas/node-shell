@@ -1,6 +1,6 @@
 
     # Dependencies
-    proto = require '@parametersjs/grpc_proto'
+    proto = require '@shell-js/grpc_proto'
     try
       grpc = require 'grpc'
     catch

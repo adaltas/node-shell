@@ -1,12 +1,12 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'options.default', ->
   
   describe 'without commands', ->
     
     it 'set value if not defined', ->
-      app = parameters
+      app = shell
         options: 'my_argument':
           default: 'default value'
       app.parse []
@@ -18,7 +18,7 @@ describe 'options.default', ->
   describe 'with commands', ->
     
     it 'set value if not defined', ->
-      app = parameters
+      app = shell
         commands: 'my_command':
           options: 'my_argument':
             default: 'default value'
@@ -32,7 +32,7 @@ describe 'options.default', ->
       .should.eql ['my_command', '--my_argument', 'default value']
           
     it 'preserve global option', ->
-      app = parameters
+      app = shell
         commands: 'my_command':
           options: 'command_argument':
             default: 'command value'

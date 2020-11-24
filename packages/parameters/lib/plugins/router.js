@@ -2,7 +2,7 @@
 // ## Plugin "router"
 
 // Dependencies
-var Parameters, clone, is_object_literal, merge, path, stream, utils;
+var Shell, clone, is_object_literal, merge, path, stream, utils;
 
 path = require('path');
 
@@ -12,12 +12,12 @@ utils = require('../utils');
 
 ({clone, merge, is_object_literal} = require('mixme'));
 
-// Parameters & plugins
-Parameters = require('../Parameters');
+// Shell.js & plugins
+Shell = require('../Shell');
 
 require('../plugins/config');
 
-Parameters.prototype.init = (function(parent) {
+Shell.prototype.init = (function(parent) {
   return function() {
     this.register({
       configure_set: function({config, command}, handler) {
@@ -60,9 +60,9 @@ Parameters.prototype.init = (function(parent) {
     });
     return parent.call(this, ...arguments);
   };
-})(Parameters.prototype.init);
+})(Shell.prototype.init);
 
-Parameters.prototype.init = (function(parent) {
+Shell.prototype.init = (function(parent) {
   return function() {
     this.register({
       configure_set: function({config, command}, handler) {
@@ -78,17 +78,17 @@ Parameters.prototype.init = (function(parent) {
     });
     return parent.call(this, ...arguments);
   };
-})(Parameters.prototype.init);
+})(Shell.prototype.init);
 
 
 // ## Method `route(context, ...users_arguments)`
 
-// * `cli_arguments`: `[string] | object | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
+// * `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 // * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
 // * Returns: `any` Whatever the route function returns.
 
 // How to use the `route` method to execute code associated with a particular command.
-Parameters.prototype.route = function(context = {}, ...args) {
+Shell.prototype.route = function(context = {}, ...args) {
   var appconfig, command, config, err, handler, i, params, route_call, route_error, route_from_config, route_load;
   // Normalize arguments
   if (Array.isArray(context)) {
@@ -153,7 +153,7 @@ Parameters.prototype.route = function(context = {}, ...args) {
     return route_call(handler, command, params, err, args);
   };
   try {
-    // Read parameters
+    // Read arguments
     params = this.parse(context.argv);
   } catch (error) {
     err = error;

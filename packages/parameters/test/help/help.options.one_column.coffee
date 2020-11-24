@@ -1,10 +1,10 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'help/help.options.one_column', ->
 
   it 'is `true`', ->
-    parameters
+    shell
       main: 'a_main'
       options:
         'debug':

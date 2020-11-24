@@ -1,11 +1,11 @@
 
-# Parameters
+# Shell.js Core object
 
     registry = []
     register = (hook) ->
       registry.push hook
 
-    Parameters = (config) ->
+    Shell = (config) ->
       @registry = []
       @config = {}
       @init()
@@ -15,9 +15,9 @@
       @confx().set @config
       @
     
-    Parameters::init = (->)
+    Shell::init = (->)
   
-    Parameters::register = (hook) ->
+    Shell::register = (hook) ->
       throw utils.error [
         'Invalid Hook Registration:'
         'hooks must consist of keys representing the hook names'
@@ -27,7 +27,7 @@
       @registry.push hook
       @
   
-    Parameters::hook = ->
+    Shell::hook = ->
       switch arguments.length
         when 3 then [name, args, handler] = arguments
         when 4 then [name, args, hooks, handler] = arguments
@@ -54,7 +54,7 @@
 Load and return a module, use `require.main.require` by default but can be
 overwritten by the `load` options passed in the configuration.
 
-    Parameters::load = (module) ->
+    Shell::load = (module) ->
       throw utils.error [
         'Invalid Load Argument:'
         'load is expecting string,'
@@ -70,7 +70,7 @@ overwritten by the `load` options passed in the configuration.
 
 ## Export
         
-    module.exports = Parameters
+    module.exports = Shell
 
 ## Dependencies
 

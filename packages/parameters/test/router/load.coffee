@@ -1,14 +1,14 @@
 
 fs = require('fs').promises
 os = require 'os'
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'router.load', ->
 
   it 'application route', ->
     mod = "#{os.tmpdir()}/node_params"
     await fs.writeFile "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
-    parameters
+    shell
       handler: mod
       options: 'my_argument': {}
     .route ['--my_argument', 'my value']
@@ -18,7 +18,7 @@ describe 'router.load', ->
   it 'command route', ->
     mod = "#{os.tmpdir()}/node_params"
     await fs.writeFile "#{mod}.coffee", 'module.exports = ({params}) -> params.my_argument'
-    parameters
+    shell
       commands:
         'my_command':
           handler: mod

@@ -1,19 +1,19 @@
 
-parameters = require '../../src'
+shell = require '../../src'
 
 describe 'config.options.api', ->
   
   describe 'list', ->
 
     it 'for application', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().options.list()
       .should.eql ['config', 'help']
 
     it 'for a command', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'app': commands: 'server': options:
           'host': {}
@@ -24,14 +24,14 @@ describe 'config.options.api', ->
   describe 'get', ->
     
     it 'an option (2 styles)', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().options('config').get()
       .name.should.eql 'config'
     
     it 'selected properties from option', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().options('config')
@@ -45,7 +45,7 @@ describe 'config.options.api', ->
   describe 'set', ->
 
     it 'an option in a command', ->
-      parameters
+      shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
       .confx().options('config')
@@ -56,7 +56,7 @@ describe 'config.options.api', ->
   describe 'get_cascaded', ->
     
     it 'return the cascaded options', ->
-      parameters
+      shell
         options: 'opt_app': cascade: true
         commands: 'server':
           options: 'opt_cmd': cascade: true
