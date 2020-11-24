@@ -5,11 +5,6 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "dependencies": {
-    "@parametersjs/grpc_client": "file:packages/grpc_client",
-    "@parametersjs/grpc_server": "file:packages/grpc_server",
-    "parameters": "file:packages/parameters"
-  },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
