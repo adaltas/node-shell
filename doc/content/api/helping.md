@@ -1,5 +1,6 @@
 ---
 title: API method `helping`
+navtitle: helping
 description: How to use the `helping` method to determine if help was requested.
 keywords: ['parameters', 'node.js', 'cli', 'api', 'helping', 'help', 'print']
 maturity: review

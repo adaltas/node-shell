@@ -9,7 +9,7 @@ maturity: review
 
 ## Description
 
-Commands define the arguments passed to a shell scripts.
+Commands define the arguments passed to a Parameters scripts.
 
 ## Properties
 

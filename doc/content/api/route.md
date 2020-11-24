@@ -1,5 +1,6 @@
 ---
 title: API method `route`
+navtitle: route
 description: How to use the `route` method to execute code associated with a particular command.
 keywords: ["parameters", "node.js", "cli", "api", "router", "command", "route"]
 maturity: initial
@@ -22,7 +23,7 @@ The first argument of the handler function is a context object with the followin
 * `argv`   
   The CLI arguments, either passed to the `route` method or obtained from `process.argv`.
 * `params`   
-  The parameters object derived from `argv`, will change form between flatten and extended mode.
+  The object derived from `argv`, will change form between flatten and extended mode.
 * `config`   
   The configuration object used to initialise the parameters instance.
 

@@ -334,7 +334,7 @@ To view 10 recent records of a log file we will use the command like this:
 node log view --recent
 ```
 
-### Getting help
+## Getting help
 
 Parameters convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands. To integrate printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as a string:
 

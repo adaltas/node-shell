@@ -1,5 +1,6 @@
 ---
 title: API method `parse`
+navtitle: parse
 description: How to use the `parse` method to convert an arguments list to a parameters object.
 keywords: ["parameters", "node.js", "cli", "api", "parse", "arguments", "argv", "array"]
 maturity: review

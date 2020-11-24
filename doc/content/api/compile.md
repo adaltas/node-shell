@@ -1,5 +1,6 @@
 ---
 title: API method `compile`
+navtitle: compile
 description: How to use the `compile` method to convert a parameters object to an arguments array.
 keywords: ["parameters", "node.js", "cli", "api", "compile", "arguments", "argv", "array"]
 maturity: review

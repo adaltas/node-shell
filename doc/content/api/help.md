@@ -1,5 +1,6 @@
 ---
 title: API method `help`
+navtitle: help
 description: How to use the `help` method to print help to the user console.
 keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'print']
 maturity: review
