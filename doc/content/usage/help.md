@@ -1,7 +1,7 @@
 ---
 title: Displaying the help
 description: How to use the help.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'help', 'print']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'help', 'print']
 maturity: review
 sort: 2
 ---
@@ -28,7 +28,7 @@ For example, an application `myapp` which has a command `secrets` with a command
 
 In the end, using the `help` option of the "secrets set" command or using `help` command with "secret set" as arguments are equivalent and work by default:
 
-```
+```bash
 # Option
 ./myapp secrets set --help
 # Command
@@ -39,12 +39,13 @@ In the end, using the `help` option of the "secrets set" command or using `help`
 
 ### Using `helping`
 
-For the developer, printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as string.
+For the developer, printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed data and check if printing help is requested. The `help` method return the usage information as string.
 
 Here's how to display help with `helping` and `help`:
 
 ```js
-const app = require('parameters')(my_config);
+const shell = require('shell')
+const app = shell(my_config)
 const params = app.parse()
 if(let commands = app.helping(params)){
   return process.stdout.write(app.help(commands));
@@ -60,7 +61,8 @@ Here's how to display help with routing:
 
 ```js
 // Routing to help required `help.route` to be set
-require('parameters')({
+const shell = require('shell')
+shell({
   handler: './some/module'
 }).route(/*...optional user arguments...*/)
 ```
@@ -78,7 +80,8 @@ TODO: describe how help could be printed for every non leaf command if requested
 It is possible to overwrite the default help options and commands such as to provide a personalised message:
 
 ```js
-require('parameters')({
+const shell = require('shell')
+shell = ({
 { options:
   { help: 
     { description: 'Overwrite description' } } }

@@ -1,7 +1,7 @@
 ---
 title: Options configuration
 description: How to define options
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'options']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'options']
 maturity: review
 ---
 
@@ -47,7 +47,7 @@ When `required` is a function, the first argument is an object with the followin
 When option is defined as an object, the keys are mapped to the option name. For example, an option `message` with a shortcut `m` is defined as:
 
 ```js
-require("parameters")({
+require("shell")({
   options: {
     "message": {
       shortcut: "m"
@@ -57,7 +57,7 @@ require("parameters")({
 Options may apply to the [application](./) like in the above or to the [command](./commands/) like below:
 
 ```js
-require("parameters")({
+require("shell")({
   commands: {
     print: {
       options: {

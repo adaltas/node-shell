@@ -1,25 +1,29 @@
 ---
 title: API method `parse`
 navtitle: parse
-description: How to use the `parse` method to convert an arguments list to a parameters object.
-keywords: ["parameters", "node.js", "cli", "api", "parse", "arguments", "argv", "array"]
+description: How to use the `parse` method to convert an arguments list to data.
+keywords: ["shell", "node.js", "cli", "api", "parse", "arguments", "argv", "array"]
 maturity: review
 ---
 
 # Method `parse([arguments])`
 
-Convert an arguments list to a parameters object.
+Convert an arguments list to data.
 
-* `arguments`: `[string] | process` The arguments to parse into parameters, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional, default to `process`.
-* `options`: `object` Options used to alter the behavior of the `compile` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are returned in extended format, default to the configuration `extended` value which is `false` by default.
-* Returns: `object | [object]` The extracted parameters, a literal object in default flatten mode or an array in extended mode.
+* `arguments` (process | string, optional, `process`)   
+  The input arguments to parse, accept the [Node.js process](https://nodejs.org/api/process.html) instance or an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array or a string, optional, default to `process`.
+* `options` (object)   
+  Options used to alter the behavior of the `compile` method.
+  * `extended` (boolean, optional, `false`)   
+  The value `true` indicates that the data is returned in extended format, default to the configuration `extended` value which is `false` by default.
+* Returns: (object | [object])   
+  The extracted data, an object literal in flatten mode or an array of object literals in extended mode.
 
 ## Description
 
 The method convert an array containing the command line arguments into a literal object in flatten mode or an array in extended mode.
 
-Only pass the parameters without the script name when providing an argument list in the form of an array or a string. It obtains the arguments from `process.argv` when `arguments` is not provided or is the [Node.js process](https://nodejs.org/api/process.html).
+Only pass the data without the script name when providing an argument list in the form of an array or a string. It obtains the arguments from `process.argv` when `arguments` is not provided or is the [Node.js process](https://nodejs.org/api/process.html).
 
 ## Examples
 
@@ -27,8 +31,8 @@ Considering a "server" application containing a "start" command and initialised 
 
 ```js
 require("should")
-const parameters = require("parameters")
-const app = parameters(
+const shell = require("shell")
+const app = shell(
 { name: "server",
   description: "Manage a web server",
   options:
@@ -57,7 +61,7 @@ app.parse([
 })
 ```
 
-In extended mode, the parameters output will be an array instead of an object:
+In extended mode, the output will be an array instead of an object:
 
 ```js
 app.parse([
@@ -84,7 +88,7 @@ app.parse(
 });
 ```
 
-In extended mode, the parameters output will be an array with 2 elements instead of an object:
+In extended mode, the output will be an array with 2 elements instead of an object:
 
 ```javascript
 app.parse([

@@ -1,7 +1,7 @@
 ---
 path: /license
 title: License
-description: MIT License of the Node.js Parameters package
+description: MIT License of the Shell.js package
 keywords: ['package', 'node.js', 'license', 'changelog', 'history', 'feature', 'changes', 'version']
 sort: 300
 ---

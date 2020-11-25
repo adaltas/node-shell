@@ -1,8 +1,8 @@
 ---
 path: /changelog
 title: Changelog
-description: Complete changelog of the Node.js Parameters package
-keywords: ['parameters', 'node.js', 'changelog', 'history', 'feature', 'changes', 'version']
+description: Complete changelog of the Shell.js package
+keywords: ['shell', 'node.js', 'changelog', 'history', 'feature', 'changes', 'version']
 sort: 200
 ---
 

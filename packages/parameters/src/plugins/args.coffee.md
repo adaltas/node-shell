@@ -180,15 +180,15 @@ Convert an arguments list to an object literal.
 
 ## Method `compile(command, [options])`
 
-Convert an object literal to an arguments array.
+Convert an object to an arguments array.
 
-* `params`: `object` The parameter object to be converted into an array of arguments, optional.
+* `data`: `object` The parameter object to be converted into an array of arguments, optional.
 * `options`: `object` Options used to alter the behavior of the `compile` method.
   * `extended`: `boolean` The value `true` indicates that the object literal are provided in extended format, default to the configuration `extended` value which is `false` by default.
   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 * Returns: `array` The command line arguments.
 
-    Shell::compile = (params, options={}) ->
+    Shell::compile = (data, options={}) ->
       argv = if options.script then [process.execPath, options.script] else []
       appconfig = @confx().get()
       options.extended ?= appconfig.extended
@@ -198,17 +198,17 @@ Convert an object literal to an arguments array.
         "got #{JSON.stringify options}"
       ] unless is_object_literal options
       keys = {}
-      # In extended mode, the params array will be truncated
-      # params = merge params unless extended
-      set_default appconfig, params
+      # In extended mode, the data array will be truncated
+      # data = merge data unless extended
+      set_default appconfig, data
       # Convert command parameter to a 1 element array if provided as a string
-      params[appconfig.command] = [params[appconfig.command]] if typeof params[appconfig.command] is 'string'
+      data[appconfig.command] = [data[appconfig.command]] if typeof data[appconfig.command] is 'string'
       # Compile
-      compile = (config, lparams) ->
+      compile = (config, ldata) ->
         for _, option of config.options
           key = option.name
           keys[key] = true
-          value = lparams[key]
+          value = ldata[key]
           # Handle required
           required = if typeof option.required is 'function'
             !!option.required.call null,
@@ -240,7 +240,7 @@ Convert an object literal to an arguments array.
               argv.push "--#{key}"
               argv.push "#{value.join ','}"
         if config.main
-          value = lparams[config.main.name]
+          value = ldata[config.main.name]
           # Handle required
           required = if typeof config.main.required is 'function'
             !!config.main.required.call null,
@@ -259,9 +259,9 @@ Convert an object literal to an arguments array.
             keys[config.main.name] = value
             argv = argv.concat value
         # Recursive
-        has_child_commands = if options.extended then params.length else Object.keys(config.commands).length
+        has_child_commands = if options.extended then data.length else Object.keys(config.commands).length
         if has_child_commands
-          command = if options.extended then params[0][appconfig.command] else params[appconfig.command].shift()
+          command = if options.extended then data[0][appconfig.command] else data[appconfig.command].shift()
           throw utils.error [
             'Invalid Command Parameter:'
             "command #{JSON.stringify command} is not registed,"
@@ -271,11 +271,11 @@ Convert an object literal to an arguments array.
           argv.push command
           keys[appconfig.command] = command
           # Compile child configuration
-          compile config.commands[command], if options.extended then params.shift() else lparams
+          compile config.commands[command], if options.extended then data.shift() else ldata
         if options.extended or not has_child_commands
-          # Handle params not defined in the configuration
+          # Handle data not defined in the configuration
           # Note, they are always pushed to the end and associated with the deepest child
-          for key, value of lparams
+          for key, value of ldata
             continue if keys[key]
             throw utils.error [
               'Invalid Parameter:'
@@ -288,22 +288,22 @@ Convert an object literal to an arguments array.
             else
               argv.push "--#{key}"
               argv.push "#{value}"
-      compile appconfig, if options.extended then params.shift() else params
+      compile appconfig, if options.extended then data.shift() else data
       argv
 
 ## Utils
 
 Given a configuration, apply default values to an object.
 
-    set_default = (config, params, tempparams = null) ->
-      tempparams = merge params unless tempparams?
+    set_default = (config, data, tempdata = null) ->
+      tempdata = merge data unless tempdata?
       if Object.keys(config.commands).length
-        command = tempparams[config.command]
-        command = tempparams[config.command].shift() if Array.isArray command
+        command = tempdata[config.command]
+        command = tempdata[config.command].shift() if Array.isArray command
         # We are not validating if the command is valid, it may not be set if help option is present
         # throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
         if config.commands[command]
-          params = set_default config.commands[command], params, tempparams
+          data = set_default config.commands[command], data, tempdata
       for _, option of config.options
-        params[option.name] ?= option.default if option.default?
-      params
+        data[option.name] ?= option.default if option.default?
+      data

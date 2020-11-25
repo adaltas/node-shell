@@ -1,7 +1,7 @@
 ---
 title: Extended mode usage
 description: How to use the extended mode.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'extended', 'mode']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'extended', 'mode']
 maturity: review
 sort: 3
 ---
@@ -17,7 +17,8 @@ For the sake of simplicity, the module operates by default in flatten mode. When
 For example, consider an application which register a "config" property for the overall application as well as a `start` command in flatten mode:
 
 ```js
-require("parameters")({
+const shell = require("shell")
+shell({
   options: {
     "config": {}
   },
@@ -27,7 +28,7 @@ require("parameters")({
 })
 ```
 
-The overall application can be started with the command `./myapp --config ./config.yml start` and its parameters in flatten mode will parsed like:
+The overall application can be started with the command `./myapp --config ./config.yml start` and the data in flatten mode will parsed like:
 
 ```json
 { "command": ["start"],
@@ -37,7 +38,8 @@ The overall application can be started with the command `./myapp --config ./conf
 However, let's imaging that we need to add a new option to provide a configuration specific to the start command. 
 
 ```js
-require("parameters")({
+const shell = require("shell")
+shell({
   options: {
     "config": {},
   },
@@ -62,7 +64,8 @@ Error: Invalid Option Configuration: option "config" in command "start" collide 
 The above example will correctly work in extended mode:
 
 ```js
-require("parameters")({
+const shell = require("shell")
+shell({
   options: {
     "config": {},
   },
@@ -77,7 +80,7 @@ require("parameters")({
 })
 ```
 
-It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml` and its parameters in extended mode will be parsed like:
+It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml` and its data in extended mode will be parsed like:
 
 ```json
 [ { "config": "./config.yml" },

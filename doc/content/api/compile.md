@@ -1,24 +1,29 @@
 ---
 title: API method `compile`
 navtitle: compile
-description: How to use the `compile` method to convert a parameters object to an arguments array.
-keywords: ["parameters", "node.js", "cli", "api", "compile", "arguments", "argv", "array"]
+description: How to use the `compile` method to convert an object to an arguments array.
+keywords: ["shell", "node.js", "cli", "api", "compile", "arguments", "argv", "array"]
 maturity: review
 ---
 
 # Method `compile(command, [options])`
 
-Convert a parameters object to an arguments array.
+Convert data to an arguments array.
 
-* `params`: `object` The parameter object to be converted into an array of arguments, optional.
-* `options`: `object` Options used to alter the behavior of the `compile` method.
-  * `extended`: `boolean` The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
-  * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
-* Returns: `array` The command line arguments.
+* `data` (object, optional)   
+  The data to be converted into an array of arguments.
+* `options` (object)   
+  Options used to alter the behavior of the `compile` method.
+  * `extended` (boolean, optional, `false`)   
+  The value `true` indicates that the parameters are provided in extended format, default to the configuration `extended` value which is `false` by default.
+  * `script` (string, optional, `false`)   
+  The JavaScript file being executed by the Node.js engine. When provided, the Node.js engine and the script names will prepend the returned arguments.
+* Returns: (array)   
+  The command line arguments.
 
 ## Description
 
-To compile parameters is the reverse process of processing an array of arguments. In that sense, this module is bi-directional, it can both convert arguments to objects and back from objects to arguments.
+To compile an object is the reverse process of processing an array of arguments with the `parse` function. In that sense, Shell.js is bi-directional, it can both convert arguments to objects and back from objects to arguments.
 
 It supports both the default flatten mode and the extended mode. The `extended` property can be defined in the configuration or as an option of `compile`. In flatten mode, the `command` argument is an object while in `extended` mode it is an array of object.
 
@@ -28,8 +33,8 @@ Considering a "server" application containing a "start" command and initialised 
 
 ```js
 require("should")
-const parameters = require("parameters")
-const app = parameters(
+const shell = require("shell")
+const app = shell(
 { name: "server",
   description: "Manage a web server",
   options:
@@ -56,7 +61,7 @@ app.compile({
 .should.eql( [ "--config", "app.yaml" ] )
 ```
 
-In extended mode, the parameters input will be an array instead of an object:
+In extended mode, the data input will be an array instead of an object:
 
 ```js
 app.compile([{
@@ -80,7 +85,7 @@ app.compile({
 );
 ```
 
-In extended mode, the parameters input will be an array with 2 elements instead of an object:
+In extended mode, the data input will be an array with 2 elements instead of an object:
 
 ```js
 app.compile([{

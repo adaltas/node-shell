@@ -217,14 +217,14 @@ Shell.prototype.parse = function(argv = process, options = {}) {
 
 // ## Method `compile(command, [options])`
 
-// Convert an object literal to an arguments array.
+// Convert an object to an arguments array.
 
-// * `params`: `object` The parameter object to be converted into an array of arguments, optional.
+// * `data`: `object` The parameter object to be converted into an array of arguments, optional.
 // * `options`: `object` Options used to alter the behavior of the `compile` method.
 //   * `extended`: `boolean` The value `true` indicates that the object literal are provided in extended format, default to the configuration `extended` value which is `false` by default.
 //   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
 // * Returns: `array` The command line arguments.
-Shell.prototype.compile = function(params, options = {}) {
+Shell.prototype.compile = function(data, options = {}) {
   var appconfig, argv, compile, keys;
   argv = options.script ? [process.execPath, options.script] : [];
   appconfig = this.confx().get();
@@ -235,22 +235,22 @@ Shell.prototype.compile = function(params, options = {}) {
     throw utils.error(['Invalid Compile Arguments:', '2nd argument option must be an object,', `got ${JSON.stringify(options)}`]);
   }
   keys = {};
-  // In extended mode, the params array will be truncated
-  // params = merge params unless extended
-  set_default(appconfig, params);
-  if (typeof params[appconfig.command] === 'string') {
+  // In extended mode, the data array will be truncated
+  // data = merge data unless extended
+  set_default(appconfig, data);
+  if (typeof data[appconfig.command] === 'string') {
     // Convert command parameter to a 1 element array if provided as a string
-    params[appconfig.command] = [params[appconfig.command]];
+    data[appconfig.command] = [data[appconfig.command]];
   }
   // Compile
-  compile = function(config, lparams) {
+  compile = function(config, ldata) {
     var _, command, has_child_commands, i, key, len, option, ref, required, results, val, value;
     ref = config.options;
     for (_ in ref) {
       option = ref[_];
       key = option.name;
       keys[key] = true;
-      value = lparams[key];
+      value = ldata[key];
       // Handle required
       required = typeof option.required === 'function' ? !!option.required.call(null, {
         config: config,
@@ -289,7 +289,7 @@ Shell.prototype.compile = function(params, options = {}) {
       }
     }
     if (config.main) {
-      value = lparams[config.main.name];
+      value = ldata[config.main.name];
       // Handle required
       required = typeof config.main.required === 'function' ? !!config.main.required.call(null, {
         config: config,
@@ -307,23 +307,23 @@ Shell.prototype.compile = function(params, options = {}) {
       }
     }
     // Recursive
-    has_child_commands = options.extended ? params.length : Object.keys(config.commands).length;
+    has_child_commands = options.extended ? data.length : Object.keys(config.commands).length;
     if (has_child_commands) {
-      command = options.extended ? params[0][appconfig.command] : params[appconfig.command].shift();
+      command = options.extended ? data[0][appconfig.command] : data[appconfig.command].shift();
       if (!config.commands[command]) {
         throw utils.error(['Invalid Command Parameter:', `command ${JSON.stringify(command)} is not registed,`, `expect one of ${JSON.stringify(Object.keys(config.commands).sort())}`, Array.isArray(config.command) ? `in command ${JSON.stringify(config.command.join(' '))}` : void 0]);
       }
       argv.push(command);
       keys[appconfig.command] = command;
       // Compile child configuration
-      compile(config.commands[command], options.extended ? params.shift() : lparams);
+      compile(config.commands[command], options.extended ? data.shift() : ldata);
     }
     if (options.extended || !has_child_commands) {
-// Handle params not defined in the configuration
+// Handle data not defined in the configuration
 // Note, they are always pushed to the end and associated with the deepest child
       results = [];
-      for (key in lparams) {
-        value = lparams[key];
+      for (key in ldata) {
+        value = ldata[key];
         if (keys[key]) {
           continue;
         }
@@ -347,37 +347,37 @@ Shell.prototype.compile = function(params, options = {}) {
       return results;
     }
   };
-  compile(appconfig, options.extended ? params.shift() : params);
+  compile(appconfig, options.extended ? data.shift() : data);
   return argv;
 };
 
 // ## Utils
 
 // Given a configuration, apply default values to an object.
-set_default = function(config, params, tempparams = null) {
+set_default = function(config, data, tempdata = null) {
   var _, command, name, option, ref;
-  if (tempparams == null) {
-    tempparams = merge(params);
+  if (tempdata == null) {
+    tempdata = merge(data);
   }
   if (Object.keys(config.commands).length) {
-    command = tempparams[config.command];
+    command = tempdata[config.command];
     if (Array.isArray(command)) {
-      command = tempparams[config.command].shift();
+      command = tempdata[config.command].shift();
     }
     // We are not validating if the command is valid, it may not be set if help option is present
     // throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
     if (config.commands[command]) {
-      params = set_default(config.commands[command], params, tempparams);
+      data = set_default(config.commands[command], data, tempdata);
     }
   }
   ref = config.options;
   for (_ in ref) {
     option = ref[_];
     if (option.default != null) {
-      if (params[name = option.name] == null) {
-        params[name] = option.default;
+      if (data[name = option.name] == null) {
+        data[name] = option.default;
       }
     }
   }
-  return params;
+  return data;
 };

@@ -1,7 +1,7 @@
 ---
 title: Load usage
 description: How to use load property.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'load']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'load']
 maturity: initial
 ---
 

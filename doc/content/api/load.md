@@ -2,7 +2,7 @@
 title: API method `load`
 navtitle: load
 description: How to use the `load` method to load modules.
-keywords: ['parameters', 'node.js', 'cli', 'api', 'load', module]
+keywords: ['shell', 'node.js', 'cli', 'api', 'load', module]
 maturity: initial
 ---
 

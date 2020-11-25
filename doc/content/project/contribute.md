@@ -1,7 +1,7 @@
 ---
 title: Contribution
 description: How to contribute to the project.
-keywords: ['parameters', 'node.js', 'cli', 'development', 'test', 'contributors', 'contribute']
+keywords: ['shell', 'node.js', 'cli', 'development', 'test', 'contributors', 'contribute']
 maturity: review
 ---
 
@@ -9,7 +9,7 @@ maturity: review
 
 ## Introduction
 
-You are encouraged to contribute to Node.js Parameters. Node.js Parameters is an open source project hosted on [GitHub](https://github.com/adaltas/node-parameters) originally written by [Adaltas](http://www.adaltas.com/en/home/).
+You are encouraged to contribute to Shell.js. The project is open sourced under the MIT license and it is hosted on [GitHub](https://github.com/adaltas/node-shell). It is written and maintained by [Adaltas](https://www.adaltas.com/), a consulting company based in Paris which specialized in Big Data.
 
 Contributions go far beyond pull requests and commits. We are thrilled to receive a variety of other contributions including the following:
 

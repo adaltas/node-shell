@@ -1,16 +1,16 @@
 ---
 title: Tutorial
-description: How to build CLI application using Node.js Parameters.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'tutorial', 'application', 'configuration']
+description: How to build CLI application using Shell.js.
+keywords: ['shell', 'node.js', 'cli', 'usage', 'tutorial', 'application', 'configuration']
 maturity: initial
 sort: 1
 ---
 
-# Node.js Parameters tutorial
+# Tutorial
 
-Welcome to Node.js Parameters! The goal of this tutorial is to guide you through configuring and build your first CLI application using Parameters. Starting from scratch and go on to advanced usage of its APIs. The tutorial contains the following sections:
+Welcome to Shell.js! The goal of this tutorial is to guide you through configuring and building your first CLI application using Shell.js. Starting from scratch and go on to advanced usage of its APIs. The tutorial contains the following sections:
 
-- What is Node.js Parameters?
+- What is the library about?
 - Getting started
 - Parsing arguments
 - Argument topology
@@ -20,9 +20,9 @@ Welcome to Node.js Parameters! The goal of this tutorial is to guide you through
 - Getting help
 - Structuring the code with routing
 
-## What is Node.js Parameters?
+## What is the library about?
 
-Parameters is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical Unix command line arguments. 
+Shell.js is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical Unix command line arguments. 
 
 It offers powerful features such as:
 - Reversibility: read and write arguments is bi-directional
@@ -47,15 +47,15 @@ mkdir myapp && cd myapp
 # Initialise the package with skipping the questionnaire
 npm init --yes
 cat package.json
-# Add the "parameters" dependency
-npm add parameters
-cat package.js | grep parameters
+# Add the dependency
+npm add shell
+cat package.js | grep shell
 # Create a new script
 echo 'console.log("hello")' > app.js
 node app
 ```
 
-The Parameters dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "app.js" file.
+The Shell.js dependency is now downloaded and available inside the "./node_modules" folder. We can start coding our application by editing the "app.js" file.
 
 ## Parsing arguments
 
@@ -63,9 +63,9 @@ Let's consider a simple application by modifying the "app.js" file as follow:
 
 ```js
 // Import the "parameter" package
-const parameters = require('parameters')
+const shell = require('shell')
 // Create a new instance
-const app = parameters({
+const app = shell({
   main: 'hello'
 })
 // Parse CLI arguments
@@ -73,11 +73,11 @@ const args = app.parse()
 console.log(args)
 ```
 
-The "parameters" package export a function which expect to a configuration object describing your commands.
+The "shell" package export a function which expect to a configuration object describing your commands.
 
 Consider the configuration as the schema or the model of your application arguments. The `main` property retrieve all the arguments of an application which are not mapped otherwise in the form of an array. We will cover other types for arguments later such as options and commands.
 
-The `parse` method convert the arguments into a parameter object. You can provide your own arguments or let `parse` discover them automatically if no argument is provided like above. Node.js expose the CLI arguments with `process.argv` as an array. The first 2 arguments are the path to the node binary and the script being executed. Parameters will strip those arguments and only parse what is left.
+The `parse` method convert the arguments into a parameter object. You can provide your own arguments or let `parse` discover them automatically if no argument is provided like above. Node.js expose the CLI arguments with `process.argv` as an array. The first 2 arguments are the path to the node binary and the script being executed. Shell.js will strip those arguments and only parse what is left.
 
 You can now execute `node app world` and it shall print:
 
@@ -99,11 +99,11 @@ This CLI command is made of multiple sections.
 * `options`: both "config" and "start" are options. The "config" option is associated with a value and the "force" option is boolean indicating the presence of the option.
 * `main`: whichever arguments not recognized by the parser is pushed into the "main" property.
 
-For the sake of curiosity, Parameters could be configured and initialized as:
+For the sake of curiosity, Shell.js could be configured and initialized as:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
   	"config": {}
   },
@@ -130,7 +130,7 @@ Let's now deep dive on options and commands.
 
 ## Configuring options
 
-Command-line `options` are commands used to pass parameters to a program. These entries, also called command-line switches, can pass along cues for changing various settings. They follow the command name on the command line or right after the application call. `options` can be passed it two ways when prefixed with:
+Command-line `options` are commands used to pass information to a program. These entries, also called command-line switches, can pass along cues for changing various settings. They follow the command name on the command line or right after the application call. `options` can be passed it two ways when prefixed with:
 
 - `--` followed by their name.
 - `-` followed by their shortcut alternative.
@@ -140,8 +140,8 @@ It is recommended using shortcuts only for the most frequently used `options`, t
 For example, let's expose a `config` option with a shortcut named `c`:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
   	"config": {
       shortcut: 'c'
@@ -166,8 +166,8 @@ In place of `./my/repo` can be any value, but if you don't provide it, the CLI w
 To illustrate the behaviour of each, let's make a basic example, but these can be used together within one `option` as well:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
     'default-opt': {
       default: 42
@@ -203,12 +203,12 @@ We have considered using `options` without defining a `commands`. In such case, 
 
 ## Configuring commands
 
-When you build an application with non-trivial functionaliies that provides more than one operation, you associate operations with commands. The Node.js Parameters allows you to flexibly configure `commands`, like building multiple levels of hierarchy and assigning their own `options` and `main` properties.
+When you build an application with non-trivial functionaliies that provides more than one operation, you associate operations with commands. Shell.js allows you to flexibly configure `commands`, like building multiple levels of hierarchy and assigning their own `options` and `main` properties.
 
-Let's consider the power of the Parameters capability on an example of configuring an application for logging strings into a file. We define our application performs the following operations:
+Let's apply Shell.js capability to an example which create an application to log data into a file. We define our application to perform the following operations:
 
 - `append`
-  Add strings of information into the end of a log file
+  Add data at the end of a log file
 - `view`
   Display the content of the log file
 
@@ -217,8 +217,8 @@ And as well, we must specify in which file the logged information should be stor
 Create the javascript file with the name "log.js" and paste following:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   options: {
     'source': {
       shortcut: 's',
@@ -336,7 +336,7 @@ node log view --recent
 
 ## Getting help
 
-Parameters convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands. To integrate printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the parsed parameters and check if printing help is requested. The `help` method return the usage information as a string:
+Shell.js convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands. To integrate printing help uses a combination of the `helping` and `help` methods. The `helping` method takes the extracted data and check if printing help is requested. The `help` method return the usage information as a string:
 
 ```js
 // Getting help
@@ -353,8 +353,8 @@ Let's add this code into the application and write the description for each of t
 
 ```js
 // Configuring application
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'log',
   description: 'Log information',
   options: {
@@ -477,8 +477,8 @@ Considering the "log" application containing the "append" and the "view" command
 To configure routing you need to define the `route` property for the `commands`. The value of this property should be as a function or the function exported by a module if defined as a string:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   /* ... */
   commands: {
     'append': {
@@ -501,8 +501,8 @@ app.route()
 
 The `route` method receives as first argument a context object with the following properties:
 - `argv` - the CLI arguments, either passed to the `route` method or obtained from `process.argv`
-- `params` - the parameters object derived from `argv`
-- `config` - the configuration object used to initialise the parameters instance
+- `params` - the data extracted from `argv`
+- `config` - the configuration object used to initialise the Shell.js instance
 
 Let's create the files with modules which will export functions "append" and "view".
 The content of the file `./routes/append.js`:
@@ -543,8 +543,8 @@ module.exports = function ({argv, params, config}) {
 Notice, when using routing we don't need to take care about the parsing and calling the help, it is implemented inside the `route` method. The top-level module of the CLI application, which is the "log.js" file, will look like:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'log',
   description: 'Log information',
   options: {

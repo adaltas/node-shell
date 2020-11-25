@@ -1,7 +1,7 @@
 ---
 title: Commands
 description: How to define commands
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'commands']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'commands']
 maturity: review
 ---
 
@@ -9,7 +9,7 @@ maturity: review
 
 ## Description
 
-Commands define the arguments passed to a Parameters scripts.
+Commands define the arguments passed to a Shell.js scripts.
 
 ## Properties
 
@@ -18,7 +18,7 @@ Commands define the arguments passed to a Parameters scripts.
 * `description` (string)   
   The command description.
 * `options` (object|array)   
-  Defined the expected command parameters. Support object and array notation. If
+  Defined the expected command options, sometimes called flags. Support object and array notation. If
   defined as an object, keys correspond to the "name" properties. If defined as 
   an array, the "name" property is required.
 * `main` (object|string)   

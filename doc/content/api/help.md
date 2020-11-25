@@ -2,7 +2,7 @@
 title: API method `help`
 navtitle: help
 description: How to use the `help` method to print help to the user console.
-keywords: ['parameters', 'node.js', 'cli', 'api', 'help', 'print']
+keywords: ['shell', 'node.js', 'cli', 'api', 'help', 'print']
 maturity: review
 ---
 
@@ -32,8 +32,8 @@ Calling `help` will always return a string, it does not detect if help was reque
 Considering a "server" application containing a "start" command and initialized with the following configuration:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'server',
   description: 'Manage a web server',
   commands: {
@@ -69,33 +69,39 @@ process.stdout.write( app.help( 'start' ) );
 Internally, an empty configuration by default register the `help` option by default:
 
 ```js
-require("assert")
-.deepStrictEqual(
-  require("parameters")({}).config.options,
-  { help:
-    { name: 'help',
+const assert = require("assert")
+const shell = require("shell")
+
+assert.deepStrictEqual(
+  shell({}).config.options
+, {
+    help: {
+      name: 'help',
       shortcut: 'h',
       description: 'Display help information',
       type: 'boolean',
-      help: true } }
-)
+      help: true
+} } )
 ```
 
 The same apply to every commands:
 
 ```js
-require("assert")
-.deepStrictEqual(
-  require("parameters")(
-  { commands:
-    { mycmd: {} } }).config.commands.mycmd.options,
-  { help:
-    { name: 'help',
+const assert = require("assert")
+const shell = require("shell")
+
+assert.deepStrictEqual(
+  shell( {
+    commands: { 'my_cmd': {} }
+  }).config.commands.my_cmd.options
+, {
+    help: {
+      name: 'help',
       shortcut: 'h',
       description: 'Display help information',
       type: 'boolean',
-      help: true } }
-)
+      help: true
+} } )
 ```
 
 ### Command `help <commands...>`
@@ -103,18 +109,24 @@ require("assert")
 Internally, an `help` command is registered if at least another command is defined:
 
 ```js
-require("assert")
-.deepStrictEqual(
-  require("..")({commands:[{name: 'secret'}]}).config.commands.help,
-  { name: 'help',
+const assert = require("assert")
+const shell = require("shell")
+
+assert.deepStrictEqual(
+  shell({
+    commands: [ { name: 'secret' } ]
+  }).config.commands.help
+, {
+    name: 'help',
     description: 'Display help information about myapp',
-    main:
-    { name: 'name', description: 'Help about a specific command' },
-      help: true,
-      strict: false,
-      shortcuts: {},
-      command: 'command',
-      options: {},
-      commands: {} }
-)
+    main: {
+      name: 'name', description: 'Help about a specific command' 
+    },
+    help: true,
+    strict: false,
+    shortcuts: {},
+    command: 'command',
+    options: {},
+    commands: {}
+} )
 ```

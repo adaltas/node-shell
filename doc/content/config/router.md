@@ -1,7 +1,7 @@
 ---
 title: Router property configuration
 description: How to use load property.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'load']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'load']
 maturity: initial
 ---
 
@@ -27,8 +27,8 @@ The `router` property is an object which provide low level access to modify the 
 If the `router` property is a string, it is interpreted as the module name exporting the handler function. For example:
 
 ```js
-const parameters = require('parameters')
-parameters({
+const shell = require('shell')
+shell({
   router: './my/module'
 })
 ```
@@ -36,8 +36,8 @@ parameters({
 Is equivalent to:
 
 ```js
-const parameters = require('parameters')
-parameters({
+const shell = require('shell')
+shell({
   router: {
     handler: './my/module'
 }})

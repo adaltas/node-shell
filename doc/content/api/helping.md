@@ -2,7 +2,7 @@
 title: API method `helping`
 navtitle: helping
 description: How to use the `helping` method to determine if help was requested.
-keywords: ['parameters', 'node.js', 'cli', 'api', 'helping', 'help', 'print']
+keywords: ['shell', 'node.js', 'cli', 'api', 'helping', 'help', 'print']
 maturity: review
 ---
 
@@ -19,11 +19,11 @@ This method is commonly used conjointly with the `help` method. It provides an i
 
 ## Example
 
-The workflow is to `parse` the arguments to get the parameters, to create a condition to get the command associated with help and to print the help by passing the returned command:
+The workflow is to `parse` the arguments to get the extracted data, to create a condition to get the command associated with help and to print the help by passing the returned command:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'server',
   description: 'Manage a web server',
   commands: {

@@ -1,7 +1,7 @@
 ---
 title: Routing
 description: Route commands to individual handler functions.
-keywords: ['parameters', 'node.js', 'cli', 'usage', 'routing', 'route', 'handler', 'fucntion']
+keywords: ['shell', 'node.js', 'cli', 'usage', 'routing', 'route', 'handler', 'fucntion']
 maturity: initial
 sort: 4
 ---
@@ -31,7 +31,7 @@ Arguments are transparently parsed and the handler function associated to the ap
 * `error`   
    Error object if any error was thrown when parsing the arguments. The property is used internally to provide the error object to the help routing function.
 * `params`   
-   Extracted parameters from `argv`
+   Extracted data from `argv`
 * `stderr`   
   The StreamWriter where to redirect error data.
 * `stderr_end`   
@@ -44,13 +44,13 @@ Arguments are transparently parsed and the handler function associated to the ap
 
 ### Interacting with `stdout` and `stdin`
 
-[The router example](https://github.com/adaltas/node-parameters/blob/master/samples/router.js) defines a `list` command which print the files of a directory:
+[The router example](https://github.com/adaltas/node-shell/blob/master/samples/router.js) defines a `list` command which print the files of a directory:
 
 ```js
-const parameters = require('parameters')
+const shell = require('shell')
 const { spawn } = require('child_process')
 
-parameters({
+shell({
   commands: {
     'list': {
       main: 'input',
@@ -64,7 +64,7 @@ parameters({
 }).route()
 ```
 
-You can test the behavior of this command with `node samples/router.js list {a_directory}`. For example, if you are inside the root folder of this project repository, executing `node samples/router.js list ./src` prints the files of the ["src" directory](https://github.com/adaltas/node-parameters/blob/master/src/).
+You can test the behavior of this command with `node samples/router.js list {a_directory}`. For example, if you are inside the root folder of this project repository, executing `node samples/router.js list ./src` prints the files of the ["src" directory](https://github.com/adaltas/node-shell/blob/master/src/).
 
 You can verify that `stdout` and `stderr` are honored by redirecting their content to a file:
 
@@ -77,15 +77,15 @@ node samples/router.js list invalid > ./stderr.log
 
 ### Working with promises
 
-The routing function can return any value. There is no restriction imposed to the developer. Thus, it is [compatible with promise](https://github.com/adaltas/node-parameters/blob/master/samples/router_promise.js):
+The routing function can return any value. There is no restriction imposed to the developer. Thus, it is [compatible with promise](https://github.com/adaltas/node-shell/blob/master/samples/router_promise.js):
 
 ```js
-const parameters = require('..')
+const shell = require('shell')
 const { spawn } = require('child_process')
 
 (async function(){
   try{
-    const result = await parameters({
+    const result = await shell({
       commands: {
         'list': {
           main: 'input',
