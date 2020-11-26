@@ -21,8 +21,8 @@ const styles = {
       textIndent: 0,
       listStyleType: 'none',
       '& a:hover': {
-        color: '#7ec699',
-      }
+        color: '#58CC85',
+      },
     },
   },
   navigate: {

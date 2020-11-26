@@ -1,13 +1,11 @@
-import React from "react"
+import React, {useState} from "react"
 import { graphql } from "gatsby"
 import Layout from "../components/Layout"
 import Section from "../components/Section"
 import Seo from "../components/Seo"
+import Toc from "../components/Toc"
 import IconToc from "../images/icon-toc.svg"
 import IconEdit from "../images/icon-edit.svg"
-import {
-  DEFAULT_WIDTH,
-} from 'typography-breakpoint-constants'
 
 const styles = {
   content: {
@@ -18,26 +16,12 @@ const styles = {
         marginRight: '2.2rem',
       },
     },
-    '& .toc': {
-      display: 'none',
-      marginLeft: 'calc(-50vw + 50%)',
-      marginRight: 'calc(-50vw + 50%)',
-      borderTop: '1px solid #4d596d',
-      borderBottom: '1px solid #4d596d',
-      background: 'rgba(0,0,0,.1)',
-      // background: 'rgba(255,255,255,.2)',
-      paddingTop: '1.666rem',
-      marginBottom: '1.666rem',
-      '> h2, > ul': {
-        maxWidth: `${DEFAULT_WIDTH}`,
-        marginRight: "auto",
-        marginLeft: "auto",
-        '> li': {
-          
-          marginLeft: '1.666rem',
-        }
-      }
-    }
+  },
+  toc: {
+    display: 'none',
+  },
+  tocVisible: {
+    display: '',
   },
   tools: {
     float: 'right',
@@ -51,7 +35,7 @@ const styles = {
       verticalAlign: 'middle',
     }
   },
-  toc: {
+  toolsToc: {
     border: 'none',
     padding: 0,
     width: '30px',
@@ -62,11 +46,8 @@ const styles = {
       opacity: .8,
       cursor: 'pointer',
     },
-    // "@media (max-width: 768px)": {
-    //   display: 'none',
-    // },
   },
-  edit: {
+  toolsEdit: {
     display: 'inline-block',
     border: 'none',
     padding: 0,
@@ -76,6 +57,9 @@ const styles = {
     background: `url(${IconEdit})`,
     outline: 'none',
     opacity: 0.5,
+    '& span': {
+      display: 'none'
+    },
     ':hover': {
       opacity: .8,
       cursor: 'pointer',
@@ -83,15 +67,16 @@ const styles = {
   }
 }
 
-export default function Template({ data }) {
-  const { markdownRemark } = data // data.markdownRemark holds our post data
-  const { frontmatter, html, fields } = markdownRemark
-  const contentRef = React.createRef()
+export default ({
+  data: {
+    markdownRemark: {
+      fields, frontmatter, headings, html
+    }
+  }
+}) => {
+  const [ tocVisible, setTocVisible ] = useState(false)
   const toggleToc = () => {
-    const tocNode = contentRef.current.querySelector(".toc")
-    if (!tocNode) return
-    const display = window.getComputedStyle(tocNode).display
-    tocNode.style.display = display === "none" ? "block" : "none"
+    setTocVisible(!tocVisible)
   }
   return (
     <Layout page={{ ...frontmatter, ...fields }}>
@@ -108,22 +93,26 @@ export default function Template({ data }) {
             data-for="content-tooltip"
             data-tip="Table of content"
             onClick={toggleToc}
-            css={styles.toc}
+            css={styles.toolsToc}
           />
           {fields.edit_url && (
             <a
               target="_blank"
               rel="noreferrer"
               href={fields.edit_url}
-              aria-label="Edit the content"
+              aria-label="Edit on GitHub"
               data-for="edit"
               data-tip="Edit the content"
-              css={styles.edit}
-            />
+              css={styles.toolsEdit}
+            ><span>Edit on GitHub</span></a>
           )}
         </div>
+        <h1>{frontmatter.title}</h1>
+        <Toc
+          headings={headings}
+          classes={{root: [styles.toc, tocVisible && styles.tocVisible]}}
+        />
         <div
-          ref={contentRef}
           css={styles.content}
           dangerouslySetInnerHTML={{ __html: html }}
         />
@@ -144,6 +133,11 @@ export const pageQuery = graphql`
       fields {
         edit_url
         slug
+      }
+      headings {
+        value
+        depth
+        id
       }
     }
   }

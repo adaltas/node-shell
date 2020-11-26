@@ -8,6 +8,9 @@ const styles = {
     zIndex: 100,
     '& a': {
       color: "#fff",
+      ':hover': {
+        color: '#58CC85',
+      },
     },
     "& > ul": {
       maxWidth: "800",
@@ -26,7 +29,10 @@ const styles = {
           borderTop: '5px solid #fff',
         },
         '> a': {
-          padding: '0.1rem 0'
+          padding: '0.1rem 0',
+          ':hover': {
+            color: '#58CC85',
+          },
         },
         '&:hover ul': {
           display: 'block',

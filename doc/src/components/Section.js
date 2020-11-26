@@ -5,7 +5,7 @@ import {
 
 const styles = {
   root: {
-    padding: '2rem',
+    padding: '2rem 1rem',
     '& > div': {
       maxWidth: `${DEFAULT_WIDTH}`,
       margin: "0 auto",

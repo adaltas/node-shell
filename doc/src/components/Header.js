@@ -20,7 +20,7 @@ const styles = {
     top: 0,
     zIndex: 100,
     "> div": {
-      padding: ".5rem",
+      padding: ".5rem 1rem",
       maxWidth: `${DEFAULT_WIDTH}`,
       margin: "0 auto",
       boxSizing: "content-box",
@@ -35,7 +35,7 @@ const styles = {
     display: "contents",
     "& a": {
       color: "white",
-      padding: ".7rem",
+      marginLeft: "1rem",
       "@media (max-width: 400px)": {
         padding: "0rem .5rem",
       },
@@ -43,7 +43,7 @@ const styles = {
   },
   logo: {
     flex: "1 1 auto",
-    paddingLeft: ".7rem",
+    // paddingLeft: ".7rem",
     '& a': {
       color: "white",
       textDecoration: "none",
