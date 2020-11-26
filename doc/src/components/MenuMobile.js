@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, Fragment } from "react"
 import { Link } from "gatsby"
 import { css } from "glamor"
 
@@ -74,7 +74,7 @@ class Menu extends Component {
                 <Link
                   to={"/"}
                   className={css(styles_nav.link)}
-                  activeClassName={css(styles_nav.linkActive)}
+                  activeClassName={css(styles_nav.linkActive).toString()}
                 >
                   Home
                 </Link>
@@ -82,13 +82,13 @@ class Menu extends Component {
               {Object.keys(menus.children).map(i => {
                 const menu = menus.children[i]
                 return (
-                  <>
+                  <Fragment key={i}>
                     <li>
                       <Link
                         key={menu.data.slug}
                         to={menu.data.slug}
                         className={css(styles_nav.link)}
-                        activeClassName={css(styles_nav.linkActive)}
+                        activeClassName={css(styles_nav.linkActive).toString()}
                       >
                         {menu.data.navtitle || menu.data.title}
                       </Link>
@@ -99,12 +99,12 @@ class Menu extends Component {
                           {Object.keys(menu.children).map(j => {
                             const subMenu = menu.children[j]
                             return (
-                              <li>
+                              <li key={`${i}-${j}`}>
                                 <Link
                                   key={subMenu.data.slug}
                                   to={subMenu.data.slug}
                                   className={css(styles_nav.link)}
-                                  activeClassName={css(styles_nav.linkActive)}
+                                  activeClassName={css(styles_nav.linkActive).toString()}
                                 >
                                   {subMenu.data.navtitle || subMenu.data.title}
                                 </Link>
@@ -114,7 +114,7 @@ class Menu extends Component {
                         </ul>
                       </li>
                     }
-                  </>
+                  </Fragment>
                 )
               })}
             </ul>

@@ -90,6 +90,7 @@ const styles = {
     },
   },
   github: {
+    paddingLeft: '.5rem',
     border: '2px solid #fff',
     color: '#fff',
     '&:hover': {

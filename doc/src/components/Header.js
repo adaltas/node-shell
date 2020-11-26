@@ -36,7 +36,6 @@ const styles = {
     "& a": {
       color: "white",
       padding: ".7rem",
-      // width: "1.5rem",
       "@media (max-width: 400px)": {
         padding: "0rem .5rem",
       },

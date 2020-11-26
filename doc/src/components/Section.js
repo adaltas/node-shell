@@ -22,8 +22,12 @@ export default ({
   classes={},
   children,
   full,
-}) => (
-  <section css={[styles.root, full && styles.full, classes.root]}>
-    <div css={classes.children}>{children}</div>
-  </section>
-)
+  tag,
+}) => {
+  const Tag = tag || 'section'
+  return (
+    <Tag css={[styles.root, full && styles.full, classes.root]}>
+      <div css={classes.children}>{children}</div>
+    </Tag>
+  )
+}

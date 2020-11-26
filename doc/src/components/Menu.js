@@ -44,7 +44,7 @@ const styles = {
         display: "inline-block",
         "& a": {
           display: 'block',
-          padding: ".7rem 1.2rem",
+          padding: ".3rem 1.2rem",
           whiteSpace: 'nowrap',
           fontSize: '1rem',
           textDecoration: "none",
@@ -81,24 +81,24 @@ export default ({
         {Object.keys(menus.children).map(i => {
           const menu = menus.children[i]
           return (
-            <li>
+            <li key={i}>
               <Link
                 key={menu.data.slug}
                 to={menu.data.slug}
-                activeClassName={css(styles.linkActive)}
+                activeClassName={css(styles.linkActive).toString()}
               >
                 {menu.data.navtitle || menu.data.title}
               </Link>
               {menu.children != null &&
-                <ul className={css(styles.dropdownMenu)}>
+                <ul css={styles.dropdownMenu}>
                   {Object.keys(menu.children).map(j => {
                     const subMenu = menu.children[j]
                     return (
-                      <li>
+                      <li key={`${i}-${j}`}>
                         <Link
                           key={subMenu.data.slug}
                           to={subMenu.data.slug}
-                          activeClassName={css(styles.linkActive)}
+                          activeClassName={css(styles.linkActive).toString()}
                         >
                           {subMenu.data.navtitle || subMenu.data.title}
                         </Link>

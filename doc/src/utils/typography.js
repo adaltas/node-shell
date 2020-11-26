@@ -1,5 +1,6 @@
 
 import Typography from 'typography'
+import color from 'color'
 import {
   // MIN_TABLET_MEDIA_QUERY,
   // MOBILE_MEDIA_QUERY,
@@ -28,6 +29,7 @@ const theme = {
       rules[`main ${k}`] = rules[k]
       rules[k] = {}
     }
+    console.log('===', color(options.linkColor).whiten(0.5).rgb().toString())
     return {
       'body': {
         background: '#171B24',
@@ -36,6 +38,10 @@ const theme = {
       'ul, li': {
         margin: '0',
         padding: '0',
+      },
+      'a': {
+        color: '#fff',
+        textDecoration: 'none',
       },
       'main h1, main h2, main h3': {
         color: '#E2E4F0',
@@ -49,6 +55,12 @@ const theme = {
       },
       'main a:hover': {
         color: `${options.linkHoverColor}`,
+      },
+      'main a code[class*="language-"]': {
+        color: `${color(options.linkColor).whiten(0.5).rgb().toString()}`,
+      },
+      'main a:hover code[class*="language-"]': {
+        color: `${color(options.linkColor).whiten(0.8).rgb().toString()}`,
       },
       'main code[class*="language-"], main pre[class*="language-"]': {
         fontFamily: 'Fira Mono !important',
