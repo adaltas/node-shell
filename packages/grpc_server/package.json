@@ -50,9 +50,6 @@
     "interface"
   ],
   "license": "MIT",
-  "optionalDependencies": {
-    "grpc": "^1.24.3"
-  },
   "main": "./lib/index",
   "mocha": {
     "throw-deprecation": true,
