@@ -55,8 +55,9 @@
     "directory": "packages/grpc_protobuf"
   },
   "scripts": {
+    "preversion": "yarn run test",
     "build": "coffee -b -o lib src && cp -rp src/shell.proto lib",
-    "pretest": "npm run build",
+    "pretest": "yarn run build",
     "test": "mocha 'test/**/*.coffee'"
   }
 }

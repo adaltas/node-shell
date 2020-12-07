@@ -1,6 +1,6 @@
 {
   "name": "@shell-js/grpc_client",
-  "version": "0.8.2",
+  "version": "0.8.1",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {
@@ -23,7 +23,7 @@
   },
   "description": "GRPC client plugin for the Shell.js package.",
   "devDependencies": {
-    "@shell-js/grpc_server": "^0.8.2"
+    "@shell-js/grpc_server": "^0.8.1"
   },
   "engines": {
     "node": ">= 0.10.x"
@@ -69,8 +69,9 @@
     "directory": "packages/grpc_client"
   },
   "scripts": {
+    "preversion": "yarn run test",
     "build": "coffee -b -o lib src",
-    "pretest": "npm run build",
+    "pretest": "yarn run build",
     "test": "mocha 'test/**/*.coffee'"
   }
 }
