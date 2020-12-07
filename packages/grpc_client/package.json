@@ -49,9 +49,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "optionalDependencies": {
-    "grpc": "^1.24.3"
-  },
   "mocha": {
     "throw-deprecation": true,
     "require": [
