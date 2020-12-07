@@ -17,6 +17,7 @@
     "gatsby-plugin-typography": "^2.7.0",
     "gatsby-remark-autolink-headers": "^2.6.0",
     "gatsby-remark-prismjs": "^3.8.0",
+    "gatsby-remark-title-to-frontmatter": "^1.0.0",
     "gatsby-source-filesystem": "^2.6.1",
     "gatsby-transformer-remark": "^2.11.1",
     "gatsby-transformer-sharp": "^2.7.0",
