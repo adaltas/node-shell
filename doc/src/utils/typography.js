@@ -29,7 +29,6 @@ const theme = {
       rules[`main ${k}`] = rules[k]
       rules[k] = {}
     }
-    console.log('===', color(options.linkColor).whiten(0.5).rgb().toString())
     return {
       'body': {
         background: '#171B24',
@@ -67,7 +66,7 @@ const theme = {
       },
       'main :not(pre) > code[class*="language-"]': {
         padding: '.2em .3em .2em .3em',
-        backgroundColor: 'rgba(0,0,0,.2)',
+        backgroundColor: 'rgba(0,0,0,.18)',
         wordWrap: 'inherit',
       },
       'main pre[class*="language-"]': {
