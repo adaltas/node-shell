@@ -68,7 +68,7 @@ You can test the behavior of this command with `node samples/router.js list {a_d
 
 You can verify that `stdout` and `stderr` are honored by redirecting their content to a file:
 
-```
+```bash
 # stdout is redirected to a file named "stdout.log"
 node samples/router.js list src > ./stdout.log
 # stderr is redirected to a file named "stderr.log"

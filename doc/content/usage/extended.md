@@ -29,8 +29,10 @@ shell({
 The overall application can be started with the command `./myapp --config ./config.yml start` and the data in flatten mode will parsed like:
 
 ```json
-{ "command": ["start"],
-  "config": "./config.yml" }
+{
+  "command": ["start"],
+  "config": "./config.yml"
+}
 ```
 
 However, let's imaging that we need to add a new option to provide a configuration specific to the start command. 
@@ -53,7 +55,7 @@ shell({
 
 Declaring a new "config" option will throw an error "Invalid Option Configuration: ..." in the default flatten mode to prevent collision from happening:
 
-```
+```text
 Error: Invalid Option Configuration: option "config" in command "start" collide with the one in application, change its name or use the extended property
 ```
 
@@ -81,6 +83,8 @@ shell({
 It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml` and its data in extended mode will be parsed like:
 
 ```json
-[ { "config": "./config.yml" },
-  { "command": "start", "config": "./start-config.yml" } ]
+[
+  { "config": "./config.yml" },
+  { "command": "start", "config": "./start-config.yml" }
+]
 ```

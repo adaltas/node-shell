@@ -45,7 +45,7 @@ configuration file which every command will use.
 
 Here's the initial definition:
 
-```
+```json
 {
   "name": "myapp",
   "description": "My Web Application",
@@ -64,7 +64,7 @@ file which could be defined in the global configuration or through a "pid"
 option. At the same level than "name" and "options", we'll enrich the definition
 with a new "commands" entry:
 
-```
+```json
 {
   "commands": [{
     "name": "info"
@@ -86,7 +86,7 @@ We now want to define commands to control our server such as "start" and
 "stop". The "start" command will require an option "port". Inside the object 
 defining the "server" command, we add a new "commands" entry:
 
-```
+```json
 {
   "commands": [{
     "name": "info"
@@ -116,10 +116,10 @@ Usage of the "start" command is now:
 The final definition, enriched with "handler" definition to route the command to
 our own modules, looks like:
 
-```
+```json
 {
   "name": "myapp",
-  "description": "My Web Application"
+  "description": "My Web Application",
   "options": [{
     "name": "config",
     "required": true

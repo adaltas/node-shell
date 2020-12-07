@@ -89,7 +89,7 @@ You can now execute `node app world` and it shall print:
 
 We have explain how to use the `main` property to retrieve all the arguments but there are other types of properties. Considering a rather complex command such as:
 
-```
+```bash
 node app --config "./my/repo" start --force 0.0.0.0:80
 ```
 
@@ -151,7 +151,7 @@ shell({
 
 Now you can pass the option and its value in two ways:
 
-```
+```bash
 node app --config ./my/repo
 node app -c ./my/repo
 ```
@@ -186,17 +186,22 @@ shell({
 
 Execute this application with a command like:
 
-```
-node samples/logger --required-opt present --select-opt "let's go" --boolean-opt 
+```bash
+node samples/logger \
+  --required-opt present \
+  --select-opt "let's go" \
+  --boolean-opt 
 ```
 
 The result of parsing will be the object like:
 
-```
-{ 'required-opt': 'present',
-  'select-opt': 'let\'s go',
-  'boolean-opt': true,
-  'default-opt': 42 }
+```json
+{
+  "required-opt": "present",
+  "select-opt": "let's go",
+  "boolean-opt": true,
+  "default-opt": 42
+}
 ```
 
 We have considered using `options` without defining a `commands`. In such case, they apply to the overall application. Although, any option can be corresponded with a specific command.
@@ -302,7 +307,7 @@ switch (args.command[0]) {
 
 Now you can execute the application:
 
-```
+```bash
 node log append "this is a random string"
 node log append "this is a second random string"
 node log view
@@ -310,27 +315,27 @@ node log view
 
 The file with a name "log.txt" in you current directory will be created. The output of these commands is going to be like this:
 
-```
+```text
 this is a random string
 this is a second random string
 ```
 
 Another example shows the usage of the `source` option. We define the name of the file like `mylog.txt`:
 
-```
+```bash
 node log -s mylog.txt append "the first string of the file mylog.txt"
 node log -s mylog.txt view
 ```
 
 The output is:
 
-```
+```text
 the first string of the file mylog.txt
 ```
 
 To view 10 recent records of a log file we will use the command like this:
 
-```
+```bash
 node log view --recent
 ```
 
@@ -395,7 +400,7 @@ if(commands = app.helping(args)){
 
 From a user perspective, to print the help information of the overall application to the console you can use the command `help`, the option `--help` or its shortcut `-h`. 
 
-```
+```bash
 node log help
 node log --help
 node log -h
@@ -408,7 +413,7 @@ It prints a human readable text divided into the following sections:
 - "COMMANDS" - the description of each command
 - "EXAMPLES" - the usage of the command and its options
 
-```
+```text
 NAME
     log - Log information
 
@@ -431,7 +436,7 @@ EXAMPLES
 
 To print the help information of the specific commands use a command name after the `help` command, for example, `node log help view`. It prints a list of options of the application and any parent command as well.
 
-```
+```text
 NAME
     log view - Viewing a log file
 
@@ -452,7 +457,7 @@ EXAMPLES
 
 The `help` option is automatically registered to the application as well as to every commands. So, the same result as the above can be achieved with these commands:
 
-```
+```bash
 node log view --help
 node log view -h
 ```
@@ -463,7 +468,7 @@ We can build very simple CLI application using only one file like we made above.
 
 Considering the "log" application containing the "append" and the "view" commands, each commands will define a `route` function. We will refactor it according to this project structure:
 
-```
+```text
 /
 |-- /node-modules
 |-- /routes
