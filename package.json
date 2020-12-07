@@ -16,11 +16,6 @@
     "lerna": "^3.22.1",
     "lint-staged": "10.5.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.coffee": "eslint"
   },
@@ -30,10 +25,7 @@
     "clean": "git clean -fdx",
     "postinstall": "husky install",
     "lint": "eslint '**/test/**/*.coffee'",
-    "test": "lerna run test",
-    "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
-    "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
-    "publish-packages": "./scripts/publish"
+    "test": "lerna run test"
   },
   "workspaces": [
     "packages/*"

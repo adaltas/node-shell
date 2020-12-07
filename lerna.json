@@ -1,13 +1,13 @@
 {
-  "npmClient": "yarn",
-  "packages": [
-    "packages/*"
-  ],
   "command": {
     "version": {
       "message": "chore(release): publish"
     }
   },
+  "ignoreChanges": [
+    "**/test/**"
+  ],
+  "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "0.8.1"
 }
