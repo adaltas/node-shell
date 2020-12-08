@@ -21,3 +21,24 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn --frozen-lockfile
     - run: yarn run test
+  www:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: yarn --frozen-lockfile
+    - run: cd doc && yarn install && npx gatsby build
+    - run: echo 'shell.js.org' > doc/public/CNAME
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@4.0.0-beta-01
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: doc/public # The folder the action should deploy.
+        CLEAN: true # Automatically remove deleted files from the deploy branch
