@@ -18,7 +18,7 @@ The `router` configuration property define the routing behaviour. It is availabl
 
 ## Execution
 
-Routing is executed by calling `route` method on the parameter instance. Refer to the [`route` method API](/api/route/) for additional information.
+Routing is executed by calling `route` method on the Shell.js instance. Refer to the [`route` method API](/api/route/) for additional information.
 
 ## Handler function
 

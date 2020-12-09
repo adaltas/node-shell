@@ -18,24 +18,29 @@ SyntaxHighlighter.registerLanguage('bash', bash);
 
 
 const codeString1 = `
-npm install parameters
+npm install shell
 `.trim()
 
 const codeString2 = `
-git clone http://github.com/adaltas/node-parameters.git
+git clone http://github.com/adaltas/node-shell.git
 `.trim()
 
 const feature1 = `
-const app = require("parameters")(
-{ name: "myapp",
+const shell = require("shell")
+const app = shell({
+  name: "myapp",
   description: "My CLI application",
-  options:
-  { "config":
-    { shortcut: "c",
-      description: "Some option" } },
-  commands:
-  { "start":
-    { description: "Start something" } }
+  options: {
+    "config": {
+      shortcut: "c",
+      description: "Some option"
+    }
+  },
+  commands: {
+    "start": {
+      description: "Start something"
+    }
+  }
 })
 `.trim()
 
@@ -49,12 +54,15 @@ console.log(args)
 `.trim()
 
 const feature3 = `
-const app = require("parameters")({
+const shell = require("shell")
+const app = shell({
   /* ... */
-  commands:
-  { "start": {
+  commands: { "start":
+    {
       /* ... */
-      route: './routes/start.js' } }
+      route: './routes/start.js'
+    }
+  }
 })
 app.route()
 
@@ -173,18 +181,26 @@ const styles = {
 const IndexPage = () => (
   <Layout isHome={true}>
     <Seo
-      title="Node.js Parameters"
-      keywords={[`gatsby`, `application`, `react`]}
+      title="Shell.js - argument parsing for Node.js CLI applications"
+      keywords={[
+        'shell', 'cli', 'arguments', 'parameters',
+        'router', 'parse', 'stringify',
+      ]}
     />
     <Banner />
     <div css={styles.homePage}>
       <Section classes={{root: styles.section}}>
-        <h2>Why Parameters?</h2>
+        <h2>Why Shell.js?</h2>
         <div>
           <div>
             <h3>Configure your CLI app</h3>
             <div>
-              <p>The configuration object of the Parameters is considered as the schema or the model of your application arguments.</p>
+              <p>
+                Shell.js is simple to configure. All it takes is a declarative
+                object describing your application. Consider it like the model
+                of your application. It is enriched by plugins such as to route
+                commands and to generate help screens.
+              </p>
               <p>
                 <Link to='/config/' css={styles.button}>
                   Read more
@@ -238,7 +254,7 @@ const IndexPage = () => (
           <div>
             <h3>Auto generate help</h3>
             <div>
-              <p>Parameters convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands.</p>
+              <p>Shell.js convert the configuration object into a readable documentation string about how to use the CLI application or one of its commands.</p>
               <p>
                 <Link to='/api/help/' css={styles.button}>
                   Read more
@@ -257,9 +273,8 @@ const IndexPage = () => (
         <div>
           <h2>Installing</h2>
           <p>
-            Starting with version 0.2.0, Node.js Parameters rely on Node.js 4.0.0 or
-            more recent. Stick to version 1.0.x if using an older version of
-            Node.js.
+            The latest version of Shell.js is tested with Node.js 10, 12 and 14.
+            New versions of Node.js shall work as well.
           </p>
           <p>Via npm:</p>
           <SyntaxHighlighter language="bash" style={tomorrow}>

@@ -62,7 +62,7 @@ The Shell.js dependency is now downloaded and available inside the "./node_modul
 Let's consider a simple application by modifying the "app.js" file as follow:
 
 ```js
-// Import the "parameter" package
+// Import the package
 const shell = require('shell')
 // Create a new instance
 const app = shell({
