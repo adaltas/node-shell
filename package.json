@@ -24,6 +24,7 @@
     "compile": "lerna run compile",
     "clean": "git clean -fdx",
     "postinstall": "husky install",
+    "publish": "lerna publish from-git --yes",
     "lint": "eslint '**/test/**/*.coffee'",
     "test": "lerna run test"
   },
