@@ -13,7 +13,7 @@ You are encouraged to contribute to Shell.js. The project is open sourced under 
 
 Contributions go far beyond pull requests and commits. We are thrilled to receive a variety of other contributions including the following:
 
-* Write and publish your own actions
+* Write and publish your own plugins
 * Write articles and blog posts, create tutorial and spread the words
 * Submit new ideas of features and documentation
 * Submitting documentation updates, enhancements, designs, or bugfixes
