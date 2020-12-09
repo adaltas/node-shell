@@ -17,7 +17,7 @@ describe 'router.config.router', ->
         stdout_end: false
         handler: path.resolve __dirname, '../../src/routes/help'
           
-    it "pass custom readable and writable stream", ->
+    it "pass custom readable and writable streams", ->
       shell
         router:
           stderr: new Writable()
