@@ -152,21 +152,21 @@ class Banner extends Component {
             <div css={styles.badges}>
                 <a
                   alt={"View this project on NPM"}
-                  href={"https://www.npmjs.com/package/parameters"}
+                  href={"https://www.npmjs.com/package/shell"}
                 >
                   <img
                     alt={"NPM version"}
-                    src={"https://img.shields.io/npm/v/parameters.svg?style=for-the-badge"}
+                    src={"https://img.shields.io/npm/v/shell.svg?style=flat"}
                   />
                 </a>
                 <a
-                  alt={"View this project on Travis"}
-                  href={"https://travis-ci.org/adaltas/node-parameters"}
+                  alt={"GitHub actions"}
+                  href={"https://github.com/adaltas/node-shell/actions"}
                 >
                   <img
                     alt={"Travis build status"}
                     src={
-                      "https://img.shields.io/travis/adaltas/node-parameters.svg?style=for-the-badge"
+                      "https://img.shields.io/github/checks-status/adaltas/node-shell/master?style=flat"
                     }
                   />
                 </a>
