@@ -8,11 +8,11 @@ describe 'api.load', ->
   it 'load relative to require.main', ->
     cwd = process.cwd()
     process.chdir os.tmpdir()
-    await fs.writeFile "#{os.tmpdir()}/relative_module.coffee", 'module.exports = (params) -> params'
-    shell
-      name: 'start'
-    .load("#{os.tmpdir()}/relative_module.coffee") "my value"
-    .should.eql 'my value'
+    await fs.writeFile "#{os.tmpdir()}/relative_module.coffee", '''
+    module.exports = (params) -> params
+    '''
+    mod = shell().load "#{os.tmpdir()}/relative_module.coffee"
+    mod('my value').should.eql 'my value'
     process.chdir cwd
     await fs.unlink "#{os.tmpdir()}/relative_module.coffee"
 
