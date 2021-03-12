@@ -6,12 +6,12 @@
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
-    "@grpc/proto-loader": "^0.5.5"
+    "@grpc/proto-loader": "^0.5.6"
   },
   "description": "GRPC Protocol Buffer definition.",
   "devDependencies": {
     "coffeescript": "^2.5.1",
-    "mocha": "^8.2.1",
+    "mocha": "^8.3.2",
     "should": "^13.2.3"
   },
   "engines": {

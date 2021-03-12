@@ -19,7 +19,7 @@
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.2.1"
+    "@grpc/grpc-js": "^1.2.10"
   },
   "description": "GRPC client plugin for the Shell.js package.",
   "devDependencies": {
@@ -61,7 +61,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "shell": "^0.8.1-alpha.0"
+    "shell": "^0.8.4"
   },
   "repository": {
     "type": "git",
