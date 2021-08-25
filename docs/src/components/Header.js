@@ -71,7 +71,7 @@ const styles = {
   },
 }
 
-export default ({
+const Header = ({
   isHome,
   menus,
   onMenuClick,
@@ -121,3 +121,5 @@ export default ({
     </header>
   )
 }
+
+export default Header

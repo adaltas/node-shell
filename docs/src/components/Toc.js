@@ -25,7 +25,7 @@ const styles = {
   }
 }
 
-export default ({
+const Toc = ({
   classes,
   headings,
 }) => (
@@ -41,3 +41,5 @@ export default ({
     </ul>
   </div>
 )
+
+export default Toc

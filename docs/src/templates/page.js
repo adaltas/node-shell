@@ -67,7 +67,7 @@ const styles = {
   }
 }
 
-export default ({
+const Page = ({
   data: {
     markdownRemark: {
       fields, frontmatter, headings, html
@@ -142,3 +142,5 @@ export const pageQuery = graphql`
     }
   }
 `
+
+export default Page

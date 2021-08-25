@@ -1,7 +1,7 @@
 import React from "react"
 
 import Layout from "../components/Layout"
-import SEO from "../components/Seo"
+import Seo from "../components/Seo"
 import { css } from "glamor"
 
 const styles = {
@@ -19,7 +19,7 @@ const IndexPage = () => (
       keywords: "parameters, node.js, 404, not found",
     }}
   >
-    <SEO title="NOT FOUND" keywords={[`gatsby`, `application`, `react`]} />
+    <Seo title="NOT FOUND" keywords={[`gatsby`, `application`, `react`]} />
     <div>
       <section>
         <div className={css(styles.notfoundContainer)}>

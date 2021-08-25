@@ -18,7 +18,7 @@ const styles = {
   },
 }
 
-export default ({
+const Section = ({
   classes={},
   children,
   full,
@@ -31,3 +31,5 @@ export default ({
     </Tag>
   )
 }
+
+export default Section

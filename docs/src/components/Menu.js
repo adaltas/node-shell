@@ -78,7 +78,7 @@ const styles = {
   },
 }
 
-export default ({
+const Menu = ({
   menus
 }) => {
   return (
@@ -120,3 +120,5 @@ export default ({
     </div>
   )
 }
+
+export default Menu
