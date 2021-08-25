@@ -17,7 +17,8 @@ For the sake of simplicity, the module operates by default in flatten mode. When
 For example, consider an application which register a "config" property for the overall application as well as a `start` command in flatten mode:
 
 ```js
-require("parameters")({
+const shell = require('shell')
+shell({
   options: {
     "config": {}
   },
@@ -37,7 +38,8 @@ The overall application can be started with the command `./myapp --config ./conf
 However, let's imaging that we need to add a new option to provide a configuration specific to the start command. 
 
 ```js
-require("parameters")({
+const shell = require("shell");
+shell({
   options: {
     "config": {},
   },
@@ -62,7 +64,8 @@ Error: Invalid Option Configuration: option "config" in command "start" collide 
 The above example will correctly work in extended mode:
 
 ```js
-require("parameters")({
+const shell = require("shell");
+shell({
   options: {
     "config": {},
   },

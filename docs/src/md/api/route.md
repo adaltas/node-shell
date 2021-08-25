@@ -32,8 +32,8 @@ The first argument of the handler function is a context object with the followin
 Considering a "server" application containing a "start" and a "stop" commands, each commands define a `handler` which point to a module exporting a function:
 
 ```js
-const parameters = require("parameters")
-const app = parameters(
+const shell = require("shell")
+const app = shell(
 { name: "server",
   commands:
   { "start":

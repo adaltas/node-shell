@@ -11,8 +11,8 @@ The configuration parameter is an object passed as an argument to the function
 which is exported by this package.
 
 ```js
-parameters = require("parameters")
-app = parameters(config)
+const shell = require("shell")
+app = shell(config)
 ```
 
 ## The root properties
@@ -45,11 +45,11 @@ app = parameters(config)
 
 ## Initialisation
 
-The configuration is commonly passed as the main argument when initialising `parameters`:
+The configuration is commonly passed as the main argument when initialising `shell`:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'my_new_app'
   main: 'some_param'
 })
@@ -60,7 +60,7 @@ It is however easy to externalize the configuration into an external file stored
 
 ```js
 const config = require('/etc/my_new_app')
-const parameters = require('parameters')
-const app = parameters(config)
+const shell = require('shell')
+const app = shell(config)
 console.log(app.parse())
 ```

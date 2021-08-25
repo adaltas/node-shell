@@ -27,8 +27,8 @@ Considering a "server" application containing a "start" command and initialised 
 
 ```js
 require("should")
-const parameters = require("parameters")
-const app = parameters(
+const shell = require("shell")
+const app = shell(
 { name: "server",
   description: "Manage a web server",
   options:

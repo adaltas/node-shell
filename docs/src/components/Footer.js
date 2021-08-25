@@ -71,12 +71,12 @@ const Footer = () => (
       <h2>Contribute</h2>
       <ul>
         <li>
-          <a href="https://github.com/adaltas/node-parameters/">
+          <a href="https://github.com/adaltas/node-shell/">
             GitHub
           </a>
         </li>
         <li>
-          <a href="https://github.com/adaltas/node-parameters/issues/">
+          <a href="https://github.com/adaltas/node-shell/issues/">
             Issue Tracker
           </a>
         </li>

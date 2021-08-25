@@ -123,7 +123,7 @@ class Menu extends Component {
         <div className={css(styles.footer)}>
           Help us{" "}
           <a
-            href="https://github.com/adaltas/node-parameters/issues"
+            href="https://github.com/adaltas/node-shell/issues"
             target="_blank"
             rel="noreferrer"
           >

@@ -25,11 +25,11 @@ The `main` property is declared as an object with the following properties:
 As an alternative, a "string" can also be provided which will be converted to an object with the name property set to the original string value. Thus, the following declarations are equivalent:
 
 ```js
-parameters({
+shell({
   main: 'input'  
 })
 // is equivalent to
-parameters({
+shell({
   main: {
     name: 'input' 
   } 
@@ -38,11 +38,13 @@ parameters({
 
 The extracted value is an array.
 
-If [no main arguments](https://github.com/adaltas/node-parameters/blob/master/samples/main_empty.js) is defined in the CLI commands, then the array is empty.
+If [no main arguments](https://github.com/adaltas/node-shell/blob/master/samples/main_empty.js) is defined in the CLI commands, then the array is empty.
 
 ```js
 require('should')
-require('parameters')({
+const shell = require('shell')
+
+shell({
   main: 'input' 
 })
 .parse([])
@@ -65,7 +67,7 @@ When `required` is a function, the first argument is an object with the followin
 ## Application level definition
 
 ```js
-require("parameters")({
+require("shell")({
   main: "leftover"
 })
 ```
@@ -73,7 +75,7 @@ require("parameters")({
 The above is the equivalent of declaring options as an array like:
 
 ```js
-require("parameters")({
+require("shell")({
   main: {
     name: "leftover"
 }})
@@ -84,7 +86,7 @@ Usage of the "main" parameter is now: `myapp [leftover]`.
 ## Command level definition
 
 ```js
-require("parameters")({
+require("shell")({
   commands: [{
     name: 'server',
     commands: [{

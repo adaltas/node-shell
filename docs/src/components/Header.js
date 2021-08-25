@@ -107,12 +107,12 @@ const Header = ({
         />
         <div className={css(styles.icons)}>
           <a
-            href="https://github.com/adaltas/node-parameters/issues"
+            href="https://github.com/adaltas/node-shell/issues"
           >
             <img src={BugIcon} alt="Bug tool" />
           </a>
           <a
-            href="https://github.com/adaltas/node-parameters"
+            href="https://github.com/adaltas/node-shell"
           >
             <img src={GitIcon} alt="GitHub" />
           </a>

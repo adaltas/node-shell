@@ -9,7 +9,7 @@ maturity: review
 
 ## Introduction
 
-You are encouraged to contribute to Node.js Parameters. Node.js Parameters is an open source project hosted on [GitHub](https://github.com/adaltas/node-parameters) originally written by [Adaltas](http://www.adaltas.com/en/home/).
+You are encouraged to contribute to Node.js Parameters. Node.js Parameters is an open source project hosted on [GitHub](https://github.com/adaltas/node-shell) originally written by [Adaltas](http://www.adaltas.com/en/home/).
 
 Contributions go far beyond pull requests and commits. We are thrilled to receive a variety of other contributions including the following:
 

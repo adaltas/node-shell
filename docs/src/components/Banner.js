@@ -143,7 +143,7 @@ class Banner extends Component {
               </Link>
               <a
                 css={[styles.button, styles.github]}
-                href="https://github.com/adaltas/node-parameters/"
+                href="https://github.com/adaltas/node-shell/"
               >
                 <img src={GitIcon} alt="Github Node.js Parameters" />
                 Github

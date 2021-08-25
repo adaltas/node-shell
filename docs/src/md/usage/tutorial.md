@@ -47,9 +47,9 @@ mkdir myapp && cd myapp
 # Initialise the package with skipping the questionnaire
 npm init --yes
 cat package.json
-# Add the "parameters" dependency
-npm add parameters
-cat package.js | grep parameters
+# Add the `shell` dependency
+npm add shell
+cat package.js | grep shell
 # Create a new script
 echo 'console.log("hello")' > app.js
 node app
@@ -63,9 +63,9 @@ Let's consider a simple application by modifying the "app.js" file as follow:
 
 ```js
 // Import the "parameter" package
-const parameters = require('parameters')
+const shell = require('shell')
 // Create a new instance
-const app = parameters({
+const app = shell({
   main: 'hello'
 })
 // Parse CLI arguments
@@ -73,7 +73,7 @@ const args = app.parse()
 console.log(args)
 ```
 
-The "parameters" package export a function which expect to a configuration object describing your commands.
+The `shell` package export a function which expect to a configuration object describing your commands.
 
 Consider the configuration as the schema or the model of your application arguments. The `main` property retrieve all the arguments of an application which are not mapped otherwise in the form of an array. We will cover other types for arguments later such as options and commands.
 
@@ -102,8 +102,8 @@ This CLI command is made of multiple sections.
 For the sake of curiosity, Parameters could be configured and initialized as:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
   	"config": {}
   },
@@ -140,8 +140,8 @@ It is recommended using shortcuts only for the most frequently used `options`, t
 For example, let's expose a `config` option with a shortcut named `c`:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
   	"config": {
       shortcut: 'c'
@@ -166,8 +166,8 @@ In place of `./my/repo` can be any value, but if you don't provide it, the CLI w
 To illustrate the behaviour of each, let's make a basic example, but these can be used together within one `option` as well:
 
 ```js
-const parameters = require("parameters")
-parameters({
+const shell = require("shell")
+shell({
   options: {
     'default-opt': {
       default: 42
@@ -217,8 +217,8 @@ And as well, we must specify in which file the logged information should be stor
 Create the javascript file with the name "log.js" and paste following:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   options: {
     'source': {
       shortcut: 's',
@@ -353,8 +353,8 @@ Let's add this code into the application and write the description for each of t
 
 ```js
 // Configuring application
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'log',
   description: 'Log information',
   options: {
@@ -477,8 +477,8 @@ Considering the "log" application containing the "append" and the "view" command
 To configure routing you need to define the `route` property for the `commands`. The value of this property should be as a function or the function exported by a module if defined as a string:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   /* ... */
   commands: {
     'append': {
@@ -543,8 +543,8 @@ module.exports = function ({argv, params, config}) {
 Notice, when using routing we don't need to take care about the parsing and calling the help, it is implemented inside the `route` method. The top-level module of the CLI application, which is the "log.js" file, will look like:
 
 ```js
-const parameters = require('parameters')
-const app = parameters({
+const shell = require('shell')
+const app = shell({
   name: 'log',
   description: 'Log information',
   options: {
