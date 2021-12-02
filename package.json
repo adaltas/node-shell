@@ -26,7 +26,8 @@
     "postinstall": "husky install",
     "publish": "lerna publish from-git --yes",
     "lint": "eslint '**/test/**/*.coffee'",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "version": "lerna version --conventional-commits"
   },
   "workspaces": [
     "packages/*"
