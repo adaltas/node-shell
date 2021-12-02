@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.5](https://github.com/adaltas/node-shell/compare/v0.8.4...v0.8.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* **shell:** prevent main collision with command ([2a72240](https://github.com/adaltas/node-shell/commit/2a72240d19cca1925bae2b5cb85006cf163b9452))
+
+
+
+
+
 ## [0.8.4](https://github.com/adaltas/node-shell/compare/v0.8.3...v0.8.4) (2020-12-09)
 
 **Note:** Version bump only for package shell
