@@ -28,15 +28,23 @@ builder_main = function(commands) {
         // Do nothing if value is undefined
         return builder;
       }
+      if (typeof value === 'string') {
+        // Cast string to object
+        value = {
+          name: value
+        };
+      }
       // Unset the property if null
       if (value === null) {
         config.main = void 0;
         return builder;
+      } else if (!is_object_literal(value)) {
+        throw utils.error(['Invalid Main Configuration:', 'accepted values are string, null and object,', `got \`${JSON.stringify(value)}\``]);
       }
-      if (typeof value === 'string') {
-        value = {
-          name: value
-        };
+      // Ensure there is no conflict with command
+      // Get root configuration to extract command name
+      if (value.name === ctx.confx([]).raw().command) {
+        throw utils.error(['Conflicting Main Value:', 'main name is conflicting with the command name,', `got \`${JSON.stringify(value.name)}\``]);
       }
       config.main = value;
       return builder;

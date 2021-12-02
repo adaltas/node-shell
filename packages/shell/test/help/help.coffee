@@ -152,7 +152,7 @@ describe 'help/help', ->
           'start':
             description: 'Description for the start command'
             main:
-              name: 'command'
+              name: 'leftover'
               description: 'Command in start'
             options:
               'string':
@@ -169,7 +169,7 @@ describe 'help/help', ->
           'stop':
             description: 'Description for the stop command'
             main:
-              name: 'command'
+              name: 'leftover'
               description: 'Command in stop'
             options: 'array':
               shortcut: 'a'
@@ -204,7 +204,7 @@ describe 'help/help', ->
         commands: 'start':
           description: 'Description for the start command'
           main:
-            name: 'command'
+            name: 'leftover'
             description: 'Command in start'
           options: 'string':
             shortcut: 's'
@@ -215,10 +215,10 @@ describe 'help/help', ->
         myscript start - Description for the start command
 
       SYNOPSIS
-        myscript start [start options] {command}
+        myscript start [start options] {leftover}
 
       OPTIONS for start
-           command                Command in start
+           leftover               Command in start
         -h --help                 Display help information
         -s --string               String option in start
       

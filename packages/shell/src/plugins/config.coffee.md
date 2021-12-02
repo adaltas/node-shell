@@ -17,11 +17,26 @@
           config = ctx.confx(commands).raw()
           # Do nothing if value is undefined
           return builder if value is undefined
+          # Cast string to object
+          value = name: value if typeof value is 'string'
           # Unset the property if null
           if value is null
             config.main = undefined
             return builder
-          value = name: value if typeof value is 'string'
+          else unless is_object_literal value
+            throw utils.error [
+              'Invalid Main Configuration:'
+              'accepted values are string, null and object,'
+              "got `#{JSON.stringify value}`"
+            ]
+          # Ensure there is no conflict with command
+          # Get root configuration to extract command name
+          if value.name is ctx.confx([]).raw().command
+            throw utils.error [
+              'Conflicting Main Value:'
+              'main name is conflicting with the command name,'
+              "got `#{JSON.stringify value.name}`"
+            ]
           config.main = value
           builder
       builder
