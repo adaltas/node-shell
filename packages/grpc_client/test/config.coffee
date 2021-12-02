@@ -12,7 +12,7 @@ describe 'grpc_client.config', ->
         port: 61234
     await app.grpc_start()
     conn = client address: '127.0.0.1', port: 61234
-    response = await conn.config []
+    response = await conn.config command: []
     try
       response.config.name.should.eql 'myapp'
     finally
