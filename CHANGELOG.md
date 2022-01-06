@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6](https://github.com/adaltas/node-shell/compare/v0.8.5...v0.8.6) (2022-01-06)
+
+
+### Bug Fixes
+
+* **shell:** multi level default option ([cdaaa9b](https://github.com/adaltas/node-shell/commit/cdaaa9b71d8e0a161f8df4f22fec86d39e8b8d11))
+
+
+
+
+
 ## [0.8.5](https://github.com/adaltas/node-shell/compare/v0.8.4...v0.8.5) (2021-12-02)
 
 
