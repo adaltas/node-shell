@@ -2,7 +2,7 @@
   // ## Plugin "args"
 
 // Dependencies
-var Shell, clone, is_object_literal, merge, set_default, utils,
+var Shell, clone, is_object_literal, merge, utils,
   indexOf = [].indexOf;
 
 utils = require('../utils');
@@ -37,7 +37,7 @@ Shell.prototype.parse = function(argv = process, options = {}) {
   // Extracted arguments
   full_params = [];
   parse = function(config, command) {
-    var _, err, helping, i, key, leftover, len, main, option, params, ref, ref1, ref2, required, shortcut, type, value, values;
+    var _, err, helping, i, key, leftover, len, main, name, option, params, ref, ref1, ref2, ref3, required, shortcut, type, value, values;
     full_params.push(params = {});
     if (command != null) {
       // Add command name provided by parent
@@ -187,6 +187,17 @@ Shell.prototype.parse = function(argv = process, options = {}) {
         throw utils.error(['Required Main Argument:', `no suitable arguments for ${JSON.stringify(main.name)}`]);
       }
     }
+    ref3 = config.options;
+    // Apply default values
+    for (_ in ref3) {
+      option = ref3[_];
+      if (option.default != null) {
+        if (params[name = option.name] == null) {
+          params[name] = option.default;
+        }
+      }
+    }
+    // Return params object associated with this command
     return params;
   };
   // Start the parser
@@ -210,8 +221,6 @@ Shell.prototype.parse = function(argv = process, options = {}) {
   } else {
     params = full_params;
   }
-  // Enrich params with default values
-  set_default(appconfig, params);
   return params;
 };
 
@@ -235,9 +244,6 @@ Shell.prototype.compile = function(data, options = {}) {
     throw utils.error(['Invalid Compile Arguments:', '2nd argument option must be an object,', `got ${JSON.stringify(options)}`]);
   }
   keys = {};
-  // In extended mode, the data array will be truncated
-  // data = merge data unless extended
-  set_default(appconfig, data);
   if (typeof data[appconfig.command] === 'string') {
     // Convert command parameter to a 1 element array if provided as a string
     data[appconfig.command] = [data[appconfig.command]];
@@ -251,6 +257,10 @@ Shell.prototype.compile = function(data, options = {}) {
       key = option.name;
       keys[key] = true;
       value = ldata[key];
+      if (value == null) {
+        // Apply default value if option missing from params
+        value = option.default;
+      }
       // Handle required
       required = typeof option.required === 'function' ? !!option.required.call(null, {
         config: config,
@@ -349,35 +359,4 @@ Shell.prototype.compile = function(data, options = {}) {
   };
   compile(appconfig, options.extended ? data.shift() : data);
   return argv;
-};
-
-// ## Utils
-
-// Given a configuration, apply default values to an object.
-set_default = function(config, data, tempdata = null) {
-  var _, command, name, option, ref;
-  if (tempdata == null) {
-    tempdata = merge(data);
-  }
-  if (Object.keys(config.commands).length) {
-    command = tempdata[config.command];
-    if (Array.isArray(command)) {
-      command = tempdata[config.command].shift();
-    }
-    // We are not validating if the command is valid, it may not be set if help option is present
-    // throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
-    if (config.commands[command]) {
-      data = set_default(config.commands[command], data, tempdata);
-    }
-  }
-  ref = config.options;
-  for (_ in ref) {
-    option = ref[_];
-    if (option.default != null) {
-      if (data[name = option.name] == null) {
-        data[name] = option.default;
-      }
-    }
-  }
-  return data;
 };

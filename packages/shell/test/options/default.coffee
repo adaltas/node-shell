@@ -17,19 +17,44 @@ describe 'options.default', ->
 
   describe 'with commands', ->
     
-    it 'set value if not defined', ->
+    it 'set value if not defined, flatten mode', ->
       app = shell
-        commands: 'my_command':
-          options: 'my_argument':
-            default: 'default value'
+        commands: 'my':
+          commands: 'command':
+            options: 'my_argument':
+              default: 'default value'
       app.parse [
-        'my_command'
+        'my', 'command'
       ]
       .should.eql
-        command: ['my_command']
+        command: ['my', 'command']
         my_argument: 'default value'
-      app.compile command: ['my_command']
-      .should.eql ['my_command', '--my_argument', 'default value']
+      app.compile command: ['my', 'command']
+      .should.eql ['my', 'command', '--my_argument', 'default value']
+        
+    it 'set value if not defined, extended mode', ->
+      # Note, the way default option is implemented shall not
+      # have any impact on flatten and extended mode
+      app = shell
+        extended: true
+        commands: 'my':
+          commands: 'command':
+            options: 'my_argument':
+              default: 'default value'
+      app.parse [
+        'my', 'command'
+      ]
+      .should.eql [
+        {}
+        { command: 'my' }
+        { command: 'command', my_argument: 'default value' }
+      ]
+      app.compile [
+        {}
+        { command: 'my' }
+        { command: 'command' }
+      ]
+      .should.eql ['my', 'command', '--my_argument', 'default value']
           
     it 'preserve global option', ->
       app = shell

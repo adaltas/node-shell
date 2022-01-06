@@ -159,6 +159,10 @@ Convert an arguments list to an object literal.
             'Required Main Argument:'
             "no suitable arguments for #{JSON.stringify main.name}"
           ] if required and params[main.name].length is 0
+        # Apply default values
+        for _, option of config.options
+           params[option.name] ?= option.default if option.default?
+        # Return params object associated with this command
         params
       # Start the parser
       parse appconfig, null
@@ -174,8 +178,6 @@ Convert an arguments list to an object literal.
               params[k] = v
       else
         params = full_params
-      # Enrich params with default values
-      set_default appconfig, params
       params
 
 ## Method `compile(command, [options])`
@@ -198,9 +200,6 @@ Convert an object to an arguments array.
         "got #{JSON.stringify options}"
       ] unless is_object_literal options
       keys = {}
-      # In extended mode, the data array will be truncated
-      # data = merge data unless extended
-      set_default appconfig, data
       # Convert command parameter to a 1 element array if provided as a string
       data[appconfig.command] = [data[appconfig.command]] if typeof data[appconfig.command] is 'string'
       # Compile
@@ -209,6 +208,8 @@ Convert an object to an arguments array.
           key = option.name
           keys[key] = true
           value = ldata[key]
+          # Apply default value if option missing from params
+          value = option.default unless value?
           # Handle required
           required = if typeof option.required is 'function'
             !!option.required.call null,
@@ -290,20 +291,3 @@ Convert an object to an arguments array.
               argv.push "#{value}"
       compile appconfig, if options.extended then data.shift() else data
       argv
-
-## Utils
-
-Given a configuration, apply default values to an object.
-
-    set_default = (config, data, tempdata = null) ->
-      tempdata = merge data unless tempdata?
-      if Object.keys(config.commands).length
-        command = tempdata[config.command]
-        command = tempdata[config.command].shift() if Array.isArray command
-        # We are not validating if the command is valid, it may not be set if help option is present
-        # throw Error "Invalid Command: \"#{command}\"" unless config.commands[command]
-        if config.commands[command]
-          data = set_default config.commands[command], data, tempdata
-      for _, option of config.options
-        data[option.name] ?= option.default if option.default?
-      data
