@@ -6,15 +6,15 @@
     }
   },
   "devDependencies": {
-    "@commitlint/cli": "^15.0.0",
-    "@commitlint/config-conventional": "^15.0.0",
-    "@commitlint/config-lerna-scopes": "^15.0.0",
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/config-lerna-scopes": "^16.0.0",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.3.0",
+    "eslint": "^8.6.0",
     "eslint-plugin-coffee": "^0.1.15",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
-    "lint-staged": "12.1.2"
+    "lint-staged": "12.1.5"
   },
   "lint-staged": {
     "*.coffee": "eslint"
