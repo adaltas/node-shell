@@ -74,6 +74,7 @@ const styles = {
   },
   button: {
     cursor: 'pointer',
+    caretColor: 'transparent',
     '&:disabled': {
       cursor: 'default',
     },
