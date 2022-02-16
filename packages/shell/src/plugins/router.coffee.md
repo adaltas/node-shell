@@ -16,6 +16,7 @@
           return handler if command.length
           config.router ?= {}
           config.router.handler ?= path.resolve __dirname, '../routes/help'
+          config.router.promise ?= false
           config.router.stdin ?= process.stdin
           config.router.stdout ?= process.stdout
           config.router.stdout_end ?= false
@@ -62,7 +63,7 @@
 
 * `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
-* Returns: `any` Whatever the route function returns.
+* Returns: `Promise<any>` Whatever the route function returns wrapped inside a promise.
 
 How to use the `route` method to execute code associated with a particular command.
 
@@ -99,7 +100,17 @@ How to use the `route` method to execute code associated with a particular comma
           stderr_end: config.router.stderr_end
         , ...context}
         @hook 'router_call', context, (context) =>
-          handler.call @, context, ...args
+          unless config.router.promise
+            return handler.call @, context, ...args
+          # Otherwise wrap result in a promise 
+          try
+            result = handler.call @, context, ...args
+            retun result if result.then
+            new Promise (resolve, reject) ->
+              resolve result
+          catch err
+            new Promise (resolve, reject) ->
+              reject err
       route_error = (err, command) =>
         context.argv = if command.length
         then ['help', ...command]

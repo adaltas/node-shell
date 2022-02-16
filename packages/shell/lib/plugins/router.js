@@ -21,7 +21,7 @@ Shell.prototype.init = (function(parent) {
   return function() {
     this.register({
       configure_set: function({config, command}, handler) {
-        var base, base1, base2, base3, base4, base5;
+        var base, base1, base2, base3, base4, base5, base6;
         if (command.length) {
           return handler;
         }
@@ -31,20 +31,23 @@ Shell.prototype.init = (function(parent) {
         if ((base = config.router).handler == null) {
           base.handler = path.resolve(__dirname, '../routes/help');
         }
-        if ((base1 = config.router).stdin == null) {
-          base1.stdin = process.stdin;
+        if ((base1 = config.router).promise == null) {
+          base1.promise = false;
         }
-        if ((base2 = config.router).stdout == null) {
-          base2.stdout = process.stdout;
+        if ((base2 = config.router).stdin == null) {
+          base2.stdin = process.stdin;
         }
-        if ((base3 = config.router).stdout_end == null) {
-          base3.stdout_end = false;
+        if ((base3 = config.router).stdout == null) {
+          base3.stdout = process.stdout;
         }
-        if ((base4 = config.router).stderr == null) {
-          base4.stderr = process.stderr;
+        if ((base4 = config.router).stdout_end == null) {
+          base4.stdout_end = false;
         }
-        if ((base5 = config.router).stderr_end == null) {
-          base5.stderr_end = false;
+        if ((base5 = config.router).stderr == null) {
+          base5.stderr = process.stderr;
+        }
+        if ((base6 = config.router).stderr_end == null) {
+          base6.stderr_end = false;
         }
         if (!(config.router.stdin instanceof stream.Readable)) {
           throw utils.error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
@@ -85,7 +88,7 @@ Shell.prototype.init = (function(parent) {
 
 // * `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
 // * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
-// * Returns: `any` Whatever the route function returns.
+// * Returns: `Promise<any>` Whatever the route function returns wrapped inside a promise.
 
 // How to use the `route` method to execute code associated with a particular command.
 Shell.prototype.route = function(context = {}, ...args) {
@@ -125,7 +128,25 @@ Shell.prototype.route = function(context = {}, ...args) {
       ...context
     };
     return this.hook('router_call', context, (context) => {
-      return handler.call(this, context, ...args);
+      var result;
+      if (!config.router.promise) {
+        return handler.call(this, context, ...args);
+      }
+      try {
+        // Otherwise wrap result in a promise 
+        result = handler.call(this, context, ...args);
+        if (result.then) {
+          retun(result);
+        }
+        return new Promise(function(resolve, reject) {
+          return resolve(result);
+        });
+      } catch (error) {
+        err = error;
+        return new Promise(function(resolve, reject) {
+          return reject(err);
+        });
+      }
     });
   };
   route_error = (err, command) => {

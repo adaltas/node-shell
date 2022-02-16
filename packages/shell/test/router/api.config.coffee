@@ -10,12 +10,13 @@ describe 'router.config.router', ->
     it "accept string (eg stderr)", ->
       shell({})
       .config.router.should.eql
+        handler: path.resolve __dirname, '../../src/routes/help'
+        promise: false
         stderr: process.stderr
         stderr_end: false
         stdin: process.stdin
         stdout: process.stdout
         stdout_end: false
-        handler: path.resolve __dirname, '../../src/routes/help'
           
     it "pass custom readable and writable streams", ->
       shell
@@ -24,12 +25,13 @@ describe 'router.config.router', ->
           stdin: new Readable()
           stdout: new Writable()
       .config.router.should.eql
+        handler: path.resolve __dirname, '../../src/routes/help'
+        promise: false
         stderr: new Writable()
         stderr_end: false
         stdin: new Readable()
         stdout: new Writable()
         stdout_end: false
-        handler: path.resolve __dirname, '../../src/routes/help'
 
   describe 'options', ->
   
