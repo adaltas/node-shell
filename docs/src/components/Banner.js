@@ -19,6 +19,9 @@ const styles = {
     textAlign: "center",
     background: "#1F2735",
     color: "#fff",
+    '& a': {
+      color: "#fff",
+    }
   },
   title: {
     '& span': {
@@ -174,15 +177,15 @@ const Banner = () => (
     <div css={styles.keys}>
       <div>
         <img src={IconSupport} alt="Supported"/>
-        Supported
+        <a href="https://www.adaltas.com/en/" alt="Big Data and Node.js consulting in Paris, France">Supported</a>
         </div>
       <div>
         <img src={IconDocs} alt="Documented"/>
-        Documented
+        <Link to="/usage/">Documented</Link>
       </div>
       <div>
         <img src={IconLicense} alt="MIT License"/>
-        MIT License
+        <Link to="/project/license/">MIT License</Link>
       </div>
     </div>
   </div>
