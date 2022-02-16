@@ -2,6 +2,7 @@ import React from "react"
 import { Link } from "gatsby"
 import {
   MIN_TABLET_MEDIA_QUERY,
+  TABLET_MEDIA_QUERY,
 } from 'typography-breakpoint-constants'
 import Layout from "../components/Layout"
 import Seo from "../components/Seo"
@@ -140,26 +141,30 @@ const styles = {
       display: 'flex',
       justifyContent: 'space-between',
       marginBottom: '2rem',
-      '> div':{
-        verticalAlign: 'top',
-        display: "inline-block",
-        '&:nth-child(odd)': {
-          width: "43%",
-        },
-        '&:nth-child(even)': {
-          width: "53%",
-        },
-        "@media (max-width: 768px)": {
-          width: "100% !important",
-          padding: "1rem 0",
+      '& p': {
+        margin: '1.2rem 0',
+        '&:last-child': {
+          textAlign: 'center',
+        }
+      },
+      [TABLET_MEDIA_QUERY]: {
+        flexDirection: 'column',
+        marginBottom: '3rem',
+        '& h3': {
+          textAlign: 'center',
         },
       },
       [MIN_TABLET_MEDIA_QUERY]: {
-        '&:nth-child(odd)': {
-          '& > div:nth-child(odd)': {
+        'h3': {
+          marginTop: '.5rem',
+        },
+        '&:nth-of-type(odd)': {
+          '& > div:nth-of-type(odd)': {
+            width: "43%",
             order: 2,
           },
-          '& > div:nth-child(even)': {
+          '& > div:nth-of-type(even)': {
+            width: "53%",
             order: 1,
           },
         },
@@ -234,11 +239,11 @@ const IndexPage = () => (
         </div>
         <div>
           <div>
-            <h3>Structure the code with routing</h3>
+            <h3>Organize the code with routing</h3>
             <div>
               <p>Load and configure the router in a separate top-level module.</p>
               <p>
-                <Link to='/api/route/' css={styles.button}>
+                <Link to='/usage/routing/' css={styles.button}>
                   Read more
                 </Link>
               </p>
@@ -273,7 +278,7 @@ const IndexPage = () => (
         <div>
           <h2>Installing</h2>
           <p>
-            The latest version of Shell.js is tested with Node.js 10, 12 and 14.
+            The latest version of Shell.js is tested with Node.js 12, 14 and 16.
             New versions of Node.js shall work as well.
           </p>
           <p>Via npm:</p>
