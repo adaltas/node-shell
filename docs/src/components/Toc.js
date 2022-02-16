@@ -29,7 +29,7 @@ const Toc = ({
   classes,
   headings,
 }) => (
-  <div css={[styles.root, classes.root]}>
+  <div css={[styles.root, ...classes.root]}>
     <ul>
     {
       headings.map( (heading) => (

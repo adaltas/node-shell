@@ -21,7 +21,7 @@ const styles = {
     display: 'none',
   },
   tocVisible: {
-    display: '',
+    display: 'block',
   },
   tools: {
     float: 'right',
