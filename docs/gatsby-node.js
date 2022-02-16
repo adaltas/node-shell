@@ -6,7 +6,7 @@ exports.onCreateNode = ({ node, getNode, actions }) => {
   if (node.internal.type === `MarkdownRemark`) {
     slug = createFilePath({ node, getNode, basePath: `pages` })
     edit_url =
-      "https://github.com/adaltas/node-shell/edit/master/" +
+      "https://github.com/adaltas/node-shell/edit/master/docs/" +
       path.relative(__dirname, node.fileAbsolutePath)
     createNodeField({
       node,
