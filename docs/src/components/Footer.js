@@ -20,9 +20,9 @@ const styles = {
       margin: 0,
       textIndent: 0,
       listStyleType: 'none',
-      '& a:hover': {
-        color: '#58CC85',
-      },
+    },
+    '& a:hover': {
+      color: '#58CC85',
     },
   },
   navigate: {
@@ -89,6 +89,7 @@ const Footer = () => (
       <h2>About</h2>
       <p>
         Node.js Parameters is&nbsp;the tool for building CLI applications with Node.js.
+        It is developed and supported by <a href="https://www.adaltas.com/en/" alt="Big Data and Node.js consulting in Paris, France">Adaltas</a>.
       </p>
     </div>
   </Section>
