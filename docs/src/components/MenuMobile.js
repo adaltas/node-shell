@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react"
 import { Link } from "gatsby"
-import { css } from "glamor"
+import { ClassNames } from '@emotion/react'
 
 const styles_nav = {
   root: {
@@ -41,7 +41,7 @@ const styles = {
     height: "calc(100% - 80px)",
     padding: "1.5rem 1rem",
     "&:after": {
-      content: " ",
+      content: '" "',
       display: "block",
       height: "2rem",
     },
@@ -66,72 +66,76 @@ class Menu extends Component {
   render() {
     const { menus } = this.props
     return (
-      <aside className={css(styles.root)}>
-        <div className={css(styles.menu)}>
-          <nav className={css(styles_nav.root)}>
-            <ul>
-              <li>
-                <Link
-                  to={"/"}
-                  className={css(styles_nav.link)}
-                  activeClassName={css(styles_nav.linkActive).toString()}
-                >
-                  Home
-                </Link>
-              </li>
-              {Object.keys(menus.children).map(i => {
-                const menu = menus.children[i]
-                return (
-                  <Fragment key={i}>
-                    <li>
-                      <Link
-                        key={menu.data.slug}
-                        to={menu.data.slug}
-                        className={css(styles_nav.link)}
-                        activeClassName={css(styles_nav.linkActive).toString()}
-                      >
-                        {menu.data.navtitle || menu.data.title}
-                      </Link>
-                    </li>
-                    {menu.children != null &&
+      <ClassNames>
+      {({ css, cx }) => (
+        <aside css={styles.root}>
+          <div css={styles.menu}>
+            <nav css={styles_nav.root}>
+              <ul>
+                <li>
+                  <Link
+                    to={"/"}
+                    className={cx(css(styles_nav.link))}
+                    activeClassName={cx(css(styles_nav.linkActive)).toString()}
+                  >
+                    Home
+                  </Link>
+                </li>
+                {Object.keys(menus.children).map(i => {
+                  const menu = menus.children[i]
+                  return (
+                    <Fragment key={i}>
                       <li>
-                        <ul>
-                          {Object.keys(menu.children).map(j => {
-                            const subMenu = menu.children[j]
-                            return (
-                              <li key={`${i}-${j}`}>
-                                <Link
-                                  key={subMenu.data.slug}
-                                  to={subMenu.data.slug}
-                                  className={css(styles_nav.link)}
-                                  activeClassName={css(styles_nav.linkActive).toString()}
-                                >
-                                  {subMenu.data.navtitle || subMenu.data.title}
-                                </Link>
-                              </li>
-                            )
-                          })}
-                        </ul>
+                        <Link
+                          key={menu.data.slug}
+                          to={menu.data.slug}
+                          className={cx(css(styles_nav.link))}
+                          activeClassName={cx(css(styles_nav.linkActive)).toString()}
+                        >
+                          {menu.data.navtitle || menu.data.title}
+                        </Link>
                       </li>
-                    }
-                  </Fragment>
-                )
-              })}
-            </ul>
-          </nav>
-        </div>
-        <div className={css(styles.footer)}>
-          Help us{" "}
-          <a
-            href="https://github.com/adaltas/node-shell/issues"
-            target="_blank"
-            rel="noreferrer"
-          >
-            improve the docs
-          </a>{" "}
-          by proposing enhancements and fixing typos.
-        </div>
-      </aside>
+                      {menu.children != null &&
+                        <li>
+                          <ul>
+                            {Object.keys(menu.children).map(j => {
+                              const subMenu = menu.children[j]
+                              return (
+                                <li key={`${i}-${j}`}>
+                                  <Link
+                                    key={subMenu.data.slug}
+                                    to={subMenu.data.slug}
+                                    className={cx(css(styles_nav.link))}
+                                    activeClassName={cx(css(styles_nav.linkActive)).toString()}
+                                  >
+                                    {subMenu.data.navtitle || subMenu.data.title}
+                                  </Link>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </li>
+                      }
+                    </Fragment>
+                  )
+                })}
+              </ul>
+            </nav>
+          </div>
+          <div css={styles.footer}>
+            Help us{" "}
+            <a
+              href="https://github.com/adaltas/node-shell/issues"
+              target="_blank"
+              rel="noreferrer"
+            >
+              improve the docs
+            </a>{" "}
+            by proposing enhancements and fixing typos.
+          </div>
+        </aside>
+      )}
+      </ClassNames>
     )
   }
 }

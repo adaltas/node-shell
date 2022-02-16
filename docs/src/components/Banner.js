@@ -1,5 +1,5 @@
 import { Link } from "gatsby"
-import React, { Component } from "react"
+import React from "react"
 import {
   TABLET_MEDIA_QUERY,
   MOBILE_MEDIA_QUERY,
@@ -120,76 +120,72 @@ const styles = {
   }
 }
 
-class Banner extends Component {
-  render() {
-    return (
-      <div css={styles.root}>
-        <div css={styles.info}>
-          <div css={styles.logo}>
-            <img
-              src={LogoIcon}
-              alt="Node.js Parameters"
-            />
-          </div>
-          <div css={styles.content}>
-            <h1 css={styles.title}>
-              <span>The tool for building</span>
-              {' '}
-              <span>CLI applications with Node.js</span>
-            </h1>
-            <div css={styles.buttons}>
-              <Link css={[styles.button, styles.getstarted]} to="/usage/tutorial/">
-                Get started
-              </Link>
-              <a
-                css={[styles.button, styles.github]}
-                href="https://github.com/adaltas/node-shell/"
-              >
-                <img src={GitIcon} alt="Github Node.js Parameters" />
-                Github
-              </a>
-            </div>
-            <div css={styles.badges}>
-                <a
-                  alt={"View this project on NPM"}
-                  href={"https://www.npmjs.com/package/shell"}
-                >
-                  <img
-                    alt={"NPM version"}
-                    src={"https://img.shields.io/npm/v/shell.svg?style=flat"}
-                  />
-                </a>
-                <a
-                  alt={"GitHub actions"}
-                  href={"https://github.com/adaltas/node-shell/actions"}
-                >
-                  <img
-                    alt={"Travis build status"}
-                    src={
-                      "https://img.shields.io/github/checks-status/adaltas/node-shell/master?style=flat"
-                    }
-                  />
-                </a>
-            </div>
-          </div>
+const Banner = () => (
+  <div css={styles.root}>
+    <div css={styles.info}>
+      <div css={styles.logo}>
+        <img
+          src={LogoIcon}
+          alt="Node.js Parameters"
+        />
+      </div>
+      <div css={styles.content}>
+        <h1 css={styles.title}>
+          <span>The tool for building</span>
+          {' '}
+          <span>CLI applications with Node.js</span>
+        </h1>
+        <div css={styles.buttons}>
+          <Link css={[styles.button, styles.getstarted]} to="/usage/tutorial/">
+            Get started
+          </Link>
+          <a
+            css={[styles.button, styles.github]}
+            href="https://github.com/adaltas/node-shell/"
+          >
+            <img src={GitIcon} alt="Github Node.js Parameters" />
+            Github
+          </a>
         </div>
-        <div css={styles.keys}>
-          <div>
-            <img src={IconSupport} alt="Supported"/>
-            Supported
-            </div>
-          <div>
-            <img src={IconDocs} alt="Documented"/>
-            Documented
-          </div>
-          <div>
-            <img src={IconLicense} alt="MIT License"/>
-            MIT License
-          </div>
+        <div css={styles.badges}>
+            <a
+              alt={"View this project on NPM"}
+              href={"https://www.npmjs.com/package/shell"}
+            >
+              <img
+                alt={"NPM version"}
+                src={"https://img.shields.io/npm/v/shell.svg?style=flat"}
+              />
+            </a>
+            <a
+              alt={"GitHub actions"}
+              href={"https://github.com/adaltas/node-shell/actions"}
+            >
+              <img
+                alt={"Travis build status"}
+                src={
+                  "https://img.shields.io/github/checks-status/adaltas/node-shell/master?style=flat"
+                }
+              />
+            </a>
         </div>
       </div>
-    )
-  }
-}
+    </div>
+    <div css={styles.keys}>
+      <div>
+        <img src={IconSupport} alt="Supported"/>
+        Supported
+        </div>
+      <div>
+        <img src={IconDocs} alt="Documented"/>
+        Documented
+      </div>
+      <div>
+        <img src={IconLicense} alt="MIT License"/>
+        MIT License
+      </div>
+    </div>
+  </div>
+)
 
 export default Banner

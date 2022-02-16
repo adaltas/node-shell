@@ -1,6 +1,5 @@
 import { Link } from "gatsby"
 import React from "react"
-import { css } from "glamor"
 import {
   DEFAULT_WIDTH,
 } from 'typography-breakpoint-constants'
@@ -76,50 +75,48 @@ const Header = ({
   menus,
   onMenuClick,
   siteTitle, 
-}) => {
-  return (
-    <header css={styles.root}>
-      <div>
-        <div css={styles.menu}>
-          <Button
-            onClick={onMenuClick}
-            aria-label="Toggle the menu"
-            data-for="header-tooltip"
-            data-tip="Toggle the menu"
-            ripple={true}
-          >
-            <img src={MenuIcon} alt="Bug tool" />
-          </Button>
-        </div>
-        <div css={styles.logo}>
-          <Link to="/">
-            <img
-              src={LogoIcon}
-              alt="Shell.js Parameters"
-              className={css(styles.logoIcon)}
-            />
-            <span>{siteTitle}</span>
-          </Link>
-        </div>
-        <Menu
-          isHome={isHome}
-          menus={menus}
-        />
-        <div className={css(styles.icons)}>
-          <a
-            href="https://github.com/adaltas/node-shell/issues"
-          >
-            <img src={BugIcon} alt="Bug tool" />
-          </a>
-          <a
-            href="https://github.com/adaltas/node-shell"
-          >
-            <img src={GitIcon} alt="GitHub" />
-          </a>
-        </div>
+}) => (
+  <header css={styles.root}>
+    <div>
+      <div css={styles.menu}>
+        <Button
+          onClick={onMenuClick}
+          aria-label="Toggle the menu"
+          data-for="header-tooltip"
+          data-tip="Toggle the menu"
+          ripple={true}
+        >
+          <img src={MenuIcon} alt="Bug tool" />
+        </Button>
       </div>
-    </header>
-  )
-}
+      <div css={styles.logo}>
+        <Link to="/">
+          <img
+            src={LogoIcon}
+            alt="Shell.js Parameters"
+            css={styles.logoIcon}
+          />
+          <span>{siteTitle}</span>
+        </Link>
+      </div>
+      <Menu
+        isHome={isHome}
+        menus={menus}
+      />
+    <div css={styles.icons}>
+        <a
+          href="https://github.com/adaltas/node-shell/issues"
+        >
+          <img src={BugIcon} alt="Bug tool" />
+        </a>
+        <a
+          href="https://github.com/adaltas/node-shell"
+        >
+          <img src={GitIcon} alt="GitHub" />
+        </a>
+      </div>
+    </div>
+  </header>
+);
 
 export default Header

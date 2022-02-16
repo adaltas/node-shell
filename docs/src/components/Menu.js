@@ -1,6 +1,6 @@
 import { Link } from "gatsby"
 import React from "react"
-import { css } from "glamor"
+import { ClassNames } from '@emotion/react'
 
 const styles = {
   menu: {
@@ -17,7 +17,7 @@ const styles = {
       margin: "auto",
       "& > li": {
         '> a:after': {
-          content: ' ',
+          content: '" "',
           display: 'inline-block',
           verticalAlign: 'middle',
           marginLeft: '6px',
@@ -82,42 +82,46 @@ const Menu = ({
   menus
 }) => {
   return (
-    <div css={styles.menu}>
-      <ul>
-        {Object.keys(menus.children).map(i => {
-          const menu = menus.children[i]
-          return (
-            <li key={i}>
-              <Link
-                key={menu.data.slug}
-                to={menu.data.slug}
-                activeClassName={css(styles.linkActive).toString()}
-              >
-                {menu.data.navtitle || menu.data.title}
-              </Link>
-              {menu.children != null &&
-                <ul css={styles.dropdownMenu}>
-                  {Object.keys(menu.children).map(j => {
-                    const subMenu = menu.children[j]
-                    return (
-                      <li key={`${i}-${j}`}>
-                        <Link
-                          key={subMenu.data.slug}
-                          to={subMenu.data.slug}
-                          activeClassName={css(styles.linkActive).toString()}
-                        >
-                          {subMenu.data.navtitle || subMenu.data.title}
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              }
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <ClassNames>
+    {({ css, cx }) => (
+      <div css={styles.menu}>
+        <ul>
+          {Object.keys(menus.children).map(i => {
+            const menu = menus.children[i]
+            return (
+              <li key={i}>
+                <Link
+                  key={menu.data.slug}
+                  to={menu.data.slug}
+                  activeClassName={cx(css(styles.linkActive).toString())}
+                >
+                  {menu.data.navtitle || menu.data.title}
+                </Link>
+                {menu.children != null &&
+                  <ul css={styles.dropdownMenu}>
+                    {Object.keys(menu.children).map(j => {
+                      const subMenu = menu.children[j]
+                      return (
+                        <li key={`${i}-${j}`}>
+                          <Link
+                            key={subMenu.data.slug}
+                            to={subMenu.data.slug}
+                            activeClassName={cx(css(styles.linkActive).toString())}
+                          >
+                            {subMenu.data.navtitle || subMenu.data.title}
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                }
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    )}
+    </ClassNames>
   )
 }
 

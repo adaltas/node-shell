@@ -2,7 +2,6 @@ import React from "react"
 
 import Layout from "../components/Layout"
 import Seo from "../components/Seo"
-import { css } from "glamor"
 
 const styles = {
   notfoundContainer: {
@@ -22,7 +21,7 @@ const IndexPage = () => (
     <Seo title="NOT FOUND" keywords={[`gatsby`, `application`, `react`]} />
     <div>
       <section>
-        <div className={css(styles.notfoundContainer)}>
+        <div css={styles.notfoundContainer}>
           <h2>NOT FOUND</h2>
           <p>You just hit a route that doesn't exist... the sadness.</p>
         </div>

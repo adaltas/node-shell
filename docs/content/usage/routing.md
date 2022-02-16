@@ -8,7 +8,7 @@ sort: 4
 
 # Routing
 
-Routing dispatch the commands of the CLI application into user provided handler function. The handler function are defined by the `route` configuration property of the application or of a command.
+Routing dispatch the commands of the CLI application into user provided handler functions. Handler functions are defined with the `route` property of the application or of a command.
 
 Help is automatically activated when using routing. A new help command is registered as well as the `--help -h` option to each commands.
 
