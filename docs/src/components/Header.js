@@ -12,7 +12,7 @@ import LogoIcon from "../images/logo-icon.svg"
 
 const styles = {
   root: {
-    background: "#1F2735",
+    background: "linear-gradient(0deg, rgba(23,30,42,.98) 0%, rgba(23,30,42,.89) 100%)",
     boxShadow: '0 0 2px #ffffff',
     width: "100%",
     position: "sticky",
