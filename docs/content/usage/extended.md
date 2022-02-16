@@ -8,11 +8,13 @@ sort: 3
 
 # Flatten versus extended mode
 
-For the sake of simplicity, the module operates by default in flatten mode. When parsing application arguments without multi-level commands, it doesn't make much a difference. However, when the application grew and more commands with deepest levels are created, there is a risk of collision between multiple options registering the same properties. While being a little more verbose, the extended ensure that multi levels of options and main arguments can be defined with the same property name.
+For the sake of simplicity, the module operates by default in flatten mode. All the parameters of a multi-level command are merged toguether as one object. When parsing application arguments without commands, it doesn't make much a difference. However, when the application grew and more commands with deepest levels are created, there is a risk of collision between multiple options registering the same properties.
+
+While being a little more verbose, the extended mode ensure that multi levels of options and main arguments can be defined with the same property name. The parameters are provided in the form of an array, one element per command.
 
 ## Flatten mode
 
-For example, consider an application which register a "config" property for the overall application as well as a `start` command in flatten mode:
+Consider an application which registers a "config" property for the overall application as well as a `start` command in flatten mode:
 
 ```js
 const shell = require("shell")
@@ -61,7 +63,7 @@ Error: Invalid Option Configuration: option "config" in command "start" collide 
 
 ## Extended mode
 
-The above example will correctly work in extended mode:
+The above example correctly works in extended mode:
 
 ```js
 const shell = require("shell")
@@ -80,7 +82,7 @@ shell({
 })
 ```
 
-It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml` and its data in extended mode will be parsed like:
+It can be started with the command `./myapp --config ./config.yml start --config ./start-config.yml`. Its data in extended mode is obtained with:
 
 ```json
 [
