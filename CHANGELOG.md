@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/adaltas/node-shell/compare/v0.8.6...v0.9.0) (2022-02-16)
+
+
+### Features
+
+* **router:** promise config ([78369f3](https://github.com/adaltas/node-shell/commit/78369f3610ac44cedd7214d32e7e1c42a736e042))
+
+
+
+
+
 ## [0.8.6](https://github.com/adaltas/node-shell/compare/v0.8.5...v0.8.6) (2022-01-06)
 
 
