@@ -3,60 +3,51 @@ import { Link } from "gatsby"
 import { ClassNames } from '@emotion/react'
 
 const styles_nav = {
-  root: {
-    " ul": {
-      marginBottom: 0,
-    },
-    "> ul": {
-      marginLeft: 0,
-    }
-  },
-  link: {
-    display: "inline-block",
-    margin: ".2rem 0",
-  },
-  linkActive: {
-    fontWeight: 'bold',
-    borderBottom: "2px solid #947EFF",
-  },
 }
 
 const styles = {
   root: {
     fontWeight: 300,
     height: "100%",
-    background: "#101319",
-    "@media (min-width: 960px)": {
-      display: "flex",
-      flexDirection: "column",
-    },
-    " a": {
-      color: "#FFFFFF",
-    },
+    display: "flex",
+    flexDirection: "column",
   },
   menu: {
-    flexGrow: 1,
-    overflow: "auto",
-    display: "block",
-    height: "calc(100% - 80px)",
-    padding: "1.5rem 1rem",
-    "&:after": {
-      content: '" "',
-      display: "block",
-      height: "2rem",
+    overflowY: "auto",
+    background: "rgba(0,0,0,.4)",
+    padding: '1rem 0',
+    '& > nav > ul > li': {
+      margin: '1rem 0'
+    },
+    '& a': {
+      margin: ".2rem 0",
+      padding: '0 1rem',
+      display: 'block'
+    },
+    '& li li a': {
+      padding: '0 1.5rem',
+    },
+    '& .active, & :hover.active': {
+      // fontWeight: 'bold',
+      // color: 'rgba(255,255,255,.8)',
+      // color: 'rgba(0,0,0,.8)',
+      // backgroundColor: "#947EFF",
+      backgroundColor: 'rgba(255,255,255,.1)',
+      color: "#947EFF",
+      fontWeight: 'normal',
+    },
+    '& a:hover': {
+      color: "#947EFF",
     },
   },
   footer: {
-    height: "80px",
-    boxShadow: '0 0 2px #a5b7d240',
+    boxShadow: '0 0 .4rem rgba(255,255,255,.1)',
+    borderTop: '1px solid rgba(255,255,255,.3)',
     padding: "1rem",
-    textAlign: "normal",
     fontSize: ".8rem",
-    position: "absolute",
     bottom: "0",
-    color: "#fff",
-    background: "#101319",
-    " a": {
+    background: "rgba(0,0,0,.6)",
+    "& a": {
       textDecoration: "underline",
     },
   },
@@ -70,14 +61,10 @@ class Menu extends Component {
       {({ css, cx }) => (
         <aside css={styles.root}>
           <div css={styles.menu}>
-            <nav css={styles_nav.root}>
+            <nav>
               <ul>
                 <li>
-                  <Link
-                    to={"/"}
-                    className={cx(css(styles_nav.link))}
-                    activeClassName={cx(css(styles_nav.linkActive)).toString()}
-                  >
+                  <Link to={"/"} activeClassName="active">
                     Home
                   </Link>
                 </li>
@@ -86,36 +73,24 @@ class Menu extends Component {
                   return (
                     <Fragment key={i}>
                       <li>
-                        <Link
-                          key={menu.data.slug}
-                          to={menu.data.slug}
-                          className={cx(css(styles_nav.link))}
-                          activeClassName={cx(css(styles_nav.linkActive)).toString()}
-                        >
+                        <Link to={menu.data.slug} activeClassName="active">
                           {menu.data.navtitle || menu.data.title}
                         </Link>
-                      </li>
-                      {menu.children != null &&
-                        <li>
+                        {menu.children != null &&
                           <ul>
                             {Object.keys(menu.children).map(j => {
                               const subMenu = menu.children[j]
                               return (
                                 <li key={`${i}-${j}`}>
-                                  <Link
-                                    key={subMenu.data.slug}
-                                    to={subMenu.data.slug}
-                                    className={cx(css(styles_nav.link))}
-                                    activeClassName={cx(css(styles_nav.linkActive)).toString()}
-                                  >
+                                  <Link to={subMenu.data.slug} activeClassName="active">
                                     {subMenu.data.navtitle || subMenu.data.title}
                                   </Link>
                                 </li>
                               )
                             })}
                           </ul>
+                        }
                         </li>
-                      }
                     </Fragment>
                   )
                 })}

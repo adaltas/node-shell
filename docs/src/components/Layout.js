@@ -25,10 +25,10 @@ const styles = {
     // "& h1": {
     //   maxWidth: "80%",
     // },
-    '& section:nth-child(odd)': {
+    '& section:nth-of-type(odd)': {
       background: '#323C4F',
     },
-    '& section:nth-child(even)': {
+    '& section:nth-of-type(even)': {
       background: '#1F2735',
     },
   },
@@ -97,7 +97,9 @@ class Layout extends Component {
             <Footer />
           </Fragment>
         }
-        drawer={<MenuMobile menus={menus} />}
+        drawer={
+          <MenuMobile menus={menus} />
+        }
       />
     )
   }
