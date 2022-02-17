@@ -105,7 +105,7 @@ How to use the `route` method to execute code associated with a particular comma
           # Otherwise wrap result in a promise 
           try
             result = handler.call @, context, ...args
-            retun result if result.then
+            retun result if result?.then
             new Promise (resolve, reject) ->
               resolve result
           catch err

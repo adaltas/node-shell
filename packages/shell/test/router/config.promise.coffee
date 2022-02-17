@@ -5,7 +5,7 @@ shell = require '../../src'
 
 describe 'router.config.promise', ->
   
-  it 'wrap error', ->
+  it 'handler throw error', ->
     shell
       options:
         'my_argument': {}
@@ -15,7 +15,7 @@ describe 'router.config.promise', ->
     .route ['--my_argument', 'my value']
     .should.be.rejectedWith 'catch me'
 
-  it 'pass user arguments', ->
+  it 'handler return value', ->
     shell
       options:
         'my_argument': {}
@@ -25,4 +25,14 @@ describe 'router.config.promise', ->
         callback 'value'
     .route ['--my_argument', 'my value'], (value) -> value
     .should.be.resolvedWith 'value'
+      
+  it 'handler return undefined', ->
+    shell
+      options:
+        'my_argument': {}
+      router:
+        promise: true
+      handler: (->)
+    .route ['--my_argument', 'my value']
+    .should.be.resolvedWith undefined
   

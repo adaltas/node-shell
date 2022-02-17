@@ -135,7 +135,7 @@ Shell.prototype.route = function(context = {}, ...args) {
       try {
         // Otherwise wrap result in a promise 
         result = handler.call(this, context, ...args);
-        if (result.then) {
+        if (result != null ? result.then : void 0) {
           retun(result);
         }
         return new Promise(function(resolve, reject) {
