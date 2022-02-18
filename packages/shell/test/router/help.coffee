@@ -1,6 +1,6 @@
 
 { Writable } = require 'stream'
-shell = require '../../src'
+shell = require '../../lib'
 
 writer = (callback) ->
   chunks = []

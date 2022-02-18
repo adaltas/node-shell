@@ -1,5 +1,5 @@
 
-shell = require '../../src'
+shell = require '../../lib'
 
 describe 'config.commands', ->
   

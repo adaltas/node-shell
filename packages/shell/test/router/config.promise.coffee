@@ -1,6 +1,6 @@
 
 path = require 'path'
-shell = require '../../src'
+shell = require '../../lib'
 { Readable, Writable } = require('stream')
 
 describe 'router.config.promise', ->

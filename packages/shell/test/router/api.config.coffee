@@ -1,6 +1,6 @@
 
 path = require 'path'
-shell = require '../../src'
+shell = require '../../lib'
 { Readable, Writable } = require('stream')
 
 describe 'router.config.router', ->
@@ -10,7 +10,7 @@ describe 'router.config.router', ->
     it "accept string (eg stderr)", ->
       shell({})
       .config.router.should.eql
-        handler: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../lib/routes/help'
         promise: false
         stderr: process.stderr
         stderr_end: false
@@ -25,7 +25,7 @@ describe 'router.config.router', ->
           stdin: new Readable()
           stdout: new Writable()
       .config.router.should.eql
-        handler: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../lib/routes/help'
         promise: false
         stderr: new Writable()
         stderr_end: false
@@ -82,7 +82,7 @@ describe 'router.config.router', ->
         main:
           name: 'name'
           description: 'Help about a specific command'
-        handler: path.resolve __dirname, '../../src/routes/help'
+        handler: path.resolve __dirname, '../../lib/routes/help'
         strict: false
         shortcuts: {}
         options: {}

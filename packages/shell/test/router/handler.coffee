@@ -1,7 +1,7 @@
 
 fs = require('fs').promises
 os = require 'os'
-shell = require '../../src'
+shell = require '../../lib'
   
 describe 'router.handler', ->
     

@@ -1,6 +1,6 @@
 
 path = require 'path'
-shell = require '../src'
+shell = require '../lib'
 
 describe 'configure', ->
 
@@ -68,7 +68,7 @@ describe 'configure', ->
           main:
             name: 'name'
             description: 'Help about a specific command'
-          handler: path.resolve __dirname, '../src/routes/help'
+          handler: path.resolve __dirname, '../lib/routes/help'
           strict: false
           options: {}
           commands: {}
