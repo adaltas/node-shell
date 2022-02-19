@@ -19,13 +19,13 @@
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.4.4"
+    "@grpc/grpc-js": "^1.5.5"
   },
   "description": "GRPC client plugin for the Shell.js package.",
   "devDependencies": {
     "@shell-js/grpc_server": "^0.9.0",
     "coffeescript": "^2.6.1",
-    "mocha": "^9.1.3",
+    "mocha": "^9.2.1",
     "should": "^13.2.3"
   },
   "engines": {
