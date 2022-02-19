@@ -1,7 +1,7 @@
 
 shell = require 'shell'
 require '@shell-js/grpc_server'
-client = require '../src/client'
+client = require '../lib/client'
 
 describe 'grpc_client.config', ->
   

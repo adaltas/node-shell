@@ -1,6 +1,6 @@
 
 shell = require 'shell'
-require '../src'
+require '../lib'
 { Writable } = require 'stream'
 { is_object_literal } = require 'mixme'
 

@@ -1,5 +1,5 @@
 
-protobuf = require '../src'
+protobuf = require '../lib'
 
 describe 'grpc_protobuf.load', ->
   

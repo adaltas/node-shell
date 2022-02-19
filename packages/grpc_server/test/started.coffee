@@ -1,6 +1,6 @@
 
 shell = require 'shell'
-require '../src'
+require '../lib'
 
 describe 'grpc_server.started', ->
   

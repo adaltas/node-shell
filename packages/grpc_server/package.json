@@ -75,8 +75,6 @@
   },
   "scripts": {
     "preversion": "yarn run test",
-    "build": "coffee -b -o lib src",
-    "pretest": "yarn run build",
     "test": "mocha 'test/**/*.coffee'"
   }
 }

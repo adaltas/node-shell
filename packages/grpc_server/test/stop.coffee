@@ -1,6 +1,6 @@
 
 shell = require 'shell/lib'
-require '../src'
+require '../lib'
 
 describe 'grpc_server.stop', ->
   

@@ -2,51 +2,42 @@
 // ## Plugin "grpc"
 
 // Dependencies
-var Shell, Transform, get_handlers, grpc, mutate, passthrough, path, proto, utils;
-
-path = require('path');
-
-utils = require('shell/lib/utils');
-
-({mutate} = require('mixme'));
-
+const path = require('path');
+const utils = require('shell/lib/utils');
+const {mutate} = require('mixme');
+const {Transform} = require('stream');
+let grpc;
 try {
   grpc = require('grpc');
 } catch (error) {
   grpc = require('@grpc/grpc-js');
 }
-
-proto = require('@shell-js/grpc_proto');
+const proto = require('@shell-js/grpc_proto');
 
 // Shell & plugins
-Shell = require('shell/lib/Shell');
-
+const Shell = require('shell/lib/Shell');
 require('shell/lib/plugins/config');
-
 require('shell/lib/plugins/router');
-
-({Transform} = require('stream'));
 
 Shell.prototype.init = (function(parent) {
   return function() {
     // Plugin configuration
     this.register({
       configure_set: function({config, command}, handler) {
-        var base, base1, base2;
         if (command.length) {
           return handler;
         }
         if (config.grpc == null) {
           config.grpc = {};
         }
-        if ((base = config.grpc).address == null) {
-          base.address = '127.0.0.1';
+        if (config.grpc.address == null) {
+          config.grpc.address = '127.0.0.1';
         }
-        if ((base1 = config.grpc).port == null) {
-          base1.port = 61234;
+        if (config.grpc.port == null) {
+          config.grpc.port = 61234;
         }
-        if ((base2 = config.grpc).command_protobuf == null) {
-          base2.command_protobuf = false;
+        if (config.grpc.command_protobuf == null) {
+          config.grpc.command_protobuf = false;
         }
         return handler;
       }
@@ -84,7 +75,7 @@ Shell.prototype.init = (function(parent) {
   };
 })(Shell.prototype.init);
 
-passthrough = function() {
+const passthrough = function() {
   return new Transform({
     objectMode: true,
     transform: function(chunk, encoding, callback) {
@@ -96,7 +87,7 @@ passthrough = function() {
   });
 };
 
-get_handlers = function(definition) {
+const get_handlers = function(definition) {
   return {
     ping: function(call, callback) {
       return callback(null, {
@@ -131,24 +122,23 @@ get_handlers = function(definition) {
 };
 
 Shell.prototype.grpc_start = function(callback) {
-  var appconfig, endpoint, handler, handlers, name, packageDefinition, promise, ref, server, shell_definition;
-  if ((ref = this._server) != null ? ref.started : void 0) {
+  if (this._server && this._server.started) {
     throw utils.error('GRPC Server Already Started');
   }
-  appconfig = this.confx().get();
+  const appconfig = this.confx().get();
   // Load the definition
-  packageDefinition = proto.loadSync();
-  shell_definition = grpc.loadPackageDefinition(packageDefinition).shell;
+  const packageDefinition = proto.loadSync();
+  const shell_definition = grpc.loadPackageDefinition(packageDefinition).shell;
   // Instantiate the server
-  server = new grpc.Server();
-  handlers = get_handlers(shell_definition);
-  for (name in handlers) {
-    handler = handlers[name];
+  const server = new grpc.Server();
+  const handlers = get_handlers(shell_definition);
+  for (const name in handlers) {
+    const handler = handlers[name];
     handlers[name] = handler.bind(this);
   }
   server.addService(shell_definition.Shell.service, handlers);
-  endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
-  promise = new Promise(function(resolve, reject) {
+  const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
+  const promise = new Promise(function(resolve, reject) {
     return server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
       server.start();
       if (err) {
