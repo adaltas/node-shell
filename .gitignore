@@ -4,7 +4,7 @@ package-lock.json
 yarn.lock
 node_modules
 !/.github
-!.eslintrc
+!.eslintrc.json
 !.gitignore
 !/.husky
 !.npmignore
