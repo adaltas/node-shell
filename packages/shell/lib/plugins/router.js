@@ -161,10 +161,9 @@ Shell.prototype.route = function(context = {}, ...args) {
       // Convert argument to an help command
       context.argv = command.length ? ['help', ...command] : ['--help'];
       params = this.parse(context.argv);
-      handler = route_load(this.config.router.handler);
-    } else {
-      handler = route_load(handler);
+      handler = this.config.router.handler;
     }
+    handler = route_load(handler);
     return route_call(handler, command, params, err, args);
   };
   let params;
