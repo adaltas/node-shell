@@ -1,7 +1,9 @@
 
-path = require 'path'
-shell = require '../../lib'
-{ Readable, Writable } = require('stream')
+import path from 'path'
+import {shell} from '../../lib/index.js'
+import { Readable, Writable } from 'stream'
+import filedirname from '../../lib/utils/filedirname.js'
+{__dirname} = filedirname import.meta.url
 
 describe 'router.config.router', ->
   
@@ -10,7 +12,7 @@ describe 'router.config.router', ->
     it "accept string (eg stderr)", ->
       shell({})
       .config.router.should.eql
-        handler: path.resolve __dirname, '../../lib/routes/help'
+        handler: 'shell/routes/help'
         promise: false
         stderr: process.stderr
         stderr_end: false
@@ -25,7 +27,7 @@ describe 'router.config.router', ->
           stdin: new Readable()
           stdout: new Writable()
       .config.router.should.eql
-        handler: path.resolve __dirname, '../../lib/routes/help'
+        handler: 'shell/routes/help'
         promise: false
         stderr: new Writable()
         stderr_end: false
@@ -82,7 +84,7 @@ describe 'router.config.router', ->
         main:
           name: 'name'
           description: 'Help about a specific command'
-        handler: path.resolve __dirname, '../../lib/routes/help'
+        handler: 'shell/routes/help'
         strict: false
         shortcuts: {}
         options: {}

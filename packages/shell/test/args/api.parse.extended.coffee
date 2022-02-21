@@ -1,17 +1,17 @@
 
-shell = require '../../lib'
+import {shell} from '../../lib/index.js'
 
 describe 'api.parse.extended', ->
 
   it 'overwrite flatten mode', ->
     shell
-      options: 'watch': {}
-    .parse ['--watch', __dirname], extended: true
-    .should.eql [watch: __dirname]
+      options: 'my_option': {}
+    .parse ['--my_option', 'my value'], extended: true
+    .should.eql [my_option: 'my value']
 
   it 'overwrite extended mode', ->
     shell
-      options: 'watch': {}
+      options: 'my_option': {}
       extended: true
-    .parse ['--watch', __dirname], extended: false
-    .should.eql watch: __dirname
+    .parse ['--my_option', 'my value'], extended: false
+    .should.eql my_option: 'my value'

@@ -3,12 +3,12 @@
 // Print the Protocol Buffer definition.
 
 // Dependencies
-const protobuf = require('protobufjs');
-const proto = require('@shell-js/grpc_proto');
-const fs = require('fs');
+import fs from 'node:fs';
+import protobuf from 'protobufjs';
+import proto from '@shell-js/grpc_proto';
 
 // ## Source code
-module.exports = function({argv, params, config, error, stdout, stdout_end}) {
+export default function({argv, params, config, error, stdout, stdout_end}) {
   const proto_path = proto.resolve();
   switch (params.format) {
     case 'json':

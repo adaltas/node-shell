@@ -1,10 +1,10 @@
 
-const {mutate, is_object_literal} = require('mixme');
+import {mutate, is_object_literal} from 'mixme';
 
 /*
 Format errors
 */
-module.exports = function() {
+export default function() {
   if (typeof arguments[0] === 'string') {
     arguments[0] = {
       message: arguments[0]

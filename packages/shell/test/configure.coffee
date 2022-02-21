@@ -1,11 +1,13 @@
 
-path = require 'path'
-shell = require '../lib'
+import path from 'path'
+import {shell} from '../lib/index.js'
+import filedirname from '../lib/utils/filedirname.js'
+{__dirname} = filedirname import.meta.url
 
 describe 'configure', ->
 
   describe 'normalisation', ->
-    
+
     it 'is immutable', ->
       config = {}
       shell config
@@ -13,13 +15,13 @@ describe 'configure', ->
 
     it 'empty without command does not throw errors', ->
       shell({}).confx().get()
-          
+
     it 'set default command name as "command" if commands available', ->
       shell
         commands:
           'my_cmd': {}
       .confx().get().command.should.eql 'command'
-          
+
     it 'nested empty commands', ->
       shell
         commands: 'parent_cmd':
@@ -68,7 +70,7 @@ describe 'configure', ->
           main:
             name: 'name'
             description: 'Help about a specific command'
-          handler: path.resolve __dirname, '../lib/routes/help'
+          handler: 'shell/routes/help'
           strict: false
           options: {}
           commands: {}

@@ -1,5 +1,5 @@
 
-shell = require '../../lib'
+import {shell} from '../../lib/index.js'
   
 describe 'options.type', ->
 
@@ -8,15 +8,15 @@ describe 'options.type', ->
     it 'is default type', ->
       app = shell
         commands: 'start':
-          options: 'watch':
+          options: 'my_option':
             shortcut: 'w'
-      app.parse(['start', '--watch', __dirname]).should.eql
+      app.parse(['start', '--my_option', 'my value']).should.eql
         command: ['start']
-        watch: __dirname
+        my_option: 'my value'
       app.compile
         command: ['start']
-        watch: __dirname
-      .should.eql ['start', '--watch', __dirname]
+        my_option: 'my value'
+      .should.eql ['start', '--my_option', 'my value']
 
   describe 'boolean', ->
 

@@ -1,7 +1,7 @@
 
-path = require 'path'
-shell = require '../../lib'
-{ Readable, Writable } = require('stream')
+import path from 'path'
+import {shell} from '../../lib/index.js'
+import { Readable, Writable } from 'stream'
 
 describe 'router.config.promise', ->
   

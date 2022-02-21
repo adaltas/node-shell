@@ -1,7 +1,7 @@
 
-shell = require 'shell'
-require '@shell-js/grpc_server'
-client = require '../lib/client'
+import {shell} from 'shell'
+import '@shell-js/grpc_server'
+import client from '../lib/client.js'
 
 describe 'grpc_client.ping', ->
   

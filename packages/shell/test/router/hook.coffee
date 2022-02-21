@@ -1,6 +1,6 @@
 
-{ Writable } = require 'stream'
-shell = require '../../lib'
+import { Writable } from 'stream'
+import {shell} from '../../lib/index.js'
 
 writer = (callback) ->
   chunks = []

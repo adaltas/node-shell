@@ -31,6 +31,12 @@
   "engines": {
     "node": ">= 0.10.x"
   },
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs"
+    }
+  },
   "files": [
     "/lib"
   ],
@@ -55,10 +61,10 @@
   "mocha": {
     "throw-deprecation": true,
     "require": [
-      "should",
-      "coffeescript/register"
+      "should"
     ],
     "inline-diffs": true,
+    "loader": "./test/loaders/coffee.js",
     "timeout": 40000,
     "reporter": "spec",
     "recursive": true
@@ -72,7 +78,10 @@
     "directory": "packages/grpc_client"
   },
   "scripts": {
+    "build": "npx rollup -c",
     "preversion": "yarn run test",
+    "pretest": "npm run build",
     "test": "mocha 'test/**/*.coffee'"
-  }
+  },
+  "type": "module"
 }

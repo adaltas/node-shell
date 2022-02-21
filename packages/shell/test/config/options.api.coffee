@@ -1,5 +1,5 @@
 
-shell = require '../../lib'
+import {shell} from '../../lib/index.js'
 
 describe 'config.options.api', ->
   

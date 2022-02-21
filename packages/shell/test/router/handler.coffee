@@ -1,7 +1,7 @@
 
-fs = require('fs').promises
-os = require 'os'
-shell = require '../../lib'
+import fs from 'fs/promises'
+import os from 'os'
+import {shell} from '../../lib/index.js'
   
 describe 'router.handler', ->
     
@@ -23,13 +23,15 @@ describe 'router.handler', ->
     ).should.throw 'catch me'
     
   it 'load with custom function handler', ->
-    await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'module.exports = -> "Hello"'
-    shell
+    await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'export default -> "Hello"'
+    await shell
       handler: './something'
-      load: (module) ->
-        require "#{os.tmpdir()}/renamed_module.coffee" if module is './something'
+      load: (module, namespace) ->
+        throw Error 'Incorrect module name' unless module is './something'
+        location = "#{os.tmpdir()}/renamed_module.coffee"
+        (await import(location))[namespace]
     .route []
-    .should.eql 'Hello'
+    .should.be.resolvedWith 'Hello'
     await fs.unlink "#{os.tmpdir()}/renamed_module.coffee"
   
   describe 'arguments', ->

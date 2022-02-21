@@ -1,8 +1,8 @@
 
-// # Route Help
+// Route Help
 // Print the help information to stderr.
 
-module.exports = function({argv, params, error, stderr, stderr_end}) {
+export default function({argv, params, error, stderr, stderr_end}) {
   const command = this.helping(params);
   if (error) {
     stderr.write(`\n${error.message}\n`);

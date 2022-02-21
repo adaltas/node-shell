@@ -2,12 +2,15 @@
 // # Shell.js
 // Usage: `shell(config)`
 
-const Shell = require('./Shell');
-require('./plugins/router');
-require('./plugins/config');
-require('./plugins/args');
-require('./plugins/help');
+import Shell from './Shell.js';
+import './plugins/router.js';
+import './plugins/config.js';
+import './plugins/args.js';
+import './plugins/help.js';
 
-module.exports = function(config) {
+const shell = function(config) {
   return new Shell(config);
 };
+
+export {shell, Shell};
+export * as utils from './utils/index.js'

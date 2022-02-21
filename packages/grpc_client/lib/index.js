@@ -1,8 +1,8 @@
 
 // Dependencies
-const client = require('./client')();
+import client from './client.js';
 
-const call = client.run({
+const call = client().run({
   argv: process.argv.slice(2)
 });
 

@@ -1,8 +1,8 @@
 
-shell = require 'shell'
-require '../lib'
-{ Writable } = require 'stream'
-{ is_object_literal } = require 'mixme'
+import {Writable} from 'node:stream'
+import {is_object_literal} from 'mixme'
+import {shell} from 'shell'
+import '../lib/index.js'
 
 writer = (callback) ->
   chunks = []

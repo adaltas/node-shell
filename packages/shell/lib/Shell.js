@@ -2,11 +2,10 @@
 // Shell.js Core object
 
 // Dependencies
-const path = require('path');
-const stream = require('stream');
-const load = require('./utils/load');
-const utils = require('./utils');
-const {clone, merge, is_object_literal} = require('mixme');
+import path from 'node:path';
+import stream from 'node:stream';
+import {error, load} from './utils/index.js';
+import {clone, merge, is_object_literal} from 'mixme';
 
 // Internal types
 const types = ['string', 'boolean', 'integer', 'array'];
@@ -32,7 +31,7 @@ Shell.prototype.init = (function() {});
 
 Shell.prototype.register = function(hook) {
   if (!is_object_literal(hook)) {
-    throw utils.error(['Invalid Hook Registration:', 'hooks must consist of keys representing the hook names', 'associated with function implementing the hook,', `got ${hook}`]);
+    throw error(['Invalid Hook Registration:', 'hooks must consist of keys representing the hook names', 'associated with function implementing the hook,', `got ${hook}`]);
   }
   this.registry.push(hook);
   return this;
@@ -48,7 +47,7 @@ Shell.prototype.hook = function() {
       [name, args, hooks, handler] = arguments;
       break;
     default:
-      throw utils.error(['Invalid Hook Argument:', 'function hook expect 3 or 4 arguments', 'name, args, hooks? and handler,', `got ${arguments.length} arguments`]);
+      throw error(['Invalid Hook Argument:', 'function hook expect 3 or 4 arguments', 'name, args, hooks? and handler,', `got ${arguments.length} arguments`]);
   }
   if (typeof hooks === 'function') {
     hooks = [hooks];
@@ -79,19 +78,24 @@ Shell.prototype.hook = function() {
 Load and return a module, use `require.main.require` by default but can be
 overwritten by the `load` options passed in the configuration.
 */
-Shell.prototype.load = function(module) {
+Shell.prototype.load = async function(module, namespace = 'default') {
   if (typeof module !== 'string') {
-    throw utils.error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
+    throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
   }
+  // Custom loader defined in the configuration
   if (this.config.load) {
+    // Provided by the user as a module path
     if (typeof this.config.load === 'string') {
-      return load(this.config.load)(module);
+      // todo, shall be async and return module.default
+      const loader = await load(this.config.load /* `, this.config.load.namespace` */);
+      return loader(module, namespace);
+    // Provided by the user as a function
     } else {
-      return this.config.load(module);
+      return await this.config.load(module, namespace);
     }
   } else {
-    return load(module);
+    return await load(module, namespace);
   }
 };
 
-module.exports = Shell;
+export default Shell;

@@ -2,14 +2,15 @@
 // Plugin "help"
 
 // Dependencies
-const path = require('path');
-const pad = require('pad');
-const utils = require('../utils');
-const {clone, is_object_literal, merge} = require('mixme');
+import path from 'node:path';
+import pad from 'pad';
+import {clone, is_object_literal, merge} from 'mixme';
+import {error, filedirname} from '../utils/index.js';
+const {__dirname} = filedirname(import.meta.url);
 
 // Shell.js & plugins
-const Shell = require('../Shell');
-require('../plugins/config');
+import Shell from '../Shell.js';
+import '../plugins/config.js';
 
 Shell.prototype.init = (function(parent) {
   return function() {
@@ -48,7 +49,7 @@ Shell.prototype.init = (function(parent) {
               description: 'Help about a specific command'
             },
             help: true,
-            handler: path.resolve(__dirname, '../routes/help'),
+            handler: 'shell/routes/help',
             options: {
               'help': {
                 disabled: true
@@ -93,19 +94,19 @@ Shell.prototype.helping = function(params, options = {}) {
   }
   if (!options.extended) {
     if (!is_object_literal(params)) {
-      throw utils.error(["Invalid Arguments:", "`helping` expect a params object as first argument", "in flatten mode,", `got ${JSON.stringify(params)}`]);
+      throw error(["Invalid Arguments:", "`helping` expect a params object as first argument", "in flatten mode,", `got ${JSON.stringify(params)}`]);
     }
   } else {
     if (!(Array.isArray(params) && !params.some(function(cparams) {
       return !is_object_literal(cparams);
     }))) {
-      throw utils.error(["Invalid Arguments:", "`helping` expect a params array with literal objects as first argument", "in extended mode,", `got ${JSON.stringify(params)}`]);
+      throw error(["Invalid Arguments:", "`helping` expect a params array with literal objects as first argument", "in extended mode,", `got ${JSON.stringify(params)}`]);
     }
   }
   // Extract the current commands from the arguments
   if (!options.extended) {
     if (params[appconfig.command] && !Array.isArray(params[appconfig.command])) {
-      throw utils.error(['Invalid Arguments:', `parameter ${JSON.stringify(appconfig.command)} must be an array in flatten mode,`, `got ${JSON.stringify(params[appconfig.command])}`]);
+      throw error(['Invalid Arguments:', `parameter ${JSON.stringify(appconfig.command)} must be an array in flatten mode,`, `got ${JSON.stringify(params[appconfig.command])}`]);
     }
     // In flatten mode, extract the commands from params
     commands = params[appconfig.command] || [];
@@ -138,7 +139,7 @@ Shell.prototype.helping = function(params, options = {}) {
     });
     if (helping) {
       if (options.extended && commands.length) {
-        throw utils.error(['Invalid Argument:', '`help` must be associated with a leaf command']);
+        throw error(['Invalid Argument:', '`help` must be associated with a leaf command']);
       }
       return true;
     }
@@ -186,7 +187,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
     options.columns = 28;
   }
   if (options.columns < 10) {
-    throw utils.error(['Invalid Help Column Option:', 'must exceed a size of 10 columns,', `got ${JSON.stringify(options.columns)}`]);
+    throw error(['Invalid Help Column Option:', 'must exceed a size of 10 columns,', `got ${JSON.stringify(options.columns)}`]);
   }
   if (process.stdout.columns == null) {
     if (options.one_column == null) {
@@ -200,7 +201,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
     commands = commands.split(' ');
   }
   if (!Array.isArray(commands)) {
-    throw utils.error(['Invalid Help Arguments:', 'expect commands to be an array as first argument,', `got ${JSON.stringify(commands)}`]);
+    throw error(['Invalid Help Arguments:', 'expect commands to be an array as first argument,', `got ${JSON.stringify(commands)}`]);
   }
   const appconfig = this.confx().get();
   let config = appconfig;
@@ -209,7 +210,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
     const command = commands[i];
     config = config.commands[command];
     if (!config) {
-      throw utils.error(['Invalid Command:', `argument \"${commands.slice(0, i + 1).join(' ')}\" is not a valid command`]);
+      throw error(['Invalid Command:', `argument \"${commands.slice(0, i + 1).join(' ')}\" is not a valid command`]);
     }
     configs.push(config);
   }

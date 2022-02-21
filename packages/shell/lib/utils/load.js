@@ -1,7 +1,8 @@
 
-const path = require('path');
+import path from 'node:path';
 
-module.exports = function(module) {
+export default async function(module, namespace = 'default') {
   module = module.substr(0, 1) === '.' ? path.resolve(process.cwd(), module) : module;
-  return require.main.require(module);
+  const mod = await import(module);
+  return mod[namespace];
 };

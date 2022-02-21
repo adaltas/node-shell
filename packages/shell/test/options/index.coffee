@@ -1,5 +1,5 @@
 
-shell = require '../../lib'
+import {shell} from '../../lib/index.js'
   
 describe 'options', ->
   
@@ -56,16 +56,16 @@ describe 'options', ->
               shortcut: 's'
               type: 'boolean'
       app.parse [
-        'start', '--watch', __dirname, '-s', 'my', '--value'
+        'start', '--watch', 'first value', '-s', 'second', '--value'
       ]
       .should.eql
         command: ['start']
-        watch: __dirname
+        watch: 'first value'
         strict: true
-        my_argument: ['my', '--value']
+        my_argument: ['second', '--value']
       app.compile
         command: ['start']
-        watch: __dirname
+        watch: 'first value'
         strict: true
-        my_argument: ['my', '--value']
-      .should.eql ['start', '--watch', __dirname, '--strict', 'my', '--value']
+        my_argument: ['second', '--value']
+      .should.eql ['start', '--watch', 'first value', '--strict', 'second', '--value']

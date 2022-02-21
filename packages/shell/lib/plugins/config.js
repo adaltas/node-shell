@@ -2,11 +2,11 @@
 // Plugin "config"
 
 // Dependencies
-const utils = require('../utils');
-const {clone, is_object_literal, merge, mutate} = require('mixme');
+import {error} from '../utils/index.js';
+import {clone, is_object_literal, merge, mutate} from 'mixme';
 
 // Shell.js & plugins
-const Shell = require('../Shell');
+import Shell from '../Shell.js';
 
 // Internal types
 const types = ['string', 'boolean', 'integer', 'array'];
@@ -35,12 +35,12 @@ const builder_main = function(commands) {
         config.main = void 0;
         return builder;
       } else if (!is_object_literal(value)) {
-        throw utils.error(['Invalid Main Configuration:', 'accepted values are string, null and object,', `got \`${JSON.stringify(value)}\``]);
+        throw error(['Invalid Main Configuration:', 'accepted values are string, null and object,', `got \`${JSON.stringify(value)}\``]);
       }
       // Ensure there is no conflict with command
       // Get root configuration to extract command name
       if (value.name === ctx.confx([]).raw().command) {
-        throw utils.error(['Conflicting Main Value:', 'main name is conflicting with the command name,', `got \`${JSON.stringify(value.name)}\``]);
+        throw error(['Conflicting Main Value:', 'main name is conflicting with the command name,', `got \`${JSON.stringify(value.name)}\``]);
       }
       config.main = value;
       return builder;
@@ -83,10 +83,10 @@ const builder_options = function(commands) {
         } else if (arguments.length === 1) {
           values = arguments[0];
         } else {
-          throw utils.error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
+          throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
         }
         if (config.options && !is_object_literal(config.options)) {
-          throw utils.error(['Invalid Options:', `expect an object, got ${JSON.stringify(config.options)}`]);
+          throw error(['Invalid Options:', `expect an object, got ${JSON.stringify(config.options)}`]);
         }
         const option = config.options[name] = merge(config.options[name], values);
         if (!ctx.config.extended) {
@@ -96,7 +96,7 @@ const builder_options = function(commands) {
               return commands[i] !== cmd;
             }).length === 0;
             if (collide) {
-              throw utils.error(['Invalid Option Configuration:', `option ${JSON.stringify(name)}`, `in command ${JSON.stringify(commands.join(' '))}`, `collide with the one in ${ctx.collision[name].length === 0 ? 'application' : JSON.stringify(ctx.collision[name].join(' '))},`, "change its name or use the extended property"]);
+              throw error(['Invalid Option Configuration:', `option ${JSON.stringify(name)}`, `in command ${JSON.stringify(commands.join(' '))}`, `collide with the one in ${ctx.collision[name].length === 0 ? 'application' : JSON.stringify(ctx.collision[name].join(' '))},`, "change its name or use the extended property"]);
             }
           }
           // Associate options with their declared command
@@ -108,14 +108,14 @@ const builder_options = function(commands) {
           option.type = 'string';
         }
         if (types.indexOf(option.type) === -1) {
-          throw utils.error(['Invalid Option Configuration:', `supported options types are ${JSON.stringify(types)},`, `got ${JSON.stringify(option.type)}`, `for option ${JSON.stringify(name)}`, commands.length ? `in command ${JSON.stringify(commands.join(' '))}` : void 0]);
+          throw error(['Invalid Option Configuration:', `supported options types are ${JSON.stringify(types)},`, `got ${JSON.stringify(option.type)}`, `for option ${JSON.stringify(name)}`, commands.length ? `in command ${JSON.stringify(commands.join(' '))}` : void 0]);
         }
         if (typeof option.enum === 'string') {
           // config.shortcuts[option.shortcut] = option.name if option.shortcut and not option.disabled
           option.enum = [option.enum];
         }
         if (option.enum && !Array.isArray(option.enum)) {
-          throw utils.error(['Invalid Option Configuration:', 'option property "enum" must be a string or an array,', `got ${option.enum}`]);
+          throw error(['Invalid Option Configuration:', 'option property "enum" must be a string or an array,', `got ${option.enum}`]);
         }
         return this;
       }
@@ -191,7 +191,7 @@ Shell.prototype.confx = function(command = []) {
           // TODO: create a more explicit message,
           // including somehting like "command #{name} is not registered",
           // also ensure it is tested
-          throw utils.error(['Invalid Command']);
+          throw error(['Invalid Command']);
         }
         // A new command doesn't have a config registered yet
         if (source.commands[name] == null) {
@@ -232,7 +232,7 @@ Shell.prototype.confx = function(command = []) {
       } else if (arguments.length === 1) {
         values = arguments[0];
       } else {
-        throw utils.error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
+        throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
       }
       lconfig = ctx.config;
       for (const name of command) {
@@ -250,7 +250,7 @@ Shell.prototype.confx = function(command = []) {
             config.extended = false;
           }
           if (typeof config.extended !== 'boolean') {
-            throw utils.error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
+            throw error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
           }
           config.root = true;
           if (config.name == null) {
@@ -266,13 +266,13 @@ Shell.prototype.confx = function(command = []) {
           }
         } else {
           if (config.name && config.name !== command.slice(-1)[0]) {
-            throw utils.error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
+            throw error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
           }
           if (config.command != null) {
-            throw utils.error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
+            throw error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
           }
           if (config.extended != null) {
-            throw utils.error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
+            throw error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
           }
           config.name = command.slice(-1)[0];
         }

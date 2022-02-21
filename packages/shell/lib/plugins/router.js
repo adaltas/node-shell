@@ -2,14 +2,15 @@
 // Plugin "router"
 
 // Dependencies
-const path = require('path');
-const stream = require('stream');
-const utils = require('../utils');
-const {clone, merge, is_object_literal} = require('mixme');
+import path from 'node:path';
+import stream from 'node:stream';
+import {clone, merge, is_object_literal} from 'mixme';
+import {error, filedirname, load} from '../utils/index.js';
+const {__dirname} = filedirname(import.meta.url);
 
 // Shell.js & plugins
-const Shell = require('../Shell');
-require('../plugins/config');
+import Shell from '../Shell.js';
+import '../plugins/config.js';
 
 Shell.prototype.init = (function(parent) {
   return function() {
@@ -22,7 +23,7 @@ Shell.prototype.init = (function(parent) {
           config.router = {};
         }
         if (config.router.handler == null) {
-          config.router.handler = path.resolve(__dirname, '../routes/help');
+          config.router.handler = 'shell/routes/help';
         }
         if (config.router.promise == null) {
           config.router.promise = false;
@@ -43,13 +44,13 @@ Shell.prototype.init = (function(parent) {
           config.router.stderr_end = false;
         }
         if (! config.router.stdin instanceof stream.Readable) {
-          throw utils.error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
+          throw error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
         }
         if (! config.router.stdout instanceof stream.Writable) {
-          throw utils.error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
+          throw error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
         }
         if (! config.router.stderr instanceof stream.Writable) {
-          throw utils.error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
+          throw error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
         }
         return handler;
       }
@@ -66,7 +67,7 @@ Shell.prototype.init = (function(parent) {
           return handler;
         }
         if (typeof config.handler !== 'function' && typeof config.handler !== 'string') {
-          throw utils.error([
+          throw error([
             'Invalid Route Configuration:',
             "accept string or function",
             !command.length
@@ -97,7 +98,7 @@ Shell.prototype.route = function(context = {}, ...args) {
       argv: context
     };
   } else if (!is_object_literal(context)) {
-    throw utils.error(['Invalid Router Arguments:', 'first argument must be a context object or the argv array,', `got ${JSON.stringify(context)}`]);
+    throw error(['Invalid Router Arguments:', 'first argument must be a context object or the argv array,', `got ${JSON.stringify(context)}`]);
   }
   const appconfig = this.confx().get();
   const route_load = (handler) => {
@@ -106,7 +107,7 @@ Shell.prototype.route = function(context = {}, ...args) {
     } else if (typeof handler === 'function') {
       return handler;
     } else {
-      throw utils.error(`Invalid Handler: expect a string or a function, got ${handler}`);
+      throw error(`Invalid Handler: expect a string or a function, got ${handler}`);
     }
   };
   const route_call = (handler, command, params, err, args) => {
@@ -137,9 +138,9 @@ Shell.prototype.route = function(context = {}, ...args) {
         return new Promise(function(resolve, reject) {
           return resolve(result);
         });
-      } catch (error) {
+      } catch (err) {
         return new Promise(function(resolve, reject) {
-          return reject(error);
+          return reject(err);
         });
       }
     });
@@ -148,7 +149,14 @@ Shell.prototype.route = function(context = {}, ...args) {
     context.argv = command.length ? ['help', ...command] : ['--help'];
     const params = this.parse(context.argv);
     const handler = route_load(this.config.router.handler);
-    return route_call(handler, command, params, err, args);
+    if (handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, err, args);
+      })
+    } else {
+      return route_call(handler, command, params, err, args);
+    }
   };
   const route_from_config = (config, command, params) => {
     let err;
@@ -156,32 +164,52 @@ Shell.prototype.route = function(context = {}, ...args) {
     if (!handler) {
       // Provide an error message if leaf command without a handler
       if (!Object.keys(config.commands).length) { // Object.keys(config.commands).length or
-        err = config.root ? utils.error(['Missing Application Handler:', 'a \"handler\" definition is required when no child command is defined']) : utils.error(['Missing Command Handler:', `a \"handler\" definition ${JSON.stringify(params[appconfig.command])} is required when no child command is defined`]);
+        err = config.root ? error(['Missing Application Handler:', 'a \"handler\" definition is required when no child command is defined']) : error(['Missing Command Handler:', `a \"handler\" definition ${JSON.stringify(params[appconfig.command])} is required when no child command is defined`]);
       }
       // Convert argument to an help command
-      context.argv = command.length ? ['help', ...command] : ['--help'];
-      params = this.parse(context.argv);
-      handler = this.config.router.handler;
+      // context.argv = command.length ? ['help', ...command] : ['--help'];
+      // params = this.parse(context.argv);
+      // handler = this.config.router.handler;
+      return route_error(err, command);
     }
     handler = route_load(handler);
-    return route_call(handler, command, params, err, args);
+    if(handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, err, args);
+      })
+      .catch(async (err) => {
+        err.message = `Fail to load route. Message is: ${err.message}`
+        return route_error(err, command);
+      })
+    }else{
+      return route_call(handler, command, params, err, args);
+    }
   };
   let params;
   try {
     // Read arguments
     params = this.parse(context.argv);
-  } catch (error) {
-    return route_error(error, error.command || []);
+  } catch (err) {
+    return route_error(err, err.command || []);
   }
   // Print help
-  if (command = this.helping(params)) {
+  let command = this.helping(params)
+  if (command) {
     // this seems wrong, must be the handler of the command
-    const handler = this.load(appconfig.router.handler);
-    return route_call(handler, command, params, undefined, args);
+    const handler = route_load(appconfig.router.handler);
+    if (handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, undefined, args);
+      })
+    } else {
+      return route_call(handler, command, params, undefined, args);
+    }
   } else {
     // Return undefined if not parsing command based arguments
     // Load a command route
-    let command = params[appconfig.command];
+    command = params[appconfig.command];
     if (appconfig.extended) {
       // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
       // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended

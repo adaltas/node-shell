@@ -1,6 +1,6 @@
 
-shell = require 'shell'
-require '../lib'
+import {shell} from 'shell'
+import '../lib/index.js'
 
 describe 'grpc_server.start', ->
   

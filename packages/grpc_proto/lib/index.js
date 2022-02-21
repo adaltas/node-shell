@@ -1,13 +1,17 @@
 
-const protoLoader = require('@grpc/proto-loader');
+// Dependencies
+import path from 'node:path';
+import protoLoader from '@grpc/proto-loader';
+import {utils} from 'shell';
+const {__dirname} = utils.filedirname(import.meta.url);
 
-module.exports = {
+export default {
   resolve: function() {
-    return require.resolve('./shell.proto');
+    return path.resolve(__dirname, './shell.proto');
   },
   load: function(proto) {
     if (proto == null) {
-      proto = module.exports.resolve();
+      proto = this.resolve();
     }
     return protoLoader.load(proto, {
       keepCase: true,
@@ -19,7 +23,7 @@ module.exports = {
   },
   loadSync: function(proto) {
     if (proto == null) {
-      proto = module.exports.resolve();
+      proto = this.resolve();
     }
     return protoLoader.loadSync(proto, {
       keepCase: true,

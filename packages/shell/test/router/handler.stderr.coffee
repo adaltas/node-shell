@@ -1,8 +1,8 @@
 
-fs = require('fs').promises
-os = require 'os'
-shell = require '../../lib'
-{ Writable } = require('stream')
+import fs from 'fs/promises'
+import os from 'os'
+import {shell} from '../../lib/index.js'
+import { Writable } from 'stream'
   
 describe 'handler.stdout', ->
 
