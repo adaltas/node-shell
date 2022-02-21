@@ -207,12 +207,12 @@ Shell.prototype.confx = function(command = []) {
       if (command.length) {
         config.command = command;
       }
-      for (name in config.commands) {
+      for (const name in config.commands) {
         config.commands[name] = ctx.confx([...command, name]).get();
       }
       config.options = this.options.show();
       config.shortcuts = {};
-      for (name in config.options) {
+      for (const name in config.options) {
         const option = config.options[name];
         if (option.shortcut) {
           config.shortcuts[option.shortcut] = option.name;

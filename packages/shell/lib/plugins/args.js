@@ -172,7 +172,7 @@ Shell.prototype.parse = function(argv = process, options = {}) {
     // Check against required main
     const main = config.main;
     if (main) {
-      required = typeof main.required === 'function' ? !!main.required.call(null, {
+      const required = typeof main.required === 'function' ? !!main.required.call(null, {
         config: config,
         command: command
       }) : !!main.required;
@@ -200,8 +200,8 @@ Shell.prototype.parse = function(argv = process, options = {}) {
       params[appconfig.command] = [];
     }
     for (const command_params of full_params) {
-      for (k in command_params) {
-        v = command_params[k];
+      for (const k in command_params) {
+        const v = command_params[k];
         if (k === appconfig.command) {
           params[k].push(v);
         } else {
@@ -286,9 +286,9 @@ Shell.prototype.compile = function(data, options = {}) {
       }
     }
     if (config.main) {
-      value = ldata[config.main.name];
+      const value = ldata[config.main.name];
       // Handle required
-      required = typeof config.main.required === 'function' ? !!config.main.required.call(null, {
+      const required = typeof config.main.required === 'function' ? !!config.main.required.call(null, {
         config: config,
         command: undefined
       }) : !!config.main.required;
@@ -319,8 +319,8 @@ Shell.prototype.compile = function(data, options = {}) {
     // Handle data not defined in the configuration
     // Note, they are always pushed to the end and associated with the deepest child
       const results = [];
-      for (key in ldata) {
-        value = ldata[key];
+      for (const key in ldata) {
+        const value = ldata[key];
         if (keys[key]) {
           continue;
         }

@@ -282,7 +282,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
     }
     for (const name of Object.keys(config.options).sort()) {
       const option = config.options[name];
-      description = option.description || `No description yet for the ${option.name} option.`;
+      let description = option.description || `No description yet for the ${option.name} option.`;
       if (option.required) {
         description += ' Required.';
       }
@@ -323,7 +323,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
     // Detailed command information
     if (options.extended) {
       for (const name in config.commands) {
-        command = config.commands[name];
+        const command = config.commands[name];
         content.push('');
         content.push(`COMMAND \"${command.name}\"`);
         // Raw command, no main, no child commands
@@ -384,7 +384,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
         return `${options.indent}${l}`;
       }));
     } else {
-      line = pad(`${options.indent}${cmd} --help`, options.columns);
+      let line = pad(`${options.indent}${cmd} --help`, options.columns);
       if (line.length > options.columns) {
         content.push(line);
         line = ' '.repeat(options.columns);
@@ -399,7 +399,7 @@ Shell.prototype.help = function(commands = [], options = {}) {
         return `${options.indent}${l}`;
       }));
     } else {
-      line = pad(`${options.indent}${cmd} help`, options.columns);
+      let line = pad(`${options.indent}${cmd} help`, options.columns);
       if (line.length > options.columns) {
         content.push(line);
         line = ' '.repeat(options.columns);
