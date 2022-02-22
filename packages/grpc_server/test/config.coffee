@@ -1,11 +1,12 @@
 
 import {shell} from 'shell'
-import '../lib/index.js'
+import grpc_server from '../lib/index.js'
 
 describe 'grpc_server.config', ->
   
   it 'default', ->
     app = shell
+      plugins: [grpc_server]
       grpc: {}
     app.confx().get().grpc
     .should.eql

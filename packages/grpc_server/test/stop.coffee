@@ -1,11 +1,12 @@
 
 import {shell} from 'shell'
-import '../lib/index.js'
+import grpc_server from '../lib/index.js'
 
 describe 'grpc_server.stop', ->
   
   it 'return false unless started', ->
     app = shell
+      plugins: [grpc_server]
       grpc:
         address: '0.0.0.0'
         port: 61234

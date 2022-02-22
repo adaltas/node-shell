@@ -6,78 +6,39 @@ import path from 'node:path';
 import stream from 'node:stream';
 import {error, load} from './utils/index.js';
 import {clone, merge, is_object_literal} from 'mixme';
+import {plugandplay} from 'plug-and-play';
 
-// Internal types
-const types = ['string', 'boolean', 'integer', 'array'];
-
-const registry = [];
-
-const register = function(hook) {
-  return registry.push(hook);
-};
+import router from './plugins/router.js';
+import configPlugin from './plugins/config.js';
+import args from './plugins/args.js';
+import help from './plugins/help.js';
 
 const Shell = function(config) {
-  this.registry = [];
-  this.config = {};
-  this.init();
-  this.collision = {};
+  this.plugins = plugandplay({
+    chain: this
+  });
+  this.plugins.register(router);
+  this.plugins.register(configPlugin);
+  this.plugins.register(args);
+  this.plugins.register(help);
   config = clone(config || {});
+  if(!config.plugins){
+    config.plugins = []
+  }
+  for(const plugin of config.plugins){
+    this.plugins.register(plugin);
+  }
   this.config = config;
+  this.plugins.call_sync({
+    args: {shell: this},
+    name: 'shell:init'
+  });
   this.confx().set(this.config);
   return this;
 };
 
-Shell.prototype.init = (function() {});
-
-Shell.prototype.register = function(hook) {
-  if (!is_object_literal(hook)) {
-    throw error(['Invalid Hook Registration:', 'hooks must consist of keys representing the hook names', 'associated with function implementing the hook,', `got ${hook}`]);
-  }
-  this.registry.push(hook);
-  return this;
-};
-
-Shell.prototype.hook = function() {
-  let args, handler, name, hooks;
-  switch (arguments.length) {
-    case 3:
-      [name, args, handler] = arguments;
-      break;
-    case 4:
-      [name, args, hooks, handler] = arguments;
-      break;
-    default:
-      throw error(['Invalid Hook Argument:', 'function hook expect 3 or 4 arguments', 'name, args, hooks? and handler,', `got ${arguments.length} arguments`]);
-  }
-  if (typeof hooks === 'function') {
-    hooks = [hooks];
-  }
-  for (const hook of registry) {
-    if (hook[name]) {
-      handler = hook.call(this, args, handler);
-    }
-  }
-  for (const hook of this.registry) {
-    if (hook[name]) {
-      handler = hook[name].call(this, args, handler);
-    }
-  }
-  if (hooks) {
-    for (const hook of hooks) {
-      handler = hook.call(this, args, handler);
-    }
-  }
-  return handler.call(this, args);
-};
-
-/*
-`load(module)`
-
-* `module`   
-  Name of the module to load, require
-Load and return a module, use `require.main.require` by default but can be
-overwritten by the `load` options passed in the configuration.
-*/
+// `load(module)`
+// https://shell.js.org/api/load/
 Shell.prototype.load = async function(module, namespace = 'default') {
   if (typeof module !== 'string') {
     throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));

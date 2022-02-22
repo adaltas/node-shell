@@ -8,14 +8,18 @@ import {clone, is_object_literal, merge} from 'mixme';
 import {error, filedirname} from '../utils/index.js';
 const {__dirname} = filedirname(import.meta.url);
 
-// Shell.js & plugins
-import Shell from '../Shell.js';
-import '../plugins/config.js';
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
+export default {
+  name: 'shell/plugins/help',
+  hooks: {
+    'shell:init': {
+      after: 'shell/plugins/config',
+      handler: function({shell}){
+        shell.helping = helping.bind(shell);
+        shell.help = help.bind(shell);
+      }
+    },
+    'shell:config:set': [{
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -63,9 +67,8 @@ Shell.prototype.init = (function(parent) {
           return config.description != null ? config.description : config.description = `No description yet for the ${config.name} command`;
         };
       }
-    });
-    this.register({
-      configure_set: function({config, command}, handler) {
+    }, {
+      handler: function({config, command}, handler) {
         if (!command.length) {
           return handler;
         }
@@ -74,18 +77,13 @@ Shell.prototype.init = (function(parent) {
           return config.description != null ? config.description : config.description = `No description yet for the ${config.name} command`;
         };
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
+    }]
+  }
+};
 
-// ## Method `helping(params)`
-
-// Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
-
-// * `params` ([object] | object)   
-//   The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
-Shell.prototype.helping = function(params, options = {}) {
+// Method `helping(params)`
+// https://shell.js.org/api/helping/
+const helping = function(params, options = {}) {
   params = clone(params);
   const appconfig = this.confx().get();
   let commands;
@@ -162,24 +160,9 @@ Shell.prototype.helping = function(params, options = {}) {
   }
 };
 
-// ## Method `help(commands, options)`
-
-// Format the configuration into a readable documentation string.
-
-// * `commands` ([string] | string)   
-//   The string or array containing the command name if any, optional.
-// * `options.extended` (boolean)   
-//   Print the child command descriptions, default is `false`.
-// * `options.indent` (string)   
-//   Indentation used with output help, default to 2 spaces.
-// * `options.columns` (integer|[integer])   
-//   The with of a column expressed as the number of characters. The value must
-//   equal or exceed 10. If the total column width exists (`process.stdout.columns`
-//   with TTY environments), the option one_column is automatically activated if
-//   the total width is less than twice this value.
-
-// It returns the formatted help to be printed as a string.
-Shell.prototype.help = function(commands = [], options = {}) {
+// Method `help(commands, options)`
+// https://shell.js.org/api/help/
+const help = function(commands = [], options = {}) {
   if (options.indent == null) {
     options.indent = '  ';
   }

@@ -8,14 +8,17 @@ import {clone, merge, is_object_literal} from 'mixme';
 import {error, filedirname, load} from '../utils/index.js';
 const {__dirname} = filedirname(import.meta.url);
 
-// Shell.js & plugins
-import Shell from '../Shell.js';
-import '../plugins/config.js';
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
+export default {
+  name: 'shell/plugins/router',
+  hooks: {
+    'shell:init': {
+      after: 'shell/plugins/config',
+      handler: function({shell}){
+        shell.route = route.bind(shell);
+      }
+    },
+    'shell:config:set': [{
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -54,15 +57,8 @@ Shell.prototype.init = (function(parent) {
         }
         return handler;
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
+    }, {
+      handler: function({config, command}, handler) {
         if (!config.handler) {
           return handler;
         }
@@ -78,20 +74,13 @@ Shell.prototype.init = (function(parent) {
         }
         return handler;
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
+    }]
+  }
+};
 
-
-// ## Method `route(context, ...users_arguments)`
-
-// * `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
-// * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
-// * Returns: `Promise<any>` Whatever the route function returns wrapped inside a promise.
-
-// How to use the `route` method to execute code associated with a particular command.
-Shell.prototype.route = function(context = {}, ...args) {
+// Method `route(context, ...users_arguments)`
+// https://shell.js.org/api/route/
+const route = function(context = {}, ...args) {
   // Normalize arguments
   if (Array.isArray(context)) {
     context = {
@@ -125,25 +114,30 @@ Shell.prototype.route = function(context = {}, ...args) {
       stderr_end: config.router.stderr_end,
       ...context
     };
-    return this.hook('router_call', context, (context) => {
-      if (!config.router.promise) {
-        return handler.call(this, context, ...args);
-      }
-      try {
-        // Otherwise wrap result in a promise 
-        const result = handler.call(this, context, ...args);
-        if (result && typeof result.then === 'function') {
-          return result;
+    return this.plugins.call_sync({
+      name: 'shell:router:call',
+      args: context,
+      handler: (context) => {
+        if (!config.router.promise) {
+          return handler.call(this, context, ...args);
         }
-        return new Promise(function(resolve, reject) {
-          return resolve(result);
-        });
-      } catch (err) {
-        return new Promise(function(resolve, reject) {
-          return reject(err);
-        });
+        try {
+          // Otherwise wrap result in a promise 
+          const result = handler.call(this, context, ...args);
+          if (result && typeof result.then === 'function') {
+            return result;
+          }
+          return new Promise(function(resolve, reject) {
+            return resolve(result);
+          });
+        } catch (err) {
+          return new Promise(function(resolve, reject) {
+            return reject(err);
+          });
+        }
       }
     });
+    
   };
   const route_error = (err, command) => {
     context.argv = command.length ? ['help', ...command] : ['--help'];

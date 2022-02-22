@@ -2,6 +2,7 @@ import path from 'node:path';
 import stream from 'node:stream';
 import { is_object_literal, mutate, clone, merge } from 'mixme';
 import { fileURLToPath } from 'node:url';
+import { plugandplay } from 'plug-and-play';
 import pad from 'pad';
 
 /*
@@ -57,92 +58,366 @@ var index = /*#__PURE__*/Object.freeze({
   filedirname: filedirname
 });
 
-const registry = [];
+filedirname(import.meta.url);
 
-const Shell = function(config) {
-  this.registry = [];
-  this.config = {};
-  this.init();
-  this.collision = {};
-  config = clone(config || {});
-  this.config = config;
-  this.confx().set(this.config);
-  return this;
+var router = {
+  name: 'shell/plugins/router',
+  hooks: {
+    'shell:init': {
+      after: 'shell/plugins/config',
+      handler: function({shell}){
+        shell.route = route.bind(shell);
+      }
+    },
+    'shell:config:set': [{
+      handler: function({config, command}, handler) {
+        if (command.length) {
+          return handler;
+        }
+        if (config.router == null) {
+          config.router = {};
+        }
+        if (config.router.handler == null) {
+          config.router.handler = 'shell/routes/help';
+        }
+        if (config.router.promise == null) {
+          config.router.promise = false;
+        }
+        if (config.router.stdin == null) {
+          config.router.stdin = process.stdin;
+        }
+        if (config.router.stdout == null) {
+          config.router.stdout = process.stdout;
+        }
+        if (config.router.stdout_end == null) {
+          config.router.stdout_end = false;
+        }
+        if (config.router.stderr == null) {
+          config.router.stderr = process.stderr;
+        }
+        if (config.router.stderr_end == null) {
+          config.router.stderr_end = false;
+        }
+        if (! config.router.stdin instanceof stream.Readable) {
+          throw error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
+        }
+        if (! config.router.stdout instanceof stream.Writable) {
+          throw error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
+        }
+        if (! config.router.stderr instanceof stream.Writable) {
+          throw error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
+        }
+        return handler;
+      }
+    }, {
+      handler: function({config, command}, handler) {
+        if (!config.handler) {
+          return handler;
+        }
+        if (typeof config.handler !== 'function' && typeof config.handler !== 'string') {
+          throw error([
+            'Invalid Route Configuration:',
+            "accept string or function",
+            !command.length
+            ? "in application,"
+            : `in command ${JSON.stringify(command.join(' '))},`,
+            `got ${JSON.stringify(config.handler)}`
+          ]);
+        }
+        return handler;
+      }
+    }]
+  }
 };
 
-Shell.prototype.init = (function() {});
-
-Shell.prototype.register = function(hook) {
-  if (!is_object_literal(hook)) {
-    throw error(['Invalid Hook Registration:', 'hooks must consist of keys representing the hook names', 'associated with function implementing the hook,', `got ${hook}`]);
+// Method `route(context, ...users_arguments)`
+// https://shell.js.org/api/route/
+const route = function(context = {}, ...args) {
+  // Normalize arguments
+  if (Array.isArray(context)) {
+    context = {
+      argv: context
+    };
+  } else if (!is_object_literal(context)) {
+    throw error(['Invalid Router Arguments:', 'first argument must be a context object or the argv array,', `got ${JSON.stringify(context)}`]);
   }
-  this.registry.push(hook);
-  return this;
-};
-
-Shell.prototype.hook = function() {
-  let args, handler, name, hooks;
-  switch (arguments.length) {
-    case 3:
-      [name, args, handler] = arguments;
-      break;
-    case 4:
-      [name, args, hooks, handler] = arguments;
-      break;
-    default:
-      throw error(['Invalid Hook Argument:', 'function hook expect 3 or 4 arguments', 'name, args, hooks? and handler,', `got ${arguments.length} arguments`]);
-  }
-  if (typeof hooks === 'function') {
-    hooks = [hooks];
-  }
-  for (const hook of registry) {
-    if (hook[name]) {
-      handler = hook.call(this, args, handler);
-    }
-  }
-  for (const hook of this.registry) {
-    if (hook[name]) {
-      handler = hook[name].call(this, args, handler);
-    }
-  }
-  if (hooks) {
-    for (const hook of hooks) {
-      handler = hook.call(this, args, handler);
-    }
-  }
-  return handler.call(this, args);
-};
-
-/*
-`load(module)`
-
-* `module`   
-  Name of the module to load, require
-Load and return a module, use `require.main.require` by default but can be
-overwritten by the `load` options passed in the configuration.
-*/
-Shell.prototype.load = async function(module, namespace = 'default') {
-  if (typeof module !== 'string') {
-    throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
-  }
-  // Custom loader defined in the configuration
-  if (this.config.load) {
-    // Provided by the user as a module path
-    if (typeof this.config.load === 'string') {
-      // todo, shall be async and return module.default
-      const loader = await load(this.config.load /* `, this.config.load.namespace` */);
-      return loader(module, namespace);
-    // Provided by the user as a function
+  const appconfig = this.confx().get();
+  const route_load = (handler) => {
+    if (typeof handler === 'string') {
+      return this.load(handler);
+    } else if (typeof handler === 'function') {
+      return handler;
     } else {
-      return await this.config.load(module, namespace);
+      throw error(`Invalid Handler: expect a string or a function, got ${handler}`);
+    }
+  };
+  const route_call = (handler, command, params, err, args) => {
+    const config = this.confx().get();
+    context = {
+      argv: process.argv.slice(2),
+      command: command,
+      error: err,
+      params: params,
+      args: args,
+      stdin: config.router.stdin,
+      stdout: config.router.stdout,
+      stdout_end: config.router.stdout_end,
+      stderr: config.router.stderr,
+      stderr_end: config.router.stderr_end,
+      ...context
+    };
+    return this.plugins.call_sync({
+      name: 'shell:router:call',
+      args: context,
+      handler: (context) => {
+        if (!config.router.promise) {
+          return handler.call(this, context, ...args);
+        }
+        try {
+          // Otherwise wrap result in a promise 
+          const result = handler.call(this, context, ...args);
+          if (result && typeof result.then === 'function') {
+            return result;
+          }
+          return new Promise(function(resolve, reject) {
+            return resolve(result);
+          });
+        } catch (err) {
+          return new Promise(function(resolve, reject) {
+            return reject(err);
+          });
+        }
+      }
+    });
+    
+  };
+  const route_error = (err, command) => {
+    context.argv = command.length ? ['help', ...command] : ['--help'];
+    const params = this.parse(context.argv);
+    const handler = route_load(this.config.router.handler);
+    if (handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, err, args);
+      })
+    } else {
+      return route_call(handler, command, params, err, args);
+    }
+  };
+  const route_from_config = (config, command, params) => {
+    let err;
+    let handler = config.handler;
+    if (!handler) {
+      // Provide an error message if leaf command without a handler
+      if (!Object.keys(config.commands).length) { // Object.keys(config.commands).length or
+        err = config.root ? error(['Missing Application Handler:', 'a \"handler\" definition is required when no child command is defined']) : error(['Missing Command Handler:', `a \"handler\" definition ${JSON.stringify(params[appconfig.command])} is required when no child command is defined`]);
+      }
+      // Convert argument to an help command
+      // context.argv = command.length ? ['help', ...command] : ['--help'];
+      // params = this.parse(context.argv);
+      // handler = this.config.router.handler;
+      return route_error(err, command);
+    }
+    handler = route_load(handler);
+    if(handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, err, args);
+      })
+      .catch(async (err) => {
+        err.message = `Fail to load route. Message is: ${err.message}`;
+        return route_error(err, command);
+      })
+    }else {
+      return route_call(handler, command, params, err, args);
+    }
+  };
+  let params;
+  try {
+    // Read arguments
+    params = this.parse(context.argv);
+  } catch (err) {
+    return route_error(err, err.command || []);
+  }
+  // Print help
+  let command = this.helping(params);
+  if (command) {
+    // this seems wrong, must be the handler of the command
+    const handler = route_load(appconfig.router.handler);
+    if (handler.then){
+      return handler
+      .then(function(handler){
+        return route_call(handler, command, params, undefined, args);
+      })
+    } else {
+      return route_call(handler, command, params, undefined, args);
     }
   } else {
-    return await load(module, namespace);
+    // Return undefined if not parsing command based arguments
+    // Load a command route
+    command = params[appconfig.command];
+    if (appconfig.extended) {
+      // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
+      // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
+      command = [];
+      for (const param in params){
+        command.push[appconfig.command];
+      }
+    }
+    const config = this.confx(command).get();
+    return route_from_config(config, command || [], params);
   }
 };
 
 // Internal types
 const types = ['string', 'boolean', 'integer', 'array'];
+
+var configPlugin = {
+  name: 'shell/plugins/config',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.collision = {};
+      shell.confx = confx.bind(shell);
+    }
+  }
+};
+
+const confx = function(command = []) {
+  const ctx = this;
+  if (typeof command === 'string') {
+    command = [command];
+  }
+  // command = [...pcommand, ...command]
+  let lconfig = this.config;
+  for (const name of command) {
+    // A new command doesn't have a config registered yet
+    if(!lconfig.commands[name]) lconfig.commands[name] = {};
+    lconfig = lconfig.commands[name];
+  }
+  return {
+    main: builder_main.call(this, command),
+    options: builder_options.call(this, command),
+    get: function() {
+      let source = ctx.config;
+      const strict = source.strict;
+      for (const name of command) {
+        if (!source.commands[name]) {
+          // TODO: create a more explicit message,
+          // including somehting like "command #{name} is not registered",
+          // also ensure it is tested
+          throw error(['Invalid Command']);
+        }
+        // A new command doesn't have a config registered yet
+        if (source.commands[name] == null) {
+          source.commands[name] = {};
+        }
+        source = source.commands[name];
+        if (source.strict) {
+          strict = source.strict;
+        }
+      }
+      const config = clone(source);
+      config.strict = strict;
+      if (command.length) {
+        config.command = command;
+      }
+      for (const name in config.commands) {
+        config.commands[name] = ctx.confx([...command, name]).get();
+      }
+      config.options = this.options.show();
+      config.shortcuts = {};
+      for (const name in config.options) {
+        const option = config.options[name];
+        if (option.shortcut) {
+          config.shortcuts[option.shortcut] = option.name;
+        }
+      }
+      if (config.main != null) {
+        config.main = this.main.get();
+      }
+      return config;
+    },
+    set: function() {
+      let values;
+      if (arguments.length === 2) {
+        values = {
+          [arguments[0]]: arguments[1]
+        };
+      } else if (arguments.length === 1) {
+        values = arguments[0];
+      } else {
+        throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
+      }
+      lconfig = ctx.config;
+      for (const name of command) {
+        // A new command doesn't have a config registered yet
+        lconfig = lconfig.commands[name];
+      }
+      mutate(lconfig, values);
+      ctx.plugins.call_sync({
+        name: 'shell:config:set',
+        args: {
+          config: lconfig,
+          command: command,
+          values: values
+        },
+        handler: ({config, command, values}) => {
+          if (!command.length) {
+            if (config.extended == null) {
+              config.extended = false;
+            }
+            if (typeof config.extended !== 'boolean') {
+              throw error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
+            }
+            config.root = true;
+            if (config.name == null) {
+              config.name = 'myapp';
+            }
+            if (Object.keys(config.commands).length) {
+              if (config.command == null) {
+                config.command = 'command';
+              }
+            }
+            if (config.strict == null) {
+              config.strict = false;
+            }
+          } else {
+            if (config.name && config.name !== command.slice(-1)[0]) {
+              throw error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
+            }
+            if (config.command != null) {
+              throw error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
+            }
+            if (config.extended != null) {
+              throw error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
+            }
+            config.name = command.slice(-1)[0];
+          }
+          if (config.commands == null) {
+            config.commands = {};
+          }
+          if (config.options == null) {
+            config.options = {};
+          }
+          if (config.shortcuts == null) {
+            config.shortcuts = {};
+          }
+          for (const key in config.options) {
+            this.options(key).set(config.options[key]);
+          }
+          for (const key in config.commands) {
+            ctx.confx([...command, key]).set(config.commands[key]);
+          }
+          return this.main.set(config.main);
+        }
+      });
+      return this;
+    },
+    raw: function() {
+      return lconfig;
+    }
+  };
+};
 
 const builder_main = function(commands) {
   const ctx = this;
@@ -301,355 +576,19 @@ const builder_options = function(commands) {
   return builder;
 };
 
-Shell.prototype.confx = function(command = []) {
-  const ctx = this;
-  if (typeof command === 'string') {
-    command = [command];
-  }
-  // command = [...pcommand, ...command]
-  let lconfig = this.config;
-  for (const name of command) {
-    // A new command doesn't have a config registered yet
-    if(!lconfig.commands[name]) lconfig.commands[name] = {};
-    lconfig = lconfig.commands[name];
-  }
-  return {
-    main: builder_main.call(this, command),
-    options: builder_options.call(this, command),
-    get: function() {
-      let source = ctx.config;
-      const strict = source.strict;
-      for (const name of command) {
-        if (!source.commands[name]) {
-          // TODO: create a more explicit message,
-          // including somehting like "command #{name} is not registered",
-          // also ensure it is tested
-          throw error(['Invalid Command']);
-        }
-        // A new command doesn't have a config registered yet
-        if (source.commands[name] == null) {
-          source.commands[name] = {};
-        }
-        source = source.commands[name];
-        if (source.strict) {
-          strict = source.strict;
-        }
-      }
-      const config = clone(source);
-      config.strict = strict;
-      if (command.length) {
-        config.command = command;
-      }
-      for (const name in config.commands) {
-        config.commands[name] = ctx.confx([...command, name]).get();
-      }
-      config.options = this.options.show();
-      config.shortcuts = {};
-      for (const name in config.options) {
-        const option = config.options[name];
-        if (option.shortcut) {
-          config.shortcuts[option.shortcut] = option.name;
-        }
-      }
-      if (config.main != null) {
-        config.main = this.main.get();
-      }
-      return config;
-    },
-    set: function() {
-      let values;
-      if (arguments.length === 2) {
-        values = {
-          [arguments[0]]: arguments[1]
-        };
-      } else if (arguments.length === 1) {
-        values = arguments[0];
-      } else {
-        throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
-      }
-      lconfig = ctx.config;
-      for (const name of command) {
-        // A new command doesn't have a config registered yet
-        lconfig = lconfig.commands[name];
-      }
-      mutate(lconfig, values);
-      ctx.hook('configure_set', {
-        config: lconfig,
-        command: command,
-        values: values
-      }, ({config, command, values}) => {
-        if (!command.length) {
-          if (config.extended == null) {
-            config.extended = false;
-          }
-          if (typeof config.extended !== 'boolean') {
-            throw error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
-          }
-          config.root = true;
-          if (config.name == null) {
-            config.name = 'myapp';
-          }
-          if (Object.keys(config.commands).length) {
-            if (config.command == null) {
-              config.command = 'command';
-            }
-          }
-          if (config.strict == null) {
-            config.strict = false;
-          }
-        } else {
-          if (config.name && config.name !== command.slice(-1)[0]) {
-            throw error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
-          }
-          if (config.command != null) {
-            throw error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
-          }
-          if (config.extended != null) {
-            throw error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
-          }
-          config.name = command.slice(-1)[0];
-        }
-        if (config.commands == null) {
-          config.commands = {};
-        }
-        if (config.options == null) {
-          config.options = {};
-        }
-        if (config.shortcuts == null) {
-          config.shortcuts = {};
-        }
-        for (const key in config.options) {
-          this.options(key).set(config.options[key]);
-        }
-        for (const key in config.commands) {
-          ctx.confx([...command, key]).set(config.commands[key]);
-        }
-        return this.main.set(config.main);
-      });
-      return this;
-    },
-    raw: function() {
-      return lconfig;
+var args = {
+  name: 'shell/plugins/args',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.parse = parse.bind(shell);
+      shell.compile = compile.bind(shell);
     }
-  };
-};
-
-filedirname(import.meta.url);
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
-        if (command.length) {
-          return handler;
-        }
-        if (config.router == null) {
-          config.router = {};
-        }
-        if (config.router.handler == null) {
-          config.router.handler = 'shell/routes/help';
-        }
-        if (config.router.promise == null) {
-          config.router.promise = false;
-        }
-        if (config.router.stdin == null) {
-          config.router.stdin = process.stdin;
-        }
-        if (config.router.stdout == null) {
-          config.router.stdout = process.stdout;
-        }
-        if (config.router.stdout_end == null) {
-          config.router.stdout_end = false;
-        }
-        if (config.router.stderr == null) {
-          config.router.stderr = process.stderr;
-        }
-        if (config.router.stderr_end == null) {
-          config.router.stderr_end = false;
-        }
-        if (! config.router.stdin instanceof stream.Readable) {
-          throw error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
-        }
-        if (! config.router.stdout instanceof stream.Writable) {
-          throw error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
-        }
-        if (! config.router.stderr instanceof stream.Writable) {
-          throw error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
-        }
-        return handler;
-      }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
-        if (!config.handler) {
-          return handler;
-        }
-        if (typeof config.handler !== 'function' && typeof config.handler !== 'string') {
-          throw error([
-            'Invalid Route Configuration:',
-            "accept string or function",
-            !command.length
-            ? "in application,"
-            : `in command ${JSON.stringify(command.join(' '))},`,
-            `got ${JSON.stringify(config.handler)}`
-          ]);
-        }
-        return handler;
-      }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
-
-
-// ## Method `route(context, ...users_arguments)`
-
-// * `cli_arguments`: `[string] | object | process` The arguments to parse into arguments, accept the [Node.js process](https://nodejs.org/api/process.html) instance, an [argument list](https://nodejs.org/api/process.html#process_process_argv) provided as an array of strings or the context object; optional, default to `process`.
-// * `...users_arguments`: `any` Any arguments that will be passed to the executed function associated with a route.
-// * Returns: `Promise<any>` Whatever the route function returns wrapped inside a promise.
-
-// How to use the `route` method to execute code associated with a particular command.
-Shell.prototype.route = function(context = {}, ...args) {
-  // Normalize arguments
-  if (Array.isArray(context)) {
-    context = {
-      argv: context
-    };
-  } else if (!is_object_literal(context)) {
-    throw error(['Invalid Router Arguments:', 'first argument must be a context object or the argv array,', `got ${JSON.stringify(context)}`]);
-  }
-  const appconfig = this.confx().get();
-  const route_load = (handler) => {
-    if (typeof handler === 'string') {
-      return this.load(handler);
-    } else if (typeof handler === 'function') {
-      return handler;
-    } else {
-      throw error(`Invalid Handler: expect a string or a function, got ${handler}`);
-    }
-  };
-  const route_call = (handler, command, params, err, args) => {
-    const config = this.confx().get();
-    context = {
-      argv: process.argv.slice(2),
-      command: command,
-      error: err,
-      params: params,
-      args: args,
-      stdin: config.router.stdin,
-      stdout: config.router.stdout,
-      stdout_end: config.router.stdout_end,
-      stderr: config.router.stderr,
-      stderr_end: config.router.stderr_end,
-      ...context
-    };
-    return this.hook('router_call', context, (context) => {
-      if (!config.router.promise) {
-        return handler.call(this, context, ...args);
-      }
-      try {
-        // Otherwise wrap result in a promise 
-        const result = handler.call(this, context, ...args);
-        if (result && typeof result.then === 'function') {
-          return result;
-        }
-        return new Promise(function(resolve, reject) {
-          return resolve(result);
-        });
-      } catch (err) {
-        return new Promise(function(resolve, reject) {
-          return reject(err);
-        });
-      }
-    });
-  };
-  const route_error = (err, command) => {
-    context.argv = command.length ? ['help', ...command] : ['--help'];
-    const params = this.parse(context.argv);
-    const handler = route_load(this.config.router.handler);
-    if (handler.then){
-      return handler
-      .then(function(handler){
-        return route_call(handler, command, params, err, args);
-      })
-    } else {
-      return route_call(handler, command, params, err, args);
-    }
-  };
-  const route_from_config = (config, command, params) => {
-    let err;
-    let handler = config.handler;
-    if (!handler) {
-      // Provide an error message if leaf command without a handler
-      if (!Object.keys(config.commands).length) { // Object.keys(config.commands).length or
-        err = config.root ? error(['Missing Application Handler:', 'a \"handler\" definition is required when no child command is defined']) : error(['Missing Command Handler:', `a \"handler\" definition ${JSON.stringify(params[appconfig.command])} is required when no child command is defined`]);
-      }
-      // Convert argument to an help command
-      // context.argv = command.length ? ['help', ...command] : ['--help'];
-      // params = this.parse(context.argv);
-      // handler = this.config.router.handler;
-      return route_error(err, command);
-    }
-    handler = route_load(handler);
-    if(handler.then){
-      return handler
-      .then(function(handler){
-        return route_call(handler, command, params, err, args);
-      })
-      .catch(async (err) => {
-        err.message = `Fail to load route. Message is: ${err.message}`;
-        return route_error(err, command);
-      })
-    }else {
-      return route_call(handler, command, params, err, args);
-    }
-  };
-  let params;
-  try {
-    // Read arguments
-    params = this.parse(context.argv);
-  } catch (err) {
-    return route_error(err, err.command || []);
-  }
-  // Print help
-  let command = this.helping(params);
-  if (command) {
-    // this seems wrong, must be the handler of the command
-    const handler = route_load(appconfig.router.handler);
-    if (handler.then){
-      return handler
-      .then(function(handler){
-        return route_call(handler, command, params, undefined, args);
-      })
-    } else {
-      return route_call(handler, command, params, undefined, args);
-    }
-  } else {
-    // Return undefined if not parsing command based arguments
-    // Load a command route
-    command = params[appconfig.command];
-    if (appconfig.extended) {
-      // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
-      // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
-      command = [];
-      for (const param in params){
-        command.push[appconfig.command];
-      }
-    }
-    const config = this.confx(command).get();
-    return route_from_config(config, command || [], params);
   }
 };
 
 // Method `parse([arguments])`
 // https://shell.js.org/api/parse/
-Shell.prototype.parse = function(argv = process, options = {}) {
+const parse = function(argv = process, options = {}) {
   const appconfig = this.confx().get();
   if (options.extended == null) {
     options.extended = appconfig.extended;
@@ -848,16 +787,9 @@ Shell.prototype.parse = function(argv = process, options = {}) {
   }
 };
 
-// ## Method `compile(command, [options])`
-
-// Convert an object to an arguments array.
-
-// * `data`: `object` The parameter object to be converted into an array of arguments, optional.
-// * `options`: `object` Options used to alter the behavior of the `compile` method.
-//   * `extended`: `boolean` The value `true` indicates that the object literal are provided in extended format, default to the configuration `extended` value which is `false` by default.
-//   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
-// * Returns: `array` The command line arguments.
-Shell.prototype.compile = function(data, options = {}) {
+// Method `compile(command, [options])`
+// https://shell.js.org/api/compile/
+const compile = function(data, options = {}) {
   let argv = options.script ? [process.execPath, options.script] : [];
   const appconfig = this.confx().get();
   if (!is_object_literal(options)) {
@@ -981,10 +913,18 @@ Shell.prototype.compile = function(data, options = {}) {
 
 filedirname(import.meta.url);
 
-Shell.prototype.init = (function(parent) {
-  return function() {
-    this.register({
-      configure_set: function({config, command}, handler) {
+var help = {
+  name: 'shell/plugins/help',
+  hooks: {
+    'shell:init': {
+      after: 'shell/plugins/config',
+      handler: function({shell}){
+        shell.helping = helping.bind(shell);
+        shell.help = help$1.bind(shell);
+      }
+    },
+    'shell:config:set': [{
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -1032,9 +972,8 @@ Shell.prototype.init = (function(parent) {
           return config.description != null ? config.description : config.description = `No description yet for the ${config.name} command`;
         };
       }
-    });
-    this.register({
-      configure_set: function({config, command}, handler) {
+    }, {
+      handler: function({config, command}, handler) {
         if (!command.length) {
           return handler;
         }
@@ -1043,18 +982,13 @@ Shell.prototype.init = (function(parent) {
           return config.description != null ? config.description : config.description = `No description yet for the ${config.name} command`;
         };
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
+    }]
+  }
+};
 
-// ## Method `helping(params)`
-
-// Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
-
-// * `params` ([object] | object)   
-//   The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
-Shell.prototype.helping = function(params, options = {}) {
+// Method `helping(params)`
+// https://shell.js.org/api/helping/
+const helping = function(params, options = {}) {
   params = clone(params);
   const appconfig = this.confx().get();
   let commands;
@@ -1131,24 +1065,9 @@ Shell.prototype.helping = function(params, options = {}) {
   }
 };
 
-// ## Method `help(commands, options)`
-
-// Format the configuration into a readable documentation string.
-
-// * `commands` ([string] | string)   
-//   The string or array containing the command name if any, optional.
-// * `options.extended` (boolean)   
-//   Print the child command descriptions, default is `false`.
-// * `options.indent` (string)   
-//   Indentation used with output help, default to 2 spaces.
-// * `options.columns` (integer|[integer])   
-//   The with of a column expressed as the number of characters. The value must
-//   equal or exceed 10. If the total column width exists (`process.stdout.columns`
-//   with TTY environments), the option one_column is automatically activated if
-//   the total width is less than twice this value.
-
-// It returns the formatted help to be printed as a string.
-Shell.prototype.help = function(commands = [], options = {}) {
+// Method `help(commands, options)`
+// https://shell.js.org/api/help/
+const help$1 = function(commands = [], options = {}) {
   if (options.indent == null) {
     options.indent = '  ';
   }
@@ -1381,8 +1300,55 @@ Shell.prototype.help = function(commands = [], options = {}) {
   return content.join('\n');
 };
 
+const Shell = function(config) {
+  this.plugins = plugandplay({
+    chain: this
+  });
+  this.plugins.register(router);
+  this.plugins.register(configPlugin);
+  this.plugins.register(args);
+  this.plugins.register(help);
+  config = clone(config || {});
+  if(!config.plugins){
+    config.plugins = [];
+  }
+  for(const plugin of config.plugins){
+    this.plugins.register(plugin);
+  }
+  this.config = config;
+  this.plugins.call_sync({
+    args: {shell: this},
+    name: 'shell:init'
+  });
+  this.confx().set(this.config);
+  return this;
+};
+
+// `load(module)`
+// https://shell.js.org/api/load/
+Shell.prototype.load = async function(module, namespace = 'default') {
+  if (typeof module !== 'string') {
+    throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
+  }
+  // Custom loader defined in the configuration
+  if (this.config.load) {
+    // Provided by the user as a module path
+    if (typeof this.config.load === 'string') {
+      // todo, shall be async and return module.default
+      const loader = await load(this.config.load /* `, this.config.load.namespace` */);
+      return loader(module, namespace);
+    // Provided by the user as a function
+    } else {
+      return await this.config.load(module, namespace);
+    }
+  } else {
+    return await load(module, namespace);
+  }
+};
+
 const shell = function(config) {
-  return new Shell(config);
+  const shell = new Shell(config);
+  return shell;
 };
 
 export { Shell, shell, index as utils };

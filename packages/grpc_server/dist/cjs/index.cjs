@@ -11,14 +11,17 @@ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'defau
 var grpc__default = /*#__PURE__*/_interopDefaultLegacy(grpc);
 var proto__default = /*#__PURE__*/_interopDefaultLegacy(proto);
 
-// import 'shell/lib/plugins/config';
-// import 'shell/lib/plugins/router';
-
-shell.Shell.prototype.init = (function(parent) {
-  return function() {
-    // Plugin configuration
-    this.register({
-      configure_set: function({config, command}, handler) {
+var index = {
+  name: 'shell/grpc_server',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.grpc_start = grpc_start.bind(shell);
+      shell.grpc_started = grpc_started.bind(shell);
+      shell.grpc_stop = grpc_stop.bind(shell);
+    },
+    'shell:config:set': [{
+      after: 'shell/plugins/router',
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -36,10 +39,8 @@ shell.Shell.prototype.init = (function(parent) {
         }
         return handler;
       }
-    });
-    // Register the "shell protobuf" command
-    this.register({
-      configure_set: function({config, command}, handler) {
+    }, {
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -65,10 +66,9 @@ shell.Shell.prototype.init = (function(parent) {
         });
         return handler;
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(shell.Shell.prototype.init);
+    }]
+  }
+};
 
 const passthrough = function() {
   return new node_stream.Transform({
@@ -116,7 +116,7 @@ const get_handlers = function(definition) {
   };
 };
 
-shell.Shell.prototype.grpc_start = function(callback) {
+const grpc_start = function(callback) {
   if (this._server && this._server.started) {
     throw shell.utils.error('GRPC Server Already Started');
   }
@@ -147,7 +147,7 @@ shell.Shell.prototype.grpc_start = function(callback) {
   return promise;
 };
 
-shell.Shell.prototype.grpc_stop = function() {
+const grpc_stop = function() {
   // server = @_server
   return new Promise((resolve, reject) => {
     if (!this.grpc_started()) {
@@ -166,7 +166,9 @@ shell.Shell.prototype.grpc_stop = function() {
   });
 };
 
-shell.Shell.prototype.grpc_started = function() {
+const grpc_started = function() {
   var ref;
   return !!((ref = this._server) != null ? ref.started : void 0);
 };
+
+module.exports = index;

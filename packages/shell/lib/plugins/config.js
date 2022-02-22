@@ -11,6 +11,153 @@ import Shell from '../Shell.js';
 // Internal types
 const types = ['string', 'boolean', 'integer', 'array'];
 
+export default {
+  name: 'shell/plugins/config',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.collision = {};
+      shell.confx = confx.bind(shell);
+    }
+  }
+};
+
+const confx = function(command = []) {
+  const ctx = this;
+  if (typeof command === 'string') {
+    command = [command];
+  }
+  // command = [...pcommand, ...command]
+  let lconfig = this.config;
+  for (const name of command) {
+    // A new command doesn't have a config registered yet
+    if(!lconfig.commands[name]) lconfig.commands[name] = {};
+    lconfig = lconfig.commands[name];
+  }
+  return {
+    main: builder_main.call(this, command),
+    options: builder_options.call(this, command),
+    get: function() {
+      let source = ctx.config;
+      const strict = source.strict;
+      for (const name of command) {
+        if (!source.commands[name]) {
+          // TODO: create a more explicit message,
+          // including somehting like "command #{name} is not registered",
+          // also ensure it is tested
+          throw error(['Invalid Command']);
+        }
+        // A new command doesn't have a config registered yet
+        if (source.commands[name] == null) {
+          source.commands[name] = {};
+        }
+        source = source.commands[name];
+        if (source.strict) {
+          strict = source.strict;
+        }
+      }
+      const config = clone(source);
+      config.strict = strict;
+      if (command.length) {
+        config.command = command;
+      }
+      for (const name in config.commands) {
+        config.commands[name] = ctx.confx([...command, name]).get();
+      }
+      config.options = this.options.show();
+      config.shortcuts = {};
+      for (const name in config.options) {
+        const option = config.options[name];
+        if (option.shortcut) {
+          config.shortcuts[option.shortcut] = option.name;
+        }
+      }
+      if (config.main != null) {
+        config.main = this.main.get();
+      }
+      return config;
+    },
+    set: function() {
+      let values;
+      if (arguments.length === 2) {
+        values = {
+          [arguments[0]]: arguments[1]
+        };
+      } else if (arguments.length === 1) {
+        values = arguments[0];
+      } else {
+        throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
+      }
+      lconfig = ctx.config;
+      for (const name of command) {
+        // A new command doesn't have a config registered yet
+        lconfig = lconfig.commands[name];
+      }
+      mutate(lconfig, values);
+      ctx.plugins.call_sync({
+        name: 'shell:config:set',
+        args: {
+          config: lconfig,
+          command: command,
+          values: values
+        },
+        handler: ({config, command, values}) => {
+          if (!command.length) {
+            if (config.extended == null) {
+              config.extended = false;
+            }
+            if (typeof config.extended !== 'boolean') {
+              throw error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
+            }
+            config.root = true;
+            if (config.name == null) {
+              config.name = 'myapp';
+            }
+            if (Object.keys(config.commands).length) {
+              if (config.command == null) {
+                config.command = 'command';
+              }
+            }
+            if (config.strict == null) {
+              config.strict = false;
+            }
+          } else {
+            if (config.name && config.name !== command.slice(-1)[0]) {
+              throw error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
+            }
+            if (config.command != null) {
+              throw error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
+            }
+            if (config.extended != null) {
+              throw error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
+            }
+            config.name = command.slice(-1)[0];
+          }
+          if (config.commands == null) {
+            config.commands = {};
+          }
+          if (config.options == null) {
+            config.options = {};
+          }
+          if (config.shortcuts == null) {
+            config.shortcuts = {};
+          }
+          for (const key in config.options) {
+            this.options(key).set(config.options[key]);
+          }
+          for (const key in config.commands) {
+            ctx.confx([...command, key]).set(config.commands[key]);
+          }
+          return this.main.set(config.main);
+        }
+      });
+      return this;
+    },
+    raw: function() {
+      return lconfig;
+    }
+  };
+};
+
 const builder_main = function(commands) {
   const ctx = this;
   const builder = {
@@ -166,137 +313,4 @@ const builder_options = function(commands) {
     }
   };
   return builder;
-};
-
-Shell.prototype.confx = function(command = []) {
-  const ctx = this;
-  if (typeof command === 'string') {
-    command = [command];
-  }
-  // command = [...pcommand, ...command]
-  let lconfig = this.config;
-  for (const name of command) {
-    // A new command doesn't have a config registered yet
-    if(!lconfig.commands[name]) lconfig.commands[name] = {};
-    lconfig = lconfig.commands[name];
-  }
-  return {
-    main: builder_main.call(this, command),
-    options: builder_options.call(this, command),
-    get: function() {
-      let source = ctx.config;
-      const strict = source.strict;
-      for (const name of command) {
-        if (!source.commands[name]) {
-          // TODO: create a more explicit message,
-          // including somehting like "command #{name} is not registered",
-          // also ensure it is tested
-          throw error(['Invalid Command']);
-        }
-        // A new command doesn't have a config registered yet
-        if (source.commands[name] == null) {
-          source.commands[name] = {};
-        }
-        source = source.commands[name];
-        if (source.strict) {
-          strict = source.strict;
-        }
-      }
-      const config = clone(source);
-      config.strict = strict;
-      if (command.length) {
-        config.command = command;
-      }
-      for (const name in config.commands) {
-        config.commands[name] = ctx.confx([...command, name]).get();
-      }
-      config.options = this.options.show();
-      config.shortcuts = {};
-      for (const name in config.options) {
-        const option = config.options[name];
-        if (option.shortcut) {
-          config.shortcuts[option.shortcut] = option.name;
-        }
-      }
-      if (config.main != null) {
-        config.main = this.main.get();
-      }
-      return config;
-    },
-    set: function() {
-      let values;
-      if (arguments.length === 2) {
-        values = {
-          [arguments[0]]: arguments[1]
-        };
-      } else if (arguments.length === 1) {
-        values = arguments[0];
-      } else {
-        throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
-      }
-      lconfig = ctx.config;
-      for (const name of command) {
-        // A new command doesn't have a config registered yet
-        lconfig = lconfig.commands[name];
-      }
-      mutate(lconfig, values);
-      ctx.hook('configure_set', {
-        config: lconfig,
-        command: command,
-        values: values
-      }, ({config, command, values}) => {
-        if (!command.length) {
-          if (config.extended == null) {
-            config.extended = false;
-          }
-          if (typeof config.extended !== 'boolean') {
-            throw error(['Invalid Configuration:', 'extended must be a boolean,', `got ${JSON.stringify(config.extended)}`]);
-          }
-          config.root = true;
-          if (config.name == null) {
-            config.name = 'myapp';
-          }
-          if (Object.keys(config.commands).length) {
-            if (config.command == null) {
-              config.command = 'command';
-            }
-          }
-          if (config.strict == null) {
-            config.strict = false;
-          }
-        } else {
-          if (config.name && config.name !== command.slice(-1)[0]) {
-            throw error(['Incoherent Command Name:', `key ${JSON.stringify(name)} is not equal with name ${JSON.stringify(config.name)}`]);
-          }
-          if (config.command != null) {
-            throw error(['Invalid Command Configuration:', 'command property can only be declared at the application level,', `got command ${JSON.stringify(config.command)}`]);
-          }
-          if (config.extended != null) {
-            throw error(['Invalid Command Configuration:', 'extended property cannot be declared inside a command']);
-          }
-          config.name = command.slice(-1)[0];
-        }
-        if (config.commands == null) {
-          config.commands = {};
-        }
-        if (config.options == null) {
-          config.options = {};
-        }
-        if (config.shortcuts == null) {
-          config.shortcuts = {};
-        }
-        for (const key in config.options) {
-          this.options(key).set(config.options[key]);
-        }
-        for (const key in config.commands) {
-          ctx.confx([...command, key]).set(config.commands[key]);
-        }
-        return this.main.set(config.main);
-      });
-      return this;
-    },
-    raw: function() {
-      return lconfig;
-    }
-  };
 };

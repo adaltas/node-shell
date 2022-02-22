@@ -2,11 +2,13 @@
 import {shell} from 'shell'
 import '@shell-js/grpc_server'
 import client from '../lib/client.js'
+import grpc_server from '@shell-js/grpc_server'
 
 describe 'grpc_client.run', ->
   
   it 'get application configuration', ->
     app = shell
+      plugins: [grpc_server]
       grpc:
         address: '0.0.0.0'
         port: 61234

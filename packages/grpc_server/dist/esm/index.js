@@ -1,17 +1,20 @@
 import { Transform } from 'node:stream';
-import { Shell, utils } from 'shell';
+import { utils } from 'shell';
 import { mutate } from 'mixme';
 import grpc from '@grpc/grpc-js';
 import proto from '@shell-js/grpc_proto';
 
-// import 'shell/lib/plugins/config';
-// import 'shell/lib/plugins/router';
-
-Shell.prototype.init = (function(parent) {
-  return function() {
-    // Plugin configuration
-    this.register({
-      configure_set: function({config, command}, handler) {
+var index = {
+  name: 'shell/grpc_server',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.grpc_start = grpc_start.bind(shell);
+      shell.grpc_started = grpc_started.bind(shell);
+      shell.grpc_stop = grpc_stop.bind(shell);
+    },
+    'shell:config:set': [{
+      after: 'shell/plugins/router',
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -29,10 +32,8 @@ Shell.prototype.init = (function(parent) {
         }
         return handler;
       }
-    });
-    // Register the "shell protobuf" command
-    this.register({
-      configure_set: function({config, command}, handler) {
+    }, {
+      handler: function({config, command}, handler) {
         if (command.length) {
           return handler;
         }
@@ -58,10 +59,9 @@ Shell.prototype.init = (function(parent) {
         });
         return handler;
       }
-    });
-    return parent.call(this, ...arguments);
-  };
-})(Shell.prototype.init);
+    }]
+  }
+};
 
 const passthrough = function() {
   return new Transform({
@@ -109,7 +109,7 @@ const get_handlers = function(definition) {
   };
 };
 
-Shell.prototype.grpc_start = function(callback) {
+const grpc_start = function(callback) {
   if (this._server && this._server.started) {
     throw utils.error('GRPC Server Already Started');
   }
@@ -140,7 +140,7 @@ Shell.prototype.grpc_start = function(callback) {
   return promise;
 };
 
-Shell.prototype.grpc_stop = function() {
+const grpc_stop = function() {
   // server = @_server
   return new Promise((resolve, reject) => {
     if (!this.grpc_started()) {
@@ -159,7 +159,9 @@ Shell.prototype.grpc_stop = function() {
   });
 };
 
-Shell.prototype.grpc_started = function() {
+const grpc_started = function() {
   var ref;
   return !!((ref = this._server) != null ? ref.started : void 0);
 };
+
+export { index as default };

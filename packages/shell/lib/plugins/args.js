@@ -5,12 +5,19 @@
 import {error} from '../utils/index.js';
 import {clone, is_object_literal, merge} from 'mixme';
 
-// Shell & plugins
-import Shell from '../Shell.js';
+export default {
+  name: 'shell/plugins/args',
+  hooks: {
+    'shell:init': function({shell}){
+      shell.parse = parse.bind(shell);
+      shell.compile = compile.bind(shell);
+    }
+  }
+};
 
 // Method `parse([arguments])`
 // https://shell.js.org/api/parse/
-Shell.prototype.parse = function(argv = process, options = {}) {
+const parse = function(argv = process, options = {}) {
   const appconfig = this.confx().get();
   if (options.extended == null) {
     options.extended = appconfig.extended;
@@ -209,16 +216,9 @@ Shell.prototype.parse = function(argv = process, options = {}) {
   }
 };
 
-// ## Method `compile(command, [options])`
-
-// Convert an object to an arguments array.
-
-// * `data`: `object` The parameter object to be converted into an array of arguments, optional.
-// * `options`: `object` Options used to alter the behavior of the `compile` method.
-//   * `extended`: `boolean` The value `true` indicates that the object literal are provided in extended format, default to the configuration `extended` value which is `false` by default.
-//   * `script`: `string` The JavaScript file being executed by the engine, when present, the engine and the script names will prepend the returned arguments, optional, default is false.
-// * Returns: `array` The command line arguments.
-Shell.prototype.compile = function(data, options = {}) {
+// Method `compile(command, [options])`
+// https://shell.js.org/api/compile/
+const compile = function(data, options = {}) {
   let argv = options.script ? [process.execPath, options.script] : [];
   const appconfig = this.confx().get();
   if (!is_object_literal(options)) {

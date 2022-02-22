@@ -10,12 +10,22 @@ maturity: review
 
 Format the configuration into a readable documentation string.
 
+Signature is `help(commands, options)`:
+
 * `commands` ([string] | string)   
   The string or array containing the command name if any, optional.
 * `options.extended` (boolean)   
   Print the child command descriptions, default is `false`.
 * `options.indent` (string)   
   Indentation used with output help, default to 2 spaces.
+* `options.columns` (integer|[integer])   
+  The with of a column expressed as the number of characters. The value must
+  equal or exceed 10. If the total column width exists (`process.stdout.columns`
+  with TTY environments), the option `one_column` is automatically activated if
+  the total width is less than twice this value.
+* `one_column` (boolean)
+  Display the help content as one column instead of two columns. The value is
+  auto discovered by default from the number of column in the terminal.
 
 All options are optional.
 

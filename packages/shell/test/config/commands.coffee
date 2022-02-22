@@ -64,10 +64,11 @@ describe 'config.commands', ->
       
     it 'call the hook', ->
       shell {}
-      .register
-        'configure_set': ({config}, handler) ->
-          config.test = 'was here'
-          handler
+      .plugins.register
+        hooks:
+          'shell:config:set': ({config}, handler) ->
+            config.test = 'was here'
+            handler
       .confx('start').set
         route: 'path/to/route'
       .get().test.should.eql 'was here'

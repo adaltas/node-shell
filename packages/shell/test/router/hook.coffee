@@ -13,26 +13,27 @@ writer = (callback) ->
 
 describe 'router.hook', ->
     
-  it 'router_call validate context', ->
+  it 'shell:router:call validate context', ->
     shell
       handler: (->)
-    .register
-      router_call: (context, handler) ->
+    .plugins.register
+      'shell:router:call': (context, handler) ->
         Object.keys(context).sort().should.eql [
           "args", "argv", "command", "error", "params", "stderr", "stderr_end", "stdin", "stdout", "stdout_end"
         ]
         handler
     .route []
         
-  it 'router_call modify shell', (next) ->
+  it 'shell:router:call modify shell', (next) ->
     shell
       handler: ({stdout}) ->
         stdout.write 'gotit'
         stdout.end()
-    .register
-      router_call: (context, handler) ->
-        context.stdout = writer (data) ->
-          data.should.eql 'gotit'
-          next()
-        handler
+    .plugins.register
+      hooks:
+        'shell:router:call': (context, handler) ->
+          context.stdout = writer (data) ->
+            data.should.eql 'gotit'
+            next()
+          handler
     .route []

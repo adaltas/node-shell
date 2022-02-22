@@ -2,7 +2,7 @@
 import {Writable} from 'node:stream'
 import {is_object_literal} from 'mixme'
 import {shell} from 'shell'
-import '../lib/index.js'
+import grpc_server from '../lib/index.js'
 
 writer = (callback) ->
   chunks = []
@@ -17,6 +17,7 @@ describe 'grpc.command.protobuf', ->
   
   it 'format json', ->
     app = shell
+      plugins: [grpc_server]
       router:
         stdout: writer (output) ->
           proto = JSON.parse output
@@ -27,6 +28,7 @@ describe 'grpc.command.protobuf', ->
   
   it 'format proto', ->
     app = shell
+      plugins: [grpc_server]
       router:
         stdout: writer (output) ->
           output.should.match /^package shell;$/m

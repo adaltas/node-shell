@@ -12,7 +12,8 @@ maturity: initial
   type: "function"   
   arguments:   
   * `module`:   
-    type: "string"
+    type: "string"   
+    Name of the module to load, required
 
 ## Description
 
@@ -20,7 +21,7 @@ Internal function used to load modules. It returns the module.
 
 It is possible to customize the loading behavior with a custom function. The [`load`](/config/load/) configuration provides an entry point to place user defined functions or the path to a module exporting a user defined function.
 
-The default behavior search for relative module path from the current working directory with `process.cwd()`. Internally, it uses the function `require.main.require`.
+The default behavior search for relative module path from the current working directory with `process.cwd()`. Internally, it uses `import` with ES modules and  `require.main.require` with CommonJS modules.
 
 ## Examples
 

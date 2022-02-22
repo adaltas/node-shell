@@ -3,13 +3,10 @@
 // Usage: `shell(config)`
 
 import Shell from './Shell.js';
-import './plugins/router.js';
-import './plugins/config.js';
-import './plugins/args.js';
-import './plugins/help.js';
 
 const shell = function(config) {
-  return new Shell(config);
+  const shell = new Shell(config);
+  return shell;
 };
 
 export {shell, Shell};

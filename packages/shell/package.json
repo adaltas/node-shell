@@ -20,7 +20,8 @@
   ],
   "dependencies": {
     "mixme": "^0.5.4",
-    "pad": "^3.2.0"
+    "pad": "^3.2.0",
+    "plug-and-play": "^2.4.0"
   },
   "devDependencies": {
     "coffeescript": "^2.6.1",
