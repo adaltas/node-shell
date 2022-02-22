@@ -70,7 +70,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "shell": "^0.8.4"
+    "shell": "^0.9.1"
   },
   "repository": {
     "type": "git",

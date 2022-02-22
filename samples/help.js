@@ -1,22 +1,34 @@
 
-const shell = require('./packages/shell');
+/*
 
-// NAME
-//     precious - Manage your precious
-// 
-// SYNOPSIS
-//     precious <command>
-// 
-// OPTIONS
-//     -h --help               Display help information
-// 
-// COMMANDS
-//     secrets                 No description yet for the secrets command
-//     help                    Display help information about precious
-// 
-// EXAMPLES
-//     precious --help         Show this message
-//     precious help           Show this message
+Call example with:
+
+* `node samples/help.js --help`
+* `node samples/help.js help`
+
+It prints:
+
+```
+NAME
+  precious - Manage your precious
+
+SYNOPSIS
+  precious <command>
+
+OPTIONS
+  -h --help                 Display help information
+
+COMMANDS
+  secrets                   No description yet for the secrets command
+  help                      Display help information
+
+EXAMPLES
+  precious --help           Show this message
+  precious help             Show this message
+```
+*/
+
+import {shell} from 'shell';
 
 const params = shell({
   name: 'precious',
@@ -36,10 +48,10 @@ const params = shell({
               shortcut: 'h'
             },
             value: {
-              shortcut: "v"
-} } } } } } });
+              shortcut: "v" }}}}}}});
 
-const args = params.parse()
-if(commands = params.helping(args)){
+const args = params.parse();
+const commands = params.helping(args);
+if(commands){
   process.stdout.write(params.help(commands))
 }

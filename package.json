@@ -30,6 +30,7 @@
     "version": "lerna version --conventional-commits"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "samples"
   ]
 }

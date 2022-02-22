@@ -1,6 +1,6 @@
 
-const shell = require('./packages/shell');
-require('should');
+import 'should';
+import {shell} from 'shell';
 
 // NAME
 //     server - Start a web server
@@ -16,14 +16,16 @@ require('should');
 const command = shell({
   name: 'server',
   description: 'Start a web server',
-  options: [{
-    name: 'host', shortcut: 'h', 
-    description: 'Web server listen host'
-  },{
-    name: 'port', shortcut: 'p', type: 'integer', 
-    description: 'Web server listen port'
-  }]
-});
+  options: {
+    'host': {
+      shortcut: 'h', 
+      description: 'Web server listen host'
+    },
+    "port": {
+    shortcut: 'p',
+    type: 'integer', 
+    description: 'Web server listen port' }}});
+
 // Print help
 console.log( command.help() );
 // Extract command arguments

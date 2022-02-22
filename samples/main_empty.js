@@ -1,6 +1,6 @@
 
-require('should')
-const shell = require('./packages/shell')
+import 'should';
+import {shell} from 'shell';
 
 shell({
   main: 'input' 

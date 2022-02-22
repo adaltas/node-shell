@@ -1,6 +1,6 @@
 
-const shell = require('./packages/shell');
-require('should');
+import 'should';
+import {shell} from 'shell';
 
 // NAME
 //     server - Manage a web server
@@ -31,8 +31,7 @@ const command = shell({
         },
         'port': {
           shortcut: 'p', type: 'integer', 
-          description: 'Web server listen port'
-} } } } });
+          description: 'Web server listen port' }}}}});
 // Print help
 console.log( command.help() );
 // Extract command arguments
