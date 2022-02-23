@@ -3,6 +3,7 @@ title: Configuration
 description: Configuration object for passing as an argument to the function
 keywords: ['shell', 'node.js', 'cli', 'usage', 'config', 'configuration']
 maturity: review
+sort: 4
 ---
 
 # Configuration

@@ -3,6 +3,7 @@ title: API
 description: API methods supported.
 keywords: ['shell', 'node.js', 'cli', 'api', 'help', 'parse', 'load', 'route', 'compile']
 maturity: review
+sort: 3
 ---
 
 # API 

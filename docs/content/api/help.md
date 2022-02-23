@@ -31,22 +31,7 @@ Calling `help` will always return a string, it does not detect if help was reque
 
 Considering a "server" application containing a "start" command and initialized with the following configuration:
 
-```js
-const shell = require('shell')
-const app = shell({
-  name: 'server',
-  description: 'Manage a web server',
-  commands: {
-    'start': {
-      description: 'Start a web server',
-      options: {
-        'host': {shortcut: 'h', description: 'Web server listen host'},
-        'port': {shortcut: 'p', type: 'integer', description: 'Web server listen port'}
-      }
-    }
-  }
-});
-```
+`embed:api/help/example.js`
 
 To print the help of the overall application does not require any arguments. It behaves the same as calling the `help` method with an empty array.
 
@@ -66,43 +51,13 @@ process.stdout.write( app.help( 'start' ) );
 
 ### Argument `--help`
 
-Internally, an empty configuration by default register the `help` option by default:
+The `help` option is registered by default:
 
-```js
-const assert = require("assert")
-const shell = require("shell")
-
-assert.deepStrictEqual(
-  shell({}).config.options
-, {
-    help: {
-      name: 'help',
-      shortcut: 'h',
-      description: 'Display help information',
-      type: 'boolean',
-      help: true
-} } )
-```
+`embed:api/help/option_root.js`
 
 The same apply to every commands:
 
-```js
-const assert = require("assert")
-const shell = require("shell")
-
-assert.deepStrictEqual(
-  shell( {
-    commands: { 'my_cmd': {} }
-  }).config.commands.my_cmd.options
-, {
-    help: {
-      name: 'help',
-      shortcut: 'h',
-      description: 'Display help information',
-      type: 'boolean',
-      help: true
-} } )
-```
+`embed:api/help/option_commands.js`
 
 ### Command `help <commands...>`
 

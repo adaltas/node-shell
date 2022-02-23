@@ -6,107 +6,98 @@ keywords: ['shell', 'node.js', 'changelog', 'history', 'feature', 'changes', 've
 sort: 200
 ---
 
-# Changelog
+# Change Log
 
-## Version 0.6.0
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-New functionality
-* router: redirect error to help route
-* router: handle help options and commands
+## [0.9.1](https://github.com/adaltas/node-shell/compare/v0.9.0...v0.9.1) (2022-02-17)
 
-Fix and improvements
-* configure: immutable input
-* project: normalise error messages
-* options: fix collision detection for sibling commands
-* shortcut: no need to test in strict mode
 
-## Version 0.5.0
+### Bug Fixes
 
-Breaking compatibility
-* run: 1st arg as info with params and extended
-* help: only accept a command, no params
-* route: rename run method and configuration to route
-* helping: only accept params, no more argv
+* **router:** handle undefined with config promise ([e4f04a4](https://github.com/adaltas/node-shell/commit/e4f04a4cad01c74a4f08bf410f80355f0374b599))
 
-New functionality
-* extended: parse and stringify without merging
-* main: string declaration shortcut
-* parse: main as an array
-* stringify: main from an array
 
-Fix and improvements
-* configure: isolate into its own method
-* options: prevent collisions in flatten mode
-* help: new extended option
-* helping: complete re-implementation
-* stringify: check 2nd argument
-* help: new sample
-* help: remove info per command
-* parse: new extended option
-* parse: improve arguments validation
-* command: only declared at application level
 
-Management
-* license: switch to MIT license
-* package: use mixme
-* package: use file instead of npm ignore
-* package: latest package dependencies
 
-## Version 0.4.4
 
-* one_of: handle optional params
-* lib: move load & merge to utils
-* readme: add author company
-* package: relative paths
+# [0.9.0](https://github.com/adaltas/node-shell/compare/v0.8.6...v0.9.0) (2022-02-16)
 
-## Version 0.4.3
 
-* help: accept array as first argument
-* src: fix error thrown as string instead of object
+### Features
 
-## Version 0.4.2
+* **router:** promise config ([78369f3](https://github.com/adaltas/node-shell/commit/78369f3610ac44cedd7214d32e7e1c42a736e042))
 
-* help: overwrittable by user
 
-## Version 0.4.1
 
-* help: handle shortcut
-* shortcut: improve err message
-* config: root property for internal use
 
-## Version 0.4.0
 
-* run: route help options and command
-* src: convert to literate coffee
-* helping: new function
-* help: new revisited format supporting nested commands
-* commands: unlimited nested dimensions
-* doc: improve run description
-* run: user arguments as last arguments, new extended option
+## [0.8.6](https://github.com/adaltas/node-shell/compare/v0.8.5...v0.8.6) (2022-01-06)
 
-## Version 0.3.0
 
-* help: default app name and description
-* config: options and commands as objects literals
+### Bug Fixes
 
-## Version 0.2.2
+* **shell:** multi level default option ([cdaaa9b](https://github.com/adaltas/node-shell/commit/cdaaa9b71d8e0a161f8df4f22fec86d39e8b8d11))
 
-* load: custom user module loader
 
-## Version 0.2.1
 
-* commands: default to help fixed on presence of options
-* run: error handling for humans
 
-## Version 0.2.0
 
-* package: release commands
-* package: update Node.js version inside Travis
-* parse: better error handling
-* options: new default option
-* test: should required by mocha
-* help: fix shortcut in commands
-* options: run get context, argv and config
-* options: run options accepts a function or a module
-* readme: API documentation
-* package: upgrade to CoffeeScript 2
+## [0.8.5](https://github.com/adaltas/node-shell/compare/v0.8.4...v0.8.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* **shell:** prevent main collision with command ([2a72240](https://github.com/adaltas/node-shell/commit/2a72240d19cca1925bae2b5cb85006cf163b9452))
+
+
+
+
+
+## [0.8.4](https://github.com/adaltas/node-shell/compare/v0.8.3...v0.8.4) (2020-12-09)
+
+**Note:** Version bump only for package shell
+
+
+
+
+
+## [0.8.3](https://github.com/adaltas/node-shell/compare/v0.8.2...v0.8.3) (2020-12-07)
+
+**Note:** Version bump only for package shell
+
+
+
+
+
+## [0.8.2](https://github.com/adaltas/node-shell/compare/v0.8.1...v0.8.2) (2020-12-07)
+
+
+### Features
+
+* **router:** pass context stdin ([17b5f4a](https://github.com/adaltas/node-shell/commit/17b5f4aa34c050f16eba4fe3cd51393584aac823))
+
+
+
+
+
+## [0.8.1](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.5...v0.8.1) (2020-11-24)
+
+**Note:** Version bump only for package parameters
+
+
+
+
+
+## [0.8.1-alpha.5](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.4...v0.8.1-alpha.5) (2020-11-23)
+
+**Note:** Version bump only for package parameters
+
+
+
+
+
+## [0.8.1-alpha.3](https://github.com/adaltas/node-parameters/compare/v0.8.1-alpha.2...v0.8.1-alpha.3) (2020-11-23)
+
+**Note:** Version bump only for package parameters

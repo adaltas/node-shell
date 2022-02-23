@@ -77,6 +77,20 @@ class Layout extends Component {
         sort: page.sort || 99,
       }
     })
+    // console.log(menus)
+    // const test = JSON.parse(JSON.stringify(menus));
+    const object_to_array = (parent) => {
+      parent.children = Object.keys(parent.children).map( key => {
+        const child = parent.children[key]
+        if(child.children){
+          object_to_array(child)
+        }
+        return child
+      }).sort( (a, b) => a.sort > b.sort ? 1 : -1 )
+    }
+    // menus.children = object_to_array(menus)
+    object_to_array(menus)
+    // console.log(test)
     return (
       <Drawer
         breakpoint={this.state.breakpoint}

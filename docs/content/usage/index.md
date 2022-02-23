@@ -3,6 +3,7 @@ title: Usage
 description: How to use Shell.js
 keywords: ['shell', 'node.js', 'usage', 'project']
 maturity: initial
+sort: 2
 ---
 
 # Usage

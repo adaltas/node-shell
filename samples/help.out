@@ -1,0 +1,17 @@
+
+NAME
+  precious - Manage your precious
+
+SYNOPSIS
+  precious <command>
+
+OPTIONS
+  -h --help                 Display help information
+
+COMMANDS
+  secrets                   No description yet for the secrets command
+  help                      Display help information
+
+EXAMPLES
+  precious --help           Show this message
+  precious help             Show this message

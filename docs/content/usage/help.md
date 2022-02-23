@@ -15,8 +15,9 @@ Help prints detailed information about how to use the CLI application or one of 
 ## How to display the help
 
 From a user perspective, there are multiple ways to print the help to the console:
+
 * by passing the `--help` option in the command, for example `./app print --help`.
-* by calling the `help` command, eventually followed by any command, if it is registered, for example `./app help print`.
+* if commands are used, by calling the `help` command, eventually followed by any command, for example `./app help print`.
 * when the command is invalid or incomplete, for example `./app print`, assuming the `print` command has a required `message` option.
 * when calling a non-leaf command, for example `./app plugin`, assuming `plugin` is not a command in itself but a group of multi-level commands such as `./app plugin print -m 'hello'`.
 
@@ -43,15 +44,11 @@ For the developer, printing help uses a combination of the `helping` and `help` 
 
 Here's how to display help with `helping` and `help`:
 
-```js
-const shell = require('shell')
-const app = shell(my_config)
-const params = app.parse()
-if(let commands = app.helping(params)){
-  return process.stdout.write(app.help(commands));
-}
-// Now work with the params object
-```
+`embed:help.js{snippet: "sample"}`
+
+The output looks like:
+
+`embed:help.out`
 
 ### With routing
 

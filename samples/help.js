@@ -9,22 +9,9 @@ Call example with:
 It prints:
 
 ```
-NAME
-  precious - Manage your precious
+// start-snippet{output}
 
-SYNOPSIS
-  precious <command>
-
-OPTIONS
-  -h --help                 Display help information
-
-COMMANDS
-  secrets                   No description yet for the secrets command
-  help                      Display help information
-
-EXAMPLES
-  precious --help           Show this message
-  precious help             Show this message
+// end-snippet{output}
 ```
 */
 
@@ -49,9 +36,11 @@ const params = shell({
             },
             value: {
               shortcut: "v" }}}}}}});
-
+              
+// start-snippet{sample}
 const args = params.parse();
 const commands = params.helping(args);
 if(commands){
   process.stdout.write(params.help(commands))
 }
+// end-snippet{sample}

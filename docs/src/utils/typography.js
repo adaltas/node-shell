@@ -70,8 +70,23 @@ const theme = {
         wordWrap: 'inherit',
       },
       'main pre[class*="language-"]': {
-        marginBottom: `${rhythm(1)}`
-      }
+        marginBottom: `${rhythm(1)}`,
+      },
+      'main .display-embed-file-highlight pre': {
+        marginBottom: '0',
+      },
+      'main .display-embed-file': {
+        textAlign: 'right',
+      },
+      'main .display-embed-file a': {
+        padding: '.3rem .5rem',
+        marginRight: '.5rem',
+        fontWeight: '300',
+        borderRight: '1px solid rgba(255,255,255,.2)',
+        borderBottom: '1px solid rgba(255,255,255,.2)',
+        borderLeft: '1px solid rgba(255,255,255,.2)',
+        backgroundColor: 'rgba(45,45,45,.6)',
+      },
     }
   },
 }

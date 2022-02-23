@@ -1,9 +1,5 @@
 import React, { Component, Fragment } from "react"
 import { Link } from "gatsby"
-import { ClassNames } from '@emotion/react'
-
-const styles_nav = {
-}
 
 const styles = {
   root: {
@@ -57,8 +53,6 @@ class Menu extends Component {
   render() {
     const { menus } = this.props
     return (
-      <ClassNames>
-      {({ css, cx }) => (
         <aside css={styles.root}>
           <div css={styles.menu}>
             <nav>
@@ -68,8 +62,7 @@ class Menu extends Component {
                     Home
                   </Link>
                 </li>
-                {Object.keys(menus.children).map(i => {
-                  const menu = menus.children[i]
+                {menus.children.map((menu, i) => {
                   return (
                     <Fragment key={i}>
                       <li>
@@ -78,8 +71,7 @@ class Menu extends Component {
                         </Link>
                         {menu.children != null &&
                           <ul>
-                            {Object.keys(menu.children).map(j => {
-                              const subMenu = menu.children[j]
+                            {menu.children.map((subMenu, j) => {
                               return (
                                 <li key={`${i}-${j}`}>
                                   <Link to={subMenu.data.slug} activeClassName="active">
@@ -109,8 +101,6 @@ class Menu extends Component {
             by proposing enhancements and fixing typos.
           </div>
         </aside>
-      )}
-      </ClassNames>
     )
   }
 }
