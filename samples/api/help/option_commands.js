@@ -5,7 +5,7 @@ import {shell} from 'shell';
 assert.deepStrictEqual(
   shell( {
     commands: { 'my_cmd': {} }
-  }).confx('my_cmd').options.show()
+  }).config('my_cmd').options.show()
 , {
   help: {
     cascade: true,

@@ -8,7 +8,7 @@ describe 'grpc_server.config', ->
     app = shell
       plugins: [grpc_server]
       grpc: {}
-    app.confx().get().grpc
+    app.config().get().grpc
     .should.eql
       'address': '127.0.0.1'
       'command_protobuf': false

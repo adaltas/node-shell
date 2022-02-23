@@ -9,14 +9,14 @@ describe 'config.main.api', ->
       shell
         options: 'config': {}
         main: 'leftover'
-      .confx().main.get().should.eql
+      .config().main.get().should.eql
         name: 'leftover'
 
     it 'for a command', ->
       shell
         commands: 'app': commands: 'server':
           main: 'leftover'
-      .confx(['app', 'server']).main.get()
+      .config(['app', 'server']).main.get()
       .should.eql
         name: 'leftover'
           
@@ -24,7 +24,7 @@ describe 'config.main.api', ->
 
     it 'for application', ->
       shell {}
-      .confx().main
+      .config().main
       .set('leftover')
       .get().should.eql
         name: 'leftover'

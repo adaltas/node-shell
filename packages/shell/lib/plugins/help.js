@@ -85,7 +85,7 @@ export default {
 // https://shell.js.org/api/helping/
 const helping = function(params, options = {}) {
   params = clone(params);
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   let commands;
   if (options.extended == null) {
     options.extended = appconfig.extended;
@@ -186,7 +186,7 @@ const help = function(commands = [], options = {}) {
   if (!Array.isArray(commands)) {
     throw error(['Invalid Help Arguments:', 'expect commands to be an array as first argument,', `got ${JSON.stringify(commands)}`]);
   }
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   let config = appconfig;
   const configs = [config];
   for (const i in commands) {

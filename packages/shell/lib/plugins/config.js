@@ -16,18 +16,18 @@ export default {
   hooks: {
     'shell:init': function({shell}){
       shell.collision = {};
-      shell.confx = confx.bind(shell);
+      shell.config = config.bind(shell);
     }
   }
 };
 
-const confx = function(command = []) {
+const config = function(command = []) {
   const ctx = this;
   if (typeof command === 'string') {
     command = [command];
   }
   // command = [...pcommand, ...command]
-  let lconfig = this.config;
+  let lconfig = this._config;
   for (const name of command) {
     // A new command doesn't have a config registered yet
     if(!lconfig.commands[name]) lconfig.commands[name] = {};
@@ -37,7 +37,7 @@ const confx = function(command = []) {
     main: builder_main.call(this, command),
     options: builder_options.call(this, command),
     get: function() {
-      let source = ctx.config;
+      let source = ctx._config;
       const strict = source.strict;
       for (const name of command) {
         if (!source.commands[name]) {
@@ -61,7 +61,7 @@ const confx = function(command = []) {
         config.command = command;
       }
       for (const name in config.commands) {
-        config.commands[name] = ctx.confx([...command, name]).get();
+        config.commands[name] = ctx.config([...command, name]).get();
       }
       config.options = this.options.show();
       config.shortcuts = {};
@@ -87,7 +87,7 @@ const confx = function(command = []) {
       } else {
         throw error(['Invalid Commands Set Arguments:', 'expect 1 or 2 arguments, got 0']);
       }
-      lconfig = ctx.config;
+      lconfig = ctx._config;
       for (const name of command) {
         // A new command doesn't have a config registered yet
         lconfig = lconfig.commands[name];
@@ -134,6 +134,8 @@ const confx = function(command = []) {
           }
           if (config.commands == null) {
             config.commands = {};
+          }else if (!is_object_literal(config.commands)){
+            throw error(['Invalid Command Configuration', 'commands must be an object,', `got ${JSON.stringify(config.commands)}`])
           }
           if (config.options == null) {
             config.options = {};
@@ -145,7 +147,7 @@ const confx = function(command = []) {
             this.options(key).set(config.options[key]);
           }
           for (const key in config.commands) {
-            ctx.confx([...command, key]).set(config.commands[key]);
+            ctx.config([...command, key]).set(config.commands[key]);
           }
           return this.main.set(config.main);
         }
@@ -162,11 +164,11 @@ const builder_main = function(commands) {
   const ctx = this;
   const builder = {
     get: function() {
-      const config = ctx.confx(commands).raw();
+      const config = ctx.config(commands).raw();
       return clone(config.main);
     },
     set: function(value) {
-      const config = ctx.confx(commands).raw();
+      const config = ctx.config(commands).raw();
       if (value === void 0) {
         // Do nothing if value is undefined
         return builder;
@@ -186,7 +188,7 @@ const builder_main = function(commands) {
       }
       // Ensure there is no conflict with command
       // Get root configuration to extract command name
-      if (value.name === ctx.confx([]).raw().command) {
+      if (value.name === ctx.config([]).raw().command) {
         throw error(['Conflicting Main Value:', 'main name is conflicting with the command name,', `got \`${JSON.stringify(value.name)}\``]);
       }
       config.main = value;
@@ -217,11 +219,11 @@ const builder_options = function(commands) {
         return copy;
       },
       remove: function(name) {
-        const config = ctx.confx(commands).raw();
+        const config = ctx.config(commands).raw();
         return delete config.options[name];
       },
       set: function() {
-        const config = ctx.confx(commands).raw();
+        const config = ctx.config(commands).raw();
         let values = null;
         if (arguments.length === 2) {
           values = {
@@ -236,7 +238,7 @@ const builder_options = function(commands) {
           throw error(['Invalid Options:', `expect an object, got ${JSON.stringify(config.options)}`]);
         }
         const option = config.options[name] = merge(config.options[name], values);
-        if (!ctx.config.extended) {
+        if (!ctx._config.extended) {
           if (!option.disabled && commands.length) {
             // Compare the current command with the options previously registered
             const collide = ctx.collision[name] && ctx.collision[name].filter(function(cmd, i) {
@@ -271,7 +273,7 @@ const builder_options = function(commands) {
   builder.__proto__ = {
     get_cascaded: function() {
       const options = {};
-      let config = ctx.confx().raw();
+      let config = ctx.config().raw();
       for (let i=0; i<commands.length; i++) {
         const command = commands[i]
         for (const name in config.options) {
@@ -297,7 +299,7 @@ const builder_options = function(commands) {
         option.transient = true;
       }
       // Get app/command configuration
-      const config = ctx.confx(commands).raw();
+      const config = ctx.config(commands).raw();
       // Merge cascaded with local options
       options = merge(options, config.options);
       for (const name in options) {

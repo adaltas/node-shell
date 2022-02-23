@@ -21,7 +21,7 @@ Convert an arguments list to data.
 
 ## Description
 
-The method convert an array containing the command line arguments into a literal object in flatten mode or an array in extended mode.
+The method convert an array containing the command line arguments into an object literal in flatten mode or an array in extended mode.
 
 Only pass the data without the script name when providing an argument list in the form of an array or a string. It obtains the arguments from `process.argv` when `arguments` is not provided or is the [Node.js process](https://nodejs.org/api/process.html).
 
@@ -29,28 +29,9 @@ Only pass the data without the script name when providing an argument list in th
 
 Considering a "server" application containing a "start" command and initialised with the following configuration:
 
-```js
-require("should")
-const shell = require("shell")
-const app = shell(
-{ name: "server",
-  description: "Manage a web server",
-  options:
-  { "config":
-    { shortcut: "c" } },
-  commands:
-  { "start":
-    { description: "Start a web server",
-      options:
-      { "host":
-        { shortcut: "h",
-          description: "Web server listen host"},
-        "port":
-        { shortcut: "p", type: "integer",
-          description: "Web server listen port" } } } } })
-```
+`embed:api/parse/example.js`
 
-Called with only the `--config` argument, the `parse` method convert the shell command into a literal object:
+Called with only the `--config` argument, the `parse` method convert the shell command into an object literal:
 
 ```js
 app.parse([

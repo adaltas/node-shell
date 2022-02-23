@@ -14,19 +14,19 @@ describe 'configure', ->
       config.should.eql {}
 
     it 'empty without command does not throw errors', ->
-      shell({}).confx().get()
+      shell({}).config().get()
 
     it 'set default command name as "command" if commands available', ->
       shell
         commands:
           'my_cmd': {}
-      .confx().get().command.should.eql 'command'
+      .config().get().command.should.eql 'command'
 
     it 'nested empty commands', ->
       shell
         commands: 'parent_cmd':
           commands: 'child_cmd': {}
-      .confx().get().commands
+      .config().get().commands
       .should.eql
         'parent_cmd':
           name: 'parent_cmd'

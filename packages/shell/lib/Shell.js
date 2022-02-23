@@ -28,12 +28,12 @@ const Shell = function(config) {
   for(const plugin of config.plugins){
     this.plugins.register(plugin);
   }
-  this.config = config;
+  this._config = config;
   this.plugins.call_sync({
     args: {shell: this},
     name: 'shell:init'
   });
-  this.confx().set(this.config);
+  this.config().set(this._config);
   return this;
 };
 
@@ -44,15 +44,15 @@ Shell.prototype.load = async function(module, namespace = 'default') {
     throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
   }
   // Custom loader defined in the configuration
-  if (this.config.load) {
+  if (this._config.load) {
     // Provided by the user as a module path
-    if (typeof this.config.load === 'string') {
+    if (typeof this._config.load === 'string') {
       // todo, shall be async and return module.default
-      const loader = await load(this.config.load /* `, this.config.load.namespace` */);
+      const loader = await load(this._config.load /* `, this._config.load.namespace` */);
       return loader(module, namespace);
     // Provided by the user as a function
     } else {
-      return await this.config.load(module, namespace);
+      return await this._config.load(module, namespace);
     }
   } else {
     return await load(module, namespace);

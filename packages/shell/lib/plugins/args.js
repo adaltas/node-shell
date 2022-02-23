@@ -18,7 +18,7 @@ export default {
 // Method `parse([arguments])`
 // https://shell.js.org/api/parse/
 const parse = function(argv = process, options = {}) {
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   if (options.extended == null) {
     options.extended = appconfig.extended;
   }
@@ -220,7 +220,7 @@ const parse = function(argv = process, options = {}) {
 // https://shell.js.org/api/compile/
 const compile = function(data, options = {}) {
   let argv = options.script ? [process.execPath, options.script] : [];
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   if (!is_object_literal(options)) {
     throw error(['Invalid Compile Arguments:', '2nd argument option must be an object,', `got ${JSON.stringify(options)}`]);
   }

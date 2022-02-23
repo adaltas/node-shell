@@ -89,7 +89,7 @@ const route = function(context = {}, ...args) {
   } else if (!is_object_literal(context)) {
     throw error(['Invalid Router Arguments:', 'first argument must be a context object or the argv array,', `got ${JSON.stringify(context)}`]);
   }
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   const route_load = (handler) => {
     if (typeof handler === 'string') {
       return this.load(handler);
@@ -100,7 +100,7 @@ const route = function(context = {}, ...args) {
     }
   };
   const route_call = (handler, command, params, err, args) => {
-    const config = this.confx().get();
+    const config = this.config().get();
     context = {
       argv: process.argv.slice(2),
       command: command,
@@ -142,7 +142,7 @@ const route = function(context = {}, ...args) {
   const route_error = (err, command) => {
     context.argv = command.length ? ['help', ...command] : ['--help'];
     const params = this.parse(context.argv);
-    const handler = route_load(this.config.router.handler);
+    const handler = route_load(this._config.router.handler);
     if (handler.then){
       return handler
       .then(function(handler){
@@ -212,7 +212,7 @@ const route = function(context = {}, ...args) {
         command.push[appconfig.command]
       }
     }
-    const config = this.confx(command).get();
+    const config = this.config(command).get();
     return route_from_config(config, command || [], params);
   }
 };

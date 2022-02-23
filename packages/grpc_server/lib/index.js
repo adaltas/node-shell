@@ -94,7 +94,7 @@ const get_handlers = function(definition) {
     },
     config: function(call, callback) {
       var config;
-      config = this.confx(call.request.command).get();
+      config = this.config(call.request.command).get();
       return callback(null, {
         config: config
       });
@@ -123,7 +123,7 @@ const grpc_start = function(callback) {
   if (this._server && this._server.started) {
     throw utils.error('GRPC Server Already Started');
   }
-  const appconfig = this.confx().get();
+  const appconfig = this.config().get();
   // Load the definition
   const packageDefinition = proto.loadSync();
   const shell_definition = grpc.loadPackageDefinition(packageDefinition).shell;

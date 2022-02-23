@@ -11,7 +11,7 @@ describe 'router.config.router', ->
     
     it "accept string (eg stderr)", ->
       shell({})
-      .config.router.should.eql
+      .config().get().router.should.eql
         handler: 'shell/routes/help'
         promise: false
         stderr: process.stderr
@@ -26,7 +26,7 @@ describe 'router.config.router', ->
           stderr: new Writable()
           stdin: new Readable()
           stdout: new Writable()
-      .config.router.should.eql
+      .config().get().router.should.eql
         handler: 'shell/routes/help'
         promise: false
         stderr: new Writable()
@@ -39,7 +39,7 @@ describe 'router.config.router', ->
   
     it 'auto generate the help options in application', ->
       shell({})
-      .confx().get().options.should.eql
+      .config().get().options.should.eql
         'help':
           cascade: true
           description: 'Display help information'
@@ -48,7 +48,7 @@ describe 'router.config.router', ->
           type: 'boolean'
           shortcut: 'h'
       shell({})
-      .confx().get().shortcuts.should.eql
+      .config().get().shortcuts.should.eql
         'h': 'help'
           
     it 'auto generate the help options in command with sub-command', ->
@@ -57,7 +57,7 @@ describe 'router.config.router', ->
           'server':
             commands:
               'start': {}
-      .confx(['server']).get().options.should.eql
+      .config(['server']).get().options.should.eql
         'help':
           cascade: true
           description: 'Display help information'
@@ -76,7 +76,7 @@ describe 'router.config.router', ->
             options: 'myopt': {}
           'help':
             description: 'Overwrite description'
-      .confx().get().commands.help.should.eql
+      .config().get().commands.help.should.eql
         name: 'help'
         help: true
         description: 'Overwrite description'
@@ -95,4 +95,4 @@ describe 'router.config.router', ->
         commands:
           'start': {}
           'help': {}
-      .config.commands.help.description.should.eql 'Display help information'
+      .config(['help']).get().description.should.eql 'Display help information'

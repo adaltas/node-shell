@@ -52,7 +52,7 @@ const app = shell(
           description: "Web server listen port" } } } } })
 ```
 
-Called with only the `config` option, the `compile` method convert a literal object into a shell command:
+Called with only the `config` option, the `compile` method convert an object literal into a shell command:
 
 ```javascript
 app.compile({

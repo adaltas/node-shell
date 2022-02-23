@@ -8,7 +8,7 @@ describe 'options.cascade', ->
       options:
         'opt': cascade: true
       commands: 'server': commands: 'start': {}
-    app.confx(['server', 'start']).options('opt').get()
+    app.config(['server', 'start']).options('opt').get()
     .should.eql
       cascade: true
       name: 'opt'
@@ -20,7 +20,7 @@ describe 'options.cascade', ->
       options:
         'opt': cascade: true
       commands: 'server': commands: 'start': {}
-    app.confx().get()
+    app.config().get()
     .commands.server.commands.start.options.opt.transient
     .should.eql true
   
@@ -30,7 +30,7 @@ describe 'options.cascade', ->
         options:
           'opt': cascade: true
         commands: 'start': {}
-    app.confx(['server', 'start']).options('opt').get()
+    app.config(['server', 'start']).options('opt').get()
     .should.eql
       cascade: true
       name: 'opt'
@@ -42,11 +42,11 @@ describe 'options.cascade', ->
       options:
         'opt': cascade: 2
       commands: 'server': commands: 'start': commands: 'sth': {}
-    app.confx(['server']).options.list()
+    app.config(['server']).options.list()
     .should.eql ['help', 'opt']
-    app.confx(['server', 'start']).options.list()
+    app.config(['server', 'start']).options.list()
     .should.eql ['help', 'opt']
-    app.confx(['server', 'start', 'sth']).options.list()
+    app.config(['server', 'start', 'sth']).options.list()
     .should.eql ['help']
         
   it 'from command with limited level', ->
@@ -55,11 +55,11 @@ describe 'options.cascade', ->
         options:
           'opt': cascade: 2
         commands: 'start': commands: 'sth': commands: 'else': {}
-    app.confx().options.list()
+    app.config().options.list()
     .should.eql ['help']
-    app.confx(['server', 'start']).options.list()
+    app.config(['server', 'start']).options.list()
     .should.eql ['help', 'opt']
-    app.confx(['server', 'start', 'sth']).options.list()
+    app.config(['server', 'start', 'sth']).options.list()
     .should.eql ['help', 'opt']
-    app.confx(['server', 'start', 'sth', 'else']).options.list()
+    app.config(['server', 'start', 'sth', 'else']).options.list()
     .should.eql ['help']

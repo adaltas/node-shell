@@ -3,7 +3,7 @@ import assert from 'assert';
 import {shell} from 'shell';
 
 assert.deepStrictEqual(
-  shell({}).config.options
+  shell({}).config().get().options
 , {
   help: {
     cascade: true,

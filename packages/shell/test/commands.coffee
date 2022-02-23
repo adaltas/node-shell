@@ -12,6 +12,16 @@ describe 'commands', ->
     app.compile
       command: ['start']
     .should.eql ['start']
+  
+  it 'commands validate to an object', ->
+    (->
+      shell
+        commands: []
+    ).should.throw [
+      'Invalid Command Configuration'
+      'commands must be an object,'
+      'got []'
+    ].join ' '
 
   it 'options is of type object', ->
     app = shell

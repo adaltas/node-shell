@@ -63,25 +63,4 @@ The same apply to every commands:
 
 Internally, an `help` command is registered if at least another command is defined:
 
-```js
-const assert = require("assert")
-const shell = require("shell")
-
-assert.deepStrictEqual(
-  shell({
-    commands: [ { name: 'secret' } ]
-  }).config.commands.help
-, {
-    name: 'help',
-    description: 'Display help information about myapp',
-    main: {
-      name: 'name', description: 'Help about a specific command' 
-    },
-    help: true,
-    strict: false,
-    shortcuts: {},
-    command: 'command',
-    options: {},
-    commands: {}
-} )
-```
+`embed:api/help/command.js`

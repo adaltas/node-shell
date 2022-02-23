@@ -9,20 +9,20 @@ describe 'config.commands', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx().get().root.should.be.true()
+      .config().get().root.should.be.true()
     
     it 'get a child command', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx(['server']).get()
+      .config(['server']).get()
       .command.should.eql ['server']
     
     it 'get a deep child command', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx(['server', 'start']).get()
+      .config(['server', 'start']).get()
       .command.should.eql ['server', 'start']
   
   describe 'set', ->
@@ -31,14 +31,14 @@ describe 'config.commands', ->
       (->
         shell
           options: 'config': {}
-        .confx().set()
+        .config().set()
       ).should.throw 'Invalid Commands Set Arguments: expect 1 or 2 arguments, got 0'
       
     it 'an object', ->
       config = shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx(['server', 'stop'])
+      .config(['server', 'stop'])
       .set(
         route: 'path/to/route'
         options: 'force': {}
@@ -53,7 +53,7 @@ describe 'config.commands', ->
       config = shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx(['server', 'stop'])
+      .config(['server', 'stop'])
       .set('route', 'path/to/route')
       .set('options', 'force': {})
       .get()
@@ -69,6 +69,6 @@ describe 'config.commands', ->
           'shell:config:set': ({config}, handler) ->
             config.test = 'was here'
             handler
-      .confx('start').set
+      .config('start').set
         route: 'path/to/route'
       .get().test.should.eql 'was here'

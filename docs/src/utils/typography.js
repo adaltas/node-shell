@@ -73,7 +73,7 @@ const theme = {
         marginBottom: `${rhythm(1)}`,
       },
       'main .display-embed-file-highlight pre': {
-        marginBottom: '0',
+        marginBottom: '2px',
       },
       'main .display-embed-file': {
         textAlign: 'right',
@@ -82,6 +82,7 @@ const theme = {
         padding: '.3rem .5rem',
         marginRight: '.5rem',
         fontWeight: '300',
+        borderTop: '3px solid rgba(45,45,45,1)',
         borderRight: '1px solid rgba(255,255,255,.2)',
         borderBottom: '1px solid rgba(255,255,255,.2)',
         borderLeft: '1px solid rgba(255,255,255,.2)',

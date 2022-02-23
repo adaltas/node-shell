@@ -9,7 +9,7 @@ describe 'config.options.api', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx().options.list()
+      .config().options.list()
       .should.eql ['config', 'help']
 
     it 'for a command', ->
@@ -18,7 +18,7 @@ describe 'config.options.api', ->
         commands: 'app': commands: 'server': options:
           'host': {}
           'port': {}
-      .confx(['app', 'server']).options.list()
+      .config(['app', 'server']).options.list()
       .should.eql ['help', 'host', 'port']
     
   describe 'get', ->
@@ -27,14 +27,14 @@ describe 'config.options.api', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx().options('config').get()
+      .config().options('config').get()
       .name.should.eql 'config'
     
     it 'selected properties from option', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx().options('config')
+      .config().options('config')
       .set('description', 'hello')
       .set('required', true)
       .get(['description', 'required'])
@@ -48,7 +48,7 @@ describe 'config.options.api', ->
       shell
         options: 'config': {}
         commands: 'server': commands: 'start': {}
-      .confx().options('config')
+      .config().options('config')
       .set('description', 'hello')
       .set('required', true)
       .get().name.should.eql 'config'
@@ -61,7 +61,7 @@ describe 'config.options.api', ->
         commands: 'server':
           options: 'opt_cmd': cascade: true
           commands: 'start': {}
-      .confx(['server', 'start']).options.get_cascaded()
+      .config(['server', 'start']).options.get_cascaded()
       .should.eql
         'help':
           cascade: true

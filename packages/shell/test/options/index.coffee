@@ -18,7 +18,7 @@ describe 'options', ->
         options:
           myparam:
             shortcut: 'm'
-      .config.options.myparam.should.eql
+      .config().get().options.myparam.should.eql
         name: 'myparam'
         shortcut: 'm'
         type: 'string'
