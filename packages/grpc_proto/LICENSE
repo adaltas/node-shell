@@ -1,14 +1,4 @@
----
-path: /license
-title: License
-description: MIT License of the Shell.js package
-keywords: ['package', 'node.js', 'license', 'changelog', 'history', 'feature', 'changes', 'version']
-sort: 300
----
-
-# MIT License
-
-## Content
+The MIT License (MIT)
 
 Copyright (c) 2011 Adaltas
 
