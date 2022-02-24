@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.2](https://github.com/adaltas/node-shell/compare/v0.9.1...v0.9.2) (2022-02-24)
+
+
+### Bug Fixes
+
+* add let/const to variables ([dd175ff](https://github.com/adaltas/node-shell/commit/dd175ff43070efa30d5d3e06720e1ce05978185a))
+* commit lint config and comment coffee lint ([719e3c2](https://github.com/adaltas/node-shell/commit/719e3c240ae3eba547adb059f67dae062effaae6))
+* **shell:** throw error unless commands an object ([96ef828](https://github.com/adaltas/node-shell/commit/96ef828405f67843b19921f5da8bfb149d571702))
+
+
+
+
+
 ## [0.9.1](https://github.com/adaltas/node-shell/compare/v0.9.0...v0.9.1) (2022-02-17)
 
 
