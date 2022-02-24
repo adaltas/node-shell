@@ -5,6 +5,8 @@ import {
   // MIN_TABLET_MEDIA_QUERY,
   // MOBILE_MEDIA_QUERY,
 } from 'typography-breakpoint-constants'
+import '../fonts/inter.css'
+import '../fonts/fira.css'
 
 // Notes
 // The standard line height is 1.5 (https://every-layout.dev/layouts/stack/)

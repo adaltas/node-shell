@@ -1,0 +1,9 @@
+
+@font-face {
+  font-family: 'Inter';
+  font-style:  normal;
+  font-weight: 400;
+  font-display: optional;
+  src: url("../../node_modules/typeface-inter/Inter Web/Inter-Regular.woff2") format("woff2"),
+       url("../../node_modules/typeface-inter/Inter Web/Inter-Regular.woff") format("woff");
+}
