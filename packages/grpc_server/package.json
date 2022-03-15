@@ -44,7 +44,8 @@
     }
   },
   "files": [
-    "/lib"
+    "./dist",
+    "./lib"
   ],
   "homepage": "https://github.com/adaltas/node-shell",
   "keywords": [
