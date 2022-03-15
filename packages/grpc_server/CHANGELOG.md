@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/adaltas/node-shell/compare/v0.9.3...v0.9.4) (2022-03-15)
+
+
+### Bug Fixes
+
+* absolute paths in files field ([7dcd0d4](https://github.com/adaltas/node-shell/commit/7dcd0d4e31a282ac99b059bd5d0a04b5716ec09b))
+
+
+
+
+
 ## [0.9.3](https://github.com/adaltas/node-shell/compare/v0.9.2...v0.9.3) (2022-03-15)
 
 
