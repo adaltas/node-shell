@@ -1,6 +1,6 @@
 {
   "name": "@shell-js/grpc_proto",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "contributors": [
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
