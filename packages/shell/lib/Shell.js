@@ -2,12 +2,10 @@
 // Shell.js Core object
 
 // Dependencies
-import path from 'node:path';
-import stream from 'node:stream';
 import {error, load} from './utils/index.js';
-import {clone, merge, is_object_literal} from 'mixme';
+import {clone} from 'mixme';
 import {plugandplay} from 'plug-and-play';
-
+// Plugins
 import router from './plugins/router.js';
 import configPlugin from './plugins/config.js';
 import args from './plugins/args.js';
