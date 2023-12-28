@@ -40,20 +40,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [18.x]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn --frozen-lockfile
-    - run: cd docs && yarn install && npx gatsby build
-    - run: echo 'shell.js.org' > docs/public/CNAME
+    - run: yarn install --frozen-lockfile
+    - run: npx gatsby build
+    - run: echo 'shell.js.org' > public/CNAME
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4.0.0-beta-01
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: docs/public # The folder the action should deploy.
-        CLEAN: true # Automatically remove deleted files from the deploy branch
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: gh-pages # The branch the action should deploy to.
+        folder: docs/public # The folder the action should deploy.
+        clean: true # Automatically remove deleted files from the deploy branch
