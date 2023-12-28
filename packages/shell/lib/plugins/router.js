@@ -25,24 +25,12 @@ export default {
         if (config.router == null) {
           config.router = {};
         }
-        if (config.router.handler == null) {
-          config.router.handler = 'shell/routes/help';
-        }
-        if (config.router.promise == null) {
-          config.router.promise = false;
-        }
-        if (config.router.stdin == null) {
-          config.router.stdin = process.stdin;
-        }
-        if (config.router.stdout == null) {
-          config.router.stdout = process.stdout;
-        }
-        if (config.router.stdout_end == null) {
-          config.router.stdout_end = false;
-        }
-        if (config.router.stderr == null) {
-          config.router.stderr = process.stderr;
-        }
+        config.router.handler ??= 'shell/routes/help';
+        config.router.promise ??= false;
+        config.router.stdin ??= process.stdin;
+        config.router.stdout ??= process.stdout;
+        config.router.stdout_end ??= false;
+        config.router.stderr ??= process.stderr;
         if (config.router.stderr_end == null) {
           config.router.stderr_end = false;
         }
