@@ -1,12 +1,12 @@
 ---
 title: API method `load`
-navtitle: load
+navtitle: shell.load
 description: How to use the `load` method to load modules.
 keywords: ['shell', 'node.js', 'cli', 'api', 'load', module]
 maturity: initial
 ---
 
-# Method `help(command)`
+# Method `shell.help(command)`
 
 ## Description
 

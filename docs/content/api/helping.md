@@ -1,12 +1,12 @@
 ---
 title: API method `helping`
-navtitle: helping
+navtitle: shell.helping
 description: How to use the `helping` method to determine if help was requested.
 keywords: ['shell', 'node.js', 'cli', 'api', 'helping', 'help', 'print']
 maturity: review
 ---
 
-# Method `helping(params)`
+# Method `shell.helping(params)`
 
 Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
 

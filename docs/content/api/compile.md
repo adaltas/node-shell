@@ -1,12 +1,12 @@
 ---
 title: API method `compile`
-navtitle: compile
+navtitle: shell.compile
 description: How to use the `compile` method to convert an object to an arguments array.
 keywords: ["shell", "node.js", "cli", "api", "compile", "arguments", "argv", "array"]
 maturity: review
 ---
 
-# Method `compile(command, [options])`
+# Method `shell.compile(command, [options])`
 
 Convert data to an arguments array.
 

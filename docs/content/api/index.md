@@ -8,19 +8,35 @@ sort: 3
 
 # API 
 
-Shell.js is made available to your module with the declaration
-`const shell = require('shell');`. The returned variable is a function
-expecting a configuration object and returning the following functions:
+Shell.js is written as an ESM package. It is also available as a CommonJS package. To import the package, uses:
 
-* [`help`](./help/) (command)   
+```js
+// ESM package
+import { shell } from 'shell';
+// CommonJS package
+const shell = require('shell');
+```
+
+A Shell.js application is initilized with a [configuration](/config/) object:
+
+```js
+const config = {};
+const app = shell(config);
+```
+
+It exposes the following functions:
+
+* [`shell.compile`](./compile/) (command, [options])   
+  Convert data to an arguments array.
+* [`shell.help`](./help/) (command)   
   Format the configuration into a readable documentation string.
-* [`helping`](./helping/) (command)   
+* [`shell.helping`](./helping/) (command)   
   Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
-* [`parse`](./parse/) ([arguments])   
-  Convert an arguments list to a data object.
-* [`load`](./load/) (module[string])   
+* [`shell.load`](./load/) (module[string])   
   Internal function used to load modules, see the [`load`](/config/load/) option to pass a function or a module referencing the function.
-* [`route`](./route/) (argv[array|process], args[mixed]...)   
+* [`shell.parse`](./parse/) ([arguments])   
+  Convert an arguments list to a data object.
+* [`shell.route`](./route/) (argv[array|process], args[mixed]...)   
   Similar to parse but it will also call the function defined by the "route"
   option. The first argument is the arguments array to parse, other arguments
   are simply transmitted to the `route` method or module as additional arguments.
@@ -28,5 +44,3 @@ expecting a configuration object and returning the following functions:
   first argument. If the option "extended" is activated, it also receives the
   original arguments and configuration as second and third arguments. Any user
   provided arguments are transmitted as is as additional arguments.
-* [`compile`](./compile/) (command, [options])   
-  Convert data to an arguments array.

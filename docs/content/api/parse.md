@@ -1,12 +1,12 @@
 ---
 title: API method `parse`
-navtitle: parse
+navtitle: shell.parse
 description: How to use the `parse` method to convert an arguments list to data.
 keywords: ["shell", "node.js", "cli", "api", "parse", "arguments", "argv", "array"]
 maturity: review
 ---
 
-# Method `parse([arguments])`
+# Method `shell.parse([arguments])`
 
 Convert an arguments list to data.
 

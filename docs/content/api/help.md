@@ -1,12 +1,12 @@
 ---
 title: API method `help`
-navtitle: help
+navtitle: shell.help
 description: How to use the `help` method to print help to the user console.
 keywords: ['shell', 'node.js', 'cli', 'api', 'help', 'print']
 maturity: review
 ---
 
-# Method `help(commands, options)`
+# Method `shell.help(commands, options)`
 
 Format the configuration into a readable documentation string.
 

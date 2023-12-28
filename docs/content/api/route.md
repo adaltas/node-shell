@@ -1,12 +1,12 @@
 ---
 title: API method `route`
-navtitle: route
+navtitle: shell.route
 description: How to use the `route` method to execute code associated with a particular command.
 keywords: ["shell", "node.js", "cli", "api", "router", "command", "route"]
 maturity: initial
 ---
 
-# Method `route(context, ...users_arguments)`
+# Method `shell.route(context, ...users_arguments)`
 
 The `route` method dispatch command into handler functions. An `handler` is a function or the name of a module exporting a function. Learn more about [routing](/usage/routing/) in the usage documentation.
 
