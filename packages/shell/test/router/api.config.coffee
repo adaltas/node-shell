@@ -1,7 +1,7 @@
 
-import path from 'path'
+import { Readable, Writable } from 'node:stream'
+import path from 'node:path'
 import {shell} from '../../lib/index.js'
-import { Readable, Writable } from 'stream'
 import filedirname from '../../lib/utils/filedirname.js'
 {__dirname} = filedirname import.meta.url
 
