@@ -2,9 +2,9 @@
 import { Writable } from 'node:stream'
 import { shell } from '../../lib/index.js'
   
-describe 'handler.stdout', ->
+describe 'handler.stderr', ->
 
-  it "pass custom writable stream", ->
+  it 'pass custom writable stream', ->
     app = shell
       router:
         stdout: new Writable

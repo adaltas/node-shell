@@ -1,7 +1,7 @@
 
 import { shell } from '../../lib/index.js'
   
-describe 'handler.stdout', ->
+describe 'handler.argv', ->
 
   it "no argument", ->
     app = shell

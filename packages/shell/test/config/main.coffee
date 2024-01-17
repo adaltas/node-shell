@@ -23,8 +23,7 @@ describe 'config.main', ->
         commands:
           'server':
             main: true
-            handler: () ->
-              console.log 'ok'
+            handler: (->)
         strict: true
     ).should.throw [
       'Invalid Main Configuration:'
@@ -39,8 +38,7 @@ describe 'config.main', ->
         commands:
           'server':
             main: 'command'
-            handler: () ->
-              console.log 'ok'
+            handler: (->)
         strict: true
     ).should.throw [
       'Conflicting Main Value:'

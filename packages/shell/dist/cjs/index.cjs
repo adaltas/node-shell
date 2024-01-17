@@ -3,9 +3,9 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var mixme = require('mixme');
+var plugAndPlay = require('plug-and-play');
 var path = require('node:path');
 var node_url = require('node:url');
-var plugAndPlay = require('plug-and-play');
 var stream = require('node:stream');
 var pad = require('pad');
 
@@ -85,8 +85,6 @@ var index = /*#__PURE__*/Object.freeze({
   load: load,
   filedirname: filedirname
 });
-
-filedirname((typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('index.cjs', document.baseURI).href)));
 
 var router = {
   name: 'shell/plugins/router',
@@ -170,17 +168,17 @@ const route = function(context = {}, ...args) {
   const route_call = (handler, command, params, err, args) => {
     const config = this.config().get();
     context = {
-      argv: process.argv.slice(2),
-      command: command,
-      error: err,
-      params: params,
-      args: args,
+      // argv: process.argv.slice(2),
       stdin: config.router.stdin,
       stdout: config.router.stdout,
       stdout_end: config.router.stdout_end,
       stderr: config.router.stderr,
       stderr_end: config.router.stderr_end,
-      ...context
+      ...context,
+      command: command,
+      error: err,
+      params: params,
+      args: args,
     };
     return this.plugins.call_sync({
       name: 'shell:router:call',
@@ -234,18 +232,33 @@ const route = function(context = {}, ...args) {
       // handler = this.config.router.handler;
       return route_error(err, command);
     }
+    // Loader is
+    // - asynchronous and return a promise which fullfill with the handler function
+    // - synchronous and return the handler function
     handler = route_load(handler);
     if(handler.then){
       return handler
-      .then(function(handler){
-        return route_call(handler, command, params, err, args);
-      })
-      .catch(async (err) => {
-        err.message = `Fail to load route. Message is: ${err.message}`;
-        return route_error(err, command);
-      })
+        .then(function (handler) {
+          return route_call(handler, command, params, err, args);
+        })
+        .catch(async (err) => {
+          return route_error(`Fail to load route. Message is: ${err.message}`, command);
+        });
     }else {
-      return route_call(handler, command, params, err, args);
+      try {
+        const res = route_call(handler, command, params, err, args);
+        if (res?.catch) {
+          return res.catch(async (err) => {
+            await route_error(`Fail to load route. Message is: ${err.message}`, command);
+            throw err;
+          });
+        } else {
+          return res;
+        }
+      } catch (err) {
+        route_error(`Fail to load route. Message is: ${err.message}`, command);
+        throw err;
+      }
     }
   };
   let params;
@@ -928,8 +941,6 @@ const compile = function(data, options = {}) {
   compile(appconfig, options.extended ? data.shift() : data);
   return argv;
 };
-
-filedirname((typeof document === 'undefined' ? new (require('u' + 'rl').URL)('file:' + __filename).href : (document.currentScript && document.currentScript.src || new URL('index.cjs', document.baseURI).href)));
 
 var help = {
   name: 'shell/plugins/help',

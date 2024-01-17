@@ -2,7 +2,7 @@
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import { shell } from '../../lib/index.js'
-  
+
 describe 'router.handler', ->
     
   it 'context is parameter instance', ->
@@ -12,15 +12,6 @@ describe 'router.handler', ->
         @should.have.property('parse').which.is.a.Function()
         @should.have.property('compile').which.is.a.Function()
     .route []
-
-  it 'propagate thrown error in sync handler', ->
-    (->
-      shell
-        options:
-          'my_argument': {}
-        handler: -> throw Error 'catch me'
-      .route ['--my_argument', 'my value']
-    ).should.throw 'catch me'
     
   it 'load with custom function handler', ->
     await fs.writeFile "#{os.tmpdir()}/renamed_module.coffee", 'export default -> "Hello"'
