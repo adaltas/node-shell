@@ -1,6 +1,6 @@
 
-import { Writable } from 'stream'
-import {shell} from '../../lib/index.js'
+import { Writable } from 'node:stream'
+import { shell } from '../../lib/index.js'
 
 writer = (callback) ->
   chunks = []

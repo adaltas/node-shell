@@ -1,7 +1,7 @@
 
-import fs from 'fs/promises'
-import os from 'os'
-import {shell} from '../../lib/index.js'
+import fs from 'node:fs/promises'
+import os from 'node:os'
+import { shell } from '../../lib/index.js'
   
 describe 'router.handler', ->
     
@@ -13,7 +13,7 @@ describe 'router.handler', ->
         @should.have.property('compile').which.is.a.Function()
     .route []
 
-  it 'propagate error', ->
+  it 'propagate thrown error in sync handler', ->
     (->
       shell
         options:

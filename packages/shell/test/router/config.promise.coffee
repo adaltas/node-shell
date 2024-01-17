@@ -1,7 +1,6 @@
 
-import path from 'path'
-import {shell} from '../../lib/index.js'
-import { Readable, Writable } from 'stream'
+import path from 'node:path'
+import { shell } from '../../lib/index.js'
 
 describe 'router.config.promise', ->
   

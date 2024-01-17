@@ -1,5 +1,5 @@
 
-import {shell} from '../../lib/index.js'
+import { shell } from '../../lib/index.js'
 
 describe 'router.api', ->
     

@@ -1,8 +1,6 @@
 
-import fs from 'fs/promises'
-import os from 'os'
-import {shell} from '../../lib/index.js'
-import { Writable } from 'stream'
+import { Writable } from 'node:stream'
+import { shell } from '../../lib/index.js'
 
 describe 'handler.stdout', ->
 
