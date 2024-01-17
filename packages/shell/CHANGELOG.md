@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.5](https://github.com/adaltas/node-shell/compare/v0.9.4...v0.9.5) (2024-01-17)
+
+
+### Bug Fixes
+
+* **shell:** router handler error ([3d627de](https://github.com/adaltas/node-shell/commit/3d627de183e2d851d22053883df5af68167774d3))
+
+
+
+
+
 ## [0.9.4](https://github.com/adaltas/node-shell/compare/v0.9.3...v0.9.4) (2022-03-15)
 
 
