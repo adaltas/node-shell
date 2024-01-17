@@ -154,6 +154,9 @@ const route = function(context = {}, ...args) {
       // handler = this.config.router.handler;
       return route_error(err, command);
     }
+    // Loader is
+    // - asynchronous and return a promise which fullfill with the handler function
+    // - synchronous and return the handler function
     handler = route_load(handler);
     if(handler.then){
       return handler
