@@ -8,6 +8,7 @@ module.exports = {
  rules: {
   'scope-enum': async ctx => 
     [2, 'always', [...(await getPackages(ctx)), 
+      'website',
       'release',
       'router',
       'help'
