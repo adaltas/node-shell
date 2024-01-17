@@ -19,20 +19,20 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn --frozen-lockfile
+    - run: yarn install --frozen-lockfile
     - run: yarn run test
-  deploy:
-    needs: test
+  publish:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v2
       with:
-        node-version: 14.x
+        node-version: '16.x'
         registry-url: 'https://registry.npmjs.org'
-    - run: yarn --frozen-lockfile
+    - run: yarn install --frozen-lockfile
     - run: yarn run publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
