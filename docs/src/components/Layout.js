@@ -132,10 +132,7 @@ const WrappedLayout = props => (
             title
           }
         }
-        pages: allMarkdownRemark(
-          sort: { order: ASC, fields: [frontmatter___sort] }
-          limit: 1000
-        ) {
+        pages: allMarkdownRemark(sort: {frontmatter: {sort: ASC}}, limit: 1000) {
           edges {
             node {
               frontmatter {
