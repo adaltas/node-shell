@@ -2,11 +2,9 @@
 // Plugin "router"
 
 // Dependencies
-import path from 'node:path';
-import stream from 'node:stream';
-import {clone, merge, is_object_literal} from 'mixme';
-import {error, filedirname, load} from '../utils/index.js';
-const {__dirname} = filedirname(import.meta.url);
+import stream from "node:stream";
+import { is_object_literal } from "mixme";
+import { error } from "../utils/index.js";
 
 export default {
   name: 'shell/plugins/router',

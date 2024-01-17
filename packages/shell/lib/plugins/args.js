@@ -2,8 +2,8 @@
 // Plugin "args"
 
 // Dependencies
+import {is_object_literal} from 'mixme';
 import {error} from '../utils/index.js';
-import {clone, is_object_literal, merge} from 'mixme';
 
 export default {
   name: 'shell/plugins/args',

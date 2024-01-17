@@ -2,14 +2,14 @@
 // Shell.js Core object
 
 // Dependencies
-import {error, load} from './utils/index.js';
-import {clone} from 'mixme';
-import {plugandplay} from 'plug-and-play';
+import { clone } from "mixme";
+import { plugandplay } from "plug-and-play";
+import { error, load } from "./utils/index.js";
 // Plugins
-import router from './plugins/router.js';
-import configPlugin from './plugins/config.js';
-import args from './plugins/args.js';
-import help from './plugins/help.js';
+import router from "./plugins/router.js";
+import configPlugin from "./plugins/config.js";
+import args from "./plugins/args.js";
+import help from "./plugins/help.js";
 
 const Shell = function(config) {
   this.plugins = plugandplay({

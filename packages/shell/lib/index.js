@@ -1,8 +1,8 @@
 
-// # Shell.js
+// Shell.js
 // Usage: `shell(config)`
 
-import Shell from './Shell.js';
+import Shell from "./Shell.js";
 
 const shell = function(config) {
   const shell = new Shell(config);

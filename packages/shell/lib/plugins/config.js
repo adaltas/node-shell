@@ -2,8 +2,8 @@
 // Plugin "config"
 
 // Dependencies
-import {error} from '../utils/index.js';
 import {clone, is_object_literal, merge, mutate} from 'mixme';
+import {error} from '../utils/index.js';
 
 // Shell.js & plugins
 import Shell from '../Shell.js';

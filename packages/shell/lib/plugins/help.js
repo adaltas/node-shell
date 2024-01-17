@@ -2,11 +2,9 @@
 // Plugin "help"
 
 // Dependencies
-import path from 'node:path';
 import pad from 'pad';
-import {clone, is_object_literal, merge} from 'mixme';
-import {error, filedirname} from '../utils/index.js';
-const {__dirname} = filedirname(import.meta.url);
+import { clone, is_object_literal, merge } from "mixme";
+import { error } from "../utils/index.js";
 
 export default {
   name: 'shell/plugins/help',
