@@ -1,6 +1,6 @@
 {
   "name": "@shell-js/grpc_server",
-  "version": "0.9.4",
+  "version": "0.9.6",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {
@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.8.22",
-    "@shell-js/grpc_proto": "^0.9.4",
+    "@shell-js/grpc_proto": "^0.9.6",
     "mixme": "^1.1.0",
     "protobufjs": "^7.3.0"
   },
