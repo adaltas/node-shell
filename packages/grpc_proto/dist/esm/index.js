@@ -2,13 +2,14 @@ import path from 'node:path';
 import protoLoader from '@grpc/proto-loader';
 import { utils } from 'shell';
 
-const {__dirname} = utils.filedirname(import.meta.url);
+// Dependencies
+const { __dirname } = utils.filedirname(import.meta.url);
 
 var index = {
-  resolve: function() {
-    return path.resolve(__dirname, './shell.proto');
+  resolve: function () {
+    return path.resolve(__dirname, "./shell.proto");
   },
-  load: function(proto) {
+  load: function (proto) {
     if (proto == null) {
       proto = this.resolve();
     }
@@ -17,10 +18,10 @@ var index = {
       longs: String,
       enums: String,
       defaults: true,
-      oneofs: true
+      oneofs: true,
     });
   },
-  loadSync: function(proto) {
+  loadSync: function (proto) {
     if (proto == null) {
       proto = this.resolve();
     }
@@ -29,9 +30,9 @@ var index = {
       longs: String,
       enums: String,
       defaults: true,
-      oneofs: true
+      oneofs: true,
     });
-  }
+  },
 };
 
 export { index as default };

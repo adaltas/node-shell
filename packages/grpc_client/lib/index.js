@@ -1,15 +1,14 @@
-
 // Dependencies
-import client from './client.js';
+import client from "./client.js";
 
 const call = client().run({
-  argv: process.argv.slice(2)
+  argv: process.argv.slice(2),
 });
 
-call.on('data', function({data}) {
+call.on("data", function ({ data }) {
   return process.stdout.write(data);
 });
 
-call.on('end', function() {
-  return process.stdout.write('end');
+call.on("end", function () {
+  return process.stdout.write("end");
 });

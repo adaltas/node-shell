@@ -1,18 +1,17 @@
-
 // Route Shell Protobuf
 // Print the Protocol Buffer definition.
 
 // Dependencies
-import fs from 'node:fs';
-import protobuf from 'protobufjs';
-import proto from '@shell-js/grpc_proto';
+import fs from "node:fs";
+import protobuf from "protobufjs";
+import proto from "@shell-js/grpc_proto";
 
 // ## Source code
-export default function({argv, params, config, error, stdout, stdout_end}) {
+export default function ({ argv, params, config, error, stdout, stdout_end }) {
   const proto_path = proto.resolve();
   switch (params.format) {
-    case 'json':
-      return protobuf.load(proto_path, function(err, root) {
+    case "json":
+      return protobuf.load(proto_path, function (err, root) {
         if (err) {
           return reject(err);
         }
@@ -21,8 +20,8 @@ export default function({argv, params, config, error, stdout, stdout_end}) {
           return stdout.end();
         }
       });
-    case 'proto':
-      return fs.readFile(proto_path, function(err, data) {
+    case "proto":
+      return fs.readFile(proto_path, function (err, data) {
         if (err) {
           return reject(err);
         }
@@ -35,4 +34,4 @@ export default function({argv, params, config, error, stdout, stdout_end}) {
       // TODO: more explicit error message
       throw error(["Invalid Format"]);
   }
-};
+}

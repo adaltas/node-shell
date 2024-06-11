@@ -1,16 +1,19 @@
+import { shell } from "shell";
 
-import {shell} from 'shell';
-
-const app = shell({
-  name: 'server',
-  description: 'Manage a web server',
+export default shell({
+  name: "server",
+  description: "Manage a web server",
   commands: {
-    'start': {
-      description: 'Start a web server',
+    start: {
+      description: "Start a web server",
       options: {
-        'host': {shortcut: 'h', description: 'Web server listen host'},
-        'port': {shortcut: 'p', type: 'integer', description: 'Web server listen port'}
-      }
-    }
-  }
+        host: { shortcut: "h", description: "Web server listen host" },
+        port: {
+          shortcut: "p",
+          type: "integer",
+          description: "Web server listen port",
+        },
+      },
+    },
+  },
 });

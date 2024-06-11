@@ -1,23 +1,25 @@
-
-import assert from "assert"
-import {shell} from "shell"
+import assert from "assert";
+import { shell } from "shell";
 
 assert.deepStrictEqual(
   shell({
-    commands: { 'secret': {} }
-  }).config('help').get()
-, {
-    name: 'help',
-    description: 'Display help information',
+    commands: { secret: {} },
+  })
+    .config("help")
+    .get(),
+  {
+    name: "help",
+    description: "Display help information",
     main: {
-      name: 'name',
-      description: 'Help about a specific command' 
+      name: "name",
+      description: "Help about a specific command",
     },
-    handler: 'shell/routes/help',
+    handler: "shell/routes/help",
     help: true,
     strict: false,
     shortcuts: {},
-    command: ['help'],
+    command: ["help"],
     options: {},
-    commands: {}
-});
+    commands: {},
+  }
+);

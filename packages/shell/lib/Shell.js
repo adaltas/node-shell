@@ -1,4 +1,3 @@
-
 // Shell.js Core object
 
 // Dependencies
@@ -11,25 +10,25 @@ import configPlugin from "./plugins/config.js";
 import args from "./plugins/args.js";
 import help from "./plugins/help.js";
 
-const Shell = function(config) {
+const Shell = function (config) {
   this.plugins = plugandplay({
-    chain: this
+    chain: this,
   });
   this.plugins.register(router);
   this.plugins.register(configPlugin);
   this.plugins.register(args);
   this.plugins.register(help);
   config = clone(config || {});
-  if(!config.plugins){
-    config.plugins = []
+  if (!config.plugins) {
+    config.plugins = [];
   }
-  for(const plugin of config.plugins){
+  for (const plugin of config.plugins) {
     this.plugins.register(plugin);
   }
   this._config = config;
   this.plugins.call_sync({
-    args: {shell: this},
-    name: 'shell:init'
+    args: { shell: this },
+    name: "shell:init",
   });
   this.config().set(this._config);
   return this;
@@ -37,18 +36,26 @@ const Shell = function(config) {
 
 // `load(module)`
 // https://shell.js.org/api/load/
-Shell.prototype.load = async function(module, namespace = 'default') {
-  if (typeof module !== 'string') {
-    throw error(['Invalid Load Argument:', 'load is expecting string,', `got ${JSON.stringify(module)}`].join(' '));
+Shell.prototype.load = async function (module, namespace = "default") {
+  if (typeof module !== "string") {
+    throw error(
+      [
+        "Invalid Load Argument:",
+        "load is expecting string,",
+        `got ${JSON.stringify(module)}`,
+      ].join(" ")
+    );
   }
   // Custom loader defined in the configuration
   if (this._config.load) {
     // Provided by the user as a module path
-    if (typeof this._config.load === 'string') {
+    if (typeof this._config.load === "string") {
       // todo, shall be async and return module.default
-      const loader = await load(this._config.load /* `, this._config.load.namespace` */);
+      const loader = await load(
+        this._config.load /* `, this._config.load.namespace` */
+      );
       return loader(module, namespace);
-    // Provided by the user as a function
+      // Provided by the user as a function
     } else {
       return await this._config.load(module, namespace);
     }
