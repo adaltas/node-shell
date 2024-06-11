@@ -28,7 +28,7 @@
     "/dist",
     "/lib"
   ],
-  "homepage": "https://github.com/adaltas/node-shell",
+  "homepage": "https://shell.js.org",
   "keywords": [
     "argument",
     "parameter",

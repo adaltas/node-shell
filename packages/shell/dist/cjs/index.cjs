@@ -203,7 +203,6 @@ const route = function(context = {}, ...args) {
         }
       }
     });
-    
   };
   const route_error = (err, command) => {
     context.argv = command.length ? ['help', ...command] : ['--help'];
