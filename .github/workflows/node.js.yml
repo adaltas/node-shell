@@ -50,9 +50,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install --frozen-lockfile
+    - run: cd docs && yarn install --frozen-lockfile
     - run: cd docs && npx gatsby build
-    - run: echo 'shell.js.org' > public/CNAME
+    - run: echo 'shell.js.org' > docs/public/CNAME
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4
       with:

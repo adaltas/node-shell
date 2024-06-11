@@ -100,25 +100,6 @@ EXAMPLES
 
 
 const styles = {
-  // homePage: {
-  //   " section h2": {
-  //     textAlign: "center",
-  //     paddingTop: 0,
-  //     fontWeight: 'bold',
-  //   },
-  //   " section": {
-  //     fontSize: '1.1rem',
-  //   },
-  // },
-  // section: {
-  //   '& h2': {
-  //     textAlign: "center",
-  //   }
-  //   // '> div': {
-  //   //   maxWidth: '1000px',
-  //   //   margin: '0 auto',      
-  //   // }
-  // },
   descContainer: {
     maxWidth: '800px',
     margin: '0 auto',
@@ -129,14 +110,6 @@ const styles = {
     '& h2': {
       textAlign: "center",
     },
-    // maxWidth: 1000,
-    // margin: "auto",
-    // position: "relative",
-    // "@media (max-width: 768px)": {
-    //   padding: "0",
-    // },
-    // display: 'block',
-    // padding: "1rem 0",
     '> div > div': {
       display: 'flex',
       justifyContent: 'space-between',
