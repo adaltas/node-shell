@@ -30,7 +30,7 @@ jobs:
         fetch-depth: 0
     - uses: actions/setup-node@v2
       with:
-        node-version: '16.x'
+        node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
     - run: yarn install --frozen-lockfile
     - run: yarn run publish
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
