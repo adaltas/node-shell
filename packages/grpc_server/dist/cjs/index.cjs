@@ -6,11 +6,6 @@ var mixme = require('mixme');
 var grpc = require('@grpc/grpc-js');
 var proto = require('@shell-js/grpc_proto');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var grpc__default = /*#__PURE__*/_interopDefaultLegacy(grpc);
-var proto__default = /*#__PURE__*/_interopDefaultLegacy(proto);
-
 var index = {
   name: 'shell/grpc_server',
   hooks: {
@@ -122,10 +117,10 @@ const grpc_start = function(callback) {
   }
   const appconfig = this.config().get();
   // Load the definition
-  const packageDefinition = proto__default["default"].loadSync();
-  const shell_definition = grpc__default["default"].loadPackageDefinition(packageDefinition).shell;
+  const packageDefinition = proto.loadSync();
+  const shell_definition = grpc.loadPackageDefinition(packageDefinition).shell;
   // Instantiate the server
-  const server = new grpc__default["default"].Server();
+  const server = new grpc.Server();
   const handlers = get_handlers();
   for (const name in handlers) {
     const handler = handlers[name];
@@ -134,7 +129,7 @@ const grpc_start = function(callback) {
   server.addService(shell_definition.Shell.service, handlers);
   const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
   const promise = new Promise(function(resolve, reject) {
-    return server.bindAsync(endpoint, grpc__default["default"].ServerCredentials.createInsecure(), function(err, port) {
+    server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
       server.start();
       if (err) {
         return reject(err);

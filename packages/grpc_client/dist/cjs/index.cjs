@@ -3,11 +3,6 @@
 var proto = require('@shell-js/grpc_proto');
 var grpc = require('@grpc/grpc-js');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var proto__default = /*#__PURE__*/_interopDefaultLegacy(proto);
-var grpc__default = /*#__PURE__*/_interopDefaultLegacy(grpc);
-
 function client(config = {}) {
   if (config.address == null) {
     config.address = '127.0.0.1';
@@ -16,11 +11,11 @@ function client(config = {}) {
     config.port = 50051;
   }
   // Load the definition
-  const packageDefinition = proto__default["default"].loadSync();
-  const shell_proto = grpc__default["default"].loadPackageDefinition(packageDefinition).shell;
+  const packageDefinition = proto.loadSync();
+  const shell_proto = grpc.loadPackageDefinition(packageDefinition).shell;
   // Instantiate the client
   const endpoint = `${config.address}:${config.port}`;
-  const client = new shell_proto.Shell(endpoint, grpc__default["default"].credentials.createInsecure());
+  const client = new shell_proto.Shell(endpoint, grpc.credentials.createInsecure());
   for (const name in shell_proto.Shell.service) {
     const service = shell_proto.Shell.service[name];
     // Response stream return a readable stream

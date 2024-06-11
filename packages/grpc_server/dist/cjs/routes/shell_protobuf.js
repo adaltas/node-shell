@@ -4,18 +4,12 @@ var fs = require('node:fs');
 var protobuf = require('protobufjs');
 var proto = require('@shell-js/grpc_proto');
 
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-var fs__default = /*#__PURE__*/_interopDefaultLegacy(fs);
-var protobuf__default = /*#__PURE__*/_interopDefaultLegacy(protobuf);
-var proto__default = /*#__PURE__*/_interopDefaultLegacy(proto);
-
 // ## Source code
 function shell_protobuf({argv, params, config, error, stdout, stdout_end}) {
-  const proto_path = proto__default["default"].resolve();
+  const proto_path = proto.resolve();
   switch (params.format) {
     case 'json':
-      return protobuf__default["default"].load(proto_path, function(err, root) {
+      return protobuf.load(proto_path, function(err, root) {
         if (err) {
           return reject(err);
         }
@@ -25,7 +19,7 @@ function shell_protobuf({argv, params, config, error, stdout, stdout_end}) {
         }
       });
     case 'proto':
-      return fs__default["default"].readFile(proto_path, function(err, data) {
+      return fs.readFile(proto_path, function(err, data) {
         if (err) {
           return reject(err);
         }

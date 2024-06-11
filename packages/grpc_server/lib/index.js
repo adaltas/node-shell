@@ -5,12 +5,6 @@
 import {Transform} from 'node:stream';
 import {utils} from 'shell';
 import {mutate} from 'mixme';
-// let grpc;
-// try {
-//   grpc from 'grpc';
-// } catch (error) {
-//   grpc from '@grpc/grpc-js';
-// }
 import grpc from '@grpc/grpc-js';
 import proto from '@shell-js/grpc_proto';
 
@@ -137,8 +131,8 @@ const grpc_start = function(callback) {
   server.addService(shell_definition.Shell.service, handlers);
   const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
   const promise = new Promise(function(resolve, reject) {
-    return server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
-      server.start();
+    server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
+      server.start()
       if (err) {
         return reject(err);
       } else {

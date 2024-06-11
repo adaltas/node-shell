@@ -127,7 +127,7 @@ const grpc_start = function(callback) {
   server.addService(shell_definition.Shell.service, handlers);
   const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
   const promise = new Promise(function(resolve, reject) {
-    return server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
+    server.bindAsync(endpoint, grpc.ServerCredentials.createInsecure(), function(err, port) {
       server.start();
       if (err) {
         return reject(err);

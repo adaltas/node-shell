@@ -54,8 +54,8 @@ function filedirname(url){
 var index = /*#__PURE__*/Object.freeze({
   __proto__: null,
   error: error,
-  load: load,
-  filedirname: filedirname
+  filedirname: filedirname,
+  load: load
 });
 
 var router = {

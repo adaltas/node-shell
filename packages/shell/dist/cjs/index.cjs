@@ -1,37 +1,11 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var mixme = require('mixme');
 var plugAndPlay = require('plug-and-play');
 var path = require('node:path');
 var node_url = require('node:url');
 var stream = require('node:stream');
 var pad = require('pad');
-
-function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
-
-function _interopNamespace(e) {
-  if (e && e.__esModule) return e;
-  var n = Object.create(null);
-  if (e) {
-    Object.keys(e).forEach(function (k) {
-      if (k !== 'default') {
-        var d = Object.getOwnPropertyDescriptor(e, k);
-        Object.defineProperty(n, k, d.get ? d : {
-          enumerable: true,
-          get: function () { return e[k]; }
-        });
-      }
-    });
-  }
-  n["default"] = e;
-  return Object.freeze(n);
-}
-
-var path__default = /*#__PURE__*/_interopDefaultLegacy(path);
-var stream__default = /*#__PURE__*/_interopDefaultLegacy(stream);
-var pad__default = /*#__PURE__*/_interopDefaultLegacy(pad);
 
 /*
 Format errors
@@ -67,23 +41,23 @@ function error() {
 }
 
 async function load(module, namespace = 'default') {
-  module = module.substr(0, 1) === '.' ? path__default["default"].resolve(process.cwd(), module) : module;
-  const mod = await (function (t) { return Promise.resolve().then(function () { return /*#__PURE__*/_interopNamespace(require(t)); }); })(module);
+  module = module.substr(0, 1) === '.' ? path.resolve(process.cwd(), module) : module;
+  const mod = await import(module);
   return mod[namespace];
 }
 
 // filedirname(import.meta.url)
 function filedirname(url){
   const __filename = node_url.fileURLToPath(url);
-  const __dirname = path__default["default"].dirname(__filename);
+  const __dirname = path.dirname(__filename);
   return {__filename, __dirname};
 }
 
 var index = /*#__PURE__*/Object.freeze({
   __proto__: null,
   error: error,
-  load: load,
-  filedirname: filedirname
+  filedirname: filedirname,
+  load: load
 });
 
 var router = {
@@ -112,13 +86,13 @@ var router = {
         if (config.router.stderr_end == null) {
           config.router.stderr_end = false;
         }
-        if (! config.router.stdin instanceof stream__default["default"].Readable) {
+        if (! config.router.stdin instanceof stream.Readable) {
           throw error(["Invalid Configuration Property:", "router.stdin must be an instance of stream.Readable,", `got ${JSON.stringify(config.router.stdin)}`]);
         }
-        if (! config.router.stdout instanceof stream__default["default"].Writable) {
+        if (! config.router.stdout instanceof stream.Writable) {
           throw error(["Invalid Configuration Property:", "router.stdout must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stdout)}`]);
         }
-        if (! config.router.stderr instanceof stream__default["default"].Writable) {
+        if (! config.router.stderr instanceof stream.Writable) {
           throw error(["Invalid Configuration Property:", "router.stderr must be an instance of stream.Writable,", `got ${JSON.stringify(config.router.stderr)}`]);
         }
         return handler;
@@ -1188,7 +1162,7 @@ const help$1 = function(commands = [], options = {}) {
         }));
       } else {
         let line = `${options.indent}   ${config.main.name}`;
-        line = pad__default["default"](line, options.columns);
+        line = pad(line, options.columns);
         if (line.length > options.columns) {
           content.push(line);
           line = ' '.repeat(options.columns);
@@ -1212,7 +1186,7 @@ const help$1 = function(commands = [], options = {}) {
       } else {
         const shortcut = option.shortcut ? `-${option.shortcut} ` : '   ';
         let line = `${options.indent}${shortcut}--${option.name}`;
-        line = pad__default["default"](line, options.columns);
+        line = pad(line, options.columns);
         if (line.length > options.columns) {
           content.push(line);
           line = ' '.repeat(options.columns);
@@ -1229,7 +1203,7 @@ const help$1 = function(commands = [], options = {}) {
     content.push('COMMANDS');
     for (const name in config.commands) {
       const command = config.commands[name];
-      let line = pad__default["default"](`${options.indent}${[command.name].join(' ')}`, options.columns);
+      let line = pad(`${options.indent}${[command.name].join(' ')}`, options.columns);
       if (line.length > options.columns) {
         content.push(line);
         line = ' '.repeat(options.columns);
@@ -1246,7 +1220,7 @@ const help$1 = function(commands = [], options = {}) {
         // Raw command, no main, no child commands
         if (!Object.keys(command.commands).length && !(command.main && command.main.required)) {
           let line = `${command.name}`;
-          line = pad__default["default"](`${options.indent}${line}`, options.columns);
+          line = pad(`${options.indent}${line}`, options.columns);
           if (line.length > options.columns) {
             content.push(line);
             line = ' '.repeat(options.columns);
@@ -1257,7 +1231,7 @@ const help$1 = function(commands = [], options = {}) {
         // Command with main
         if (command.main) {
           let line = `${command.name} {${command.main.name}}`;
-          line = pad__default["default"](`${options.indent}${line}`, options.columns);
+          line = pad(`${options.indent}${line}`, options.columns);
           if (line.length > options.columns) {
             content.push(line);
             line = ' '.repeat(options.columns);
@@ -1300,7 +1274,7 @@ const help$1 = function(commands = [], options = {}) {
         return `${options.indent}${l}`;
       }));
     } else {
-      let line = pad__default["default"](`${options.indent}${cmd} --help`, options.columns);
+      let line = pad(`${options.indent}${cmd} --help`, options.columns);
       if (line.length > options.columns) {
         content.push(line);
         line = ' '.repeat(options.columns);
@@ -1315,7 +1289,7 @@ const help$1 = function(commands = [], options = {}) {
         return `${options.indent}${l}`;
       }));
     } else {
-      let line = pad__default["default"](`${options.indent}${cmd} help`, options.columns);
+      let line = pad(`${options.indent}${cmd} help`, options.columns);
       if (line.length > options.columns) {
         content.push(line);
         line = ' '.repeat(options.columns);
