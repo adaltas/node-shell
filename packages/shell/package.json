@@ -50,15 +50,17 @@
   ],
   "homepage": "https://shell.js.org",
   "keywords": [
-    "argument",
-    "arg",
-    "parameter",
+    "shell",
+    "cli",
+    "arguments",
+    "parser",
+    "parameters",
     "param",
     "option",
     "command",
-    "cli",
-    "getopt",
-    "parser"
+    "bash",
+    "sh",
+    "getopt"
   ],
   "license": "MIT",
   "main": "./lib/index",
