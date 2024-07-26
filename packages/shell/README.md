@@ -7,11 +7,15 @@ Please start the [tutorial](https://shell.js.org/usage/tutorial/) and refer to t
 
 ## Features
 
-- Argument parser and stringifier (reversability)
-- Declarative syntax
-- Commands and sub-commands support
-- Routing and asynchronous function call
-- Auto generate help
+- Reversibility, argument parser and stringifier
+- Auto-discovery, extract unregistered options
+- Standard and commands-based command lines (eg `git pull ...`)
+- Unlimited/multi level commands (eg `myapp server start ...`)
+- Type conversion ('string', 'boolean', 'integer', 'array')
+- Object literals, config and parsed results are serializable and human readable
+- Routing, run asynchronous functions or modules based on user commands
+- Auto-generated help
+- Complete tests coverages and samples
 
 ## Prerequisites
 
