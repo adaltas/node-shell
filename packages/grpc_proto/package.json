@@ -11,7 +11,7 @@
   "description": "GRPC Protocol Buffer definition.",
   "devDependencies": {
     "coffeescript": "^2.7.0",
-    "mocha": "^10.4.0",
+    "mocha": "^10.7.0",
     "rollup-plugin-copy": "^3.5.0",
     "should": "^13.2.3"
   },

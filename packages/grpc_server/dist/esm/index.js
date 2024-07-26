@@ -52,7 +52,7 @@ const get_handlers = function () {
 };
 
 const grpc_start = function () {
-  if (this._server && this._server.started) {
+  if (this._server) {
     throw utils.error("GRPC Server Already Started");
   }
   const appconfig = this.config().get();
@@ -68,37 +68,32 @@ const grpc_start = function () {
   }
   server.addService(shell_definition.Shell.service, handlers);
   const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
-  const promise = new Promise(function (resolve, reject) {
+  return new Promise( (resolve, reject) => {
     server.bindAsync(
       endpoint,
       grpc.ServerCredentials.createInsecure(),
-      function (err, port) {
-        server.start();
+      (err, port) => {
         if (err) {
           return reject(err);
         } else {
+          this._server = server;
           return resolve(port);
         }
       }
     );
   });
-  this._server = server;
-  return promise;
 };
 
 const grpc_stop = function () {
-  // server = @_server
   return new Promise((resolve, reject) => {
     if (!this.grpc_started()) {
       return resolve(false);
     }
     return this._server.tryShutdown((err) => {
-      // Note, as of june 2019,
-      // grpc marks the server as started but not as stopped
-      this._server.started = false;
       if (err) {
         return reject(err);
       } else {
+        this._server = null;
         return resolve(true);
       }
     });
@@ -106,7 +101,7 @@ const grpc_stop = function () {
 };
 
 const grpc_started = function () {
-  return !!this._server?.started;
+  return !!this._server;
 };
 
 var index = {

@@ -6,8 +6,8 @@
     "shell": "^0.9.6"
   },
   "devDependencies": {
-    "glob": "^10.4.1",
-    "mocha": "^10.4.0",
+    "glob": "^11.0.0",
+    "mocha": "^10.7.0",
     "should": "^13.2.3"
   },
   "mocha": {
