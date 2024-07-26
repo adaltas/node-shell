@@ -19,7 +19,7 @@ Please start the [tutorial](https://shell.js.org/usage/tutorial/) and refer to t
 
 ## Prerequisites
 
-- Node.js (version 18 or later)
+- Node.js (version 20 or later)
 - A Node Package Manager
 
 ## Installation
