@@ -32,9 +32,8 @@ jobs:
       with:
         node-version: '22.x'
         registry-url: 'https://registry.npmjs.org'
-    - run: npm whoami
-    - run: yarn install --frozen-lockfile
-    - run: npm run publish
+    - run: yarn install
+    - run: yarn run publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   www:
