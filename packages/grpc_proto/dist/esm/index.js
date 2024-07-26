@@ -10,9 +10,7 @@ var index = {
     return path.resolve(__dirname, "./shell.proto");
   },
   load: function (proto) {
-    if (proto == null) {
-      proto = this.resolve();
-    }
+    proto ??= this.resolve();
     return protoLoader.load(proto, {
       keepCase: true,
       longs: String,
@@ -22,9 +20,7 @@ var index = {
     });
   },
   loadSync: function (proto) {
-    if (proto == null) {
-      proto = this.resolve();
-    }
+    proto ??= this.resolve();
     return protoLoader.loadSync(proto, {
       keepCase: true,
       longs: String,
