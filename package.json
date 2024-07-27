@@ -26,7 +26,7 @@
     "lint:check": "lerna run lint:check",
     "lint:fix": "lerna run lint:fix",
     "test": "lerna run test",
-    "version": "lerna version --conventional-commits"
+    "version": "lerna version"
   },
   "workspaces": [
     "packages/*",
