@@ -14,9 +14,6 @@
     "lerna": "^8.1.7",
     "lint-staged": "15.2.7"
   },
-  "lint-staged": {
-    "*.coffee": "eslint"
-  },
   "name": "shell",
   "scripts": {
     "compile": "lerna run compile",
@@ -25,6 +22,7 @@
     "publish": "lerna publish from-git --yes",
     "lint:check": "lerna run lint:check",
     "lint:fix": "lerna run lint:fix",
+    "lint:staged": "lerna run lint:staged",
     "test": "lerna run test",
     "version": "lerna version"
   },

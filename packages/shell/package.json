@@ -70,6 +70,9 @@
     "getopt"
   ],
   "license": "MIT",
+  "lint-staged": {
+    "*.js": "npm run lint:check"
+  },
   "main": "./lib/index",
   "mocha": {
     "throw-deprecation": true,
@@ -94,6 +97,7 @@
     "build": "npx rollup -c",
     "lint:check": "npx eslint",
     "lint:fix": "npx eslint --fix",
+    "lint:staged": "npx lint-staged",
     "preversion": "yarn run test",
     "pretest": "npm run build",
     "test": "mocha 'test/**/*.coffee' 'test/**/*.js'"
