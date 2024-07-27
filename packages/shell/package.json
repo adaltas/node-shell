@@ -1,6 +1,6 @@
 {
   "name": "shell",
-  "version": "0.9.6",
+  "version": "0.10.0",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {

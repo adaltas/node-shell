@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/adaltas/node-shell/compare/v0.9.6...v0.10.0) (2024-07-27)
+
+**Note:** Version bump only for package @shell-js/samples
+
+
+
+
+
 ## [0.9.5](https://github.com/adaltas/node-shell/compare/v0.9.4...v0.9.5) (2024-01-17)
 
 **Note:** Version bump only for package @shell-js/samples

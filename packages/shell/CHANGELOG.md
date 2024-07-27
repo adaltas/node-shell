@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/adaltas/node-shell/compare/v0.9.6...v0.10.0) (2024-07-27)
+
+
+### Features
+
+* support node 20 and 22 ([b462be6](https://github.com/adaltas/node-shell/commit/b462be6883b2bd14b35550fb3cc9177c4458f67e))
+
+
+
+
+
 ## [0.9.5](https://github.com/adaltas/node-shell/compare/v0.9.4...v0.9.5) (2024-01-17)
 
 

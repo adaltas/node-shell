@@ -1,9 +1,9 @@
 {
   "name": "@shell-js/samples",
-  "version": "0.9.6",
+  "version": "0.10.0",
   "private": true,
   "dependencies": {
-    "shell": "^0.9.6"
+    "shell": "^0.10.0"
   },
   "devDependencies": {
     "glob": "^11.0.0",
