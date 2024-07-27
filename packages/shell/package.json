@@ -71,7 +71,8 @@
   ],
   "license": "MIT",
   "lint-staged": {
-    "*.js": "npm run lint:check"
+    "*.js": "npm run lint:fix",
+    "*.md": "prettier -w"
   },
   "main": "./lib/index",
   "mocha": {

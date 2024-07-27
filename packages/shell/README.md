@@ -1,4 +1,3 @@
-
 # Shell.js argument parser and router for Node.js
 
 This project demonstrates the usage of the Shell library for creating command-line tools that parse arguments and route function calls based on those arguments. The Shell library uses a declarative syntax and allows you to build powerful and user-friendly command-line interfaces in Node.js.
@@ -39,16 +38,15 @@ shell({
   name: "myapp",
   description: "My CLI application",
   options: {
-    "config": {
+    config: {
       shortcut: "c",
-      description: "Some option"
-    }
+      description: "Some option",
+    },
   },
   commands: {
-    "start": {
-      description: "Start something"
-    }
-  }
-})
-.route();
+    start: {
+      description: "Start something",
+    },
+  },
+}).route();
 ```
