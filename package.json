@@ -28,6 +28,7 @@
     "test": "lerna run test",
     "version": "lerna version"
   },
+  "type": "module",
   "workspaces": [
     "packages/*",
     "samples"
