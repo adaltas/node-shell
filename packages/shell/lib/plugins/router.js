@@ -32,21 +32,21 @@ export default {
           if (config.router.stderr_end == null) {
             config.router.stderr_end = false;
           }
-          if (!config.router.stdin instanceof stream.Readable) {
+          if (!(config.router.stdin instanceof stream.Readable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stdin must be an instance of stream.Readable,",
               `got ${JSON.stringify(config.router.stdin)}`,
             ]);
           }
-          if (!config.router.stdout instanceof stream.Writable) {
+          if (!(config.router.stdout instanceof stream.Writable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stdout must be an instance of stream.Writable,",
               `got ${JSON.stringify(config.router.stdout)}`,
             ]);
           }
-          if (!config.router.stderr instanceof stream.Writable) {
+          if (!(config.router.stderr instanceof stream.Writable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stderr must be an instance of stream.Writable,",
@@ -104,7 +104,7 @@ const route = function (context = {}, ...args) {
       return handler;
     } else {
       throw error(
-        `Invalid Handler: expect a string or a function, got ${handler}`
+        `Invalid Handler: expect a string or a function, got ${handler}`,
       );
     }
   };
@@ -136,7 +136,7 @@ const route = function (context = {}, ...args) {
           if (result && typeof result.then === "function") {
             return result;
           }
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve) {
             return resolve(result);
           });
         } catch (err) {
@@ -168,15 +168,15 @@ const route = function (context = {}, ...args) {
         // Object.keys(config.commands).length or
         err = config.root
           ? error([
-              "Missing Application Handler:",
-              'a "handler" definition is required when no child command is defined',
-            ])
+            "Missing Application Handler:",
+            'a "handler" definition is required when no child command is defined',
+          ])
           : error([
-              "Missing Command Handler:",
-              `a \"handler\" definition ${JSON.stringify(
-                params[appconfig.command]
-              )} is required when no child command is defined`,
-            ]);
+            "Missing Command Handler:",
+            `a "handler" definition ${JSON.stringify(
+              params[appconfig.command],
+            )} is required when no child command is defined`,
+          ]);
       }
       // Convert argument to an help command
       // context.argv = command.length ? ['help', ...command] : ['--help'];
@@ -196,7 +196,7 @@ const route = function (context = {}, ...args) {
         .catch(async (err) => {
           return route_error(
             `Fail to load route. Message is: ${err.message}`,
-            command
+            command,
           );
         });
     } else {
@@ -206,7 +206,7 @@ const route = function (context = {}, ...args) {
           return res.catch(async (err) => {
             await route_error(
               `Fail to load route. Message is: ${err.message}`,
-              command
+              command,
             );
             throw err;
           });
@@ -245,10 +245,11 @@ const route = function (context = {}, ...args) {
     if (appconfig.extended) {
       // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
       // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
-      command = [];
-      for (const param in params) {
-        command.push[appconfig.command];
-      }
+      // command = [];
+      // for (const param in params) {
+      //   command.push[appconfig.command];
+      // }
+      console.warn("TODO");
     }
     const config = this.config(command).get();
     return route_from_config(config, command || [], params);

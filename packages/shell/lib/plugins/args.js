@@ -148,14 +148,14 @@ const parse = function (argv = process, options = {}) {
       const required =
         typeof option.required === "function"
           ? !!option.required.call(null, {
-              config: config,
-              command: command,
-            })
+            config: config,
+            command: command,
+          })
           : !!option.required;
       if (required && params[option.name] == null) {
         throw error([
           "Required Option:",
-          `the \"${option.name}\" option must be provided`,
+          `the "${option.name}" option must be provided`,
         ]);
       }
       // Handle enum
@@ -169,7 +169,7 @@ const parse = function (argv = process, options = {}) {
             if (option.enum.indexOf(value) === -1) {
               throw error([
                 "Invalid Argument Value:",
-                `the value of option \"${option.name}\"`,
+                `the value of option "${option.name}"`,
                 `must be one of ${JSON.stringify(option.enum)},`,
                 `got ${JSON.stringify(value)}`,
               ]);
@@ -190,7 +190,7 @@ const parse = function (argv = process, options = {}) {
           // Validate the command
           throw error([
             "Invalid Argument:",
-            `fail to interpret all arguments \"${leftover.join(" ")}\"`,
+            `fail to interpret all arguments "${leftover.join(" ")}"`,
           ]);
         }
         // Parse child configuration
@@ -211,9 +211,9 @@ const parse = function (argv = process, options = {}) {
       const required =
         typeof main.required === "function"
           ? !!main.required.call(null, {
-              config: config,
-              command: command,
-            })
+            config: config,
+            command: command,
+          })
           : !!main.required;
       if (required && params[main.name].length === 0) {
         throw error([
@@ -292,9 +292,9 @@ const compile = function (data, options = {}) {
       const required =
         typeof option.required === "function"
           ? !!option.required.call(null, {
-              config: config,
-              command: undefined,
-            })
+            config: config,
+            command: undefined,
+          })
           : !!option.required;
       if (required && value == null) {
         throw error([
@@ -311,7 +311,7 @@ const compile = function (data, options = {}) {
           if (option.enum.indexOf(val) === -1) {
             throw error([
               "Invalid Parameter Value:",
-              `the value of option \"${option.name}\"`,
+              `the value of option "${option.name}"`,
               `must be one of ${JSON.stringify(option.enum)},`,
               `got ${JSON.stringify(val)}`,
             ]);
@@ -344,9 +344,9 @@ const compile = function (data, options = {}) {
       const required =
         typeof config.main.required === "function"
           ? !!config.main.required.call(null, {
-              config: config,
-              command: undefined,
-            })
+            config: config,
+            command: undefined,
+          })
           : !!config.main.required;
       if (required && value == null) {
         throw error([
@@ -378,7 +378,7 @@ const compile = function (data, options = {}) {
           "Invalid Command Parameter:",
           `command ${JSON.stringify(command)} is not registed,`,
           `expect one of ${JSON.stringify(
-            Object.keys(config.commands).sort()
+            Object.keys(config.commands).sort(),
           )}`,
           Array.isArray(config.command)
             ? `in command ${JSON.stringify(config.command.join(" "))}`
@@ -390,7 +390,7 @@ const compile = function (data, options = {}) {
       // Compile child configuration
       compile(
         config.commands[command],
-        options.extended ? data.shift() : ldata
+        options.extended ? data.shift() : ldata,
       );
     }
     if (options.extended || !has_child_commands) {
@@ -407,7 +407,7 @@ const compile = function (data, options = {}) {
             [
               "Invalid Parameter:",
               `the property --${key} is not a registered argument`,
-            ].join(" ")
+            ].join(" "),
           );
         }
         if (typeof value === "boolean") {

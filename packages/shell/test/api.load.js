@@ -11,7 +11,7 @@ describe("api.load", function () {
       `${os.tmpdir()}/relative_module.coffee`,
       dedent`
     export default (params) -> params
-    `
+    `,
     );
     const mod = await shell().load(`${os.tmpdir()}/relative_module.coffee`);
     mod("my value").should.eql("my value");
@@ -25,7 +25,7 @@ describe("api.load", function () {
     })
       .load({ name: "something" })
       .should.be.rejectedWith(
-        'Invalid Load Argument: load is expecting string, got {"name":"something"}'
+        'Invalid Load Argument: load is expecting string, got {"name":"something"}',
       );
   });
 });

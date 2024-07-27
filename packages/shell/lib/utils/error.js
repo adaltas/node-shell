@@ -19,8 +19,8 @@ export default function () {
     if (!is_object_literal(arg)) {
       throw Error(
         `Invalid Error Argument: expect an object literal, got ${JSON.stringify(
-          arg
-        )}.`
+          arg,
+        )}.`,
       );
     }
     mutate(options, arg);

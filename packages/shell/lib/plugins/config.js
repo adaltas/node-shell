@@ -100,7 +100,7 @@ const builder_options = function (commands) {
         }
         const option = (config.options[name] = merge(
           config.options[name],
-          values
+          values,
         ));
         if (!ctx._config.extended) {
           if (!option.disabled && commands.length) {
@@ -316,7 +316,7 @@ const config = function (command = []) {
               throw error([
                 "Incoherent Command Name:",
                 `key ${JSON.stringify(
-                  config.name
+                  config.name,
                 )} is not equal with name ${JSON.stringify(config.name)}`,
               ]);
             }

@@ -24,9 +24,16 @@
     "plug-and-play": "^2.5.8"
   },
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
     "coffeescript": "^2.7.0",
+    "dedent": "^1.5.3",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-mocha": "^10.4.3",
+    "eslint-plugin-prettier": "^5.2.1",
     "mocha": "^10.7.0",
-    "rollup": "^4.19.0",
+    "prettier": "^3.3.3",
+    "rollup": "^4.19.1",
     "rollup-plugin-node-resolve": "^5.2.0",
     "should": "^13.2.3"
   },
@@ -85,9 +92,11 @@
   },
   "scripts": {
     "build": "npx rollup -c",
+    "lint:check": "npx eslint",
+    "lint:fix": "npx eslint --fix",
     "preversion": "yarn run test",
     "pretest": "npm run build",
-    "test": "mocha 'test/**/*.coffee'"
+    "test": "mocha 'test/**/*.coffee' 'test/**/*.js'"
   },
   "type": "module"
 }

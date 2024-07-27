@@ -60,7 +60,7 @@ export default {
             };
             config.commands[command.name] = merge(
               command,
-              config.commands[command.name]
+              config.commands[command.name],
             );
           }
           return function () {
@@ -132,7 +132,7 @@ const helping = function (params, options = {}) {
       throw error([
         "Invalid Arguments:",
         `parameter ${JSON.stringify(
-          appconfig.command
+          appconfig.command,
         )} must be an array in flatten mode,`,
         `got ${JSON.stringify(params[appconfig.command])}`,
       ]);
@@ -246,9 +246,9 @@ const help = function (commands = [], options = {}) {
     if (!config) {
       throw error([
         "Invalid Command:",
-        `argument \"${commands
+        `argument "${commands
           .slice(0, i + 1)
-          .join(" ")}\" is not a valid command`,
+          .join(" ")}" is not a valid command`,
       ]);
     }
     configs.push(config);
@@ -268,7 +268,7 @@ const help = function (commands = [], options = {}) {
     content.push(
       ...[`${name}`, `${nameDescription}`].map(function (l) {
         return `${options.indent}${l}`;
-      })
+      }),
     );
   } else {
     content.push(`${options.indent}${name} - ${nameDescription}`);
@@ -317,7 +317,7 @@ const help = function (commands = [], options = {}) {
         content.push(
           ...[`${config.main.name}`, `${description}`].map(function (l) {
             return `${options.indent}${l}`;
-          })
+          }),
         );
       } else {
         let line = `${options.indent}   ${config.main.name}`;
@@ -350,7 +350,7 @@ const help = function (commands = [], options = {}) {
             })
             .map(function (l) {
               return `${options.indent}${l}`;
-            })
+            }),
         );
       } else {
         const shortcut = option.shortcut ? `-${option.shortcut} ` : "   ";
@@ -374,7 +374,7 @@ const help = function (commands = [], options = {}) {
       const command = config.commands[name];
       let line = pad(
         `${options.indent}${[command.name].join(" ")}`,
-        options.columns
+        options.columns,
       );
       if (line.length > options.columns) {
         content.push(line);
@@ -390,7 +390,7 @@ const help = function (commands = [], options = {}) {
       for (const name in config.commands) {
         const command = config.commands[name];
         content.push("");
-        content.push(`COMMAND \"${command.name}\"`);
+        content.push(`COMMAND "${command.name}"`);
         // Raw command, no main, no child commands
         if (
           !Object.keys(command.commands).length &&
@@ -432,14 +432,14 @@ const help = function (commands = [], options = {}) {
           if (commands.length === 1) {
             content.push(
               `${options.indent}Where command is ${Object.keys(
-                command.commands
-              )}.`
+                command.commands,
+              )}.`,
             );
           } else if (commands.length > 1) {
             content.push(
               `${options.indent}Where command is one of ${Object.keys(
-                command.commands
-              ).join(", ")}.`
+                command.commands,
+              ).join(", ")}.`,
             );
           }
         }
@@ -449,11 +449,11 @@ const help = function (commands = [], options = {}) {
   // Add examples
   config = configs[configs.length - 1];
   // has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
-  const has_help_command = Object.values(config.commands).some(function (
-    command
-  ) {
-    return command.name === "help";
-  });
+  const has_help_command = Object.values(config.commands).some(
+    function (command) {
+      return command.name === "help";
+    },
+  );
   const has_help_option = true;
   content.push("");
   content.push("EXAMPLES");
@@ -467,7 +467,7 @@ const help = function (commands = [], options = {}) {
       content.push(
         ...[`${cmd} --help`, "Show this message"].map(function (l) {
           return `${options.indent}${l}`;
-        })
+        }),
       );
     } else {
       let line = pad(`${options.indent}${cmd} --help`, options.columns);
@@ -484,7 +484,7 @@ const help = function (commands = [], options = {}) {
       content.push(
         ...[`${cmd} help`, "Show this message"].map(function (l) {
           return `${options.indent}${l}`;
-        })
+        }),
       );
     } else {
       let line = pad(`${options.indent}${cmd} help`, options.columns);

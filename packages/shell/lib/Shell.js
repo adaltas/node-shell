@@ -43,7 +43,7 @@ Shell.prototype.load = async function (module, namespace = "default") {
         "Invalid Load Argument:",
         "load is expecting string,",
         `got ${JSON.stringify(module)}`,
-      ].join(" ")
+      ].join(" "),
     );
   }
   // Custom loader defined in the configuration
@@ -52,7 +52,7 @@ Shell.prototype.load = async function (module, namespace = "default") {
     if (typeof this._config.load === "string") {
       // todo, shall be async and return module.default
       const loader = await load(
-        this._config.load /* `, this._config.load.namespace` */
+        this._config.load /* `, this._config.load.namespace` */,
       );
       return loader(module, namespace);
       // Provided by the user as a function

@@ -5,8 +5,7 @@ yarn.lock
 yarn-error.log
 node_modules
 !/.github
-!.eslintrc.yml
+!.prettierrc
 !.gitignore
 !/.husky
 !.npmignore
-!.travis.yml
