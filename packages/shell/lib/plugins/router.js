@@ -68,9 +68,9 @@ export default {
             throw error([
               "Invalid Route Configuration:",
               "accept string or function",
-              !command.length
-                ? "in application,"
-                : `in command ${JSON.stringify(command.join(" "))},`,
+              !command.length ? "in application," : (
+                `in command ${JSON.stringify(command.join(" "))},`
+              ),
               `got ${JSON.stringify(config.handler)}`,
             ]);
           }
@@ -166,17 +166,18 @@ const route = function (context = {}, ...args) {
       // Provide an error message if leaf command without a handler
       if (!Object.keys(config.commands).length) {
         // Object.keys(config.commands).length or
-        err = config.root
-          ? error([
-            "Missing Application Handler:",
-            'a "handler" definition is required when no child command is defined',
-          ])
+        err =
+          config.root ?
+            error([
+              "Missing Application Handler:",
+              'a "handler" definition is required when no child command is defined',
+            ])
           : error([
-            "Missing Command Handler:",
-            `a "handler" definition ${JSON.stringify(
-              params[appconfig.command],
-            )} is required when no child command is defined`,
-          ]);
+              "Missing Command Handler:",
+              `a "handler" definition ${JSON.stringify(
+                params[appconfig.command],
+              )} is required when no child command is defined`,
+            ]);
       }
       // Convert argument to an help command
       // context.argv = command.length ? ['help', ...command] : ['--help'];

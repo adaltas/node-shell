@@ -63,9 +63,9 @@ const parse = function (argv = process, options = {}) {
         throw error([
           "Invalid Shortcut Argument:",
           `the "-${shortcut}" argument is not a valid option`,
-          Array.isArray(config.command)
-            ? `in command "${config.command.join(" ")}"`
-            : void 0,
+          Array.isArray(config.command) ?
+            `in command "${config.command.join(" ")}"`
+          : void 0,
         ]);
       }
       // Auto discovery
@@ -146,12 +146,12 @@ const parse = function (argv = process, options = {}) {
       const option = config.options[name];
       // Handler required
       const required =
-        typeof option.required === "function"
-          ? !!option.required.call(null, {
+        typeof option.required === "function" ?
+          !!option.required.call(null, {
             config: config,
             command: command,
           })
-          : !!option.required;
+        : !!option.required;
       if (required && params[option.name] == null) {
         throw error([
           "Required Option:",
@@ -209,12 +209,12 @@ const parse = function (argv = process, options = {}) {
     const main = config.main;
     if (main) {
       const required =
-        typeof main.required === "function"
-          ? !!main.required.call(null, {
+        typeof main.required === "function" ?
+          !!main.required.call(null, {
             config: config,
             command: command,
           })
-          : !!main.required;
+        : !!main.required;
       if (required && params[main.name].length === 0) {
         throw error([
           "Required Main Argument:",
@@ -290,12 +290,12 @@ const compile = function (data, options = {}) {
       }
       // Handle required
       const required =
-        typeof option.required === "function"
-          ? !!option.required.call(null, {
+        typeof option.required === "function" ?
+          !!option.required.call(null, {
             config: config,
             command: undefined,
           })
-          : !!option.required;
+        : !!option.required;
       if (required && value == null) {
         throw error([
           "Required Option:",
@@ -342,12 +342,12 @@ const compile = function (data, options = {}) {
       const value = ldata[config.main.name];
       // Handle required
       const required =
-        typeof config.main.required === "function"
-          ? !!config.main.required.call(null, {
+        typeof config.main.required === "function" ?
+          !!config.main.required.call(null, {
             config: config,
             command: undefined,
           })
-          : !!config.main.required;
+        : !!config.main.required;
       if (required && value == null) {
         throw error([
           "Required Main Parameter:",
@@ -366,12 +366,12 @@ const compile = function (data, options = {}) {
       }
     }
     // Recursive
-    const has_child_commands = options.extended
-      ? data.length
-      : Object.keys(config.commands).length;
+    const has_child_commands =
+      options.extended ? data.length : Object.keys(config.commands).length;
     if (has_child_commands) {
-      const command = options.extended
-        ? data[0][appconfig.command]
+      const command =
+        options.extended ?
+          data[0][appconfig.command]
         : data[appconfig.command].shift();
       if (!config.commands[command]) {
         throw error([
@@ -380,9 +380,9 @@ const compile = function (data, options = {}) {
           `expect one of ${JSON.stringify(
             Object.keys(config.commands).sort(),
           )}`,
-          Array.isArray(config.command)
-            ? `in command ${JSON.stringify(config.command.join(" "))}`
-            : void 0,
+          Array.isArray(config.command) ?
+            `in command ${JSON.stringify(config.command.join(" "))}`
+          : void 0,
         ]);
       }
       argv.push(command);

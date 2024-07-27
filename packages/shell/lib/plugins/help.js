@@ -65,8 +65,8 @@ export default {
           }
           return function () {
             handler.call(this, ...arguments);
-            return config.description != null
-              ? config.description
+            return config.description != null ?
+                config.description
               : (config.description = `No description yet for the ${config.name} command`);
           };
         },
@@ -78,8 +78,8 @@ export default {
           }
           return function () {
             handler.call(this, ...arguments);
-            return config.description != null
-              ? config.description
+            return config.description != null ?
+                config.description
               : (config.description = `No description yet for the ${config.name} command`);
           };
         },
@@ -152,8 +152,9 @@ const helping = function (params, options = {}) {
     appconfig.commands[commands[0]].help
   ) {
     // Note, when argv equals ['help'], there is no leftover and main is null
-    const leftover = !options.extended
-      ? params[appconfig.commands[commands[0]].main.name]
+    const leftover =
+      !options.extended ?
+        params[appconfig.commands[commands[0]].main.name]
       : params[1][appconfig.commands[commands[0]].main.name];
     if (leftover) {
       return leftover;

@@ -9,15 +9,6 @@ export default [
   },
   {
     languageOptions: { globals: { ...globals.node } },
-    rules: {
-      indent: [
-        "error",
-        2,
-        {
-          SwitchCase: 1,
-        },
-      ],
-    },
   },
   js.configs.recommended,
   mocha.configs.flat.recommended,

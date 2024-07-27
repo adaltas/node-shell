@@ -116,9 +116,9 @@ const builder_options = function (commands) {
                 `option ${JSON.stringify(name)}`,
                 `in command ${JSON.stringify(commands.join(" "))}`,
                 `collide with the one in ${
-                  ctx.collision[name].length === 0
-                    ? "application"
-                    : JSON.stringify(ctx.collision[name].join(" "))
+                  ctx.collision[name].length === 0 ?
+                    "application"
+                  : JSON.stringify(ctx.collision[name].join(" "))
                 },`,
                 "change its name or use the extended property",
               ]);
@@ -138,9 +138,9 @@ const builder_options = function (commands) {
             `supported options types are ${JSON.stringify(types)},`,
             `got ${JSON.stringify(option.type)}`,
             `for option ${JSON.stringify(name)}`,
-            commands.length
-              ? `in command ${JSON.stringify(commands.join(" "))}`
-              : void 0,
+            commands.length ?
+              `in command ${JSON.stringify(commands.join(" "))}`
+            : void 0,
           ]);
         }
         if (typeof option.enum === "string") {
