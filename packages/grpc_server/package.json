@@ -1,6 +1,6 @@
 {
   "name": "@shell-js/grpc_server",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
   "coffeelintConfig": {
     "indentation": {
