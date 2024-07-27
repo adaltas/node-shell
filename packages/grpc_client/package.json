@@ -71,7 +71,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "shell": "^0.9.1"
+    "shell": "^0.10.0"
   },
   "repository": {
     "type": "git",
