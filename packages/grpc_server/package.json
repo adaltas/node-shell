@@ -1,19 +1,23 @@
 {
   "name": "@shell-js/grpc_server",
   "version": "0.10.1",
+  "description": "GRPC server plugin for the Shell.js package.",
+  "keywords": [
+    "argument",
+    "parameter",
+    "cli",
+    "grpc",
+    "client",
+    "rpc",
+    "remove",
+    "server",
+    "protocol",
+    "interface"
+  ],
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
-  "coffeelintConfig": {
-    "indentation": {
-      "level": "error",
-      "value": 2
-    },
-    "line_endings": {
-      "level": "error",
-      "value": "unix"
-    },
-    "max_line_length": {
-      "level": "ignore"
-    }
+  "bugs": {
+    "email": "open@adaltas.com",
+    "url": "https://github.com/adaltas/node-shell/issues"
   },
   "contributors": [
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
@@ -29,7 +33,6 @@
     "mocha": "^10.7.0",
     "should": "^13.2.3"
   },
-  "description": "GRPC server plugin for the Shell.js package.",
   "engines": {
     "node": ">= 0.10.x"
   },
@@ -48,18 +51,6 @@
     "/lib"
   ],
   "homepage": "https://shell.js.org",
-  "keywords": [
-    "argument",
-    "parameter",
-    "cli",
-    "grpc",
-    "client",
-    "rpc",
-    "remove",
-    "server",
-    "protocol",
-    "interface"
-  ],
   "license": "MIT",
   "main": "./lib/index",
   "mocha": {
@@ -90,5 +81,6 @@
     "pretest": "npm run build",
     "test": "mocha 'test/**/*.coffee'"
   },
-  "type": "module"
+  "type": "module",
+  "gitHead": "437629d1d64e73173408e67832c0c735b1225fdc"
 }

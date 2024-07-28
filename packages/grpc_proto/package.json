@@ -1,14 +1,30 @@
 {
   "name": "@shell-js/grpc_proto",
+  "description": "GRPC Protocol Buffer definition.",
   "version": "0.10.0",
+  "keywords": [
+    "argument",
+    "parameter",
+    "cli",
+    "grpc",
+    "client",
+    "rpc",
+    "remove",
+    "protobuf",
+    "protocol",
+    "interface"
+  ],
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
+  "bugs": {
+    "email": "open@adaltas.com",
+    "url": "https://github.com/adaltas/node-shell/issues"
+  },
   "contributors": [
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
     "@grpc/proto-loader": "^0.7.13"
   },
-  "description": "GRPC Protocol Buffer definition.",
   "devDependencies": {
     "coffeescript": "^2.7.0",
     "mocha": "^10.7.0",
@@ -29,18 +45,6 @@
     "/lib"
   ],
   "homepage": "https://shell.js.org",
-  "keywords": [
-    "argument",
-    "parameter",
-    "cli",
-    "grpc",
-    "client",
-    "rpc",
-    "remove",
-    "protobuf",
-    "protocol",
-    "interface"
-  ],
   "license": "MIT",
   "main": "./lib/index",
   "mocha": {

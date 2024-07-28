@@ -1,19 +1,24 @@
 {
   "name": "shell",
   "version": "0.10.1",
+  "description": "Command line arguments parser and stringifier",
+  "keywords": [
+    "shell",
+    "cli",
+    "arguments",
+    "parser",
+    "parameters",
+    "param",
+    "option",
+    "command",
+    "bash",
+    "sh",
+    "getopt"
+  ],
   "author": "David Worms <david@adaltas.com> (https://www.adaltas.com)",
-  "coffeelintConfig": {
-    "indentation": {
-      "level": "error",
-      "value": 2
-    },
-    "line_endings": {
-      "level": "error",
-      "value": "unix"
-    },
-    "max_line_length": {
-      "level": "ignore"
-    }
+  "bugs": {
+    "email": "open@adaltas.com",
+    "url": "https://github.com/adaltas/node-shell/issues"
   },
   "contributors": [
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
@@ -37,7 +42,6 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "should": "^13.2.3"
   },
-  "description": "Command line arguments parser and stringifier",
   "engines": {
     "node": ">= 0.10.x"
   },
@@ -56,19 +60,6 @@
     "/lib"
   ],
   "homepage": "https://shell.js.org",
-  "keywords": [
-    "shell",
-    "cli",
-    "arguments",
-    "parser",
-    "parameters",
-    "param",
-    "option",
-    "command",
-    "bash",
-    "sh",
-    "getopt"
-  ],
   "license": "MIT",
   "lint-staged": {
     "*.js": "npm run lint:fix",
@@ -103,5 +94,6 @@
     "pretest": "npm run build",
     "test": "mocha 'test/**/*.coffee' 'test/**/*.js'"
   },
-  "type": "module"
+  "type": "module",
+  "gitHead": "437629d1d64e73173408e67832c0c735b1225fdc"
 }
