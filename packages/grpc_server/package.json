@@ -1,6 +1,6 @@
 {
   "name": "@shell-js/grpc_server",
-  "version": "0.10.1",
+  "version": "0.11.0",
   "description": "GRPC server plugin for the Shell.js package.",
   "keywords": [
     "argument",
@@ -24,7 +24,7 @@
   ],
   "dependencies": {
     "@grpc/grpc-js": "^1.11.1",
-    "@shell-js/grpc_proto": "^0.10.0",
+    "@shell-js/grpc_proto": "^0.11.0",
     "mixme": "^1.1.0",
     "protobufjs": "^7.3.2"
   },
