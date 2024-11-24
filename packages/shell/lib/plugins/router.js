@@ -23,15 +23,16 @@ export default {
           if (config.router == null) {
             config.router = {};
           }
+          config.router.error_message ??= true;
+          config.router.error_stack ??= false;
+          config.router.error_help ??= false;
           config.router.handler ??= "shell/routes/help";
           config.router.promise ??= false;
           config.router.stdin ??= process.stdin;
           config.router.stdout ??= process.stdout;
           config.router.stdout_end ??= false;
           config.router.stderr ??= process.stderr;
-          if (config.router.stderr_end == null) {
-            config.router.stderr_end = false;
-          }
+          config.router.stderr_end ??= false;
           if (!(config.router.stdin instanceof stream.Readable)) {
             throw error([
               "Invalid Configuration Property:",
@@ -133,23 +134,40 @@ const route = function (context = {}, ...args) {
           // Otherwise wrap result in a promise
           // Return value may be a promise
           const result = handler.call(this, context, ...args);
-          return Promise.resolve(result);
+          if (result?.then) {
+            return result;
+          } else {
+            return Promise.resolve(result);
+          }
         } catch (err) {
           return Promise.reject(err);
         }
       },
     });
   };
-  const route_error = (err, command) => {
-    context.argv = command.length ? ["help", ...command] : ["--help"];
-    const params = this.parse(context.argv);
-    const handler = route_load(this._config.router.handler);
-    if (handler.then) {
-      return handler.then(function (handler) {
+  const route_error = (err, message, command) => {
+    // Print message
+    if (message && appconfig.router.error_message) {
+      appconfig.router.stderr.write(`\n${message}\n`);
+    }
+    // Print stack
+    if (err && appconfig.router.error_stack) {
+      appconfig.router.stderr.write(`\n${err.stack}\n`);
+    }
+    // Print help command
+    if (!err | appconfig.router.error_help) {
+      context.argv = command.length ? ["help", ...command] : ["--help"];
+      const params = this.parse(context.argv);
+      const handler = route_load(this._config.router.handler);
+      if (handler.then) {
+        return handler.then(function (handler) {
+          return route_call(handler, command, params, err, args);
+        });
+      } else {
         return route_call(handler, command, params, err, args);
-      });
+      }
     } else {
-      return route_call(handler, command, params, err, args);
+      return Promise.resolve();
     }
   };
   const route_from_config = (config, command, params) => {
@@ -172,11 +190,8 @@ const route = function (context = {}, ...args) {
               )} is required when no child command is defined`,
             ]);
       }
-      // Convert argument to an help command
-      // context.argv = command.length ? ['help', ...command] : ['--help'];
-      // params = this.parse(context.argv);
-      // handler = this.config.router.handler;
-      return route_error(err, command);
+      // Print help, error might be null
+      return route_error(err, err?.message, command);
     }
     // Loader is
     // - asynchronous and return a promise which fullfill with the handler function
@@ -186,6 +201,7 @@ const route = function (context = {}, ...args) {
       return handler
         .catch(async (err) => {
           return route_error(
+            err,
             `Fail to load module ${JSON.stringify(config.handler)}, message is: ${err.message}.`,
             command,
           );
@@ -195,10 +211,12 @@ const route = function (context = {}, ...args) {
           return route_call(handler, command, params, err, args);
         })
         .catch(async (err) => {
-          return route_error(
+          await route_error(
+            err,
             `Fail to load route. Message is: ${err.message}`,
             command,
           );
+          throw err;
         });
     } else {
       try {
@@ -206,6 +224,7 @@ const route = function (context = {}, ...args) {
         if (res?.catch) {
           return res.catch(async (err) => {
             await route_error(
+              err,
               `Command failed to execute, message is: ${err.message}`,
               command,
             );
@@ -216,6 +235,7 @@ const route = function (context = {}, ...args) {
         }
       } catch (err) {
         route_error(
+          err,
           `Command failed to execute, message is: ${JSON.stringify(err.message)}`,
           command,
         );
@@ -223,39 +243,58 @@ const route = function (context = {}, ...args) {
       }
     }
   };
-  let params;
-  try {
-    // Read arguments
-    params = this.parse(context.argv);
-  } catch (err) {
-    return route_error(err, err.command || []);
-  }
-  // Print help
-  let command = this.helping(params);
-  if (command) {
-    // this seems wrong, must be the handler of the command
-    const handler = route_load(appconfig.router.handler);
-    if (handler.then) {
-      return handler.then(function (handler) {
+  // Dispose streams
+  const dispose = () => {
+    if (appconfig.router.stdout_end) {
+      appconfig.router.stdout.end();
+    }
+    if (appconfig.router.stderr_end) {
+      appconfig.router.stderr.end();
+    }
+  };
+  const run = () => {
+    let params;
+    try {
+      // Read arguments
+      params = this.parse(context.argv);
+    } catch (err) {
+      return route_error(null, err.message, err.command || []);
+    }
+    // Print help
+    let command = this.helping(params);
+    if (command) {
+      // this seems wrong, must be the handler of the command
+      const handler = route_load(appconfig.router.handler);
+      if (handler.then) {
+        return handler.then(function (handler) {
+          return route_call(handler, command, params, undefined, args);
+        });
+      } else {
         return route_call(handler, command, params, undefined, args);
-      });
+      }
     } else {
-      return route_call(handler, command, params, undefined, args);
+      // Return undefined if not parsing command based arguments
+      // Load a command route
+      command = params[appconfig.command];
+      if (appconfig.extended) {
+        // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
+        // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
+        // command = [];
+        // for (const param in params) {
+        //   command.push[appconfig.command];
+        // }
+        console.warn("TODO");
+      }
+      const config = this.config(command).get();
+      return route_from_config(config, command || [], params);
     }
-  } else {
-    // Return undefined if not parsing command based arguments
-    // Load a command route
-    command = params[appconfig.command];
-    if (appconfig.extended) {
-      // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
-      // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
-      // command = [];
-      // for (const param in params) {
-      //   command.push[appconfig.command];
-      // }
-      console.warn("TODO");
-    }
-    const config = this.config(command).get();
-    return route_from_config(config, command || [], params);
+  };
+  try {
+    const res = run();
+    res?.finally?.(dispose);
+    return res;
+  } catch (err) {
+    dispose();
+    throw err;
   }
 };

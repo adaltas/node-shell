@@ -66,11 +66,11 @@ describe("router.help", function () {
         strict: true,
       }).route(["server", "--opt", "val"]);
     }).then((output) => {
-      output.should.match(
-        /^\s+Invalid Argument: the argument --opt is not a valid option/,
+      output.should.containEql(
+        "Invalid Argument: the argument --opt is not a valid option",
       );
-      output.should.match(
-        /^\s+myapp server - No description yet for the server command/m,
+      output.should.containEql(
+        "myapp server - No description yet for the server command",
       );
     });
   });

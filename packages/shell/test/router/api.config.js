@@ -5,6 +5,9 @@ describe("router.config.router", function () {
   describe("router", function () {
     it("accept string (eg stderr)", function () {
       shell({}).config().get().router.should.eql({
+        error_message: true,
+        error_stack: false,
+        error_help: false,
         handler: "shell/routes/help",
         promise: false,
         stderr: process.stderr,
@@ -25,7 +28,7 @@ describe("router.config.router", function () {
       })
         .config()
         .get()
-        .router.should.eql({
+        .router.should.match({
           handler: "shell/routes/help",
           promise: false,
           stderr: new Writable(),

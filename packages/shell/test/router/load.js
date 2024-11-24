@@ -61,7 +61,6 @@ describe("router.load", function () {
           output.should.containEql(
             `Fail to load module "${mod}", message is: Oh is not defined.`,
           );
-          output.should.containEql("myapp - No description yet");
         }),
         stderr_end: true,
       },

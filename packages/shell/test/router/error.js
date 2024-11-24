@@ -62,15 +62,16 @@ describe("router.error", function () {
           router: {
             stderr: writer(resolve),
             stderr_end: true,
+            error_help: true,
           },
         })
           .route([])
           .catch(reject);
       }).then(function (output) {
-        output.should.match(
-          /^\s+Missing Application Handler: a "handler" definition is required when no child command is defined/,
+        output.should.containEql(
+          'Missing Application Handler: a "handler" definition is required when no child command is defined',
         );
-        output.should.match(/^\s+myapp - No description yet/m);
+        output.should.containEql("myapp - No description yet");
       });
     });
 
@@ -137,6 +138,7 @@ describe("router.error", function () {
           router: {
             stderr: writer(resolve),
             stderr_end: true,
+            error_help: true,
           },
           commands: {
             server: {
@@ -149,11 +151,11 @@ describe("router.error", function () {
           .route(["server", "start"])
           .catch(reject);
       });
-      output.should.match(
-        /^\s+Missing Command Handler: a "handler" definition \["server","start"\] is required when no child command is defined/,
+      output.should.containEql(
+        'Missing Command Handler: a "handler" definition ["server","start"] is required when no child command is defined',
       );
-      output.should.match(
-        /^\s+myapp server start - No description yet for the start command/m,
+      output.should.containEql(
+        "myapp server start - No description yet for the start command",
       );
     });
   });
@@ -165,15 +167,16 @@ describe("router.error", function () {
           router: {
             stderr: writer(resolve),
             stderr_end: true,
+            error_help: true,
           },
         })
           .route(["invalid", "leftover"])
           .catch(reject);
       }).then(function (output) {
-        output.should.match(
-          /^\s+Invalid Argument: fail to interpret all arguments "invalid leftover"/,
+        output.should.containEql(
+          'Invalid Argument: fail to interpret all arguments "invalid leftover"',
         );
-        output.should.match(/^\s+myapp - No description yet/m);
+        output.should.containEql("myapp - No description yet");
       });
     });
 
@@ -183,16 +186,17 @@ describe("router.error", function () {
           router: {
             stderr: writer(resolve),
             stderr_end: true,
+            error_help: true,
           },
           strict: true,
         })
           .route(["--opt", "val"])
           .catch(reject);
       }).then(function (output) {
-        output.should.match(
-          /^\s+Invalid Argument: the argument --opt is not a valid option/,
+        output.should.containEql(
+          "Invalid Argument: the argument --opt is not a valid option",
         );
-        output.should.match(/^\s+myapp - No description yet/m);
+        output.should.containEql("myapp - No description yet");
       });
     });
 
@@ -205,17 +209,18 @@ describe("router.error", function () {
           router: {
             stderr: writer(resolve),
             stderr_end: true,
+            error_help: true,
           },
           strict: true,
         })
           .route(["server", "--opt", "val"])
           .catch(reject);
       }).then(function (output) {
-        output.should.match(
-          /^\s+Invalid Argument: the argument --opt is not a valid option/,
+        output.should.containEql(
+          "Invalid Argument: the argument --opt is not a valid option",
         );
-        output.should.match(
-          /^\s+myapp server - No description yet for the server command/m,
+        output.should.containEql(
+          "myapp server - No description yet for the server command",
         );
       });
     });
