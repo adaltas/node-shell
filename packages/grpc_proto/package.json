@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "coffeescript": "^2.7.0",
-    "mocha": "^10.7.0",
+    "mocha": "^10.8.2",
     "rollup-plugin-copy": "^3.5.0",
     "should": "^13.2.3"
   },

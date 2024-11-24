@@ -23,12 +23,12 @@
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.11.1"
+    "@grpc/grpc-js": "^1.12.2"
   },
   "devDependencies": {
     "@shell-js/grpc_server": "^0.11.0",
     "coffeescript": "^2.7.0",
-    "mocha": "^10.7.0",
+    "mocha": "^10.8.2",
     "should": "^13.2.3"
   },
   "engines": {
@@ -62,7 +62,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "shell": "^0.10.0"
+    "shell": "^0.11.0"
   },
   "repository": {
     "type": "git",

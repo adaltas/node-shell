@@ -23,14 +23,14 @@
     "Sergei Kudinov <sergei@adaltas.com> (https://www.adaltas.com)"
   ],
   "dependencies": {
-    "@grpc/grpc-js": "^1.11.1",
+    "@grpc/grpc-js": "^1.12.2",
     "@shell-js/grpc_proto": "^0.11.0",
     "mixme": "^1.1.0",
-    "protobufjs": "^7.3.2"
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
     "coffeescript": "^2.7.0",
-    "mocha": "^10.7.0",
+    "mocha": "^10.8.2",
     "should": "^13.2.3"
   },
   "engines": {
@@ -65,7 +65,7 @@
     "recursive": true
   },
   "peerDependencies": {
-    "shell": "^0.10.0"
+    "shell": "^0.11.0"
   },
   "publishConfig": {
     "access": "public"
