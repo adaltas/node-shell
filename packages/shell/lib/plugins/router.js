@@ -185,7 +185,14 @@ const route = function (context = {}, ...args) {
     handler = route_load(handler);
     if (handler.then) {
       return handler
+        .catch(async (err) => {
+          return route_error(
+            `Fail to load module ${JSON.stringify(config.handler)}, message is: ${err.message}.`,
+            command,
+          );
+        })
         .then(function (handler) {
+          if (!handler) return;
           return route_call(handler, command, params, err, args);
         })
         .catch(async (err) => {
@@ -200,7 +207,7 @@ const route = function (context = {}, ...args) {
         if (res?.catch) {
           return res.catch(async (err) => {
             await route_error(
-              `Fail to load route. Message is: ${err.message}`,
+              `Command failed to execute, message is: ${err.message}`,
               command,
             );
             throw err;
@@ -209,7 +216,10 @@ const route = function (context = {}, ...args) {
           return res;
         }
       } catch (err) {
-        route_error(`Fail to load route. Message is: ${err.message}`, command);
+        route_error(
+          `Command failed to execute, message is: ${JSON.stringify(err.message)}`,
+          command,
+        );
         throw err;
       }
     }

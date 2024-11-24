@@ -58,11 +58,10 @@ describe("router.load", function () {
       options: { my_argument: {} },
       router: {
         stderr: writer(function (output) {
-          output.should.match(
-            /^\s+Fail to load route. Message is: Oh is not defined/,
+          output.should.containEql(
+            `Fail to load module "${mod}", message is: Oh is not defined.`,
           );
-          output.should.match(/^\s+myapp - No description yet/m);
-          // next();
+          output.should.containEql("myapp - No description yet");
         }),
         stderr_end: true,
       },

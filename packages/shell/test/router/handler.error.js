@@ -16,7 +16,7 @@ const writer = (callback) => {
 };
 
 describe("router.handler.error", function () {
-  describe("thrown error in function handler", function () {
+  describe("thrown error in async function handler", function () {
     it("value", function () {
       (function () {
         shell({
@@ -52,11 +52,13 @@ describe("router.handler.error", function () {
           e; // do nothing
         }
       });
-      output.should.containEql("Fail to load route. Message is: catch me");
+      output.should.containEql(
+        'Command failed to execute, message is: "catch me"',
+      );
     });
   });
 
-  describe("rejected error in function handler", function () {
+  describe("rejected error in async function handler", function () {
     it("value", function () {
       return shell({
         handler: async function () {
@@ -86,13 +88,15 @@ describe("router.handler.error", function () {
           },
         }).route(["--my_argument", "my value"]);
       });
-      output.should.containEql("Fail to load route. Message is: catch me");
+      output.should.containEql(
+        "Command failed to execute, message is: catch me",
+      );
     });
   });
 
-  describe("load module", function () {
-    it("thrown error", async function () {
-      const handler = `${os.tmpdir()}/router_load_handler_invalid.js`;
+  describe("thrown error from imported sync handler", function () {
+    it("stderr", async function () {
+      const handler = `${os.tmpdir()}/router_load_thrown_error.js`;
       try {
         await fs.writeFile(
           handler,
@@ -113,9 +117,11 @@ describe("router.handler.error", function () {
         await fs.unlink(handler);
       }
     });
+  });
 
-    it("rejected error", async function () {
-      const handler = `${os.tmpdir()}/router_load_handler_invalid.js`;
+  describe("rejected error from imported async sync handler", function () {
+    it("stderr", async function () {
+      const handler = `${os.tmpdir()}/router_load_reject_error.js`;
       try {
         await fs.writeFile(
           handler,
@@ -132,6 +138,30 @@ describe("router.handler.error", function () {
           }).route(["--my_argument", "my value"]);
         });
         output.should.containEql("Fail to load route. Message is: catch me");
+      } finally {
+        await fs.unlink(handler);
+      }
+    });
+  });
+
+  describe("thrown error from invalid imported module", function () {
+    it("stderr", async function () {
+      const handler = `${os.tmpdir()}/router_load_handler_invalid.js`;
+      try {
+        await fs.writeFile(handler, "invalid module");
+        const output = await new Promise((resolve) => {
+          shell({
+            handler: handler,
+            options: { my_argument: {} },
+            router: {
+              stderr: writer(resolve),
+              stderr_end: true,
+            },
+          }).route(["--my_argument", "my value"]);
+        });
+        output.should.containEql(
+          `Fail to load module "${handler}", message is: Unexpected identifier 'module'`,
+        );
       } finally {
         await fs.unlink(handler);
       }

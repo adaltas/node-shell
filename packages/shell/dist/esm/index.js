@@ -205,6 +205,11 @@ const route = function (context = {}, ...args) {
     });
   };
   const route_error = (err, command) => {
+    // Print stack
+    // if (err?.stack) {
+    //   appconfig.stderr.write(err.stack);
+    // }
+    // Print help command
     context.argv = command.length ? ["help", ...command] : ["--help"];
     const params = this.parse(context.argv);
     const handler = route_load(this._config.router.handler);
@@ -248,7 +253,22 @@ const route = function (context = {}, ...args) {
     handler = route_load(handler);
     if (handler.then) {
       return handler
+        .catch(async (err) => {
+          // appconfig.router.stderr.write(`!!!!!!!!!!!!!!!!!!!!!!`);
+          // appconfig.router.stderr.write(
+          //   `Fail to load module ${JSON.stringify(config.handler)}\n`,
+          // );
+          // appconfig.router.stderr.write(
+          //   typeof error === "string" ? error : error.message,
+          // );
+          // appconfig.router.stderr.write("\n");
+          return route_error(
+            `Fail to load module ${JSON.stringify(config.handler)}, message is: ${err.message}.`,
+            command,
+          );
+        })
         .then(function (handler) {
+          if (!handler) return;
           return route_call(handler, command, params, err, args);
         })
         .catch(async (err) => {
@@ -263,7 +283,7 @@ const route = function (context = {}, ...args) {
         if (res?.catch) {
           return res.catch(async (err) => {
             await route_error(
-              `Fail to load route. Message is: ${err.message}`,
+              `Command failed to execute, message is: ${err.message}`,
               command,
             );
             throw err;
@@ -272,7 +292,10 @@ const route = function (context = {}, ...args) {
           return res;
         }
       } catch (err) {
-        route_error(`Fail to load route. Message is: ${err.message}`, command);
+        route_error(
+          `Command failed to execute, message is: ${JSON.stringify(err.message)}`,
+          command,
+        );
         throw err;
       }
     }
