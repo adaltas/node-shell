@@ -1,11 +1,10 @@
-
-import 'should';
-import {shell} from 'shell';
+import "should";
+import { shell } from "shell";
 
 shell({
-  main: 'input' 
+  main: "input",
 })
-.parse([])
-.should.eql({
-  input: []
-})
+  .parse([])
+  .should.eql({
+    input: [],
+  });

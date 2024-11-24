@@ -17,5 +17,5 @@ assert.deepStrictEqual(
       name: "help",
       transient: true,
     },
-  }
+  },
 );

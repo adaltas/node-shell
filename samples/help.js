@@ -1,4 +1,3 @@
-
 /*
 
 Call example with:
@@ -15,32 +14,39 @@ It prints:
 ```
 */
 
-import {shell} from 'shell';
+import { shell } from "shell";
 
 const params = shell({
-  name: 'precious',
-  description: 'Manage your precious',
+  name: "precious",
+  description: "Manage your precious",
   commands: {
-    "secrets": {
+    secrets: {
       options: {
         database: {
           shortcut: "d",
-          description: "Where to store your secrets"
-        }
+          description: "Where to store your secrets",
+        },
       },
       commands: {
-        "set": {
+        set: {
           options: {
             key: {
-              shortcut: 'h'
+              shortcut: "h",
             },
             value: {
-              shortcut: "v" }}}}}}});
-              
+              shortcut: "v",
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
 // start-snippet{sample}
 const args = params.parse();
 const commands = params.helping(args);
-if(commands){
-  process.stdout.write(params.help(commands))
+if (commands) {
+  process.stdout.write(params.help(commands));
 }
 // end-snippet{sample}

@@ -19,7 +19,7 @@ function client (config = {}) {
   const endpoint = `${config.address}:${config.port}`;
   const client = new shell_proto.Shell(
     endpoint,
-    grpc.credentials.createInsecure()
+    grpc.credentials.createInsecure(),
   );
   for (const name in shell_proto.Shell.service) {
     const service = shell_proto.Shell.service[name];

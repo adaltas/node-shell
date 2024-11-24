@@ -1,4 +1,3 @@
-
 /*
 
 Call example with:
@@ -25,31 +24,31 @@ Command succeed!
 ```
 */
 
-import {shell} from 'shell';
-import {spawn} from 'child_process';
+import { shell } from "shell";
+import { spawn } from "child_process";
 
-console.log('=============');
+console.log("=============");
 
 const result = await shell({
   commands: {
-    'list': {
-      main: 'input',
-      handler: async function({params, error, stderr, stdout}){
-        return new Promise(function(resolve, reject){
-          const ls = spawn('ls', ['-lh', ...params.input])
-          ls.stderr.pipe(stderr)
-          ls.stdout.pipe(stdout)
-          ls.on('close', (code) => {
+    list: {
+      main: "input",
+      handler: async function ({ params, stderr, stdout }) {
+        return new Promise(function (resolve, reject) {
+          const ls = spawn("ls", ["-lh", ...params.input]);
+          ls.stderr.pipe(stderr);
+          ls.stdout.pipe(stdout);
+          ls.on("close", (code) => {
             code === 0
-            ? resolve('Command succeed!')
-            : reject(new Error(`Command failed with code: ${code}`))
+              ? resolve("Command succeed!")
+              : reject(new Error(`Command failed with code: ${code}`));
           });
         });
-      }
-    }
-  }
+      },
+    },
+  },
 }).route();
 
-console.log('-------------');
-console.log(result)
-console.log('=============');
+console.log("-------------");
+console.log(result);
+console.log("=============");

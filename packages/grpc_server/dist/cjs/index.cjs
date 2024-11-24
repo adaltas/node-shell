@@ -70,7 +70,7 @@ const grpc_start = function () {
   }
   server.addService(shell_definition.Shell.service, handlers);
   const endpoint = `${appconfig.grpc.address}:${appconfig.grpc.port}`;
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     server.bindAsync(
       endpoint,
       grpc.ServerCredentials.createInsecure(),
@@ -81,7 +81,7 @@ const grpc_start = function () {
           this._server = server;
           return resolve(port);
         }
-      }
+      },
     );
   });
 };

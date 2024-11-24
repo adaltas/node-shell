@@ -16,13 +16,13 @@
   },
   "name": "shell",
   "scripts": {
-    "compile": "lerna run compile",
+    "build": "lerna run build",
     "clean": "git clean -fdx",
     "postinstall": "husky install",
     "publish": "lerna publish from-git --yes",
-    "lint:check": "lerna run lint:check",
-    "lint:fix": "lerna run lint:fix",
-    "lint:staged": "lerna run lint:staged",
+    "lint:check": "eslint",
+    "lint:fix": "eslint --fix",
+    "lint:staged": "npx lint-staged",
     "test": "lerna run test",
     "version": "lerna version"
   },

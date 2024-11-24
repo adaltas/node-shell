@@ -21,7 +21,7 @@ const packages = await glob(
 export default {
   extends: ["@commitlint/config-conventional"],
   rules: {
-    "scope-enum": async (ctx) => [
+    "scope-enum": async () => [
       2,
       "always",
       [

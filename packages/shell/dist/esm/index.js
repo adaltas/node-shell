@@ -24,8 +24,8 @@ function error () {
     if (!is_object_literal(arg)) {
       throw Error(
         `Invalid Error Argument: expect an object literal, got ${JSON.stringify(
-          arg
-        )}.`
+          arg,
+        )}.`,
       );
     }
     mutate(options, arg);
@@ -95,21 +95,21 @@ var router = {
           if (config.router.stderr_end == null) {
             config.router.stderr_end = false;
           }
-          if (!config.router.stdin instanceof stream.Readable) {
+          if (!(config.router.stdin instanceof stream.Readable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stdin must be an instance of stream.Readable,",
               `got ${JSON.stringify(config.router.stdin)}`,
             ]);
           }
-          if (!config.router.stdout instanceof stream.Writable) {
+          if (!(config.router.stdout instanceof stream.Writable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stdout must be an instance of stream.Writable,",
               `got ${JSON.stringify(config.router.stdout)}`,
             ]);
           }
-          if (!config.router.stderr instanceof stream.Writable) {
+          if (!(config.router.stderr instanceof stream.Writable)) {
             throw error([
               "Invalid Configuration Property:",
               "router.stderr must be an instance of stream.Writable,",
@@ -131,9 +131,9 @@ var router = {
             throw error([
               "Invalid Route Configuration:",
               "accept string or function",
-              !command.length
-                ? "in application,"
-                : `in command ${JSON.stringify(command.join(" "))},`,
+              !command.length ? "in application," : (
+                `in command ${JSON.stringify(command.join(" "))},`
+              ),
               `got ${JSON.stringify(config.handler)}`,
             ]);
           }
@@ -167,7 +167,7 @@ const route = function (context = {}, ...args) {
       return handler;
     } else {
       throw error(
-        `Invalid Handler: expect a string or a function, got ${handler}`
+        `Invalid Handler: expect a string or a function, got ${handler}`,
       );
     }
   };
@@ -199,7 +199,7 @@ const route = function (context = {}, ...args) {
           if (result && typeof result.then === "function") {
             return result;
           }
-          return new Promise(function (resolve, reject) {
+          return new Promise(function (resolve) {
             return resolve(result);
           });
         } catch (err) {
@@ -229,15 +229,16 @@ const route = function (context = {}, ...args) {
       // Provide an error message if leaf command without a handler
       if (!Object.keys(config.commands).length) {
         // Object.keys(config.commands).length or
-        err = config.root
-          ? error([
+        err =
+          config.root ?
+            error([
               "Missing Application Handler:",
               'a "handler" definition is required when no child command is defined',
             ])
           : error([
               "Missing Command Handler:",
-              `a \"handler\" definition ${JSON.stringify(
-                params[appconfig.command]
+              `a "handler" definition ${JSON.stringify(
+                params[appconfig.command],
               )} is required when no child command is defined`,
             ]);
       }
@@ -259,7 +260,7 @@ const route = function (context = {}, ...args) {
         .catch(async (err) => {
           return route_error(
             `Fail to load route. Message is: ${err.message}`,
-            command
+            command,
           );
         });
     } else {
@@ -269,7 +270,7 @@ const route = function (context = {}, ...args) {
           return res.catch(async (err) => {
             await route_error(
               `Fail to load route. Message is: ${err.message}`,
-              command
+              command,
             );
             throw err;
           });
@@ -308,10 +309,11 @@ const route = function (context = {}, ...args) {
     if (appconfig.extended) {
       // TODO: not tested yet, construct a commands array like in flatten mode when extended is activated
       // command = (for i in [0...params.length] then params[i][appconfig.command]) if appconfig.extended
-      command = [];
-      for (const param in params) {
-        command.push[appconfig.command];
-      }
+      // command = [];
+      // for (const param in params) {
+      //   command.push[appconfig.command];
+      // }
+      console.warn("TODO");
     }
     const config = this.config(command).get();
     return route_from_config(config, command || [], params);
@@ -417,7 +419,7 @@ const builder_options = function (commands) {
         }
         const option = (config.options[name] = merge(
           config.options[name],
-          values
+          values,
         ));
         if (!ctx._config.extended) {
           if (!option.disabled && commands.length) {
@@ -433,9 +435,9 @@ const builder_options = function (commands) {
                 `option ${JSON.stringify(name)}`,
                 `in command ${JSON.stringify(commands.join(" "))}`,
                 `collide with the one in ${
-                  ctx.collision[name].length === 0
-                    ? "application"
-                    : JSON.stringify(ctx.collision[name].join(" "))
+                  ctx.collision[name].length === 0 ?
+                    "application"
+                  : JSON.stringify(ctx.collision[name].join(" "))
                 },`,
                 "change its name or use the extended property",
               ]);
@@ -455,9 +457,9 @@ const builder_options = function (commands) {
             `supported options types are ${JSON.stringify(types)},`,
             `got ${JSON.stringify(option.type)}`,
             `for option ${JSON.stringify(name)}`,
-            commands.length
-              ? `in command ${JSON.stringify(commands.join(" "))}`
-              : void 0,
+            commands.length ?
+              `in command ${JSON.stringify(commands.join(" "))}`
+            : void 0,
           ]);
         }
         if (typeof option.enum === "string") {
@@ -633,7 +635,7 @@ const config = function (command = []) {
               throw error([
                 "Incoherent Command Name:",
                 `key ${JSON.stringify(
-                  config.name
+                  config.name,
                 )} is not equal with name ${JSON.stringify(config.name)}`,
               ]);
             }
@@ -756,9 +758,9 @@ const parse = function (argv = process, options = {}) {
         throw error([
           "Invalid Shortcut Argument:",
           `the "-${shortcut}" argument is not a valid option`,
-          Array.isArray(config.command)
-            ? `in command "${config.command.join(" ")}"`
-            : void 0,
+          Array.isArray(config.command) ?
+            `in command "${config.command.join(" ")}"`
+          : void 0,
         ]);
       }
       // Auto discovery
@@ -839,16 +841,16 @@ const parse = function (argv = process, options = {}) {
       const option = config.options[name];
       // Handler required
       const required =
-        typeof option.required === "function"
-          ? !!option.required.call(null, {
-              config: config,
-              command: command,
-            })
-          : !!option.required;
+        typeof option.required === "function" ?
+          !!option.required.call(null, {
+            config: config,
+            command: command,
+          })
+        : !!option.required;
       if (required && params[option.name] == null) {
         throw error([
           "Required Option:",
-          `the \"${option.name}\" option must be provided`,
+          `the "${option.name}" option must be provided`,
         ]);
       }
       // Handle enum
@@ -862,7 +864,7 @@ const parse = function (argv = process, options = {}) {
             if (option.enum.indexOf(value) === -1) {
               throw error([
                 "Invalid Argument Value:",
-                `the value of option \"${option.name}\"`,
+                `the value of option "${option.name}"`,
                 `must be one of ${JSON.stringify(option.enum)},`,
                 `got ${JSON.stringify(value)}`,
               ]);
@@ -883,7 +885,7 @@ const parse = function (argv = process, options = {}) {
           // Validate the command
           throw error([
             "Invalid Argument:",
-            `fail to interpret all arguments \"${leftover.join(" ")}\"`,
+            `fail to interpret all arguments "${leftover.join(" ")}"`,
           ]);
         }
         // Parse child configuration
@@ -902,12 +904,12 @@ const parse = function (argv = process, options = {}) {
     const main = config.main;
     if (main) {
       const required =
-        typeof main.required === "function"
-          ? !!main.required.call(null, {
-              config: config,
-              command: command,
-            })
-          : !!main.required;
+        typeof main.required === "function" ?
+          !!main.required.call(null, {
+            config: config,
+            command: command,
+          })
+        : !!main.required;
       if (required && params[main.name].length === 0) {
         throw error([
           "Required Main Argument:",
@@ -983,12 +985,12 @@ const compile = function (data, options = {}) {
       }
       // Handle required
       const required =
-        typeof option.required === "function"
-          ? !!option.required.call(null, {
-              config: config,
-              command: undefined,
-            })
-          : !!option.required;
+        typeof option.required === "function" ?
+          !!option.required.call(null, {
+            config: config,
+            command: undefined,
+          })
+        : !!option.required;
       if (required && value == null) {
         throw error([
           "Required Option:",
@@ -1004,7 +1006,7 @@ const compile = function (data, options = {}) {
           if (option.enum.indexOf(val) === -1) {
             throw error([
               "Invalid Parameter Value:",
-              `the value of option \"${option.name}\"`,
+              `the value of option "${option.name}"`,
               `must be one of ${JSON.stringify(option.enum)},`,
               `got ${JSON.stringify(val)}`,
             ]);
@@ -1035,12 +1037,12 @@ const compile = function (data, options = {}) {
       const value = ldata[config.main.name];
       // Handle required
       const required =
-        typeof config.main.required === "function"
-          ? !!config.main.required.call(null, {
-              config: config,
-              command: undefined,
-            })
-          : !!config.main.required;
+        typeof config.main.required === "function" ?
+          !!config.main.required.call(null, {
+            config: config,
+            command: undefined,
+          })
+        : !!config.main.required;
       if (required && value == null) {
         throw error([
           "Required Main Parameter:",
@@ -1059,23 +1061,23 @@ const compile = function (data, options = {}) {
       }
     }
     // Recursive
-    const has_child_commands = options.extended
-      ? data.length
-      : Object.keys(config.commands).length;
+    const has_child_commands =
+      options.extended ? data.length : Object.keys(config.commands).length;
     if (has_child_commands) {
-      const command = options.extended
-        ? data[0][appconfig.command]
+      const command =
+        options.extended ?
+          data[0][appconfig.command]
         : data[appconfig.command].shift();
       if (!config.commands[command]) {
         throw error([
           "Invalid Command Parameter:",
           `command ${JSON.stringify(command)} is not registed,`,
           `expect one of ${JSON.stringify(
-            Object.keys(config.commands).sort()
+            Object.keys(config.commands).sort(),
           )}`,
-          Array.isArray(config.command)
-            ? `in command ${JSON.stringify(config.command.join(" "))}`
-            : void 0,
+          Array.isArray(config.command) ?
+            `in command ${JSON.stringify(config.command.join(" "))}`
+          : void 0,
         ]);
       }
       argv.push(command);
@@ -1083,7 +1085,7 @@ const compile = function (data, options = {}) {
       // Compile child configuration
       compile(
         config.commands[command],
-        options.extended ? data.shift() : ldata
+        options.extended ? data.shift() : ldata,
       );
     }
     if (options.extended || !has_child_commands) {
@@ -1100,7 +1102,7 @@ const compile = function (data, options = {}) {
             [
               "Invalid Parameter:",
               `the property --${key} is not a registered argument`,
-            ].join(" ")
+            ].join(" "),
           );
         }
         if (typeof value === "boolean") {
@@ -1189,13 +1191,13 @@ var help = {
             };
             config.commands[command.name] = merge(
               command,
-              config.commands[command.name]
+              config.commands[command.name],
             );
           }
           return function () {
             handler.call(this, ...arguments);
-            return config.description != null
-              ? config.description
+            return config.description != null ?
+                config.description
               : (config.description = `No description yet for the ${config.name} command`);
           };
         },
@@ -1207,8 +1209,8 @@ var help = {
           }
           return function () {
             handler.call(this, ...arguments);
-            return config.description != null
-              ? config.description
+            return config.description != null ?
+                config.description
               : (config.description = `No description yet for the ${config.name} command`);
           };
         },
@@ -1261,7 +1263,7 @@ const helping = function (params, options = {}) {
       throw error([
         "Invalid Arguments:",
         `parameter ${JSON.stringify(
-          appconfig.command
+          appconfig.command,
         )} must be an array in flatten mode,`,
         `got ${JSON.stringify(params[appconfig.command])}`,
       ]);
@@ -1281,8 +1283,9 @@ const helping = function (params, options = {}) {
     appconfig.commands[commands[0]].help
   ) {
     // Note, when argv equals ['help'], there is no leftover and main is null
-    const leftover = !options.extended
-      ? params[appconfig.commands[commands[0]].main.name]
+    const leftover =
+      !options.extended ?
+        params[appconfig.commands[commands[0]].main.name]
       : params[1][appconfig.commands[commands[0]].main.name];
     if (leftover) {
       return leftover;
@@ -1375,9 +1378,9 @@ const help$1 = function (commands = [], options = {}) {
     if (!config) {
       throw error([
         "Invalid Command:",
-        `argument \"${commands
+        `argument "${commands
           .slice(0, i + 1)
-          .join(" ")}\" is not a valid command`,
+          .join(" ")}" is not a valid command`,
       ]);
     }
     configs.push(config);
@@ -1397,7 +1400,7 @@ const help$1 = function (commands = [], options = {}) {
     content.push(
       ...[`${name}`, `${nameDescription}`].map(function (l) {
         return `${options.indent}${l}`;
-      })
+      }),
     );
   } else {
     content.push(`${options.indent}${name} - ${nameDescription}`);
@@ -1446,7 +1449,7 @@ const help$1 = function (commands = [], options = {}) {
         content.push(
           ...[`${config.main.name}`, `${description}`].map(function (l) {
             return `${options.indent}${l}`;
-          })
+          }),
         );
       } else {
         let line = `${options.indent}   ${config.main.name}`;
@@ -1479,7 +1482,7 @@ const help$1 = function (commands = [], options = {}) {
             })
             .map(function (l) {
               return `${options.indent}${l}`;
-            })
+            }),
         );
       } else {
         const shortcut = option.shortcut ? `-${option.shortcut} ` : "   ";
@@ -1503,7 +1506,7 @@ const help$1 = function (commands = [], options = {}) {
       const command = config.commands[name];
       let line = pad(
         `${options.indent}${[command.name].join(" ")}`,
-        options.columns
+        options.columns,
       );
       if (line.length > options.columns) {
         content.push(line);
@@ -1519,7 +1522,7 @@ const help$1 = function (commands = [], options = {}) {
       for (const name in config.commands) {
         const command = config.commands[name];
         content.push("");
-        content.push(`COMMAND \"${command.name}\"`);
+        content.push(`COMMAND "${command.name}"`);
         // Raw command, no main, no child commands
         if (
           !Object.keys(command.commands).length &&
@@ -1561,14 +1564,14 @@ const help$1 = function (commands = [], options = {}) {
           if (commands.length === 1) {
             content.push(
               `${options.indent}Where command is ${Object.keys(
-                command.commands
-              )}.`
+                command.commands,
+              )}.`,
             );
           } else if (commands.length > 1) {
             content.push(
               `${options.indent}Where command is one of ${Object.keys(
-                command.commands
-              ).join(", ")}.`
+                command.commands,
+              ).join(", ")}.`,
             );
           }
         }
@@ -1578,11 +1581,11 @@ const help$1 = function (commands = [], options = {}) {
   // Add examples
   config = configs[configs.length - 1];
   // has_help_option = Object.values(config.options).some (option) -> option.name is 'help'
-  const has_help_command = Object.values(config.commands).some(function (
-    command
-  ) {
-    return command.name === "help";
-  });
+  const has_help_command = Object.values(config.commands).some(
+    function (command) {
+      return command.name === "help";
+    },
+  );
   content.push("");
   content.push("EXAMPLES");
   const cmd = configs
@@ -1595,7 +1598,7 @@ const help$1 = function (commands = [], options = {}) {
       content.push(
         ...[`${cmd} --help`, "Show this message"].map(function (l) {
           return `${options.indent}${l}`;
-        })
+        }),
       );
     } else {
       let line = pad(`${options.indent}${cmd} --help`, options.columns);
@@ -1612,7 +1615,7 @@ const help$1 = function (commands = [], options = {}) {
       content.push(
         ...[`${cmd} help`, "Show this message"].map(function (l) {
           return `${options.indent}${l}`;
-        })
+        }),
       );
     } else {
       let line = pad(`${options.indent}${cmd} help`, options.columns);
@@ -1664,7 +1667,7 @@ Shell.prototype.load = async function (module, namespace = "default") {
         "Invalid Load Argument:",
         "load is expecting string,",
         `got ${JSON.stringify(module)}`,
-      ].join(" ")
+      ].join(" "),
     );
   }
   // Custom loader defined in the configuration
@@ -1673,7 +1676,7 @@ Shell.prototype.load = async function (module, namespace = "default") {
     if (typeof this._config.load === "string") {
       // todo, shall be async and return module.default
       const loader = await load(
-        this._config.load /* `, this._config.load.namespace` */
+        this._config.load /* `, this._config.load.namespace` */,
       );
       return loader(module, namespace);
       // Provided by the user as a function
@@ -1687,7 +1690,6 @@ Shell.prototype.load = async function (module, namespace = "default") {
 
 // Shell.js
 // Usage: `shell(config)`
-
 
 const shell = function (config) {
   const shell = new Shell(config);

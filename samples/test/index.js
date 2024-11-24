@@ -7,14 +7,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const samples = glob.sync(`${__dirname}/../**/*.js`);
 // [_, major] = process.version.match(/(\d+)\.\d+\.\d+/)
 
-describe("Samples", () => {
+describe("Samples", function () {
   samples
     .filter((sample) => {
       return !/test/.test(sample);
     })
     .map((sample) => {
       // return unless /\.js$/.test sample
-      it(`Sample ${path.relative(__dirname + "/..", sample)}`, (callback) => {
+      it(`Sample ${path.relative(__dirname + "/..", sample)}`, function (callback) {
         exec(`node ${sample}`, (err) => {
           callback(err);
         });

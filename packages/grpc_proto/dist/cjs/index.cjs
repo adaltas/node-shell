@@ -6,7 +6,7 @@ var shell = require('shell');
 
 var _documentCurrentScript = typeof document !== 'undefined' ? document.currentScript : null;
 // Dependencies
-const { __dirname: __dirname$1 } = shell.utils.filedirname((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.src || new URL('index.cjs', document.baseURI).href)));
+const { __dirname: __dirname$1 } = shell.utils.filedirname((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.cjs', document.baseURI).href)));
 
 var index = {
   resolve: function () {

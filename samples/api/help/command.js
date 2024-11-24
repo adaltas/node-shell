@@ -21,5 +21,5 @@ assert.deepStrictEqual(
     command: ["help"],
     options: {},
     commands: {},
-  }
+  },
 );
