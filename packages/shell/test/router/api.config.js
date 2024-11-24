@@ -8,6 +8,7 @@ describe("router.config.router", function () {
         error_message: true,
         error_stack: false,
         error_help: false,
+        exit: false,
         handler: "shell/routes/help",
         promise: false,
         stderr: process.stderr,

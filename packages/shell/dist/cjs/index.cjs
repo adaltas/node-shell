@@ -91,6 +91,7 @@ var router = {
           config.router.error_message ??= true;
           config.router.error_stack ??= false;
           config.router.error_help ??= false;
+          config.router.exit ??= false;
           config.router.handler ??= "shell/routes/help";
           config.router.promise ??= false;
           config.router.stdin ??= process.stdin;
@@ -357,9 +358,15 @@ const route = function (context = {}, ...args) {
   try {
     const res = run();
     res?.finally?.(dispose);
+    if (appconfig.router.exit) {
+      res?.catch?.(() => process.exit(1));
+    }
     return res;
   } catch (err) {
     dispose();
+    if (appconfig.router.exit) {
+      process.exit(1);
+    }
     throw err;
   }
 };
