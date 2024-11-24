@@ -25,4 +25,16 @@ describe("router.api", function () {
       })
       .should.eql("got: user value and param value");
   });
+
+  it("accept user arguments", function () {
+    shell({
+      handler: (context, value, udf) => {
+        return udf(value);
+      },
+    })
+      .route(["--opt", "param value"], "some arg", (value) =>
+        value.toUpperCase(),
+      )
+      .should.eql("SOME ARG");
+  });
 });
