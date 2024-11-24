@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.0](https://github.com/adaltas/node-shell/compare/v0.11.0...v0.12.0) (2024-11-24)
+
+### Features
+
+- **shell:** improve error messages ([95d6e0e](https://github.com/adaltas/node-shell/commit/95d6e0e9cf1ba1e2dcca73ca23deca6c287474d0))
+- **shell:** new error_message error_stack and error_help router options ([a8e1a1f](https://github.com/adaltas/node-shell/commit/a8e1a1f15b9f32a36aacea76e2487425252c35ec))
+- **shell:** router exit option ([8554263](https://github.com/adaltas/node-shell/commit/8554263f3c5575fde122bba3b3ad1e875458a274))
+
 ## [0.11.0](https://github.com/adaltas/node-shell/compare/v0.10.1...v0.11.0) (2024-08-04)
 
 **Note:** Version bump only for package shell
