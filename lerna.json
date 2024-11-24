@@ -11,5 +11,5 @@
   },
   "ignoreChanges": ["**/test/**"],
   "npmClient": "npm",
-  "version": "fixed"
+  "version": "0.11.0"
 }
