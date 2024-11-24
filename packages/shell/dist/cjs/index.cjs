@@ -197,17 +197,11 @@ const route = function (context = {}, ...args) {
         }
         try {
           // Otherwise wrap result in a promise
+          // Return value may be a promise
           const result = handler.call(this, context, ...args);
-          if (result && typeof result.then === "function") {
-            return result;
-          }
-          return new Promise(function (resolve) {
-            return resolve(result);
-          });
+          return Promise.resolve(result);
         } catch (err) {
-          return new Promise(function (resolve, reject) {
-            return reject(err);
-          });
+          return Promise.reject(err);
         }
       },
     });
