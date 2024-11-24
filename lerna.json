@@ -9,9 +9,7 @@
       "message": "chore(release): publish"
     }
   },
-  "ignoreChanges": [
-    "**/test/**"
-  ],
-  "npmClient": "yarn",
-  "version": "0.11.0"
+  "ignoreChanges": ["**/test/**"],
+  "npmClient": "npm",
+  "version": "fixed"
 }
