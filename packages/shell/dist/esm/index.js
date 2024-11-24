@@ -173,22 +173,21 @@ const route = function (context = {}, ...args) {
   };
   const route_call = (handler, command, params, err, args) => {
     const config = this.config().get();
-    context = {
-      // argv: process.argv.slice(2),
-      stdin: config.router.stdin,
-      stdout: config.router.stdout,
-      stdout_end: config.router.stdout_end,
-      stderr: config.router.stderr,
-      stderr_end: config.router.stderr_end,
-      ...context,
-      command: command,
-      error: err,
-      params: params,
-      args: args,
-    };
     return this.plugins.call_sync({
       name: "shell:router:call",
-      args: context,
+      args: {
+        // argv: process.argv.slice(2),
+        stdin: config.router.stdin,
+        stdout: config.router.stdout,
+        stdout_end: config.router.stdout_end,
+        stderr: config.router.stderr,
+        stderr_end: config.router.stderr_end,
+        ...context,
+        command: command,
+        error: err,
+        params: params,
+        args: args,
+      },
       handler: (context) => {
         if (!config.router.promise) {
           return handler.call(this, context, ...args);
@@ -205,11 +204,6 @@ const route = function (context = {}, ...args) {
     });
   };
   const route_error = (err, command) => {
-    // Print stack
-    // if (err?.stack) {
-    //   appconfig.stderr.write(err.stack);
-    // }
-    // Print help command
     context.argv = command.length ? ["help", ...command] : ["--help"];
     const params = this.parse(context.argv);
     const handler = route_load(this._config.router.handler);
@@ -254,14 +248,6 @@ const route = function (context = {}, ...args) {
     if (handler.then) {
       return handler
         .catch(async (err) => {
-          // appconfig.router.stderr.write(`!!!!!!!!!!!!!!!!!!!!!!`);
-          // appconfig.router.stderr.write(
-          //   `Fail to load module ${JSON.stringify(config.handler)}\n`,
-          // );
-          // appconfig.router.stderr.write(
-          //   typeof error === "string" ? error : error.message,
-          // );
-          // appconfig.router.stderr.write("\n");
           return route_error(
             `Fail to load module ${JSON.stringify(config.handler)}, message is: ${err.message}.`,
             command,

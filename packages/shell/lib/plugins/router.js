@@ -110,22 +110,21 @@ const route = function (context = {}, ...args) {
   };
   const route_call = (handler, command, params, err, args) => {
     const config = this.config().get();
-    context = {
-      // argv: process.argv.slice(2),
-      stdin: config.router.stdin,
-      stdout: config.router.stdout,
-      stdout_end: config.router.stdout_end,
-      stderr: config.router.stderr,
-      stderr_end: config.router.stderr_end,
-      ...context,
-      command: command,
-      error: err,
-      params: params,
-      args: args,
-    };
     return this.plugins.call_sync({
       name: "shell:router:call",
-      args: context,
+      args: {
+        // argv: process.argv.slice(2),
+        stdin: config.router.stdin,
+        stdout: config.router.stdout,
+        stdout_end: config.router.stdout_end,
+        stderr: config.router.stderr,
+        stderr_end: config.router.stderr_end,
+        ...context,
+        command: command,
+        error: err,
+        params: params,
+        args: args,
+      },
       handler: (context) => {
         if (!config.router.promise) {
           return handler.call(this, context, ...args);
