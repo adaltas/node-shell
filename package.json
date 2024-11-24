@@ -18,13 +18,13 @@
   "scripts": {
     "build": "lerna run build",
     "clean": "git clean -fdx",
-    "postinstall": "husky install",
     "publish": "lerna publish from-git --yes",
     "lint:check": "eslint",
     "lint:fix": "eslint --fix",
     "lint:staged": "npx lint-staged",
     "test": "lerna run test",
-    "version": "lerna version"
+    "version": "lerna version",
+    "prepare": "husky install"
   },
   "type": "module",
   "workspaces": [
