@@ -37,3 +37,7 @@ Shell.js is sugar for parsing typical unix command line options.
   - [Changelog](https://shell.js.org/project/changelog/)
   - [License](https://shell.js.org/project/license/)
   - [Contribute](https://shell.js.org/project/contribute/)
+
+## Contributors
+
+The project is sponsored by [Adaltas](https://www.adaltas.com) based in Paris, France. Adaltas offers support and consulting on distributed systems, big data and open source.
