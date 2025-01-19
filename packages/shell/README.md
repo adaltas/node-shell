@@ -45,7 +45,11 @@ shell({
   },
   commands: {
     start: {
-      description: "Start something",
+      description: "Start one or multiple applications",
+      main: "apps",
+      handler: ({ params, stdout }) => {
+        stdout.write(`Application: ${params.apps.join(" ")}`);
+      },
     },
   },
 }).route();
