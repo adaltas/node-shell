@@ -8,15 +8,15 @@ describe("api.load", function () {
     const cwd = process.cwd();
     process.chdir(os.tmpdir());
     await fs.writeFile(
-      `${os.tmpdir()}/relative_module.coffee`,
+      `${os.tmpdir()}/relative_module.js`,
       dedent`
-    export default (params) -> params
+    export default (params) => params
     `,
     );
-    const mod = await shell().load(`${os.tmpdir()}/relative_module.coffee`);
+    const mod = await shell().load(`${os.tmpdir()}/relative_module.js`);
     mod("my value").should.eql("my value");
     process.chdir(cwd);
-    await fs.unlink(`${os.tmpdir()}/relative_module.coffee`);
+    await fs.unlink(`${os.tmpdir()}/relative_module.js`);
   });
 
   it("load is not a string", async function () {

@@ -1,0 +1,67 @@
+import { shell } from "../../lib/index.js";
+
+describe("api.compile", function () {
+  it("validate", function () {
+    (function () {
+      shell().compile({}, "invalid");
+    }).should.throw(
+      'Invalid Compile Arguments: 2nd argument option must be an object, got "invalid"',
+    );
+  });
+
+  it("command string is converted to a 1 element array internally", function () {
+    shell({
+      commands: {
+        start: {},
+      },
+    })
+      .compile({
+        command: "start",
+      })
+      .should.eql(["start"]);
+  });
+
+  it("catch main argument with type of string", function () {
+    (function () {
+      shell({
+        main: "leftover",
+      }).compile({
+        leftover: "my value",
+      });
+    }).should.throw(
+      'Invalid Parameter Type: expect main to be an array, got "my value"',
+    );
+  });
+
+  it("check a command is registered", function () {
+    (function () {
+      shell({
+        commands: {
+          start: {},
+          stop: {},
+        },
+      }).compile({
+        command: ["status"],
+      });
+    }).should.throw(
+      'Invalid Command Parameter: command "status" is not registed, expect one of ["help","start","stop"]',
+    );
+
+    (function () {
+      shell({
+        commands: {
+          server: {
+            commands: {
+              start: {},
+              stop: {},
+            },
+          },
+        },
+      }).compile({
+        command: ["server", "status"],
+      });
+    }).should.throw(
+      'Invalid Command Parameter: command "status" is not registed, expect one of ["start","stop"] in command "server"',
+    );
+  });
+});

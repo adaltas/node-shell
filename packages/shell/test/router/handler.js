@@ -15,20 +15,20 @@ describe("router.handler", function () {
 
   it("load with custom function handler", async function () {
     await fs.writeFile(
-      `${os.tmpdir()}/renamed_module.coffee`,
-      'export default -> "Hello"',
+      `${os.tmpdir()}/renamed_module.js`,
+      'export default () => "Hello"',
     );
     await shell({
       handler: "./something",
       load: async function (module, namespace) {
         if (module !== "./something") throw Error("Incorrect module name");
-        const location = `${os.tmpdir()}/renamed_module.coffee`;
+        const location = `${os.tmpdir()}/renamed_module.js`;
         return (await import(location))[namespace];
       },
     })
       .route([])
       .should.be.resolvedWith("Hello");
-    await fs.unlink(`${os.tmpdir()}/renamed_module.coffee`);
+    await fs.unlink(`${os.tmpdir()}/renamed_module.js`);
   });
 
   describe("arguments", function () {

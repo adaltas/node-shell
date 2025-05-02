@@ -17,10 +17,10 @@ function writer(callback) {
 
 describe("router.load", function () {
   it("application route", async function () {
-    const mod = `${os.tmpdir()}/node_params.coffee`;
+    const mod = `${os.tmpdir()}/node_params.js`;
     await fs.writeFile(
       `${mod}`,
-      "export default ({params}) -> params.my_argument",
+      "export default ({params}) => params.my_argument",
     );
     await shell({
       handler: mod,
@@ -32,10 +32,10 @@ describe("router.load", function () {
   });
 
   it("command route", async function () {
-    const mod = `${os.tmpdir()}/node_params.coffee`;
+    const mod = `${os.tmpdir()}/node_params.js`;
     await fs.writeFile(
       `${mod}`,
-      "export default ({params}) -> params.my_argument",
+      "export default ({params}) => params.my_argument",
     );
     await shell({
       commands: {
@@ -51,15 +51,15 @@ describe("router.load", function () {
   });
 
   it("error to load route", async function () {
-    const mod = `${os.tmpdir()}/router_load_handler_invalid.coffee`;
-    await fs.writeFile(`${mod}`, "Oh no, this is so invalid");
+    const mod = `${os.tmpdir()}/router_load_handler_invalid.js`;
+    await fs.writeFile(`${mod}`, "Oh no");
     await shell({
       handler: mod,
       options: { my_argument: {} },
       router: {
         stderr: writer(function (output) {
           output.should.containEql(
-            `Fail to load module "${mod}", message is: Oh is not defined.`,
+            `Fail to load module "${mod}", message is: Unexpected identifier`,
           );
         }),
         stderr_end: true,
