@@ -1,7 +1,7 @@
 ---
 title: Main parameter usage
 description: How to use main parameter.
-keywords: ['shell', 'node.js', 'cli', 'usage', 'main']
+keywords: ["shell", "node.js", "cli", "usage", "main"]
 maturity: initial
 ---
 
@@ -15,25 +15,25 @@ Main is what is left once the option and the commands have been extracted. Like 
 
 The `main` property is declared as an object with the following properties:
 
-* `name` (string)   
+- `name` (string)  
   The name of the main property.
-* `required` (boolean || function)   
+- `required` (boolean || function)  
   Whether or not the value must always be present.
-* `description` (string)   
+- `description` (string)  
   The description of the main argument.
 
 As an alternative, a "string" can also be provided which will be converted to an object with the name property set to the original string value. Thus, the following declarations are equivalent:
 
 ```js
 shell({
-  main: 'input'  
-})
+  main: "input",
+});
 // is equivalent to
 shell({
   main: {
-    name: 'input' 
-  } 
-})
+    name: "input",
+  },
+});
 ```
 
 The extracted value is an array.
@@ -41,23 +41,23 @@ The extracted value is an array.
 If [no main arguments](https://github.com/adaltas/node-shell/blob/master/samples/main_empty.js) is defined in the CLI commands, then the array is empty.
 
 ```js
-require('should')
-require('shell')({
-  main: 'input' 
+require("should");
+require("shell")({
+  main: "input",
 })
-.parse([])
-.should.eql({
-  input: []
-})
+  .parse([])
+  .should.eql({
+    input: [],
+  });
 ```
 
 ## Using `required` as a function
 
 When `required` is a function, the first argument is an object with the following properties:
 
-* `config`   
+- `config`  
   The configuration associated with the command or the full configuration is no command is used.
-* `command`
+- `command`
   The current command name, use `config.command` to acess the full command as an array.
 
 ## Examples
@@ -66,8 +66,8 @@ When `required` is a function, the first argument is an object with the followin
 
 ```js
 require("shell")({
-  main: "leftover"
-})
+  main: "leftover",
+});
 ```
 
 The above is the equivalent of declaring options as an array like:
@@ -75,8 +75,9 @@ The above is the equivalent of declaring options as an array like:
 ```js
 require("shell")({
   main: {
-    name: "leftover"
-}})
+    name: "leftover",
+  },
+});
 ```
 
 Usage of the "main" parameter is now: `myapp [leftover]`.
@@ -85,12 +86,18 @@ Usage of the "main" parameter is now: `myapp [leftover]`.
 
 ```js
 require("shell")({
-  commands: [{
-    name: 'server',
-    commands: [{
-      name: 'start',
-      main: 'leftover'
-}]}]})
+  commands: [
+    {
+      name: "server",
+      commands: [
+        {
+          name: "start",
+          main: "leftover",
+        },
+      ],
+    },
+  ],
+});
 ```
 
 Usage of the "main" parameter is now: `myapp server start [leftover]`.

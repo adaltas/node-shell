@@ -1,7 +1,17 @@
 ---
 title: Routing
 description: Route commands to individual handler functions.
-keywords: ['shell', 'node.js', 'cli', 'usage', 'routing', 'route', 'handler', 'fucntion']
+keywords:
+  [
+    "shell",
+    "node.js",
+    "cli",
+    "usage",
+    "routing",
+    "route",
+    "handler",
+    "fucntion",
+  ]
 maturity: initial
 sort: 4
 ---
@@ -24,21 +34,21 @@ Routing is executed by calling `route` method on the Shell.js instance. Refer to
 
 Arguments are transparently parsed and the handler function associated to the application or a command is called with a context object as first argument. The context contains the following properties:
 
-* `argv`   
+- `argv`  
    CLI arguments.
-* `command` ([string])   
+- `command` ([string])  
   The command being called, an empty array if no command is executed.
-* `error`   
+- `error`  
    Error object if any error was thrown when parsing the arguments. The property is used internally to provide the error object to the help routing function.
-* `params`   
+- `params`  
    Extracted data from `argv`
-* `stderr`   
+- `stderr`  
   The StreamWriter where to redirect error data.
-* `stderr_end`   
+- `stderr_end`  
   The StreamWriter where to redirect error data.
-* `stdout`   
+- `stdout`  
   The StreamWriter where to redirect standard data.
-* `stdout_end`   
+- `stdout_end`
 
 ## Examples
 
@@ -47,21 +57,21 @@ Arguments are transparently parsed and the handler function associated to the ap
 [The router example](https://github.com/adaltas/node-shell/blob/master/samples/router.js) defines a `list` command which print the files of a directory:
 
 ```js
-const shell = require('shell')
-const { spawn } = require('child_process')
+const { shell } = require("shell");
+const { spawn } = require("child_process");
 
 shell({
   commands: {
-    'list': {
-      main: 'input',
-      handler: async function({params, stderr, stdout}){
-        const ls = spawn('ls', ['-lh', ...params.input])
-        ls.stderr.pipe(stderr)
-        ls.stdout.pipe(stdout)
-      }
-    }
-  }
-}).route()
+    list: {
+      main: "input",
+      handler: async function ({ params, stderr, stdout }) {
+        const ls = spawn("ls", ["-lh", ...params.input]);
+        ls.stderr.pipe(stderr);
+        ls.stdout.pipe(stdout);
+      },
+    },
+  },
+}).route();
 ```
 
 You can test the behavior of this command with `node samples/router.js list {a_directory}`. For example, if you are inside the root folder of this project repository, executing `node samples/router.js list ./src` prints the files of the ["src" directory](https://github.com/adaltas/node-shell/blob/master/src/).
@@ -80,33 +90,31 @@ node samples/router.js list invalid > ./stderr.log
 The routing function can return any value. There is no restriction imposed to the developer. Thus, it is [compatible with promise](https://github.com/adaltas/node-shell/blob/master/samples/router_promise.js):
 
 ```js
-const shell = require('shell')
-const { spawn } = require('child_process')
-
-(async function(){
-  try{
+const { shell } = require("shell");
+const { spawn } = require("child_process")(async function () {
+  try {
     const result = await shell({
       commands: {
-        'list': {
-          main: 'input',
-          handler: async function({params, error, stderr, stdout}){
-            return new Promise(function(resolve, reject){
-              const ls = spawn('ls', ['-lh', ...params.input])
-              ls.stderr.pipe(stderr)
-              ls.stdout.pipe(stdout)
-              ls.on('close', (code) => {
+        list: {
+          main: "input",
+          handler: async function ({ params, error, stderr, stdout }) {
+            return new Promise(function (resolve, reject) {
+              const ls = spawn("ls", ["-lh", ...params.input]);
+              ls.stderr.pipe(stderr);
+              ls.stdout.pipe(stdout);
+              ls.on("close", (code) => {
                 code === 0
-                ? resolve('Command succeed!')
-                : reject(new Error(`Command failed with code: ${code}`))
+                  ? resolve("Command succeed!")
+                  : reject(new Error(`Command failed with code: ${code}`));
               });
-            })
-          }
-        }
-      }
-    }).route()
-    console.log(`=== ${result} ===`)
-  }catch(err){
-    console.error(`=== ${err.message} ===`)
+            });
+          },
+        },
+      },
+    }).route();
+    console.log(`=== ${result} ===`);
+  } catch (err) {
+    console.error(`=== ${err.message} ===`);
   }
-})()
+})();
 ```

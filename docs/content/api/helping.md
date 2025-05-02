@@ -2,7 +2,7 @@
 title: API method `helping`
 navtitle: shell.helping
 description: How to use the `helping` method to determine if help was requested.
-keywords: ['shell', 'node.js', 'cli', 'api', 'helping', 'help', 'print']
+keywords: ["shell", "node.js", "cli", "api", "helping", "help", "print"]
 maturity: review
 ---
 
@@ -10,7 +10,7 @@ maturity: review
 
 Determine if help was requested by returning zero to n commands if help is requested or null otherwise.
 
-* `params` ([object] | object)   
+- `params` ([object] | object)  
   The parameter object parsed from arguments, an object in flatten mode or an array in extended mode, optional.
 
 ## Description
@@ -22,25 +22,30 @@ This method is commonly used conjointly with the `help` method. It provides an i
 The workflow is to `parse` the arguments to get the extracted data, to create a condition to get the command associated with help and to print the help by passing the returned command:
 
 ```js
-const shell = require('shell')
+const { shell } = require("shell");
 const app = shell({
-  name: 'server',
-  description: 'Manage a web server',
+  name: "server",
+  description: "Manage a web server",
   commands: {
-    'start': {
-      description: 'Start a web server',
+    start: {
+      description: "Start a web server",
       options: {
-        'host': {shortcut: 'h', description: 'Web server listen host'},
-        'port': {shortcut: 'p', type: 'integer', description: 'Web server listen port'}
-      }
-    }
-  }
+        host: { shortcut: "h", description: "Web server listen host" },
+        port: {
+          shortcut: "p",
+          type: "integer",
+          description: "Web server listen port",
+        },
+      },
+    },
+  },
 });
-const params = app.parse()
-if(let command = app.helping(params)){
-  const help = app.help(command)
-  process.stdout.write(help)
-  process.exit()
+const params = app.parse();
+const command = app.helping(params);
+if (command) {
+  const help = app.help(command);
+  process.stdout.write(help);
+  process.exit();
 }
 ```
 

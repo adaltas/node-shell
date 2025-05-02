@@ -1,7 +1,7 @@
 ---
 title: Displaying the help
 description: How to use the help.
-keywords: ['shell', 'node.js', 'cli', 'usage', 'help', 'print']
+keywords: ["shell", "node.js", "cli", "usage", "help", "print"]
 maturity: review
 sort: 2
 ---
@@ -16,10 +16,10 @@ Help prints detailed information about how to use the CLI application or one of 
 
 From a user perspective, there are multiple ways to print the help to the console:
 
-* by passing the `--help` option in the command, for example `./app print --help`.
-* if commands are used, by calling the `help` command, eventually followed by any command, for example `./app help print`.
-* when the command is invalid or incomplete, for example `./app print`, assuming the `print` command has a required `message` option.
-* when calling a non-leaf command, for example `./app plugin`, assuming `plugin` is not a command in itself but a group of multi-level commands such as `./app plugin print -m 'hello'`.
+- by passing the `--help` option in the command, for example `./app print --help`.
+- if commands are used, by calling the `help` command, eventually followed by any command, for example `./app help print`.
+- when the command is invalid or incomplete, for example `./app print`, assuming the `print` command has a required `message` option.
+- when calling a non-leaf command, for example `./app plugin`, assuming `plugin` is not a command in itself but a group of multi-level commands such as `./app plugin print -m 'hello'`.
 
 Use `./myapp --help` to print the help usage of the overall application. The `help` option is automatically registered to the application as well as to every commands.
 
@@ -58,10 +58,10 @@ Here's how to display help with routing:
 
 ```js
 // Routing to help required `help.route` to be set
-const shell = require('shell')
+const { shell } = require("shell");
 shell({
-  handler: './some/module'
-}).route(/*...optional user arguments...*/)
+  handler: "./some/module",
+}).route(/*...optional user arguments...*/);
 ```
 
 ### Invalid or incomplete command
@@ -77,10 +77,10 @@ TODO: describe how help could be printed for every non leaf command if requested
 It is possible to overwrite the default help options and commands such as to provide a personalised message:
 
 ```js
-const shell = require('shell')
+const {shell} = require('shell')
 shell = ({
 { options:
-  { help: 
+  { help:
     { description: 'Overwrite description' } } }
 )
 ```

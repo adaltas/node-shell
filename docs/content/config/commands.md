@@ -1,7 +1,7 @@
 ---
 title: Commands
 description: How to define commands
-keywords: ['shell', 'node.js', 'cli', 'usage', 'commands']
+keywords: ["shell", "node.js", "cli", "usage", "commands"]
 maturity: review
 ---
 
@@ -13,26 +13,26 @@ Commands define the arguments passed to a Shell.js scripts.
 
 ## Properties
 
-* `name` (string)   
+- `name` (string)  
   The command name.
-* `description` (string)   
+- `description` (string)  
   The command description.
-* `options` (object|array)   
+- `options` (object|array)  
   Defined the expected command options, sometimes called flags. Support object and array notation. If
-  defined as an object, keys correspond to the "name" properties. If defined as 
+  defined as an object, keys correspond to the "name" properties. If defined as
   an array, the "name" property is required.
-* `main` (object|string)   
+- `main` (object|string)  
   What is left once the option and the commands have been extracted.
-* `commands` (object|array)   
+- `commands` (object|array)  
   Support unlimited multi-level commands.
-* `handler` (function|string)   
-  Execute a function or the function exported by a module if defined as a 
+- `handler` (function|string)  
+  Execute a function or the function exported by a module if defined as a
   string, provide the params object, see the [routing documentation](/api/route/).
 
 ## Multi-level commands
 
 The package can handle simple argument definitions as well as complex command
-based definitions including one or multiple nested commands. Thus, large 
+based definitions including one or multiple nested commands. Thus, large
 applications can group all its functionalities into one parent CLI entry point.
 
 ## Examples of configuration
@@ -40,8 +40,8 @@ applications can group all its functionalities into one parent CLI entry point.
 ### Basic application
 
 Let's start with a basic application call `myapp` which deploys and manages
-a web application. Using the "conf" option, our application require a 
-configuration file which every command will use. 
+a web application. Using the "conf" option, our application require a
+configuration file which every command will use.
 
 Here's the initial definition:
 
@@ -49,10 +49,12 @@ Here's the initial definition:
 {
   "name": "myapp",
   "description": "My Web Application",
-  "options": [{
-    "name": "conf",
-    "required": true
-  }]
+  "options": [
+    {
+      "name": "conf",
+      "required": true
+    }
+  ]
 }
 ```
 
@@ -66,14 +68,17 @@ with a new "commands" entry:
 
 ```json
 {
-  "commands": [{
-    "name": "info"
-  },{
-    "name": "server",
-    "options": {
-      "name": "pid"
+  "commands": [
+    {
+      "name": "info"
+    },
+    {
+      "name": "server",
+      "options": {
+        "name": "pid"
+      }
     }
-  }]
+  ]
 }
 ```
 
@@ -82,29 +87,35 @@ Usage of the "server" command is now:
 
 ### Multi-level commands
 
-We now want to define commands to control our server such as "start" and 
-"stop". The "start" command will require an option "port". Inside the object 
+We now want to define commands to control our server such as "start" and
+"stop". The "start" command will require an option "port". Inside the object
 defining the "server" command, we add a new "commands" entry:
 
 ```json
 {
-  "commands": [{
-    "name": "info"
-  },{
-    "name": "server",
-    "options": {
-      "name": "pid"
+  "commands": [
+    {
+      "name": "info"
     },
-    "commands": [{
-      "name": "start",
+    {
+      "name": "server",
       "options": {
-        "name": "port",
-        "required": true
-      }
-    },{
-      "name": "stop"
-    }]
-  }]
+        "name": "pid"
+      },
+      "commands": [
+        {
+          "name": "start",
+          "options": {
+            "name": "port",
+            "required": true
+          }
+        },
+        {
+          "name": "stop"
+        }
+      ]
+    }
+  ]
 }
 ```
 

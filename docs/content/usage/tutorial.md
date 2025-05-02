@@ -1,7 +1,16 @@
 ---
 title: Tutorial
 description: How to build CLI application using Shell.js.
-keywords: ['shell', 'node.js', 'cli', 'usage', 'tutorial', 'application', 'configuration']
+keywords:
+  [
+    "shell",
+    "node.js",
+    "cli",
+    "usage",
+    "tutorial",
+    "application",
+    "configuration",
+  ]
 maturity: initial
 sort: 1
 ---
@@ -22,9 +31,10 @@ Welcome to Shell.js! The goal of this tutorial is to guide you through configuri
 
 ## What is the library about?
 
-Shell.js is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical Unix command line arguments. 
+Shell.js is a Node.js package published on NPM. It is a sugar to build CLI application for parsing typical Unix command line arguments.
 
 It offers powerful features such as:
+
 - Reversibility: read and write arguments is bi-directional
 - Auto-discovery: extract unregistered options
 - Unlimited multi-level commands (eg `myapp server start ...`)
@@ -37,7 +47,7 @@ It offers powerful features such as:
 
 For users not familiar with the Node.js environment, you can follow the [official installation instructions](https://nodejs.org/en/download/) to get started and have the `node`, `npm` and `npx` commands available on your system.
 
-The `node` command execute JavaScript scripts. The `npm` command expose the NPM package manager for JavaScript. The `npx` is intended to help round out the experience of using packages from the npm registry. 
+The `node` command execute JavaScript scripts. The `npm` command expose the NPM package manager for JavaScript. The `npx` is intended to help round out the experience of using packages from the npm registry.
 
 Once you have installed Node, create a basic Node.js project which is called a package:
 
@@ -63,14 +73,14 @@ Let's consider a simple application by modifying the "app.js" file as follow:
 
 ```js
 // Import the package
-const shell = require('shell')
+const { shell } = require("shell");
 // Create a new instance
 const app = shell({
-  main: 'hello'
-})
+  main: "hello",
+});
 // Parse CLI arguments
-const args = app.parse()
-console.log(args)
+const args = app.parse();
+console.log(args);
 ```
 
 The "shell" package export a function which expect to a configuration object describing your commands.
@@ -82,7 +92,9 @@ The `parse` method convert the arguments into a parameter object. You can provid
 You can now execute `node app world` and it shall print:
 
 ```js
-{ hello: [ 'world' ] }
+{
+  hello: ["world"];
+}
 ```
 
 ## Argument topology
@@ -94,27 +106,31 @@ node app --config "./my/repo" start --force 0.0.0.0:80
 ```
 
 This CLI command is made of multiple sections.
-* `application`: the overall configuration define the application.
-* `command`: "start" is called a command in param and is a subset of an application. It has its own options and main properties, dissociated from the ones defined at the application level.
-* `options`: both "config" and "start" are options. The "config" option is associated with a value and the "force" option is boolean indicating the presence of the option.
-* `main`: whichever arguments not recognized by the parser is pushed into the "main" property.
+
+- `application`: the overall configuration define the application.
+- `command`: "start" is called a command in param and is a subset of an application. It has its own options and main properties, dissociated from the ones defined at the application level.
+- `options`: both "config" and "start" are options. The "config" option is associated with a value and the "force" option is boolean indicating the presence of the option.
+- `main`: whichever arguments not recognized by the parser is pushed into the "main" property.
 
 For the sake of curiosity, Shell.js could be configured and initialized as:
 
 ```js
-const shell = require("shell")
+const { shell } = require("shell");
 shell({
   options: {
-  	"config": {}
+    config: {},
   },
   commands: {
-  	"start": {
+    start: {
       main: "address",
-  	  options: {
-  	  	"force": {
-          type: "boolean"
-} } } } })
-.parse()
+      options: {
+        force: {
+          type: "boolean",
+        },
+      },
+    },
+  },
+}).parse();
 ```
 
 Running the command above shall lead to:
@@ -135,18 +151,19 @@ Command-line `options` are commands used to pass information to a program. These
 - `--` followed by their name.
 - `-` followed by their shortcut alternative.
 
-It is recommended using shortcuts only for the most frequently used `options`, to avoid difficulty in understanding the commands of third-party developers. 
+It is recommended using shortcuts only for the most frequently used `options`, to avoid difficulty in understanding the commands of third-party developers.
 
 For example, let's expose a `config` option with a shortcut named `c`:
 
 ```js
-const shell = require("shell")
+const { shell } = require("shell");
 shell({
   options: {
-  	"config": {
-      shortcut: 'c'
-} } })
-.parse()
+    config: {
+      shortcut: "c",
+    },
+  },
+}).parse();
 ```
 
 Now you can pass the option and its value in two ways:
@@ -166,22 +183,23 @@ In place of `./my/repo` can be any value, but if you don't provide it, the CLI w
 To illustrate the behaviour of each, let's make a basic example, but these can be used together within one `option` as well:
 
 ```js
-const shell = require("shell")
+const { shell } = require("shell");
 shell({
   options: {
-    'default-opt': {
-      default: 42
+    "default-opt": {
+      default: 42,
     },
-    'select-opt': {
-      enum: [1, 2, 3, "let's go"]
+    "select-opt": {
+      enum: [1, 2, 3, "let's go"],
     },
-    'required-opt': {
-      required: true
+    "required-opt": {
+      required: true,
     },
-    'boolean-opt': {
-      type: 'boolean'
-} } })
-.parse()
+    "boolean-opt": {
+      type: "boolean",
+    },
+  },
+}).parse();
 ```
 
 Execute this application with a command like:
@@ -190,7 +208,7 @@ Execute this application with a command like:
 node samples/logger \
   --required-opt present \
   --select-opt "let's go" \
-  --boolean-opt 
+  --boolean-opt
 ```
 
 The result of parsing will be the object like:
@@ -222,26 +240,30 @@ And as well, we must specify in which file the logged information should be stor
 Create the javascript file with the name "log.js" and paste following:
 
 ```js
-const shell = require('shell')
+const { shell } = require("shell");
 const app = shell({
   options: {
-    'source': {
-      shortcut: 's',
-      default: 'log.txt'
-    }
+    source: {
+      shortcut: "s",
+      default: "log.txt",
+    },
   },
   commands: {
-    'append': {
+    append: {
       main: {
-        name: 'data',
-        required: true
-      }
+        name: "data",
+        required: true,
+      },
     },
-    'view': {
+    view: {
       options: {
-        'recent': {
-          type: 'boolean'
-} } } } } )
+        recent: {
+          type: "boolean",
+        },
+      },
+    },
+  },
+});
 ```
 
 This configuration object consists:
@@ -259,15 +281,15 @@ In the configuration above we have prepared the model of our application. For th
 
 ```js
 // Parsing arguments
-const args = app.parse()
+const args = app.parse();
 // The example of handling arguments
-switch(args.command[0]){
-  case 'append':
+switch (args.command[0]) {
+  case "append":
     // Do something...
-    break
-  case 'view':
+    break;
+  case "view":
     // Do something...
-    break
+    break;
 }
 ```
 
@@ -275,33 +297,37 @@ Let's add a logic to our logging application:
 
 ```js
 // Parsing arguments
-const args = app.parse()
+const args = app.parse();
 // Use file system module
-var fs = require("fs")
+var fs = require("fs");
 // Handling commands
 switch (args.command[0]) {
-  case 'append':
+  case "append":
     // Appending the string to the file
-    fs.appendFile(args.source, args.data + "\n", (err) => { if(err) throw err })
-    break
-  case 'view':
+    fs.appendFile(args.source, args.data + "\n", (err) => {
+      if (err) throw err;
+    });
+    break;
+  case "view":
     // Check the viewing mode
-    if(args.recent) {
+    if (args.recent) {
       // Execute the bash command 'tail' for viewing strings from the ending of the file
       // Prints only last 10 strings, because it is the default value of the 'tail' command
-      require('child_process').exec('tail ' + args.source,
+      require("child_process").exec(
+        "tail " + args.source,
         (error, stdout, stderr) => {
-          process.stdout.write(stdout)
-          process.stderr.write(stderr)
-        })
+          process.stdout.write(stdout);
+          process.stderr.write(stderr);
+        },
+      );
     } else {
       // View the full file using the file system module
-      fs.readFile(params.source, function(err, buf) {
-        if(err) throw err
-        process.stdout.write(buf.toString())
-      })
+      fs.readFile(params.source, function (err, buf) {
+        if (err) throw err;
+        process.stdout.write(buf.toString());
+      });
     }
-    break
+    break;
 }
 ```
 
@@ -346,11 +372,11 @@ Shell.js convert the configuration object into a readable documentation string a
 ```js
 // Getting help
 // Wether or not help was requested
-if(commands = app.helping(args)){
+if ((commands = app.helping(args))) {
   // Print a help information
-  process.stdout.write(app.help(commands))
+  process.stdout.write(app.help(commands));
   // Terminate the process
-  process.exit()
+  process.exit();
 }
 ```
 
@@ -358,47 +384,52 @@ Let's add this code into the application and write the description for each of t
 
 ```js
 // Configuring application
-const shell = require('shell')
+const { shell } = require("shell");
 const app = shell({
-  name: 'log',
-  description: 'Log information',
+  name: "log",
+  description: "Log information",
   options: {
-    'source': {
-      shortcut: 's',
-      default: 'log.txt',
-      description: 'The path to a file in which the logged information are stored'
-    }
+    source: {
+      shortcut: "s",
+      default: "log.txt",
+      description:
+        "The path to a file in which the logged information are stored",
+    },
   },
   commands: {
-    'append': {
-      description: 'Append strings to a log file',
+    append: {
+      description: "Append strings to a log file",
       main: {
-        name: 'data',
+        name: "data",
         required: true,
-        description: 'Logged data'
-      }
+        description: "Logged data",
+      },
     },
-    'view': {
-      description: 'Viewing a log file',
+    view: {
+      description: "Viewing a log file",
       options: {
-        'recent': {
-          type: 'boolean',
-          description: 'Viewing 10 recent records in a log file'
-} } } } } )
+        recent: {
+          type: "boolean",
+          description: "Viewing 10 recent records in a log file",
+        },
+      },
+    },
+  },
+});
 // Parsing arguments
-const args = app.parse()
+const args = app.parse();
 // Getting help
 // Wether or not help was requested
-if(commands = app.helping(args)){
+if ((commands = app.helping(args))) {
   // Print a help information
-  process.stdout.write(app.help(commands))
+  process.stdout.write(app.help(commands));
   // Terminate the process
-  process.exit()
+  process.exit();
 }
 /* ... */
 ```
 
-From a user perspective, to print the help information of the overall application to the console you can use the command `help`, the option `--help` or its shortcut `-h`. 
+From a user perspective, to print the help information of the overall application to the console you can use the command `help`, the option `--help` or its shortcut `-h`.
 
 ```bash
 node log help
@@ -407,6 +438,7 @@ node log -h
 ```
 
 It prints a human readable text divided into the following sections:
+
 - "NAME" - the short description of the application or the command
 - "SYNOPSIS" - the basic syntax for using the command and its options
 - "OPTIONS" - the description of each option
@@ -464,7 +496,7 @@ node log view -h
 
 ## Structuring the code with routing
 
-We can build very simple CLI application using only one file like we made above. When the application is getting complex, the best practice is to load and configure the router in a separate top-level module that is dedicated to routing. 
+We can build very simple CLI application using only one file like we made above. When the application is getting complex, the best practice is to load and configure the router in a separate top-level module that is dedicated to routing.
 
 Considering the "log" application containing the "append" and the "view" commands, each commands will define a `route` function. We will refactor it according to this project structure:
 
@@ -482,29 +514,30 @@ Considering the "log" application containing the "append" and the "view" command
 To configure routing you need to define the `route` property for the `commands`. The value of this property should be as a function or the function exported by a module if defined as a string:
 
 ```js
-const shell = require('shell')
+const { shell } = require("shell");
 const app = shell({
   /* ... */
   commands: {
-    'append': {
+    append: {
       /* ... */
-      handler: './routes/append.js'
+      handler: "./routes/append.js",
     },
-    'view': {
+    view: {
       /* ... */
-      handler: './routes/view.js'
-    }
-  }
-})
+      handler: "./routes/view.js",
+    },
+  },
+});
 ```
 
 To execute routing you need to call the `route` method, which dispatch the commands of the CLI application into a function based on the `route` configuration property of the commands:
 
 ```js
-app.route()
+app.route();
 ```
 
 The `route` method receives as first argument a context object with the following properties:
+
 - `argv` - the CLI arguments, either passed to the `route` method or obtained from `process.argv`
 - `params` - the data extracted from `argv`
 - `config` - the configuration object used to initialise the Shell.js instance
@@ -513,73 +546,76 @@ Let's create the files with modules which will export functions "append" and "vi
 The content of the file `./routes/append.js`:
 
 ```js
-module.exports = function ({argv, params, config}) {
+module.exports = function ({ argv, params, config }) {
   // Use file system module
-  var fs = require("fs")
+  var fs = require("fs");
   // Appending the string to the file
   fs.appendFile(params.source, params.data + "\n", (err) => {
-    if(err) throw err
-  })
-}
+    if (err) throw err;
+  });
+};
 ```
 
 The content of the file `./routes/view.js`:
 
 ```js
-module.exports = function ({argv, params, config}) {
+module.exports = function ({ argv, params, config }) {
   // Check the viewing mode
-  if(params.recent) {
+  if (params.recent) {
     // Execute the bash command 'tail' for viewing strings from the ending of the file
-    require('child_process').exec('tail ' + params.source,
+    require("child_process").exec(
+      "tail " + params.source,
       (error, stdout, stderr) => {
-        process.stdout.write(stdout)
-        process.stderr.write(stderr)
-      })
+        process.stdout.write(stdout);
+        process.stderr.write(stderr);
+      },
+    );
   } else {
     // View the full file using the file system module
-    require("fs").readFile(params.source, function(err, buf) {
-      if(err) throw err
-      process.stdout.write(buf.toString())
-    })
+    require("fs").readFile(params.source, function (err, buf) {
+      if (err) throw err;
+      process.stdout.write(buf.toString());
+    });
   }
-}
+};
 ```
 
 Notice, when using routing we don't need to take care about the parsing and calling the help, it is implemented inside the `route` method. The top-level module of the CLI application, which is the "log.js" file, will look like:
 
 ```js
-const shell = require('shell')
+const { shell } = require("shell");
 const app = shell({
-  name: 'log',
-  description: 'Log information',
+  name: "log",
+  description: "Log information",
   options: {
-    'source': {
-      shortcut: 's',
-      default: 'log.txt',
-      description: 'The path to a file in which the logged information are stored'
-    }
+    source: {
+      shortcut: "s",
+      default: "log.txt",
+      description:
+        "The path to a file in which the logged information are stored",
+    },
   },
   commands: {
-    'append': {
-      description: 'Append strings to a log file',
+    append: {
+      description: "Append strings to a log file",
       main: {
-        name: 'data',
+        name: "data",
         required: true,
-        description: 'Logged data'
+        description: "Logged data",
       },
-      handler: './routes/append.js'
+      handler: "./routes/append.js",
     },
-    'view': {
-      description: 'Viewing a log file',
+    view: {
+      description: "Viewing a log file",
       options: {
-        'recent': {
-          type: 'boolean',
-          description: 'Viewing 10 recent records in a log file'
-        }
+        recent: {
+          type: "boolean",
+          description: "Viewing 10 recent records in a log file",
+        },
       },
-      handler: './routes/view.js'
-    }
-  }
-})
-app.route()
+      handler: "./routes/view.js",
+    },
+  },
+});
+app.route();
 ```

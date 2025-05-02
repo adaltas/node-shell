@@ -2,7 +2,7 @@
 title: API method `help`
 navtitle: shell.help
 description: How to use the `help` method to print help to the user console.
-keywords: ['shell', 'node.js', 'cli', 'api', 'help', 'print']
+keywords: ["shell", "node.js", "cli", "api", "help", "print"]
 maturity: review
 ---
 
@@ -10,11 +10,11 @@ maturity: review
 
 Format the configuration into a readable documentation string.
 
-* `commands` ([string] | string)   
+- `commands` ([string] | string)  
   The string or array containing the command name if any, optional.
-* `options.extended` (boolean)   
+- `options.extended` (boolean)  
   Print the child command descriptions, default is `false`.
-* `options.indent` (string)   
+- `options.indent` (string)  
   Indentation used with output help, default to 2 spaces.
 
 All options are optional.
@@ -36,15 +36,15 @@ Considering a "server" application containing a "start" command and initialized 
 To print the help of the overall application does not require any arguments. It behaves the same as calling the `help` method with an empty array.
 
 ```js
-process.stdout.write( app.help() )
-process.stdout.write( app.help( [] ) )
+process.stdout.write(app.help());
+process.stdout.write(app.help([]));
 ```
 
 Pass the name of the command as an array to print the help of any nested command. It behaves the same as defining the command as a string.
 
 ```js
-process.stdout.write( app.help( ['start'] ) );
-process.stdout.write( app.help( 'start' ) );
+process.stdout.write(app.help(["start"]));
+process.stdout.write(app.help("start"));
 ```
 
 ## Implementation
